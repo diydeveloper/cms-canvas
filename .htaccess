@@ -1,0 +1,10 @@
+# mod_rewrite
+RewriteEngine on
+
+RewriteBase /
+
+RewriteCond $1 !\.(gif|jpg|png|jpeg|css|js|ico|swf)$ [NC]
+RewriteCond $1 !^(index\.php|robots\.txt)
+RewriteCond $1 !(assets|uploads|themes)
+RewriteRule ^(.*)$ index.php/$1 [L]
+
