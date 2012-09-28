@@ -1,17 +1,12 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
-* Code Igniter
-*
-* An open source application development framework for PHP 4.3.2 or newer
-*
-* @package     CodeIgniter
-* @author      Dariusz Debowczyk
-* @copyright   Copyright (c) 2006, D.Debowczyk
-* @license     http://www.codeignitor.com/user_guide/license.html
-* @link        http://www.codeigniter.com
-* @since       Version 1.0
-* @filesource
-*/
+ * CMS Canvas
+ *
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
+ */
 
 // ------------------------------------------------------------------------
 

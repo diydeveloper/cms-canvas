@@ -1,11 +1,14 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 /**
- * @package 		PyroCMS
- * @subpackage 		Libraries
+ * CMS Canvas
+ *
+ * @package 		CMSCanvas
  * @author			Phil Sturgeon - PyroCMS Development Team
+ * @modified        Mark Price
  *
  * Central library for Plugin logic
  */
+
 abstract class Plugin
 {
 	private $attributes = array();

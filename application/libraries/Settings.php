@@ -1,9 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
-* @Autor    Mark Price - markalanprice@gmail.com
-*
-* Admin Panel defined settings 
-* Overwrite config/settings.php
+ * CMS Canvas
+ *
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
  */
 
 class Settings 

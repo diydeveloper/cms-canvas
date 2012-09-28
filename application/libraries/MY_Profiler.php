@@ -1,35 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * CodeIgniter
+ * CMS Canvas
  *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
- * @link		http://codeigniter.com
- * @since		Version 1.0
- * @filesource
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
  */
 
-// ------------------------------------------------------------------------
-
-/**
- * CodeIgniter Profiler Class
- *
- * This class enables you to display benchmark, query, and other data
- * in order to help with debugging and optimization.
- *
- * Note: At some point it would be good to move all the HTML in this class
- * into a set of template files in order to allow customization.
- *
- * @package		CodeIgniter
- * @subpackage	Libraries
- * @category	Libraries
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/general/profiling.html
- */
 class MY_Profiler {
 
 	protected $_available_sections = array(

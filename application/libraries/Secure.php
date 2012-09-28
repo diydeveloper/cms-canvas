@@ -1,7 +1,13 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); 
 /**
- * @class Security is used to check if a session is initiated 
-**/
+ * CMS Canvas
+ *
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
+ */
+
 class Secure
 {
     public $CI;
