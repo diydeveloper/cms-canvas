@@ -102,7 +102,7 @@
                         });
                     });
                 </script>
-                <?php js_start(); ?>
+                <?php js_end(); ?>
             <?php endif; ?>
         </div>
         <div class="clear"></div>
