@@ -157,115 +157,115 @@
     </div>
 </div>
 
-<script>
-    var editor = CodeMirror.fromTextArea(document.getElementById("layout"), {
-        lineNumbers: true,
-        matchBrackets: true,
-        mode: "application/x-httpd-php",
-        indentUnit: 4,
-        indentWithTabs: true,
-        enterMode: "keep",
-        tabMode: "shift"
-    });
-
-    var editor = CodeMirror.fromTextArea(document.getElementById("page_head"), {
-        lineNumbers: true,
-        matchBrackets: true,
-        mode: "application/x-httpd-php",
-        indentUnit: 4,
-        indentWithTabs: true,
-        enterMode: "keep",
-        tabMode: "shift"
-    });
-</script>
-
+<?php js_start(); ?>
 <script type="text/javascript">
-$(document).ready(function() {
-    $( "#tabs" ).tabs();
+    $(document).ready(function() {
+        var editor = CodeMirror.fromTextArea(document.getElementById("layout"), {
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: "application/x-httpd-php",
+            indentUnit: 4,
+            indentWithTabs: true,
+            enterMode: "keep",
+            tabMode: "shift"
+        });
 
-    // Save Content
-    $("#save, #save_exit").click( function() {
+        var editor = CodeMirror.fromTextArea(document.getElementById("page_head"), {
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: "application/x-httpd-php",
+            indentUnit: 4,
+            indentWithTabs: true,
+            enterMode: "keep",
+            tabMode: "shift"
+        });
 
-        if ($('#category_group_id').val() != '<?php echo $Content_type->category_group_id; ?>')
-        {
-            if ( ! confirm('Changing category groups will delete current category entry relations of this content type.\n\n Are you sure you want to continue?'))
+        $( "#tabs" ).tabs();
+
+        // Save Content
+        $("#save, #save_exit").click( function() {
+
+            if ($('#category_group_id').val() != '<?php echo $Content_type->category_group_id; ?>')
             {
-                return false;
+                if ( ! confirm('Changing category groups will delete current category entry relations of this content type.\n\n Are you sure you want to continue?'))
+                {
+                    return false;
+                }
             }
-        }
 
-        if ($(this).attr('id') == 'save_exit')
-        {
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'save_exit',
-                value: '1'
-            }).appendTo('#layout_edit');
+            if ($(this).attr('id') == 'save_exit')
+            {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'save_exit',
+                    value: '1'
+                }).appendTo('#layout_edit');
 
-            $('#layout_edit').submit();
-        }
-        else
-        {
-            $('#layout_edit').submit();
-        }
+                $('#layout_edit').submit();
+            }
+            else
+            {
+                $('#layout_edit').submit();
+            }
+        });
+
+        $('a.copy_text').zclip({
+            path: '<?php echo theme_url('assets/js/zclip/ZeroClipboard.swf'); ?>',
+            copy: function() {return $(this).text();},
+            afterCopy: function() {}
+        });
+
+        // Hide / Show Admin Acess
+        $('input[name="restrict_admin_access"]').change( function(e) {
+            if ($('input[name="restrict_admin_access"]:checked').val() == 1)   
+            {
+                $('#admin_access_field').show();
+            }
+            else
+            {
+                $('#admin_access_field').hide();
+            }
+        });
+        $('input[name="restrict_admin_access"]').trigger('change');
+
+        // Hide / Show Acess
+        $('input[name="access"]').change( function(e) {
+            if ($('input[name="access"]:checked').val() == 2)   
+            {
+                $('#access_field').show();
+            }
+            else
+            {
+                $('#access_field').hide();
+            }
+        });
+        $('input[name="access"]').trigger('change');
+
+        // Hide / Show Max Revisions
+        $('input[name="enable_versioning"]').change( function(e) {
+            if ($('input[name="enable_versioning"]:checked').val() == 1)   
+            {
+                $('#max_revisions_div').show();
+            }
+            else
+            {
+                $('#max_revisions_div').hide();
+            }
+        });
+        $('input[name="enable_versioning"]').trigger('change');
+
+        // Hide / Show Dynamic Routing
+        $('#enable_dynamic_routing').change( function(e) {
+            if ($('#enable_dynamic_routing').is(':checked'))   
+            {
+                $('#dynamic_route_div').show();
+            }
+            else
+            {
+                $('#dynamic_route_div').hide();
+            }
+        });
+        $('#enable_dynamic_routing').trigger('change');
     });
-
-    $('a.copy_text').zclip({
-        path: '<?php echo theme_url('assets/js/zclip/ZeroClipboard.swf'); ?>',
-        copy: function() {return $(this).text();},
-        afterCopy: function() {}
-    });
-
-    // Hide / Show Admin Acess
-    $('input[name="restrict_admin_access"]').change( function(e) {
-        if ($('input[name="restrict_admin_access"]:checked').val() == 1)   
-        {
-            $('#admin_access_field').show();
-        }
-        else
-        {
-            $('#admin_access_field').hide();
-        }
-    });
-    $('input[name="restrict_admin_access"]').trigger('change');
-
-    // Hide / Show Acess
-    $('input[name="access"]').change( function(e) {
-        if ($('input[name="access"]:checked').val() == 2)   
-        {
-            $('#access_field').show();
-        }
-        else
-        {
-            $('#access_field').hide();
-        }
-    });
-    $('input[name="access"]').trigger('change');
-
-    // Hide / Show Max Revisions
-    $('input[name="enable_versioning"]').change( function(e) {
-        if ($('input[name="enable_versioning"]:checked').val() == 1)   
-        {
-            $('#max_revisions_div').show();
-        }
-        else
-        {
-            $('#max_revisions_div').hide();
-        }
-    });
-    $('input[name="enable_versioning"]').trigger('change');
-
-    // Hide / Show Dynamic Routing
-    $('#enable_dynamic_routing').change( function(e) {
-        if ($('#enable_dynamic_routing').is(':checked'))   
-        {
-            $('#dynamic_route_div').show();
-        }
-        else
-        {
-            $('#dynamic_route_div').hide();
-        }
-    });
-    $('#enable_dynamic_routing').trigger('change');
-});
 </script>
+<?php js_end(); ?>

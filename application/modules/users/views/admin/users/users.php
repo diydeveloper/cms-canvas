@@ -70,6 +70,7 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready( function() {
         $('.sortable').click( function() {
@@ -105,3 +106,4 @@
         });
     });
 </script>
+<?php js_end(); ?>

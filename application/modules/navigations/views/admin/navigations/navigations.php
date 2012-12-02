@@ -42,7 +42,7 @@
     </div>
 </div>
 
-
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready(function() {
         // Sort By
@@ -80,3 +80,4 @@
 
     });
 </script>
+<?php js_end(); ?>

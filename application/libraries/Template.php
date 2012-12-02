@@ -451,7 +451,15 @@ class Template
 
         foreach ($this->scripts as $script)
         {
-            $js_includes .=  "\n\t<script type=\"text/javascript\">" . $script . "</script>";
+            // Check if script add the script tags included
+            if (stripos(trim($script), '<script') === 0)
+            {
+                $js_includes .=  "\n" . $script;
+            }
+            else
+            {
+                $js_includes .=  "\n\t<script type=\"text/javascript\">" . $script . "</script>";
+            }
         }
 
         $this->headers_sent = TRUE;

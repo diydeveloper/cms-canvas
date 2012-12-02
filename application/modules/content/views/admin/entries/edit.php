@@ -157,7 +157,8 @@
     </div>
 </div>
 
-<script>
+<?php js_start(); ?>
+<script type="text/javascript">
     $(document).ready(function() {
         $( ".tabs" ).tabs();
 
@@ -252,3 +253,4 @@
         <?php endif; ?>
     });
 </script>
+<?php js_end(); ?>

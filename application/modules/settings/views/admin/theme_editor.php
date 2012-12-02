@@ -88,17 +88,21 @@
                 <?php echo form_open(null, 'id="form"'); ?>
                     <?php echo form_textarea(array('name'=>'code', 'id'=>'code', 'value'=>set_value('code', $code))); ?>
                 <?php echo form_close(); ?>
+                <?php js_start(); ?>
                 <script type="text/javascript">
-                    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-                        lineNumbers: true,
-                        matchBrackets: true,
-                        mode: "<?php echo $mode; ?>",
-                        indentUnit: 4,
-                        indentWithTabs: true,
-                        enterMode: "keep",
-                        tabMode: "shift"
+                    $(document).ready( function() {
+                        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                            lineNumbers: true,
+                            matchBrackets: true,
+                            mode: "<?php echo $mode; ?>",
+                            indentUnit: 4,
+                            indentWithTabs: true,
+                            enterMode: "keep",
+                            tabMode: "shift"
+                        });
                     });
                 </script>
+                <?php js_start(); ?>
             <?php endif; ?>
         </div>
         <div class="clear"></div>

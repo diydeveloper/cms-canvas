@@ -113,7 +113,8 @@
     </div>
 </div>
 
-<script>
+<?php js_start(); ?>
+<script type="text/javascript">
     $(document).ready( function() {
         // Auto fill short name based on title
         $('#title').keyup( function(e) {
@@ -173,3 +174,4 @@
         $('input[name="enable_versioning"]').trigger('change');
     });
 </script>
+<?php js_end(); ?>

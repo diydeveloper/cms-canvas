@@ -89,51 +89,54 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
+    $(document).ready( function() {
+        // Sort By
+        $('.sortable').click( function() {
+            sort = $(this);
 
-    // Sort By
-    $('.sortable').click( function() {
-        sort = $(this);
+            if (sort.hasClass('asc'))
+            {
+                window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?'; ?>&sort=" + sort.attr('rel') + "&order=desc";
+            }
+            else
+            {
+                window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?';  ?>&sort=" + sort.attr('rel') + "&order=asc";
+            }
 
-        if (sort.hasClass('asc'))
-        {
-            window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?'; ?>&sort=" + sort.attr('rel') + "&order=desc";
-        }
-        else
-        {
-            window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?';  ?>&sort=" + sort.attr('rel') + "&order=asc";
-        }
-
-        return false;
-    });
-
-    <?php if ($sort = $this->input->get('sort')): ?>
-        $('a.sortable[rel="<?php echo $sort; ?>"]').addClass('<?php echo ($this->input->get('order')) ? $this->input->get('order') : 'asc' ?>');
-    <?php else: ?>
-        $('a.sortable[rel="modified_date"]').addClass('desc');
-    <?php endif; ?>
-
-    // Delete
-    $('.delete').click( function() {
-        if (confirm('Delete cannot be undone! Are you sure you want to do this?'))
-        {
-            $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/content/entries/delete'); ?>').submit()
-        }
-        else
-        {
             return false;
-        }
-    });
+        });
 
-    $('#add_entry').click( function () {
-        $('#content_types_dropdown').show();
-        $('#add_entry').addClass('selected');
-    });
+        <?php if ($sort = $this->input->get('sort')): ?>
+            $('a.sortable[rel="<?php echo $sort; ?>"]').addClass('<?php echo ($this->input->get('order')) ? $this->input->get('order') : 'asc' ?>');
+        <?php else: ?>
+            $('a.sortable[rel="modified_date"]').addClass('desc');
+        <?php endif; ?>
 
-    $(document).mouseup( function (e) {
-        if ($('#content_types_dropdown').is(":visible") && $(e.target).parents('#add_entry_li').length == 0) {
-            $('#add_entry').removeClass('selected');
-            $('#content_types_dropdown').hide();
-        }
+        // Delete
+        $('.delete').click( function() {
+            if (confirm('Delete cannot be undone! Are you sure you want to do this?'))
+            {
+                $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/content/entries/delete'); ?>').submit()
+            }
+            else
+            {
+                return false;
+            }
+        });
+
+        $('#add_entry').click( function () {
+            $('#content_types_dropdown').show();
+            $('#add_entry').addClass('selected');
+        });
+
+        $(document).mouseup( function (e) {
+            if ($('#content_types_dropdown').is(":visible") && $(e.target).parents('#add_entry_li').length == 0) {
+                $('#add_entry').removeClass('selected');
+                $('#content_types_dropdown').hide();
+            }
+        });
     });
 </script>
+<?php js_end(); ?>

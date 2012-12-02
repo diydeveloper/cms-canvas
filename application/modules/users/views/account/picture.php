@@ -20,6 +20,7 @@
 </div>
 
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready( function() {
         $('#remove_picture').click( function() {
@@ -37,3 +38,4 @@
         });
     });
 </script>
+<?php js_end(); ?>

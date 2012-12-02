@@ -75,25 +75,27 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
-$(document).ready(function() {
+    $(document).ready(function() {
 
-    $('#link_type').change(function() {
-        if ($(this).val() == 'page')
-        {
-            $('.url_div').hide();    
-            $('.page_div').show();    
-        }
-        else
-        {
-            $('.page_div').hide();    
-            $('.url_div').show();    
-        }
+        $('#link_type').change(function() {
+            if ($(this).val() == 'page')
+            {
+                $('.url_div').hide();    
+                $('.page_div').show();    
+            }
+            else
+            {
+                $('.page_div').hide();    
+                $('.url_div').show();    
+            }
+        });
+
+        $('#link_type').trigger('change');
+
+        $( "#tabs" ).tabs();
+
     });
-
-    $('#link_type').trigger('change');
-
-    $( "#tabs" ).tabs();
-
-});
 </script>
+<?php js_end(); ?>

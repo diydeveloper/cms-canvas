@@ -41,19 +41,21 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
+<?php js_start(); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
 
-    $('.delete').click(function() {
-        if (confirm('Delete cannot be undone! Are you sure you want to do this?\n\n NOTE: Images will remain on the server.'))
-        {
-            $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/galleries/delete'); ?>').submit()
-        }
-        else
-        {
-            return false;
-        }
+        $('.delete').click(function() {
+            if (confirm('Delete cannot be undone! Are you sure you want to do this?\n\n NOTE: Images will remain on the server.'))
+            {
+                $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/galleries/delete'); ?>').submit()
+            }
+            else
+            {
+                return false;
+            }
+        });
+
     });
-
-});
 </script>
+<?php js_end(); ?>

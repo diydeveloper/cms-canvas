@@ -45,18 +45,22 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
-    $('#content_field_type_id').change( function() {
-        $.post("<?php echo site_url(ADMIN_PATH . '/content/fields/settings'); ?>", { content_field_type_id: $('#content_field_type_id').val() <?php echo ($edit_mode) ? ', field_id: ' . $Field->id : '' ?> }, function(data) {
-            $('#config').html(data);
+    $(document).ready( function() {
+        $('#content_field_type_id').change( function() {
+            $.post("<?php echo site_url(ADMIN_PATH . '/content/fields/settings'); ?>", { content_field_type_id: $('#content_field_type_id').val() <?php echo ($edit_mode) ? ', field_id: ' . $Field->id : '' ?> }, function(data) {
+                $('#config').html(data);
+            });
         });
+
+        $('#content_field_type_id').trigger('change');
+
+        <?php if ( ! $edit_mode): ?>
+            $('#label').keyup( function(e) {
+                $('#short_tag').val($(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, ''))
+            });
+        <?php endif; ?>
     });
-
-    $('#content_field_type_id').trigger('change');
-
-    <?php if ( ! $edit_mode): ?>
-        $('#label').keyup( function(e) {
-            $('#short_tag').val($(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, ''))
-        });
-    <?php endif; ?>
 </script>
+<?php js_end(); ?>

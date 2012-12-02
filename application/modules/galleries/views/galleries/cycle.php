@@ -17,14 +17,14 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready( function() {
-    $('#gallery_<?php echo $Gallery->id; ?>').cycle({
-        fx: '<?php echo $effect; ?>',
-        speed: <?php echo $speed; ?>,
-        pause: <?php echo $pause; ?>,
-        timeout: <?php echo $timeout; ?>,
-        sync: <?php echo $sync; ?>,
-        delay: <?php echo $delay; ?>
+    $(document).ready( function() {
+        $('#gallery_<?php echo $Gallery->id; ?>').cycle({
+            fx: '<?php echo $effect; ?>',
+            speed: <?php echo $speed; ?>,
+            pause: <?php echo $pause; ?>,
+            timeout: <?php echo $timeout; ?>,
+            sync: <?php echo $sync; ?>,
+            delay: <?php echo $delay; ?>
+        });
     });
-});
 </script>

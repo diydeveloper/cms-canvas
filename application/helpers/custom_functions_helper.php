@@ -391,3 +391,39 @@ if ( ! function_exists('xml_output'))
         $CI->output->set_output("<?xml version=\"1.0\"?>\r\n");
     }
 }
+
+// ------------------------------------------------------------------------
+
+/*
+ * JS Head Start
+ *
+ * Starts output buffering to place javascript in the <head> of the template
+ * 
+ * @return void
+ */
+if ( ! function_exists('js_start'))
+{
+    function js_start()
+    {
+        ob_start();
+    }
+}
+
+// ------------------------------------------------------------------------
+
+/*
+ * JS Head End
+ *
+ * Ends output buffering to place javascript in the <head> of the template
+ * 
+ * @return void
+ */
+if ( ! function_exists('js_end'))
+{
+    function js_end()
+    {
+        $CI =& get_instance();
+        $CI->template->add_script(ob_get_contents());
+        ob_end_clean();
+    }
+}

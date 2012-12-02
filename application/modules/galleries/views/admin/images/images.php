@@ -43,56 +43,58 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
+<?php js_start(); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
 
-    initDnD = function() {
-        // Sort images (table sort)
-        $('#image_table').tableDnD({
-            onDrop: function(table, row) {
-                show_status('Saving...', false, true);
-                order = $('#image_table').tableDnDSerialize()
-                $.post('<?php echo site_url(ADMIN_PATH . '/galleries/images/order') ?>', order, function() {
-                    show_status('Saved', true, false);
-                } );
-            },
-            dragHandle: "drag_handle"
-        });
-    }
-
-    // Delete
-    $('.delete').click( function() {
-        if (confirm('Delete cannot be undone! Images will remain on the server. Are you sure you want to do this?'))
-        {
-            $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/galleries/images/delete/' . $Gallery->id); ?>').submit()
+        initDnD = function() {
+            // Sort images (table sort)
+            $('#image_table').tableDnD({
+                onDrop: function(table, row) {
+                    show_status('Saving...', false, true);
+                    order = $('#image_table').tableDnDSerialize()
+                    $.post('<?php echo site_url(ADMIN_PATH . '/galleries/images/order') ?>', order, function() {
+                        show_status('Saved', true, false);
+                    } );
+                },
+                dragHandle: "drag_handle"
+            });
         }
-        else
-        {
-            return false;
-        }
-    });
 
-    initDnD();
-
-    // KCFinder add images
-    $('#add_image').click( function() {
-        window.KCFinder = {
-            callBackMultiple: function(files) {
-                window.KCFinder = null;
-                $.post('<?php echo site_url(ADMIN_PATH . '/galleries/images/add'); ?>', {'files': files, 'gallery_id': <?php echo $Gallery->id; ?>}, function(files) {
-                    // Refresh image table
-                    $('#image_table').load("<?php echo current_url(); ?> #image_table > *", function(){ initDnD(); });
-                });
+        // Delete
+        $('.delete').click( function() {
+            if (confirm('Delete cannot be undone! Images will remain on the server. Are you sure you want to do this?'))
+            {
+                $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/galleries/images/delete/' . $Gallery->id); ?>').submit()
             }
-        };
-        var left = (screen.width/2)-(800/2);
-        var top = (screen.height/2)-(600/2);
-        window.open('/assets/js/kcfinder/browse.php?type=images',
-            'kcfinder_image', 'status=0, toolbar=0, location=0, menubar=0, ' +
-            'directories=0, resizable=1, scrollbars=0, width=800, height=600, top=' + top + ', left=' + left
-        );
+            else
+            {
+                return false;
+            }
+        });
+
+        initDnD();
+
+        // KCFinder add images
+        $('#add_image').click( function() {
+            window.KCFinder = {
+                callBackMultiple: function(files) {
+                    window.KCFinder = null;
+                    $.post('<?php echo site_url(ADMIN_PATH . '/galleries/images/add'); ?>', {'files': files, 'gallery_id': <?php echo $Gallery->id; ?>}, function(files) {
+                        // Refresh image table
+                        $('#image_table').load("<?php echo current_url(); ?> #image_table > *", function(){ initDnD(); });
+                    });
+                }
+            };
+            var left = (screen.width/2)-(800/2);
+            var top = (screen.height/2)-(600/2);
+            window.open('/assets/js/kcfinder/browse.php?type=images',
+                'kcfinder_image', 'status=0, toolbar=0, location=0, menubar=0, ' +
+                'directories=0, resizable=1, scrollbars=0, width=800, height=600, top=' + top + ', left=' + left
+            );
+        });
+
+
     });
-
-
-});
 </script>
+<?php js_end(); ?>

@@ -124,6 +124,7 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready(function() {
         $( ".tabs" ).tabs();
@@ -151,3 +152,4 @@
         });
     });
 </script>
+<?php js_end(); ?>

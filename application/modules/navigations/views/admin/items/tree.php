@@ -20,6 +20,7 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready(function(){
         $('ol.sortable').nestedSortable({
@@ -59,3 +60,4 @@
         });
     });
 </script>
+<?php js_end(); ?>

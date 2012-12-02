@@ -60,6 +60,7 @@
     </div>
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready( function() {
         $("input[type='radio'][name='type']").change(function() {
@@ -76,3 +77,4 @@
         $("input[type='radio'][name='type']:checked").trigger('change');
     });
 </script>
+<?php js_end(); ?>

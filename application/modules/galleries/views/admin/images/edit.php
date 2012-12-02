@@ -49,6 +49,7 @@
 
 </div>
 
+<?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready( function() {
 
@@ -84,3 +85,4 @@
         $('textarea#description').ckeditor(thin_config);
     });
 </script>
+<?php js_end(); ?>
