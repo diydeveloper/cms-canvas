@@ -297,9 +297,11 @@ class Lex_Parser
 				}
 			}
 
+			$temp_condition = $condition;
 			$condition = preg_replace_callback('/\b('.$this->variable_regex.')\b/', array($this, 'process_condition_var'), $condition);
 
-			if ($callback)
+			// CMS Canvas custom modification, only parse callback if the condition was not a variable
+			if ($callback && $temp_condition == $condition)
 			{
 				$condition = preg_replace('/\b(?!\{\s*)('.$this->callback_name_regex.')(?!\s+.*?\s*\})\b/', '{$1}', $condition);
 				$condition = $this->parse_callback_tags($condition, $data, $callback);
