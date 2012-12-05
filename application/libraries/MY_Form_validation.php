@@ -34,6 +34,21 @@ class MY_Form_validation extends CI_Form_validation
        
         return $query->num_rows() === 0;
     }
+
+    public function validate_captcha($user_code)
+    {
+        $CI =& get_instance();
+
+        if (strtolower($user_code) == strtolower($CI->session->userdata('captcha_code')))
+        {
+            return TRUE;
+        }
+        else
+        {
+            $CI->form_validation->set_message('validate_captcha', 'The code provided does not match the CAPTCHA.');
+            return FALSE;
+        }
+    }
   
 }
 // END MY Form Validation Class

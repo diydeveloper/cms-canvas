@@ -427,3 +427,31 @@ if ( ! function_exists('js_end'))
         ob_end_clean();
     }
 }
+
+// ------------------------------------------------------------------------
+
+/*
+ * String to Boolean
+ *
+ * This function analyzes a string and returns false if the string is empty, false, or 0
+ * and true for everything else
+ * 
+ * @param string
+ * @return bool
+ */
+if ( ! function_exists('str_to_bool'))
+{
+    function str_to_bool($str)
+    {
+        $str = (string) $str;
+        
+        if (in_array(strtolower($str), array('false', '0', '')))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+}

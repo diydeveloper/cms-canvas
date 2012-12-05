@@ -16,37 +16,6 @@
  */
 class Contact_plugin extends Plugin
 {
-    private $contact_form = array(
-        'fields' => array(
-            'name' => array(
-                'label' => 'Name',
-                'type'  => 'text',
-                'validation'  => 'trim|required',
-            ),
-            'email' => array(
-                'label' => 'Email',
-                'type'  => 'text',
-                'validation'  => 'trim|required|valid_email',
-            ),
-            'phone' => array(
-                'label' => 'Phone',
-                'type'  => 'text',
-                'validation'  => 'trim|required',
-            ),
-            'message' => array(
-                'label' => 'Message',
-                'type'  => 'textarea',
-                'validation'  => 'trim|required',
-            ),
-            '' => array(
-                'label' => '',
-                'type' => 'submit',
-                'value' => 'Send',
-            ),
-        ),
-
-    );
-
     /*
      * Form
      *
@@ -58,66 +27,79 @@ class Contact_plugin extends Plugin
      */
     public function form()
     {
-        $content = $this->content();
+        $parse_data = array();
 
-        if ($content != '')
+        if (str_to_bool($this->attribute('captcha')))
         {
-            // Wrap content with form tags and add a spam check field
-            // A theory that spam bots do not read css and will attempt to fill all fields
-            // The form will not submit if the hidden field has been filled
-            $content = '<form' . (($this->attribute('anchor')) ? ' action="' . current_url() . $this->attribute('anchor') . '"' : '')  . ' method="post"' . ($this->attribute('id') ? ' id="' . $this->attribute('id') . '"' : '') . ($this->attribute('class') ? ' class="' . $this->attribute('class') . '"' : '') . '>' . $content . '<div style="display: none;"><input type="text" name="spam_check" value="" />' . (($this->attribute('id')) ? '<input type="hidden" name="form_id" value="' . $this->attribute('id') . '" />' : '') . '</div></form>';
+            $parse_data['captcha'] = '<img class="captcha_image" src="' . site_url('contact/captcha') . '" />';
+            $parse_data['captcha_input'] = '<input class="captcha_input" type="text" name="captcha_input" />';
+        }
 
-            if ($this->attribute('id') == '' || $this->attribute('id') == $this->input->post('form_id'))
+        $data['id'] = $this->attribute('id');
+        $data['class'] = $this->attribute('class');
+        $data['anchor'] = $this->attribute('anchor');
+        $data['captcha'] = str_to_bool($this->attribute('captcha'));
+        $data['content'] = $this->parser->parse_string($this->content(), $parse_data, TRUE);
+
+        // Wrap content with form tags and add a spam check field
+        // A theory that spam bots do not read css and will attempt to fill all fields
+        // The form will not submit if the hidden field has been filled
+        $content = $this->load->view('contact', $data, TRUE);
+
+        if ($this->attribute('id') == '' || $this->attribute('id') == $this->input->post('form_id'))
+        {
+            // We need at least one validation rule for run to work
+            $this->form_validation->set_rules('spam_check', 'Spam Check', 'trim');
+
+            // Repopulate form by default
+            if ($this->input->post())
             {
-                // Repopulate form by default
-                if ($this->input->post() && $this->attribute('required'))
-                {
-                    $content = $this->_repopulate_form($content);
-                }
-
-                // Set required fields
-                if ($required = $this->attribute('required'))
-                {
-                    foreach(explode('|', $required) as $name)
-                    {
-                        $this->form_validation->set_rules($name, $name, 'required');
-                    }
-                }
-
-                // Process Form
-                if ($this->form_validation->run() == TRUE && $this->input->post('spam_check') == '')
-                {
-                    $this->_send_form();
-                    return "Your message has been sent. Thank You";
-                }
-
-                // Add validation errors to the content
-                $content = validation_errors() . $content;
+                $content = $this->_repopulate_form($content);
             }
 
-            return array('_content' => $content);
-        }
-        else
-        {
-            // No custom content was set, use the default form
-            $data['id'] = $this->attribute('id');
-            $data['class'] = $this->attribute('class');
-            $data['anchor'] = $this->attribute('anchor');
-            $data['Form'] = $this->load->library('formation', $this->contact_form);
-            $data['Form']->populate();
-
-            if ($this->attribute('id') == '' || $this->attribute('id') == $this->input->post('form_id'))
+            // No custom content was set, use the default form validations
+            if ($this->content() == '')
             {
-                if ($data['Form']->validate() == TRUE && $this->input->post('spam_check') == '')
+                $this->form_validation->set_rules('name', 'Name', 'trim|required');
+                $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+                $this->form_validation->set_rules('phone', 'Phone', 'trim|required');
+                $this->form_validation->set_rules('message', 'Message', 'trim|required');
+            }
+
+            // Set required fields
+            if ($required = $this->attribute('required'))
+            {
+                foreach(explode('|', $required) as $name)
                 {
-                    $this->_send_form();
-                    return "Your message has been sent. Thank You";
+                    $this->form_validation->set_rules($name, $name, 'required');
                 }
             }
 
-            // Load view
-            return $this->load->view('contact', $data, TRUE);
+            if (str_to_bool($this->attribute('captcha')))
+            {
+                $this->form_validation->set_rules('captcha_input', 'CAPTCHA', 'validate_captcha|required');
+            }
+
+            // Process Form
+            if ($this->form_validation->run() == TRUE && $this->input->post('spam_check') == '')
+            {
+                $this->_send_form();
+
+                if ($this->attribute('success_redirect'))
+                {
+                    redirect($this->attribute('success_redirect'));
+                }
+                else
+                {
+                    return "Your message has been sent. Thank You";
+                }
+            }
+
+            // Add validation errors to the content
+            $content = validation_errors() . $content;
         }
+
+        return array('_content' => $content);
     }
 
     // ------------------------------------------------------------------------
