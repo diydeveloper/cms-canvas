@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
@@ -120,6 +120,7 @@ CKEDITOR.lang['nl'] =
 		alignTop		: 'Boven',
 		alignMiddle		: 'Midden',
 		alignBottom		: 'Onder',
+		invalidValue	: 'Invalid value.', // MISSING
 		invalidHeight	: 'De hoogte moet een getal zijn.',
 		invalidWidth	: 'De breedte moet een getal zijn.',
 		invalidCssLength	: 'Waarde in veld "%1" moet een positief nummer zijn, met of zonder een geldige CSS meeteenheid (px, %, in, cm, mm, em, ex, pt of pc).',

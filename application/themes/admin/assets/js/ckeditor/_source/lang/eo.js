@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
@@ -120,6 +120,7 @@ CKEDITOR.lang['eo'] =
 		alignTop		: 'Supre',
 		alignMiddle		: 'Centre',
 		alignBottom		: 'Malsupre',
+		invalidValue	: 'Invalid value.', // MISSING
 		invalidHeight	: 'Alto devas esti nombro.',
 		invalidWidth	: 'Larĝo devas esti nombro.',
 		invalidCssLength	: 'La valoro indikita por la "%1" kampo devas esti pozitiva nombro kun aŭ sen valida CSSmezurunuo (px, %, in, cm, mm, em, ex, pt, or pc).',

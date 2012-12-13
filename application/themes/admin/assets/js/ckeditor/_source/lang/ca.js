@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
@@ -120,6 +120,7 @@ CKEDITOR.lang['ca'] =
 		alignTop		: 'Superior',
 		alignMiddle		: 'Centre',
 		alignBottom		: 'Inferior',
+		invalidValue	: 'Invalid value.', // MISSING
 		invalidHeight	: 'L\'alçada ha de ser un nombre.',
 		invalidWidth	: 'L\'amplada ha de ser un nombre.',
 		invalidCssLength	: 'Value specified for the "%1" field must be a positive number with or without a valid CSS measurement unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING

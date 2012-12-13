@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
@@ -120,6 +120,7 @@ CKEDITOR.lang['is'] =
 		alignTop		: 'Efst',
 		alignMiddle		: 'Miðjuð',
 		alignBottom		: 'Neðst',
+		invalidValue	: 'Invalid value.', // MISSING
 		invalidHeight	: 'Height must be a number.', // MISSING
 		invalidWidth	: 'Width must be a number.', // MISSING
 		invalidCssLength	: 'Value specified for the "%1" field must be a positive number with or without a valid CSS measurement unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING

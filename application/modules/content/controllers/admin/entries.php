@@ -527,21 +527,10 @@ class Entries extends Admin_Controller {
      */
     function css()
     {
-        $this->load->model('entries_model');
+        // No long use the entry_id variable but maybe some day
         $entry_id = $this->uri->segment(5);
-        $Entry = $this->entries_model->get_by_id($entry_id);
-
-        if ( ! $Entry->exists())
-        {
-            return show_404();
-        }
 
         $css = @file_get_contents(site_url('themes/' . $this->settings->theme . '/' . trim($this->settings->editor_stylesheet, '/'))) . "\n";
-
-        if ($Entry->content_types->get()->exists())
-        {
-            $css .= $Entry->content_types->css . "\n\n";
-        }
 
         header('Content-type: text/css');
 
