@@ -443,6 +443,11 @@ if ( ! function_exists('str_to_bool'))
 {
     function str_to_bool($str)
     {
+        if (is_bool($str))
+        {
+            return $str;
+        }
+
         $str = (string) $str;
         
         if (in_array(strtolower($str), array('false', '0', '')))

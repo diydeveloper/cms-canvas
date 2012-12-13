@@ -25,10 +25,10 @@ class Navigations_library
         $this->tree = array();
         $this->start_node = 0;
         $this->start_nav_on_level_of_current = FALSE;
-        $this->start_nav_from_parent = FALSE;
         $this->start_nav_with_kids_of_current = FALSE;
-        $this->no_current = FALSE;
-        $this->start_nav_from_parent_depth = 1;
+        $this->disable_current = FALSE;
+        $this->starting_parent_depth = 1;
+        $this->start_nav_from_parent_depth = 0;
         $this->start_x_levels_above_current = 0;
         $this->current_depth = 0;
         $this->tag_id = null;
@@ -62,6 +62,12 @@ class Navigations_library
         {
             $this->$var = $value;
         }
+
+        // Cast strings to the appropriate datatype
+        $this->nested = str_to_bool($this->nested);
+        $this->disable_current = str_to_bool($this->disable_current);
+        $this->start_nav_on_level_of_current = str_to_bool($this->start_nav_on_level_of_current);
+        $this->start_nav_with_kids_of_current = str_to_bool($this->start_nav_with_kids_of_current);
     }
 
     // ------------------------------------------------------------------------
@@ -87,20 +93,24 @@ class Navigations_library
         $this->tree = $this->_get_nav();
 
         // Mark current and current trail nav items
-        if ( ! $this->no_current)
+        if ( ! $this->disable_current)
         {
             $this->tree = $this->_set_current($this->tree);
             $this->tree = $this->_set_current_trail($this->tree);
         }
 
         // Calculate the depth of subset requested
-        if ($this->start_nav_on_level_of_current)
+        if ($this->start_nav_from_parent_depth > 0)
+        {
+            $this->starting_parent_depth = $this->start_nav_from_parent_depth;
+        }
+        elseif ($this->start_nav_on_level_of_current)
         {
             $calculated_depth = $this->current_depth - 1;
 
             if ($calculated_depth > 0)
             {
-                $this->start_nav_from_parent_depth = $calculated_depth;
+                $this->starting_parent_depth = $calculated_depth;
             }
         }
         elseif ($this->start_x_levels_above_current > 0)
@@ -109,12 +119,12 @@ class Navigations_library
 
             if ($calculated_depth > 0)
             {
-                $this->start_nav_from_parent_depth = $calculated_depth;
+                $this->starting_parent_depth = $calculated_depth;
             }
         }
 
         // Get a nav subset
-        if (($this->start_nav_from_parent) || ($this->start_x_levels_above_current > 0))
+        if (($this->start_nav_from_parent_depth > 0) || ($this->start_x_levels_above_current > 0))
         {
             $this->tree = $this->_current_parent_subset($this->tree);
         } 
@@ -143,7 +153,7 @@ class Navigations_library
     {
         $recursive = TRUE;
 
-        if ( ! empty($this->subnav_visibility) && ($this->subnav_visibility != 'show' || $this->subnav_visibility != 'current_trail'))
+        if ( ! empty($this->subnav_visibility) && $this->subnav_visibility != 'show' && $this->subnav_visibility != 'current_trail')
         {
             $recursive = FALSE;
         }
@@ -417,7 +427,7 @@ class Navigations_library
             {
                 if ($Item->current || $Item->current_trail)
                 {
-                    if ($depth == $this->start_nav_from_parent_depth)
+                    if ($depth == $this->starting_parent_depth)
                     {
                         $subset = $nav;
                     }
@@ -630,6 +640,10 @@ class Navigations_library
                 $nav = '<ul>';
             }
         }
+        else
+        {
+            $nav = '';
+        }
 
         $content = $this->_content;
 
@@ -806,6 +820,8 @@ class Navigations_library
             }
             else
             {
+                _pr($crumbs);
+                exit;
                 return $crumbs;
             }
         }
@@ -881,6 +897,7 @@ class Navigations_library
             $Item->class = trim($Item->class . ' current last');
             $Item->id = trim($Item->tag_id);
             $Item->url = current_url();
+            $Item->path = current_url();
             $crumbs[] = object_to_array($Item);
         }
         else
@@ -893,7 +910,8 @@ class Navigations_library
             // List Item Attributes
             $Item->class = trim($Item->class);
             $Item->id = trim($Item->tag_id);
-            $Item->url = (($Item->type == 'url') ? $this->CI->parser->parse_string($Item->url, array(), TRUE) : $Item->url);
+            $Item->url = ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url;
+            $Item->path = ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url;
 
             $crumbs[] = object_to_array($Item);
         } 

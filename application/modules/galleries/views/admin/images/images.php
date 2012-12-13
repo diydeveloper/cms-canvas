@@ -88,7 +88,7 @@
             };
             var left = (screen.width/2)-(800/2);
             var top = (screen.height/2)-(600/2);
-            window.open('/assets/js/kcfinder/browse.php?type=images',
+            window.open('/application/themes/admin/assets/js/kcfinder/browse.php?type=images',
                 'kcfinder_image', 'status=0, toolbar=0, location=0, menubar=0, ' +
                 'directories=0, resizable=1, scrollbars=0, width=800, height=600, top=' + top + ', left=' + left
             );
