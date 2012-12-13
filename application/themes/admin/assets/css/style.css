@@ -82,7 +82,7 @@ label {
 
 #ajax_status {
     background: url('../images/dark-transparent.png');
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     margin-top: -32.5px;
