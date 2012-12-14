@@ -4,10 +4,10 @@ class Ckeditor_field extends Field_type
 {
     function view($data)
     {
-        $this->template->add_package(array('ckeditor', 'ck_jq_adapter'));
+        $this->template->add_package(array('ckeditor'));
 
         $config = "$(document).ready( function() {
-            var config = { 
+            var ckeditor_config = { 
                 toolbar : [
                                 { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
                                 { name: 'colors', items : [ 'TextColor','BGColor' ] },
@@ -22,7 +22,7 @@ class Ckeditor_field extends Field_type
                                 { name: 'document', items : [ 'Source' ] }
                             ],
                 entities : true,
-                extraPlugins : 'stylesheetparser,mediaembed'," .
+                extraPlugins : 'stylesheetparser'," .
                 (($this->settings->editor_stylesheet) ? "contentsCss : [ CKEDITOR.basePath + 'contents.css', '" . site_url(ADMIN_PATH . '/content/entries/css/' . $data['Entry']->id) . "?' + new Date().getTime()  ]," : "")
                  . "stylesSet : [],
                 height : '300px',
@@ -34,12 +34,8 @@ class Ckeditor_field extends Field_type
                 filebrowserFlashUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=flash') . "'
             };
 
-            $('textarea.ckeditor_textarea').ckeditor(config);
-
-            $('#entry_edit').submit( function() {
-                $('div.textarea_content').each( function(index) {
-                    $('textarea', this).val($('.editor', this).val());
-                });
+            $('textarea.ckeditor_textarea').each(function(index) {
+                CKEDITOR.replace($(this).attr('name'), ckeditor_config); 
             });
 
         });";
