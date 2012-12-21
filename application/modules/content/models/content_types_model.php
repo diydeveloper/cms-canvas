@@ -2,6 +2,9 @@
 
 class Content_types_model extends DataMapper
 {	
+    // Used to cache the current user's permissions to content types for inline editing
+    public $has_permission_cache = array();
+
     public $table = "content_types";
     public $has_many = array(
         'entries' => array(

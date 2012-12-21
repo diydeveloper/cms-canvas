@@ -29,6 +29,9 @@ class Template
     public $meta_keywords;
     public $theme_path = 'themes';
 
+    private $_js_order = array();  // Tracks the order in which javascripts and inline scripts were added
+    private $_css_order = array();  // Tracks the order in which stylesheets and inline css were added
+
     function __construct()
     {
         $this->CI =& get_instance();
@@ -249,6 +252,13 @@ class Template
             if ( ! in_array($stylesheet, $this->stylesheets))
             {
                 $this->stylesheets[] = $stylesheet;
+                $index = end(array_keys($this->stylesheets));
+
+                // Keep track of the order in which stylesheets and css are added
+                $this->_css_order[] = array(
+                        'array' => 'stylesheets',
+                        'index' => $index,
+                    );
             }
         }
 
@@ -275,6 +285,13 @@ class Template
         foreach ($css as $style)
         {
             $this->css[] = $style;
+            $index = end(array_keys($this->css));
+
+            // Keep track of the order in which stylesheets and css are added
+            $this->_css_order[] = array(
+                    'array' => 'css',
+                    'index' => $index,
+                );
         }
 
         return $this;
@@ -305,6 +322,13 @@ class Template
             if ( ! in_array($javascript, $this->javascripts))
             {
                 $this->javascripts[] = $javascript;
+                $index = end(array_keys($this->javascripts));
+
+                // Keep track of the order in which javascripts and scripts are added
+                $this->_js_order[] = array(
+                        'array' => 'javascripts',
+                        'index' => $index,
+                    );
             }
         }
 
@@ -331,6 +355,13 @@ class Template
         foreach ($scripts as $javascript)
         {
             $this->scripts[] = $javascript;
+            $index = end(array_keys($this->scripts));
+
+            // Keep track of the order in which javascripts and scripts are added
+            $this->_js_order[] = array(
+                    'array' => 'scripts',
+                    'index' => $index,
+                );
         }
 
         return $this;
@@ -444,21 +475,25 @@ class Template
     {
         $js_includes = "\n\t<script>var BASE_HREF=\"" . base_url() . "\"</script>";
 
-        foreach ($this->javascripts as $javascript)
+        foreach ($this->_js_order as $js_order) 
         {
-            $js_includes .=  "\n\t<script type=\"text/javascript\" src=\"" . $javascript . "\"></script>";
-        }
-
-        foreach ($this->scripts as $script)
-        {
-            // Check if script add the script tags included
-            if (stripos(trim($script), '<script') === 0)
+            if ($js_order['array'] == 'javascripts')
             {
-                $js_includes .=  "\n" . $script;
+                $js_includes .=  "\n\t<script type=\"text/javascript\" src=\"" . $this->javascripts[$js_order['index']] . "\"></script>";
             }
-            else
+            else if ($js_order['array'] == 'scripts')
             {
-                $js_includes .=  "\n\t<script type=\"text/javascript\">" . $script . "</script>";
+                $script = $this->scripts[$js_order['index']];
+
+                // Check if script has the script tags included
+                if (stripos(trim($script), '<script') === 0)
+                {
+                    $js_includes .=  "\n" . $script;
+                }
+                else
+                {
+                    $js_includes .=  "\n\t<script type=\"text/javascript\">" . $script . "</script>";
+                }
             }
         }
 
@@ -481,14 +516,26 @@ class Template
     {
         $css_includes = '';
 
-        foreach ($this->stylesheets as $stylesheet)
+        foreach ($this->_css_order as $css_order) 
         {
-            $css_includes .=  "\n\t<link href=\"" . $stylesheet . "\" rel=\"stylesheet\" type=\"text/css\" />";
-        }
+            if ($css_order['array'] == 'stylesheets')
+            {
+                $css_includes .=  "\n\t<link href=\"" . $this->stylesheets[$css_order['index']] . "\" rel=\"stylesheet\" type=\"text/css\" />";
+            }
+            else if ($css_order['array'] == 'css')
+            {
+                $style = $this->css[$css_order['index']];
 
-        foreach ($this->css as $style)
-        {
-            $css_includes .=  "\n\t<style type=\"text/css\">" . $style . "</style>";
+                // Check if css has the script tags included
+                if (stripos(trim($style), '<stle') === 0)
+                {
+                    $css_includes .=  "\n" . $style;
+                }
+                else
+                {
+                    $css_includes .=  "\n\t<style type=\"text/css\">" . $style . "</style>";
+                }
+            }
         }
 
         $this->headers_sent = TRUE;

@@ -94,6 +94,11 @@ body {
 	position: absolute;
 }
 
+#admin-toolbar > ul.admin-toolbar-right li ul {
+    right: 0;
+    text-align: right;
+}
+
 #admin-toolbar > ul li li {
 	clear: both;
 }
@@ -113,3 +118,35 @@ body {
 	background: #333;
 	color: #000000;
 }
+
+#admin-toolbar #admin-settings-icon {
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: url('/application/modules/content/assets/images/toolbar/settings.png') no-repeat center center;
+}
+
+#admin-save-status {
+   font-style: italic; 
+   color: #CCCCCC !important; 
+   display: block;
+}
+
+.cc_admin_editable {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: block;
+    width: auto;
+    height: auto;
+    position: static;
+}
+
+.cc_admin_editable:hover {
+    outline: 1px dashed #D8B166;
+}
+
+.cc_admin_editable.cke_focus, .cc_admin_editable:focus {
+    outline: 1px solid #D8B166;
+}
+

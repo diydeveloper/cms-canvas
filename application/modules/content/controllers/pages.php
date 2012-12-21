@@ -89,7 +89,7 @@ class Pages extends Public_Controller
             $data['_content'] = $Page->build_content();
 
             // Set Metadata
-            $this->template->set_meta_title($Page->title . ' | ' . $this->settings->site_name)
+            $this->template->set_meta_title(strip_tags($Page->title) . ' | ' . $this->settings->site_name)
                            ->set_meta_title($Page->meta_title)
                            ->set_meta_description($Page->meta_description)
                            ->set_meta_keywords($Page->meta_keywords);

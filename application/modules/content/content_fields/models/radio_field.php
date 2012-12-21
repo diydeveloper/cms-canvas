@@ -2,13 +2,17 @@
 
 class Radio_field extends Field_type
 {
-    function settings($data)
+    function settings()
     {
+        $data = get_object_vars($this);
+        
         return $this->load->view('settings/radio', $data, TRUE);
     }
 
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+        
         return $this->load->view('radio', $data, TRUE);
     }
 }

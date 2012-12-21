@@ -183,7 +183,7 @@ class Entries extends Admin_Controller {
         $Content_fields = $this->load->library('content_fields');
         $Content_fields->initialize($config);
 
-        // Check if versioning is enabled an wheater a revision is loaded
+        // Check if versioning is enabled and whether a revision is loaded
         if ($Content_type->enable_versioning && is_numeric($revision_id))
         {
             $Revision = new Entry_revisions_model(); 
@@ -309,6 +309,7 @@ class Entries extends Admin_Controller {
             $Entry->save();
 
             // Save field data to entries_data
+            $Content_fields->from_array($this->input->post());
             $Content_fields->save();
 
             // Add Revision if versioing enabled
@@ -601,6 +602,121 @@ class Entries extends Admin_Controller {
         {
             echo image_thumb($this->input->post('image_path'), 150, 150, FALSE, array('no_image_image' => ADMIN_NO_IMAGE));
         }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Save Inline Content
+     *
+     * Called by AJAX to save inline content elements
+     * 
+     * @return void
+     */
+    function save_inline_content()
+    {
+        if ( ! is_ajax())
+        {
+            return show_404();
+        }
+
+        $this->load->model('entries_model');
+        $this->load->model('entry_revisions_model');
+        $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
+        $data = array();
+
+        foreach ($this->input->post() as $key => $content)
+        {
+            // Preg match the entry id and the field id from the html element's id attribute
+            if (preg_match("/cc_field_(\d+)_(\d+|title)/", $key, $matches))
+            {
+               $entry_id = $matches[1];
+               $field_id = $matches[2];
+
+               // Build a new data array sorted by entry
+               $data[$entry_id]['field_id_' . $field_id] = $content;
+            }
+        }
+
+        foreach ($data as $entry_id => $fields)
+        {
+            $Entry = new Entries_model();
+
+            // If user not a super admin check if user's group is allowed access
+            if ($this->Group_session->type != SUPER_ADMIN)
+            {
+                $Entry->group_start()
+                    ->where('restrict_admin_access', 0)
+                    ->or_where_related('content_types/admin_groups', 'group_id', $this->Group_session->id)
+                    ->group_end();
+            }
+
+            $Entry->get_by_id($entry_id);
+
+            // Either entry doesn't exist or user doesn't have permission to it so skip it
+            if ( ! $Entry->exists())
+            {
+                continue;
+            }
+
+            $Content_type = $Entry->content_types->get();
+
+            // Load content fields library
+            $config['Entry'] = $Entry;
+            $config['content_type_id'] = $Entry->content_type_id;
+
+            $Content_fields = $this->load->library('content_fields');
+            $Content_fields->initialize($config);
+
+            // Get content fields html
+            $field_validation = $Content_fields->run();
+
+            // Validation and process form
+            if ($this->form_validation->run() == TRUE && $field_validation)
+            {
+                if (isset($fields['field_id_title']))
+                {
+                    $Entry->title = $fields['field_id_title'];
+                }
+
+                $Entry->modified_date = date('Y-m-d H:i:s');
+                $Entry->save();
+
+                $Content_fields->from_array($fields);
+                $Content_fields->save();
+            }
+
+            // Add Revision if versioing enabled
+            if ($Content_type->enable_versioning)
+            {
+                // Delete old revsions so that not to exceed max revisions setting
+                $Revision = new Entry_revisions_model();
+                $Revision->where('entry_id', $entry_id)
+                    ->order_by('id', 'desc')
+                    ->limit(25, $Content_type->max_revisions - 1)
+                    ->get()
+                    ->delete_all();
+                    
+                // Serialize and save post data to entry revisions table
+                $User = $this->secure->get_user_session();
+                $Revision = new Entry_revisions_model();
+                $Revision->entry_id = $Entry->id;
+                $Revision->content_type_id = $Entry->content_type_id;
+                $Revision->author_id = $User->id;
+                $Revision->author_name = $User->first_name . ' ' . $User->last_name;
+                $Revision->revision_date = date('Y-m-d H:i:s');
+                $Revision->revision_data = serialize($this->input->post());
+                $Revision->save();
+            }
+        }
+
+        // Clear cache so updates will show on next page load
+        $this->load->library('cache');
+        $this->cache->delete_all('entries');
+
+        // Clear navigation cache so updates will show on next page load
+        $this->load->library('navigations/navigations_library');
+        $this->navigations_library->clear_cache();
     }
 }
 

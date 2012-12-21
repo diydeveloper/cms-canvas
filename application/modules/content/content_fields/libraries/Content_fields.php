@@ -3,7 +3,9 @@
 class Content_fields
 {
     public $fields = array();
+    public $field_types;
     public $Entry;
+    public $Entry_data;
     public $CI;
 
     private $old_fields = array();
@@ -45,6 +47,9 @@ class Content_fields
             $this->_get_entry_data();
         }
 
+        // Factories out field types with consistent data structure
+        $this->_factor_field_types();
+
     }
 
     // ------------------------------------------------------------------------
@@ -62,14 +67,10 @@ class Content_fields
 
         foreach($this->fields as $Field)
         {
-            // Load Field model and set field data
-            $Field_model = $this->CI->load->model($Field->content_field_types_model_name . '_field');
-            $data['Field'] = $Field;
-
             $this->CI->form_validation->set_rules('field_id_' . $Field->id . (($Field->content_field_types_array_post) ? '[]' : ''), $Field->label, 'trim' . (($Field->required) ? '|required' : ''));
 
             // Validate field command
-            if ($Field_model->validate($data) === FALSE)
+            if ($this->field_types['field_id_' . $Field->id]->validate() === FALSE)
             {
                 $return = FALSE;
             }
@@ -89,8 +90,6 @@ class Content_fields
      */
     function settings($Field = null)
     {
-        $data = array();
-
         // Set type
         if ($this->CI->input->post('content_field_type_id'))
         {
@@ -108,8 +107,6 @@ class Content_fields
             $type = 'ckeditor';
         }
 
-        $Field_model = $this->CI->load->model($type . '_field');
-
         // Get current field settings if an ajax request in edit mode
         if (is_ajax())
         {
@@ -118,20 +115,14 @@ class Content_fields
             // Edit mode
             if ($field_id)
             {
-                $data['edit_mode'] = TRUE;
                 $this->CI->load->model('content_fields_model');
                 $Field = $this->CI->content_fields_model->get_by_id($field_id);
             }
         }
 
-        // Pass field settings to model if exists
-        if ($Field != '' && $Field->exists())
-        {
-            $Field->settings = @unserialize($Field->settings);
-            $data['Field'] = $Field;
-        }
+        $Field_type = Field_type::factory($Field, null, null, $type . '_field');
 
-        return $Field_model->settings($data); 
+        return $Field_type->settings(); 
     }
 
     // ------------------------------------------------------------------------
@@ -149,31 +140,12 @@ class Content_fields
 
         foreach($this->fields as $Field)
         {
-            // Load Field model and set field data
-            $Field_model = $this->CI->load->model($Field->content_field_types_model_name . '_field');
-            $data['Entry'] = $this->Entry;
-            $data['Entry_data'] = $this->Entry_data;
-
-            $Field->settings = @unserialize($Field->settings);
-
-            // Build options array
-            $option_array = array();
-            foreach (explode("\n", $Field->options) as $option)
-            {
-                $option = explode("=", $option, 2);
-                $option_array[$option[0]] = (count($option) == 2) ? $option[1] : $option[0];
-            }
-
-            $Field->options = $option_array;
-
-            $data['Field'] = $Field;
-
             $form_views .= '<div>';
             $form_views .= '<label for="field_id_' . $Field->id . '"><div class="arrow arrow_expand"></div>' . (($Field->required) ? '<span class="required">*</span> ' : '') .  $Field->label .'</label>';
 
             $form_views .= '<div>';
 
-            $form_views .= $Field_model->view($data); 
+            $form_views .= $this->field_types['field_id_' . $Field->id]->display_field(); 
 
             $form_views .= '</div>';
 
@@ -188,7 +160,7 @@ class Content_fields
     /*
      * Save
      *
-     * Saves field post data to database and remvoes unused fields from databse
+     * Saves field post data to database and removes unused fields from databse
      *
      * @return string
      */
@@ -198,24 +170,46 @@ class Content_fields
 
         $this->Entry_data->entry_id = $this->Entry->id;
 
-        // Set empty post values to null
-        foreach($this->fields as $Field)
+        // Set empty content values to null
+        foreach($this->field_types as $field_id_str => $Field_type)
         {
-            // Load Field model and set field data
-            $Field_model = $this->CI->load->model($Field->content_field_types_model_name . '_field');
-            $data['Field'] = $Field;
-
-            $value = $Field_model->save($data);
+            $value = $Field_type->save();
 
             if ($value == '')
             {
                 $value = NULL;
             }
 
-            $this->Entry_data->{'field_id_' . $Field->id} =  $value;
+            $this->Entry_data->{$field_id_str} = $value;
         }
 
         $this->Entry_data->save();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * From Array
+     *
+     * Populates entry data from a given array
+     *
+     * @param array
+     * @return void
+     */
+    function from_array($array)
+    {
+        if ( ! is_array($array))
+        {
+            $array = (array) $array;
+        }
+
+        foreach ($array as $key => $value)
+        {
+            if (isset($this->field_types[$key]))
+            {
+                $this->field_types[$key]->set_content($value);
+            }
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -243,7 +237,7 @@ class Content_fields
             // be used for validating and processing instead of the fields array
             $this->old_fields = new Content_fields_model();
             $this->old_fields->order_by('sort', 'ASC')
-                ->include_related('content_field_types', 'model_name')
+                ->include_related('content_field_types', array('model_name', 'array_post'))
                 ->get_by_content_type_id($old_content_type_id);
 
             // Get entry data
@@ -298,5 +292,23 @@ class Content_fields
             ->entries_data
             ->select(trim($select, ', '))
             ->get();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Factor Field Types
+     *
+     * Builds data populated factory field type objects for each field
+     *
+     * @access private
+     * @return void
+     */
+    private function _factor_field_types()
+    {
+        foreach ($this->fields as $Field)
+        {
+            $this->field_types['field_id_' . $Field->id] = Field_type::factory($Field, $this->Entry, $this->Entry_data);
+        }
     }
 }

@@ -2,8 +2,10 @@
 
 class Page_url_field extends Field_type
 {
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+        
         // Get all entries for link dropdown
         $this->load->model('content/entries_model');
 

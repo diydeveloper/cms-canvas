@@ -3,7 +3,7 @@
         echo form_textarea(array(
             'id' => 'field_id_' . $Field->id, 
             'name'=>'field_id_' . $Field->id, 
-            'value'=>set_value('field_id_' . $Field->id, $Entry_data->{'field_id_' . $Field->id})
+            'value'=>set_value('field_id_' . $Field->id, $content)
         )); 
     ?>
 </div>

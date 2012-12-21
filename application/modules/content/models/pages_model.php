@@ -13,9 +13,25 @@ class Pages_model extends CI_Model
      */
     function admin_toolbar($content_type_id, $entry_id = null)
     {
+        // Update the inline editing setting if user submitted setting
+        if ($this->input->post('admin_toggle_inline_editing'))
+        {
+            $this->load->model('settings/settings_model'); 
+            $Settings_model = new Settings_model();
+            $Settings_model->where('slug', 'enable_inline_editing')->where('module IS NULL')->update('value', (($this->settings->enable_inline_editing) ? '0' : '1'));
+
+            // Clear the settings cache
+            $this->load->library('cache');
+            $this->cache->delete_all('settings');
+
+            // Redirect to the current url so that it clears the post
+            redirect(current_url());
+        }
+
         // Show admin_toolbar on page
         if ($this->settings->enable_admin_toolbar && $this->secure->group_types(array(ADMINISTRATOR))->is_auth())
         {
+            $this->template->add_script("var ADMIN_PATH = '" . site_url(ADMIN_PATH) . "';");
             $admin_toolbar = $this->load->view('admin/admin_toolbar', array('entry_id' => $entry_id, 'content_type_id' => $content_type_id), TRUE);
             $this->template->add_stylesheet('/application/modules/content/assets/css/admin_toolbar.css');
             $this->template->add_package(array('jquery', 'superfish'));
@@ -36,8 +52,30 @@ class Pages_model extends CI_Model
                     onShow       : function(){},
                     onHide       : function(){}
                 });
+
+                jq_admin_toolbar('#admin-toggle-inline-editing').click(function() {
+                    jq_admin_toolbar('<form method=\"post\"><input type=\"hidden\" name=\"admin_toggle_inline_editing\" value=\"1\" /></form>').appendTo('body').submit();
+                });
             });");
+
+            $this->_content_editable();
         }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Content Editable
+     *
+     * Validates that the user's groups has permissions
+     * to view this content type
+     *
+     * @return void
+     */
+    private function _content_editable()
+    {
+        $this->template->add_package('ckeditor');
+        $this->template->add_javascript('/application/modules/content/assets/js/content_editable.js');
     }
 
     // ------------------------------------------------------------------------

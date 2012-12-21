@@ -181,7 +181,16 @@ class Entries_library
             $count++;
 
             $content['entry_id'] = $Entry->id;
-            $content['title'] = $Entry->title;
+
+            if (is_inline_editable($Entry->content_type_id))
+            {
+                $content['title'] = '<div id="cc_field_' . $Entry->id . '_title" class="cc_admin_editable cc_text_editable" contenteditable="true">' . $Entry->title . '</div>';
+            }
+            else
+            {
+                $content['title'] = $Entry->title;
+            }
+
             $content['created_date'] = $Entry->created_date;
             $content['modified_date'] = $Entry->modified_date;
             $content['url_title'] = $Entry->url_title;
@@ -200,12 +209,7 @@ class Entries_library
                 // Only define tags that belong to this content type
                 if ($Field->content_type_id == $Entry->content_type_id)
                 {
-                    $Field_model =& $this->CI->load->model($Field->model_name . '_field');
-
-                    $data['Field'] = $Field;
-                    $data['Entry'] = $Entry;
-
-                    $content[$Field->short_tag] = $Field_model->output($data);
+                    $content[$Field->short_tag] = Field_type::factory($Field, $Entry)->output();
                 }
             }
 

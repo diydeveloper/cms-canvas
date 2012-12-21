@@ -2,39 +2,47 @@
 
 class Checkbox_field extends Field_type
 {
-    function settings($data)
+    function settings()
     {
+        $data = get_object_vars($this);
+
         return $this->load->view('settings/checkbox', $data, TRUE);
     }
 
-    function save($data)
+    function save()
     {
         // Convert data array to pipe delimited string
-        if (isset($_POST['field_id_' . $data['Field']->id]) && is_array($_POST['field_id_' . $data['Field']->id]))
+        if ($this->content != '')
         {
-            return implode('|', $_POST['field_id_' . $data['Field']->id]);
+            if (is_array($this->content))
+            {
+                return implode('|', $this->content);
+            }
+            else
+            {
+                return $this->content;
+            }
         }
 
         return NULL;
     }
 
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+
         return $this->load->view('checkbox', $data, TRUE);
     }
 
-    function output($data)
+    function output()
     {
-        $Field = $data['Field'];
-        $Entry = $data['Entry'];
-
         $value_array = array();
 
-        if (isset($Entry->{'field_id_' . $Field->id}))
+        if ($this->content != '')
         {
-            $this->parser->set_callback($Field->short_tag, array($this, 'checkbox_callback'));
+            $this->parser->set_callback($this->Field->short_tag, array($this, 'checkbox_callback'));
 
-            foreach(explode('|', $Entry->{'field_id_' . $Field->id}) as $value)
+            foreach(explode('|', $this->content) as $value)
             {
                 $value_array[] = array('item' => $value);
             }

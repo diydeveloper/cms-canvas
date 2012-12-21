@@ -2,8 +2,10 @@
 
 class Image_field extends Field_type
 {
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+        
         $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image.js');
         return $this->load->view('image', $data, TRUE);
     }

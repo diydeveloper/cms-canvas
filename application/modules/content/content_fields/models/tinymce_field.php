@@ -2,8 +2,10 @@
 
 class Tinymce_field extends Field_type
 {
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+        
         $this->template->add_package(array('tinymce'));
 
         $config = "$(document).ready( function() {
@@ -37,7 +39,7 @@ class Tinymce_field extends Field_type
                 // Drop lists for link/image/media/template dialogs
                 external_link_list_url : \"" . site_url(ADMIN_PATH . "/content/entries/links") . "\",
                 " . 
-                (($this->settings->editor_stylesheet) ? "content_css : \"" . site_url(ADMIN_PATH . '/content/entries/css/' . $data['Entry']->id) . "?\" + new Date().getTime()" : "")
+                (($this->settings->editor_stylesheet) ? "content_css : \"" . site_url(ADMIN_PATH . '/content/entries/css/' . $this->Entry->id) . "?\" + new Date().getTime()" : "")
             . "}); 
 
         });

@@ -67,7 +67,7 @@
                     <?php foreach($Entries as $Entry): ?>
                     <tr>
                         <td class="center"><input type="checkbox" value="<?php echo $Entry->id ?>" name="selected[]" /></td>
-                        <td><?php echo $Entry->title; ?></td>
+                        <td><?php echo strip_tags($Entry->title); ?></td>
                         <td><?php echo ($Entry->slug) ? '/'. $Entry->slug : ''; ?></td>
                         <td class="right"><?php echo $Entry->id; ?></td>
                         <td><?php echo $Entry->content_types_title; ?></td>

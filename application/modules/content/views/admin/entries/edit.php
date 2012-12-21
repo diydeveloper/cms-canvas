@@ -2,7 +2,7 @@
 
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="<?php echo theme_url('assets/images/review.png'); ?>"> Entry Edit <?php echo ($edit_mode) ? '- ' . $Entry->title . ' (#' . $Entry->id . ')' : ''; ?></h1>
+        <h1><img alt="" src="<?php echo theme_url('assets/images/review.png'); ?>"> Entry Edit <?php echo ($edit_mode) ? '- ' . strip_tags($Entry->title) . ' (#' . $Entry->id . ')' : ''; ?></h1>
 
         <div class="buttons">
             <a class="button" href="#" id="save"><span>Save</span></a>

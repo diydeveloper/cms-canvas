@@ -2,20 +2,10 @@
 
 class Datetime_field extends Field_type
 {
-    function validate($data)
+    function display_field()
     {
-        // Convert field to MYSQL date format
-        if (isset($_POST['field_id_' . $data['Field']->id]) 
-            && $_POST['field_id_' . $data['Field']->id] != '')
-        {
-            $_POST['field_id_' . $data['Field']->id] = date('Y-m-d H:i:s', strtotime($_POST['field_id_' . $data['Field']->id]));
-        }
-
-        return TRUE;
-    }
-
-    function view($data)
-    {
+        $data = get_object_vars($this);
+        
        /* May need in the future
         * Currently javascript is always loaded for date_created
 
@@ -28,5 +18,18 @@ class Datetime_field extends Field_type
          */
 
         return $this->load->view('datetime', $data, TRUE);
+    }
+
+
+    function save()
+    {
+        if ($this->content != '')
+        {
+            return date('Y-m-d H:i:s', strtotime($this->content));
+        }
+        else
+        {
+            return null;
+        }
     }
 }

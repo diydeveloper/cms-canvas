@@ -2,20 +2,10 @@
 
 class Date_field extends Field_type
 {
-    function validate($data)
+    function display_field()
     {
-        // Convert field to MYSQL date format
-        if (isset($_POST['field_id_' . $data['Field']->id]) 
-            && $_POST['field_id_' . $data['Field']->id] != '')
-        {
-            $_POST['field_id_' . $data['Field']->id] = date('Y-m-d', strtotime($_POST['field_id_' . $data['Field']->id]));
-        }
+        $data = get_object_vars($this);
 
-        return TRUE;
-    }
-
-    function view($data)
-    {
         $datepicker = '$(document).ready(function() {$(\'.datepicker\').datepicker();});';
 
         if ( ! in_array($datepicker, $this->template->scripts))
@@ -24,5 +14,17 @@ class Date_field extends Field_type
         }
 
         return $this->load->view('date', $data, TRUE);
+    }
+
+    function save()
+    {
+        if ($this->content != '')
+        {
+            return date('Y-m-d', strtotime($this->content));
+        }
+        else
+        {
+            return null;
+        }
     }
 }

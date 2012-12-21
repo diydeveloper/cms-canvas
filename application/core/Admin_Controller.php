@@ -6,8 +6,6 @@ class Admin_Controller extends MY_Controller
 	{
 		parent::__construct();
 
-        $this->load->helper('admin_helper');
-
         $this->template->set_theme('admin', 'default', 'application/themes');
         $this->template->parse_views = FALSE;
 

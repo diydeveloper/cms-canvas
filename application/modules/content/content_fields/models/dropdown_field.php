@@ -2,13 +2,17 @@
 
 class Dropdown_field extends Field_type
 {
-    function settings($data)
+    function settings()
     {
+        $data = get_object_vars($this);
+        
         return $this->load->view('settings/dropdown', $data, TRUE);
     }
 
-    function view($data)
+    function display_field()
     {
+        $data = get_object_vars($this);
+        
         return $this->load->view('dropdown', $data, TRUE);
     }
 }

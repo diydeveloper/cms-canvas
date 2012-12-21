@@ -6,6 +6,12 @@ class MY_Controller extends CI_Controller
 	{
 		parent::__construct();
 
+        // Load in the admin helper functions if the current user is an administrator
+        if ($this->secure->group_types(array(ADMINISTRATOR))->is_auth())
+        {
+            $this->load->helper('admin_helper');
+        }
+
         $this->cms_parameters = array();
         $this->cms_base_route = '';
 
@@ -38,6 +44,5 @@ class MY_Controller extends CI_Controller
             $this->group_id = $this->session->userdata('user_session')->group_id;
             $this->Group_session = $this->session->userdata('group_session');
         }
-
 	}
 }

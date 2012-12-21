@@ -460,3 +460,58 @@ if ( ! function_exists('str_to_bool'))
         }
     }
 }
+
+// ------------------------------------------------------------------------
+
+/*
+ * Is Inline Editable
+ *
+ * Returns true if inline editing is enabled, admin toolbar is enabled, and user is an administrator
+ *
+ * @return bool
+ */
+if ( ! function_exists('is_inline_editable'))
+{
+    function is_inline_editable($content_type_id = null)
+    {
+        $CI =& get_instance();
+        $CI->load->model('content_types_model');
+
+        if ($CI->settings->enable_inline_editing && $CI->settings->enable_admin_toolbar && $CI->secure->group_types(array(ADMINISTRATOR))->is_auth())
+        {
+            if (empty($content_type_id))
+            {
+                return TRUE;
+            }
+
+            if ($CI->Group_session->type != SUPER_ADMIN)
+            {
+                // Check if we have already cached permissions for this content type
+                if ( ! isset($CI->content_types_model->has_permission_cache[$content_type_id]))
+                {
+                    $Content_types_model = new Content_types_model();
+
+                    // No permission for this content type has been cached yet.
+                    // Query to see if current user has permission to this content type
+                    $Content_type = $Content_types_model->group_start()
+                        ->where('restrict_admin_access', 0)
+                        ->or_where_related('admin_groups', 'group_id', $CI->Group_session->id)
+                        ->group_end()
+                        ->get_by_id($content_type_id);
+
+                    $CI->content_types_model->has_permission_cache[$content_type_id] = ($Content_type->exists()) ? TRUE : FALSE;
+                }
+
+                return $CI->content_types_model->has_permission_cache[$content_type_id];
+            }
+            else
+            {
+                return TRUE;
+            }
+        }
+        else
+        {
+            return FALSE;
+        }
+    }   
+}  
