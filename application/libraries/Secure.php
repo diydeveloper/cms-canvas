@@ -17,16 +17,22 @@ class Secure
     private $unpermitted_redirect = null;
     private $unauthenticated_redirect;
 
-    function __construct()
+    public function __construct()
     {
         $this->CI =& get_instance(); 
         $this->unauthenticated_redirect();
     }
 
-    /**
-    * checks to see if the user is permitted and if not redirects them to the location set in unauthenticated_redirect
+    // --------------------------------------------------------------------
+
+    /*
+     * Require Auth
+     *
+     * Checks to see if the user is permitted and if not redirects them to the location set in unauthenticated_redirect
+     * 
+     * @return bool or redirect
      */
-    function require_auth()
+    public function require_auth()
     {
         // Prevent IE users from caching secured pages
         if( ! isset($_SESSION)) 
@@ -55,9 +61,16 @@ class Secure
         redirect($this->unauthenticated_redirect);
     }
 
+    // --------------------------------------------------------------------
 
-    // Checks that the user is authenticated had has permission
-    function is_auth()
+    /*
+     * Is Auth
+     *
+     * Checks that the user is authenticated had has permission
+     *
+     * @return bool
+     */
+    public function is_auth()
     {
         if ($this->get_user_session())
         {
@@ -105,13 +118,46 @@ class Secure
             }
         }
 
-        return false;
+        // User is not authenticated. Do one last check to see if user has a remember me cookie set
+        if ($this->check_remember_me())
+        {
+            // A cookie was found and a new session was created.
+            // Rerun is_auth to now check if the user has permission
+            return $this->is_auth();
+        }
+        else
+        {
+            return false;
+        }
     }
 
+    // --------------------------------------------------------------------
+
     /*
-     * Specifies the groups that will have access
+     * Check Remember Me
+     *
+     * Checks if user has a remember me cookie set 
+     * and logs user in if validation is true
+     *
+     * @return bool
      */
-    function groups($groups)
+    function check_remember_me()
+    {
+        $Users_model = $this->CI->load->model('users/users_model');
+        return $Users_model->check_remember_me();
+    }
+
+    // --------------------------------------------------------------------
+
+    /*
+     * Groups
+     *
+     * Specifies the groups that will have access
+     *
+     * @param array
+     * @return object
+     */
+    public function groups($groups)
     {
         if ( ! is_array($groups))
         {
@@ -123,10 +169,17 @@ class Secure
         return $this;
     }
 
+    // --------------------------------------------------------------------
+
     /*
+     * Group Types
+     *
      * Specifies the group_types that will have access
+     *
+     * @param array
+     * @return object
      */
-    function group_types($types)
+    public function group_types($types)
     {
         if ( ! is_array($types))
         {
@@ -138,6 +191,16 @@ class Secure
         return $this;
     }
 
+    // --------------------------------------------------------------------
+
+    /*
+     * Unauthenticated Redirect
+     *
+     * Sets where to redirect when an unauthenticated user attempts access an authenticated page
+     *
+     * @param string
+     * @return object
+     */
     function unauthenticated_redirect($unauthenticated_redirect = null)
     {
         if ( ! empty($unauthenticated_redirect)) 
@@ -152,6 +215,17 @@ class Secure
         return $this;
     }
 
+    // --------------------------------------------------------------------
+
+    /*
+     * Unpermitted Redirect
+     *
+     * Sets where to redirect when an authenticated user attempts to
+     * access a page where they do not have the correct permissions
+     *
+     * @param string
+     * @return object
+     */
     function unpermitted_redirect($unpermitted_redirect)
     {
         $this->unpermitted_redirect = $unpermitted_redirect;
@@ -159,6 +233,15 @@ class Secure
         return $this;
     }
 
+    // --------------------------------------------------------------------
+
+    /*
+     * Reset
+     *
+     * Resets the current object to the default settings
+     *
+     * @return void
+     */
     function reset()
     {
         $this->groups = array();
@@ -169,17 +252,29 @@ class Secure
         $this->unauthenticated_redirect();
     }
 
-    /**
-    * returns the current user's session object
-    **/
+    // --------------------------------------------------------------------
+
+    /*
+     * Get User Session
+     *
+     * Returns the current user's session object
+     *
+     * @return object
+     */
     function get_user_session()
     {
         return  $this->CI->session->userdata('user_session');
     }
 
-    /**
-    * returns the current user's group session object
-    **/
+    // --------------------------------------------------------------------
+
+    /*
+     * Get Group Session
+     *
+     * Returns the current user's group session object
+     *
+     * @return object
+     */
     function get_group_session()
     {
         return  $this->CI->session->userdata('group_session');
