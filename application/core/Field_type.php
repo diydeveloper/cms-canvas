@@ -2,6 +2,10 @@
 
 class Field_type extends CI_Model
 {
+    protected $Entry = null;
+    protected $Field = null;
+    protected $content = null;
+    
     /*
      * Factory
      *
@@ -14,25 +18,11 @@ class Field_type extends CI_Model
      * @param string
      * @return object
      */
-    public static function factory($Field = null, $Entry = null, $Entry_data = null, $model_name = null) 
+    public static function factory($model_name, $Field = null, $Entry = null, $Entry_data = null) 
     {
         $CI =& get_instance();
 
-        if ( ! empty($model_name))
-        {
-            $classname = $model_name;
-        }
-        else if ( ! empty($Field))
-        {
-            if ($Field instanceof Content_fields_model)
-            {
-                $classname = $Field->content_field_types_model_name . '_field';
-            }
-            else
-            {
-                $classname = $Field->model_name . '_field';
-            }
-        }
+        $classname = $model_name . '_field';
 
         include_once APPPATH . '/modules/content/content_fields/models/' . $classname . '.php';
         $Field_type = new $classname;
@@ -59,10 +49,6 @@ class Field_type extends CI_Model
 
         return $Field_type;
     }
-
-    protected $Entry = null;
-    protected $Field = null;
-    protected $content = null;
 
     public function view()
     {
@@ -137,16 +123,6 @@ class Field_type extends CI_Model
         }
 
         $Field->settings = @unserialize($Field->settings);
-
-        // Build options array
-        $option_array = array();
-        foreach (explode("\n", $Field->options) as $option)
-        {
-            $option = explode("=", $option, 2);
-            $option_array[$option[0]] = (count($option) == 2) ? $option[1] : $option[0];
-        }
-
-        $Field->options = $option_array;
 
         $this->Field = $Field;
     }

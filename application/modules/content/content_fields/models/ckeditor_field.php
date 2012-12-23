@@ -2,6 +2,13 @@
 
 class Ckeditor_field extends Field_type
 {
+    function settings()
+    {
+        $data = get_object_vars($this);
+        
+        return $this->load->view('settings/ckeditor', $data, TRUE);
+    }
+
     function display_field()
     {
         $data = get_object_vars($this);
@@ -38,6 +45,7 @@ class Ckeditor_field extends Field_type
             };
 
             $('textarea.ckeditor_textarea').each(function(index) {
+                ckeditor_config.height = $(this).height();
                 CKEDITOR.replace($(this).attr('name'), ckeditor_config); 
             });
 

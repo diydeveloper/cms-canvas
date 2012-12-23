@@ -14,14 +14,7 @@ class Checkbox_field extends Field_type
         // Convert data array to pipe delimited string
         if ($this->content != '')
         {
-            if (is_array($this->content))
-            {
-                return implode('|', $this->content);
-            }
-            else
-            {
-                return $this->content;
-            }
+            return implode('|', $this->content);
         }
 
         return NULL;
@@ -30,6 +23,16 @@ class Checkbox_field extends Field_type
     function display_field()
     {
         $data = get_object_vars($this);
+
+        // Build options array
+        $option_array = array();
+        foreach (explode("\n", $this->Field->options) as $option)
+        {
+            $option = explode("=", $option, 2);
+            $option_array[$option[0]] = (count($option) == 2) ? $option[1] : $option[0];
+        }
+
+        $data['Field']->options = $option_array;
 
         return $this->load->view('checkbox', $data, TRUE);
     }
@@ -42,7 +45,7 @@ class Checkbox_field extends Field_type
         {
             $this->parser->set_callback($this->Field->short_tag, array($this, 'checkbox_callback'));
 
-            foreach(explode('|', $this->content) as $value)
+            foreach($this->content as $value)
             {
                 $value_array[] = array('item' => $value);
             }
@@ -51,6 +54,18 @@ class Checkbox_field extends Field_type
         }
 
         return '';
+    }
+
+    function set_content($content)
+    {
+        if (is_array($content))
+        {
+            $this->content = $content;
+        }
+        else if ($content != '')
+        {
+            $this->content = explode('|', $content);
+        }
     }
 
     function checkbox_callback($trigger, $parameters, $content, $data)

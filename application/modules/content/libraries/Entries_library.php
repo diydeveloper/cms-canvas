@@ -209,7 +209,7 @@ class Entries_library
                 // Only define tags that belong to this content type
                 if ($Field->content_type_id == $Entry->content_type_id)
                 {
-                    $content[$Field->short_tag] = Field_type::factory($Field, $Entry)->output();
+                    $content[$Field->short_tag] = Field_type::factory($Field->model_name, $Field, $Entry)->output();
                 }
             }
 

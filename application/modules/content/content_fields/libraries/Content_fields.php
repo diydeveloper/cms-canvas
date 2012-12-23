@@ -120,7 +120,7 @@ class Content_fields
             }
         }
 
-        $Field_type = Field_type::factory($Field, null, null, $type . '_field');
+        $Field_type = Field_type::factory($type, $Field);
 
         return $Field_type->settings(); 
     }
@@ -308,7 +308,7 @@ class Content_fields
     {
         foreach ($this->fields as $Field)
         {
-            $this->field_types['field_id_' . $Field->id] = Field_type::factory($Field, $this->Entry, $this->Entry_data);
+            $this->field_types['field_id_' . $Field->id] = Field_type::factory($Field->content_field_types_model_name, $Field, $this->Entry, $this->Entry_data);
         }
     }
 }
