@@ -554,7 +554,7 @@ class Entries extends Admin_Controller {
 
         $regex = "((https?|ftp)\:\/\/)?"; // SCHEME
         $regex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; // User and Pass
-        $regex .= "([a-z0-9-.]*)\.([a-z]{2,3})"; // Host or IP
+        $regex .= "([a-z0-9-._]*)\.([a-z]{2,3})"; // Host or IP
         $regex .= "(\:[0-9]{2,5})?"; // Port
         $regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; // Path
         $regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?"; // GET Query
