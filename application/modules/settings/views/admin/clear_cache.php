@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <span>
-                        <label><?php echo form_checkbox(array('name' => 'cache[images]', 'value' => '1', 'checked' => set_checkbox('cache[datamapper]', '1', TRUE))); ?> DB Schema</label>
+                        <label><?php echo form_checkbox(array('name' => 'cache[datamapper]', 'value' => '1', 'checked' => set_checkbox('cache[datamapper]', '1', TRUE))); ?> DB Schema</label>
                     </span>
                 </div>
             <?php echo form_close(); ?>

@@ -54,11 +54,11 @@ class Clear_cache extends Admin_Controller
                         $this->cache->delete_all('datamapper');
                         break;
                 }
-
-                // Set a success message
-                $this->session->set_flashdata('message', '<p class="success">Cache succcessfully cleared.</p>');
-                redirect(current_url());
             }
+
+            // Set a success message
+            $this->session->set_flashdata('message', '<p class="success">Cache succcessfully cleared.</p>');
+            redirect(current_url());
         }
 
         $this->template->view('admin/clear_cache', $data);
