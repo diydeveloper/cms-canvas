@@ -25,6 +25,7 @@ class Types extends Admin_Controller {
         // Init
         $data = array();
         $data['breadcrumb'] = set_crumbs(array('content/types' => 'Content Types', current_url() => 'Content Type Edit'));
+        $data['revision_id'] = $revision_id = $this->uri->segment(6);
         $this->load->model('content_types_model');
         $this->load->model('content_types_admin_groups_model');
         $this->load->model('users/groups_model');
@@ -60,6 +61,24 @@ class Types extends Admin_Controller {
             $data['restrict_to'] = (array) $data['restrict_to'];
         }
 
+        // Load a revision if a revision id was provided in the URL
+        if ( ! empty($revision_id))
+        {
+            $this->load->model('content_type_revisions_model');
+            $Revision = new content_type_revisions_model();
+            $Revision->get_by_id($revision_id);
+
+            if ($Revision->exists())
+            {
+                $revision_data = @unserialize($Revision->revision_data);
+                $Content_type->from_array($revision_data);
+            }
+            else
+            {
+                return show_404();
+            }
+        }
+
         // Get admin groups currently assigned to this conten type
         $data['current_admin_groups'] = option_array_value($Content_type->admin_groups->get(), 'id', 'group_id');
 
@@ -86,7 +105,7 @@ class Types extends Admin_Controller {
         // Form validation
         if ($this->form_validation->run() == TRUE)
         {
-            // Deletect if the category group changed.
+            // Detect if the category group changed.
             // If it has changed delete entry category relations 
             // of the content type
             if ($Content_type->category_group_id != $this->input->post('category_group_id'))
@@ -110,6 +129,8 @@ class Types extends Admin_Controller {
             $Content_type->theme_layout = ($this->input->post('theme_layout') != '') ? $this->input->post('theme_layout') : NULL;
             $Content_type->entries_allowed = ($this->input->post('entries_allowed') != '') ? $this->input->post('entries_allowed') : NULL;
             $Content_type->save();
+
+            $Content_type->add_revision();
 
             // Assign admin groups to this content type 
             // if restrict admin access is enabled
@@ -299,6 +320,8 @@ class Types extends Admin_Controller {
             $Content_type->theme_layout = ($this->input->post('theme_layout') != '') ? $this->input->post('theme_layout') : NULL;
             $Content_type->entries_allowed = ($this->input->post('entries_allowed') != '') ? $this->input->post('entries_allowed') : NULL;
             $Content_type->save();
+
+            $Content_type->add_revision();
 
             // Assign admin groups to this content type 
             // if restrict admin access is enabled

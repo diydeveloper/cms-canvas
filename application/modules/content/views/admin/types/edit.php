@@ -39,6 +39,7 @@
                 <ul class="htabs">
                     <li><a href="#html-tab">HTML</a></li>
                     <li><a href="#page-head-tab">Page &lt;head&gt;</a></li>
+                    <li><a href="#revisions-tab">Revisions</a></li>
                     <li><a href="#settings-tab">Settings</a></li>
                 </ul>
                 <div id="html-tab">
@@ -48,6 +49,42 @@
                     <p class="info">Include custom JavaScript, CSS, and/or meta information in the <strong>&lt;head&gt;</strong> block of this content type's pages.</p>
 
                     <?php echo form_textarea(array('name'=>'page_head', 'id'=>'page_head', 'value'=>set_value('page_head', !empty($Content_type->page_head) ? $Content_type->page_head : ''))); ?>
+                </div>
+                <div id="revisions-tab">
+                    <?php $Content_type->content_type_revisions->order_by('id', 'desc')->get(); $r = $Content_type->content_type_revisions->result_count(); ?>
+                    <table class="list">
+                        <thead>
+                            <tr>
+                                <th>Revision</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                                <th class="right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($Content_type->content_type_revisions->exists()): ?>
+                                <?php foreach($Content_type->content_type_revisions as $Revision): ?>
+                                    <tr>
+                                        <td>Revision <?php echo $r; ?></td>
+                                        <td><?php echo $Revision->author_name; ?></td>
+                                        <td><?php echo date('m/d/Y h:i a', strtotime($Revision->revision_date)); ?></td>
+                                        <td class="right">
+                                            <?php if ( ($revision_id == '' && $r == $Content_type->content_type_revisions->result_count()) 
+                                                || $Revision->id == $revision_id): ?>
+                                                <strong>Currently Loaded</strong>
+                                            <?php else: ?>
+                                                [ <a href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $Revision->content_type_id . '/' . $Revision->id); ?> ">Load Revision</a> ]</td>
+                                            <?php endif; ?>
+                                    </tr>
+                                    <?php $r--; ?>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td class="center" colspan="4">No revisions have been saved.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
                 <div id="settings-tab">
                     <div class="form">
