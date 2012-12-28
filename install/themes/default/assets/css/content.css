@@ -1,0 +1,90 @@
+/**
+ * CMS Canvas
+ *
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
+ */
+
+b, strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic
+}
+
+/* HEADER TAGS */
+h1, h2, 
+h3, h4, 
+h5, h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
+h4 {
+    font-size: 1em;
+}
+
+h5 {
+    font-size: .8em;
+}
+
+h6 {
+    font-size: .7em;
+}
+/* END HEADER TAGS */
+
+/* LIST STYLES */
+ul, ol {
+    list-style: disc outside none;
+    padding: 0 0 0 40px;
+}
+
+ol li ol ,
+ul li ul {
+    margin: 0;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+ul li, ol li {
+    margin: 3px 0;
+}
+/* END LIST STYLES */
+
+/* LINKS */
+a {
+    color: darkblue;
+}
+
+a:hover {
+    color: darkblue;
+}
+/* END LINKS */
+
+/* MARGIN BOTTOMS */
+h1, h2, h3, h4, h5{
+    margin-bottom: 15px;
+}
+
+p,  ul, ol, table, blockquote {
+    margin-bottom:  15px;
+}
+/* END MARGIN BOTTOMS */
+
+p.cool{}
