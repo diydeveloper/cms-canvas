@@ -4,6 +4,10 @@ html, body {
     font-size: 13px;
 }
 
+a {
+    color: #21759B;
+}
+
 h1 {
     font-size: 20px;
     color: #212C35;
@@ -13,6 +17,10 @@ h1 {
 
 p {
      margin-bottom:  15px;
+}
+
+strong {
+    font-weight: bold;
 }
 
 header {
@@ -63,6 +71,7 @@ header {
     background: #FFFFFF;
     border-right: 1px solid #CCCCCC;
     padding: 15px 30px 15px 20px;
+    min-height: 400px;
 }
 
 #right_column {
@@ -77,7 +86,7 @@ header {
 #right_column ul li {
     padding: 0px 10px;
     height: 50px;
-    border-bottom: 1px dotted #000000;
+    border-bottom: 1px solid #CCCCCC;
     color: #000000;
     font-weight: bold;
     line-height: 50px;
@@ -141,6 +150,10 @@ table th {
     background: url('../images/configuration.png') no-repeat;
 }
 
+#finished {
+    background: url('../images/finished.png') no-repeat;
+}
+
 /* NOTICES */
 p.success {
     padding: 10px 10px 10px 33px;
@@ -197,4 +210,17 @@ span.good {
 
 .required {
     color: red;
+}
+
+td img {
+    vertical-align: middle;
+}
+
+.border {
+    border: 1px solid #DDDDDD;
+    box-shadow: 3px 3px 10px #DDDDDD;
+}
+
+.padding {
+    padding: 5px;
 }

@@ -48,12 +48,12 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = __HOSTNAME__;
-$db['default']['username'] = __USERNAME__;
-$db['default']['password'] = __PASSWORD__;
-$db['default']['database'] = __DATABASE__;
-$db['default']['dbdriver'] = __DRIVER__;
-$db['default']['dbprefix'] = __PREFIX__;
+$db['default']['hostname'] = '__HOSTNAME__';
+$db['default']['username'] = '__USERNAME__';
+$db['default']['password'] = '__PASSWORD__';
+$db['default']['database'] = '__DATABASE__';
+$db['default']['dbdriver'] = '__DRIVER__';
+$db['default']['dbprefix'] = '__PREFIX__';
 $db['default']['port'] = __PORT__;
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;

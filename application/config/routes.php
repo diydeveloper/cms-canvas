@@ -38,6 +38,20 @@
 |
 */
 
+// Redirect to the installer if the installed config item is set to false or is missing
+if ( ! config_item('installed'))
+{
+    if (file_exists(FCPATH . 'install'))
+    {
+        header('Location: /install/index.php');
+    }
+    else
+    {
+        echo "Could not find install directory.";
+    }
+    exit;
+}
+
 $route['default_controller'] = "content/pages";
 $route['404_override'] = 'content/pages';
 

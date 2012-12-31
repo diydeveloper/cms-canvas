@@ -1,10 +1,25 @@
-# mod_rewrite
-RewriteEngine on
+<IfModule mod_rewrite.c>
+    RewriteEngine on
 
-RewriteBase /
+    RewriteBase /
 
-RewriteCond $1 !\.(gif|jpg|png|jpeg|css|js|ico|swf)$ [NC]
-RewriteCond $1 !^(index\.php|robots\.txt)
-RewriteCond $1 !(assets|uploads|themes|install)
-RewriteRule ^(.*)$ index.php/$1 [L]
+    # Remove access to system folder
+    RewriteCond %{REQUEST_URI} ^system.*
+    RewriteRule ^(.*)$ /index.php/$1 [L]
 
+    # Allow access to asset directories
+    RewriteCond $1 ^application.*
+    RewriteCond $1 !(assets.*)
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+
+    # Check if user is accessing a file or folder that already exists
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+ 
+<IfModule !mod_rewrite.c>
+    # If we don't have mod_rewrite installed, all 404's
+    # can be sent to index.php and everything works as normal.
+    ErrorDocument 404 /index.php
+</IfModule>

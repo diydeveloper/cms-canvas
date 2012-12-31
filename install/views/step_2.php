@@ -81,7 +81,28 @@
         </tbody>
     </table>
 </div>
-<p>3. Please make sure you have set the correct permissions on the files list below.</p>
+<p>3. The following settings are <strong>NOT</strong> required but recommended.</p>
+<div class="box">
+    <table width="100%">
+        <thead>
+            <tr>
+                <th class="align_left">Module</th>
+                <th>Current Settings</th>
+                <th>Recommended Settings</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Apache ModRewrite:</td>
+                <td class="align_center"><?php echo (@file_get_contents(base_url() . '/step1') !== FALSE) ? 'On' : 'Off'; ?></td>
+                <td class="align_center">On</td>
+                <td class="align_center"><img src="<?php echo base_url() . 'assets/images/' . ((@file_get_contents(base_url() . '/step1') !== FALSE) ? 'good' : 'bad'); ?>.png" /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<p>4. Please make sure you have set the correct permissions on the files list below.</p>
 <div class="box">
     <table width="100%">
         <thead>
@@ -92,13 +113,17 @@
         </thead>
         <tbody>
             <tr>
+                <td><?php echo ROOT . 'application/config/config.php'; ?></td>
+                <td class="align_center"><?php echo is_writable(ROOT . 'application/config/config.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
+            </tr>
+            <tr>
                 <td><?php echo ROOT . 'application/config/database.php'; ?></td>
                 <td class="align_center"><?php echo is_writable(ROOT . 'application/config/database.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
             </tr>
         </tbody>
     </table>
 </div>
-<p>4. Please make sure you have set the correct permissions on the directories list below.</p>
+<p>5. Please make sure you have set the correct permissions on the directories list below.</p>
 <div class="box">
     <table width="100%">
         <thead>

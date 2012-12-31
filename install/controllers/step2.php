@@ -55,6 +55,11 @@ class Step2 extends CI_Controller
 
     private function validate()
     {
+        if ( ! is_writable(ROOT . 'application/config/config.php'))
+        {
+            $this->errors[] =  ROOT . 'application/config/config.php is not writable.';
+        }
+
         if ( ! is_writable(ROOT . 'application/config/database.php'))
         {
             $this->errors[] =  ROOT . 'application/config/database.php is not writable.';
