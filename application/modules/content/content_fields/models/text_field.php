@@ -13,7 +13,7 @@ class Text_field extends Field_type
     {
         if (is_inline_editable($this->Entry->content_type_id))
         {
-            return '<div id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_admin_editable cc_text_editable" contenteditable="true">' . $this->content . '</div>';
+            return '<div id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_admin_editable cc_text_editable" contenteditable="true">{{ noparse }}' . $this->content . '{{ /noparse }}</div>';
         }
         else
         {

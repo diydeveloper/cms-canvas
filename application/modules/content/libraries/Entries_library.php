@@ -184,7 +184,7 @@ class Entries_library
 
             if (is_inline_editable($Entry->content_type_id))
             {
-                $content['title'] = '<div id="cc_field_' . $Entry->id . '_title" class="cc_admin_editable cc_text_editable" contenteditable="true">' . $Entry->title . '</div>';
+                $content['title'] = '<div id="cc_field_' . $Entry->id . '_title" class="cc_admin_editable cc_text_editable" contenteditable="true">{{ noparse }}' . $Entry->title . '{{ /noparse }}</div>';
             }
             else
             {
