@@ -31,7 +31,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td class="center" colspan="3">No category groups have been added.</td>
+                            <td class="center" colspan="4">No category groups have been added.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
