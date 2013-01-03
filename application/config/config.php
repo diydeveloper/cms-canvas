@@ -26,17 +26,7 @@ $config['base_url'] = BASE_URL;
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
-
-/*
-|--------------------------------------------------------------------------
-| Installed
-|--------------------------------------------------------------------------
-|
-| Used to determine if CMS Canvas needs to be installed
-|
-*/
-$config['installed'] = TRUE;
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -234,7 +224,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = '53592fb25048e67adbb96cdfad01ec2c';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
