@@ -66,7 +66,7 @@
                 <div class="form">
                     <div>
                         <?php echo form_label('URL:', 'slug'); ?>
-                        <span style="line-height: 24px; "> <?php echo base_url(); ?> </span>
+                        <span style="line-height: 24px; "> <?php echo trim(site_url(), '/'); ?>/ </span>
                         <?php echo form_input(array('name'=>'slug', 'id'=>'slug', 'value'=>set_value('slug', !empty($Entry->slug) ? $Entry->slug : ''))); ?>
                     </div>
                     <div>
