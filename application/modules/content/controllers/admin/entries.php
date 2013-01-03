@@ -718,5 +718,76 @@ class Entries extends Admin_Controller {
         $this->load->library('navigations/navigations_library');
         $this->navigations_library->clear_cache();
     }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Pre Save Output
+     *
+     * Called by AJAX to return processed output content from its
+     * content field type before it has been saved to the db
+     * 
+     * @return string
+     */
+    function pre_save_output()
+    {
+        if ( ! is_ajax())
+        {
+            return show_404();
+        }
+
+        // Init
+        $this->load->model('entries_model');
+        $this->load->model('content_fields_model');
+        $response = array();
+
+        $editable_id = $this->input->post('editable_id');
+        $content = $this->input->post('content');
+
+        // Preg match the entry id and the field id from the html element's id attribute
+        if (preg_match("/cc_field_(\d+)_(\d+)/", $editable_id, $matches))
+        {
+            $entry_id = $matches[1];
+            $field_id = $matches[2];
+        }
+        else
+        {
+            $response['status'] = 'error';
+            $response['message'] = 'Unable to parse the entry id and field id.';
+            echo json_encode($response);
+        }
+
+        $Entry = new Entries_model();
+        $Entry->get_by_id($entry_id);
+
+        if ( ! $Entry->exists())
+        {
+            $response['status'] = 'error';
+            $response['message'] = 'The entry id provided does not exist.';
+            echo json_encode($response);
+        }
+
+        $Field = new Content_fields_model();
+        $Field->order_by('sort', 'ASC')
+            ->include_related('content_field_types', array('model_name', 'array_post'))
+            ->get_by_id($field_id);
+
+        if ( ! $Field->exists())
+        {
+            $response['status'] = 'error';
+            $response['message'] = 'The field id provided does not exist.';
+            echo json_encode($response);
+        }
+
+        $Content_object = new stdClass();
+        $Content_object->{'field_id_' . $Field->id} = $content;
+
+        $Field_type = Field_type::factory($Field->content_field_types_model_name, $Field, $Entry, $Content_object);
+        $output = $Field_type->output();
+
+        $response['status'] = 'success';
+        $response['content'] = $output;
+        echo json_encode($response);
+    }
 }
 

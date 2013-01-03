@@ -31,7 +31,7 @@ class Pages_model extends CI_Model
         // Show admin_toolbar on page
         if ($this->settings->enable_admin_toolbar && $this->secure->group_types(array(ADMINISTRATOR))->is_auth())
         {
-            $this->template->add_script("var ADMIN_PATH = '" . site_url(ADMIN_PATH) . "';");
+            $this->template->add_script("var ADMIN_URL = '" . site_url(ADMIN_PATH) . "';");
             $admin_toolbar = $this->load->view('admin/admin_toolbar', array('entry_id' => $entry_id, 'content_type_id' => $content_type_id), TRUE);
             $this->template->add_stylesheet('/application/modules/content/assets/css/admin_toolbar.css');
             $this->template->add_package(array('jquery', 'superfish'));

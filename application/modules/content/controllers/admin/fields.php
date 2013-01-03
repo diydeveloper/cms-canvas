@@ -122,6 +122,7 @@ class Fields extends Admin_Controller {
 
             $this->load->library('cache');
             $this->cache->delete_all('content_types');
+            $this->cache->delete_all('entries');
 
             // There is probably a better way to go about getting the
             // field datatype but this should work for now
