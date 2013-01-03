@@ -44,7 +44,7 @@ class Image_field extends Field_type
                  $_SESSION['KCFINDER']['disabled'] = false;
                  $_SESSION['isLoggedIn'] = true;
 
-                 $class = ($settings['class']) ? ' class="' . $settings['class'] . ' cc_image_editable' . '"' : '';
+                 $class = ($settings['class']) ? ' class="' . $settings['class'] . ' cc_image_editable' . '"' : ' class="cc_image_editable"';
 
                  return '<img' . $id . $class . ' src="' . $image_src . '" /><input id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_hidden_editable" type="hidden" value="' . $this->content . '" />';
              }

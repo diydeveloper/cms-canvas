@@ -1,9 +1,8 @@
+var cc_editable_page_dirty = false;
+
 jq_admin_toolbar(document).ready( function() {  
     // Turn off automatic editor creation first.
     CKEDITOR.disableAutoInline = true;
-
-    var editable_content;
-    var page_dirty = false;
 
     var cc_text_config = { 
         toolbar : [
@@ -48,7 +47,7 @@ jq_admin_toolbar(document).ready( function() {
                 alert('Error: ' + XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText);
             },
             success: function(data){
-                page_dirty = false;
+                cc_editable_page_dirty = false;
                 jq_admin_toolbar('#admin-save-status').html('Saved').show().delay(5000).fadeOut();
             }
         });
@@ -63,7 +62,7 @@ jq_admin_toolbar(document).ready( function() {
             before = $(this).html();
         }
     }).live('blur keyup paste DOMNodeInserted', function() { 
-        if (!page_dirty) {
+        if (!cc_editable_page_dirty) {
             id = jq_admin_toolbar(this).attr('id');
 
             if (typeof CKEDITOR.instances[id] !== 'undefined') {
@@ -79,12 +78,12 @@ jq_admin_toolbar(document).ready( function() {
     });
 
     jq_admin_toolbar('.cc_admin_editable').live('change', function() {
-        page_dirty = true;
+        cc_editable_page_dirty = true;
         jq_admin_toolbar('#admin-save-status').html('Unsaved').show();
     }); 
 
     function admin_unload_page() { 
-        if(page_dirty){
+        if(cc_editable_page_dirty){
             return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
         }
     }

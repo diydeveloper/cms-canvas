@@ -14,7 +14,10 @@ jq_admin_toolbar(document).ready( function() {
                         // Replacing the content will update the hidden input with the new content
                         hidden_input.remove();
                         image.replaceWith(response.content);
-                        jq_admin_toolbar('#admin-save-status').html('Processing Image...').delay(500).fadeOut();
+
+                        // Set the page status to dirty and show as Unsaved in status bar
+                        cc_editable_page_dirty = true;
+                        jq_admin_toolbar('#admin-save-status').html('Processing Image...').delay(500).html('Unsaved');
                     } else {
                         jq_admin_toolbar('#admin-save-status').hide();
                         alert(response.message);
