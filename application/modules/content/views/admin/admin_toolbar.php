@@ -6,7 +6,7 @@
         <li><a target="ee_admin" class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $content_type_id); ?>">Edit Content Type</a></li>
         <?php endif; ?>
         <li>
-            <a class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>">Content &nbsp;<img src="<?php echo site_url('/application/modules/content/assets/images/down-triangle.gif'); ?>" /></a>
+            <a class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>">Content &nbsp;<img src="<?php echo base_url('/application/modules/content/assets/images/down-triangle.gif'); ?>" /></a>
             <ul>
                 <li><a href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>">Entries</a></li>
                 <li><a href="<?php echo site_url(ADMIN_PATH . '/content/types'); ?>">Content Types</a></li>

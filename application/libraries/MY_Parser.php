@@ -87,6 +87,7 @@ class MY_Parser extends CI_Parser {
 
          // Global tags
          $data['site_url'] = trim(site_url(), '/');
+         $data['base_url'] = trim(base_url(), '/');
          $data['theme_url'] = trim(theme_url(), '/');
 
          // Not sure if needed

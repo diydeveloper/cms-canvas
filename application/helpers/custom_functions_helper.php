@@ -267,7 +267,7 @@ if ( ! function_exists('theme_url'))
     function theme_url($uri = '')
     {
         $CI =& get_instance();
-        return site_url($CI->template->theme_path . '/' . $CI->template->theme . '/'  . trim($uri, '/'));
+        return base_url($CI->template->theme_path . '/' . $CI->template->theme . '/'  . trim($uri, '/'));
     }
 }
 

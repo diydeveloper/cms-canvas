@@ -27,6 +27,11 @@ class Helper_plugin extends Plugin
         return site_url($this->attribute('path', ''));
     }
 
+    public function base_url()
+    {
+        return base_url($this->attribute('path', ''));
+    }
+
     public function current_url()
     {
         return current_url();

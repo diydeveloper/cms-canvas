@@ -247,7 +247,7 @@ class Template
 
         foreach ($stylesheets as $stylesheet)
         {
-            $stylesheet = (strpos($stylesheet, 'http') === 0 ? $stylesheet : site_url($stylesheet));
+            $stylesheet = (strpos($stylesheet, 'http') === 0 ? $stylesheet : base_url($stylesheet));
 
             if ( ! in_array($stylesheet, $this->stylesheets))
             {
@@ -316,8 +316,8 @@ class Template
 
         foreach ($javascripts as $javascript)
         {
-            // If HTTP not in javascript uri add prepend site_url
-            $javascript = (strpos($javascript, 'http') === 0 ? $javascript : site_url($javascript));
+            // If HTTP not in javascript uri add prepend base_url
+            $javascript = (strpos($javascript, 'http') === 0 ? $javascript : base_url($javascript));
 
             if ( ! in_array($javascript, $this->javascripts))
             {

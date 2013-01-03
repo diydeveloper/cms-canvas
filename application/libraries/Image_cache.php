@@ -87,7 +87,7 @@ class Image_cache
             }
         }
          
-        return site_url($this->new_image);
+        return base_url($this->new_image);
     }
 
     // ------------------------------------------------------------------------

@@ -531,7 +531,7 @@ class Entries extends Admin_Controller {
         // No long use the entry_id variable but maybe some day
         $entry_id = $this->uri->segment(5);
 
-        $css = @file_get_contents(site_url('themes/' . $this->settings->theme . '/' . trim($this->settings->editor_stylesheet, '/'))) . "\n";
+        $css = @file_get_contents(base_url('themes/' . $this->settings->theme . '/' . trim($this->settings->editor_stylesheet, '/'))) . "\n";
 
         header('Content-type: text/css');
 
