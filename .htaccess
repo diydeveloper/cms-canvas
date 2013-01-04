@@ -4,7 +4,11 @@
     RewriteBase /
 
     # Remove access to system folder
-    RewriteCond %{REQUEST_URI} ^system.*
+    RewriteCond $1 ^system.*
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+
+    # Remove access to system folder
+    RewriteCond $1 ^assets/cms/cache.*
     RewriteRule ^(.*)$ /index.php/$1 [L]
 
     # Allow access to asset directories
