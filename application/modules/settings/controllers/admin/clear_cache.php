@@ -39,7 +39,14 @@ class Clear_cache extends Admin_Controller
                         $this->cache->delete_all('content_types');
                         break;
                     case "images":
-                        $this->cache->delete_all('images');
+                        // Cached images are located outside the cache directory 
+                        // due to strict security restrictions on the cache folder
+                        $this->load->helper('file');
+
+                        if ( file_exists(FCPATH . IMAGE_CACHE) ) 
+                        {
+                            delete_files(FCPATH . IMAGE_CACHE, TRUE);
+                        }
                         break;
                     case "navigations":
                         $this->cache->delete_all('navigations');

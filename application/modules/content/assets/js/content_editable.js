@@ -51,6 +51,8 @@ jq_admin_toolbar(document).ready( function() {
                 jq_admin_toolbar('#admin-save-status').html('Saved').show().delay(5000).fadeOut();
             }
         });
+        
+        return false;
     });
 
     jq_admin_toolbar('.cc_admin_editable').live('focus', function() {

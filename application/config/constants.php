@@ -89,11 +89,11 @@ define('SUPER_ADMIN',   'super_admin');
 
 /*
 |--------------------------------------------------------------------------
-| CMS Cache Directory
+| CMS Image Cache Directory
 |--------------------------------------------------------------------------
 |
 */
-define('IMAGE_CACHE',   '/assets/cms/cache/images');
+define('IMAGE_CACHE',   '/assets/cms/uploads/images/cache');
 
 /*
 |--------------------------------------------------------------------------
