@@ -1,8 +1,9 @@
 var cc_editable_page_dirty = false;
 
+// Turn off automatic editor creation first.
+CKEDITOR.disableAutoInline = true;
+
 jq_admin_toolbar(document).ready( function() {  
-    // Turn off automatic editor creation first.
-    CKEDITOR.disableAutoInline = true;
 
     var cc_text_config = { 
         toolbar : [
@@ -73,7 +74,7 @@ jq_admin_toolbar(document).ready( function() {
                 new_content = $(this).html();
             }
 
-            if (before != new_content) { 
+            if (typeof before !== 'undefined' && before != new_content) { 
                 jq_admin_toolbar(this).trigger('change'); 
             }
         }
