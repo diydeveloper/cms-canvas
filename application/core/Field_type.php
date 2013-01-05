@@ -131,4 +131,14 @@ class Field_type extends CI_Model
     {
         $this->content = ($content != '') ? $content : null;
     }
+
+    public function is_inline_editable()
+    {
+        if (empty($this->Entry->content_type_id))
+        {
+            return FALSE;
+        }
+
+        return is_inline_editable($this->Entry->content_type_id);
+    }
 }

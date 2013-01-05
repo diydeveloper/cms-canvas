@@ -61,7 +61,7 @@ class Ckeditor_field extends Field_type
 
     function output()
     {
-        if (is_inline_editable($this->Entry->content_type_id))
+        if ($this->is_inline_editable())
         {
             $this->template->add_javascript('/application/modules/content/content_fields/assets/js/ckeditor_inline_editable.js');
             $_SESSION['KCFINDER'] = array();
