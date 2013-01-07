@@ -37,6 +37,13 @@ class Checkbox_field extends Field_type
         return $this->load->view('checkbox', $data, TRUE);
     }
 
+    function validate()
+    {
+        $this->CI->form_validation->set_rules('field_id_' . $this->Field->id . '[]', $this->Field->label, 'trim' . (($this->Field->required) ? '|required' : ''));
+
+        return TRUE;
+    }
+
     function output()
     {
         $value_array = array();
