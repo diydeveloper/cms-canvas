@@ -54,6 +54,10 @@ class Field_type extends CI_Model
         {
             $Field_type->set_content($Entry->{'field_id_' . $Field->id});
         }
+        else
+        {
+            $Field_type->set_content('');
+        }
 
         return $Field_type;
     }

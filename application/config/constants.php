@@ -93,7 +93,7 @@ define('SUPER_ADMIN',   'super_admin');
 |--------------------------------------------------------------------------
 |
 */
-define('IMAGE_CACHE',   '/assets/cms/uploads/images/cache');
+define('IMAGE_CACHE',   '/assets/cms/image-cache');
 
 /*
 |--------------------------------------------------------------------------
