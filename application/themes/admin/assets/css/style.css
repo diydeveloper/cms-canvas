@@ -386,6 +386,15 @@ body > #container {
 	padding-top: 7px;
 }
 
+.box > .heading.position_top {
+    position: fixed;
+    left: 30px;
+    right: 30px;
+    top: 0px;
+    border-radius: 0;
+    z-index: 100;
+}
+
 .box > .content {
 	padding: 10px;
 	border-left: 1px solid #CCCCCC;

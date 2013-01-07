@@ -5,8 +5,8 @@
         <h1><img alt="" src="<?php echo theme_url('assets/images/review.png'); ?>"> Entry Edit <?php echo ($edit_mode) ? '- ' . strip_tags($Entry->title) . ' (#' . $Entry->id . ')' : ''; ?></h1>
 
         <div class="buttons">
-            <a class="button" href="#" id="save"><span>Save</span></a>
-            <a class="button" href="#" id="save_exit"><span>Save &amp; Exit</span></a>
+            <a class="button" href="javascript:void(0);" id="save"><span>Save</span></a>
+            <a class="button" href="javascript:void(0);" id="save_exit"><span>Save &amp; Exit</span></a>
             <a class="button" href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>"><span>Cancel</span></a>
         </div>
     </div>
@@ -251,6 +251,16 @@
                 $('#url_title').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))
             });
         <?php endif; ?>
+
+        heading_pos = $('.heading').offset().top;
+
+        $(window).scroll(function () {
+            if (heading_pos - $(window).scrollTop() <= 0) {
+                $('.heading').addClass('position_top');
+            } else {
+                $('.heading').removeClass('position_top');
+            }
+        });
     });
 </script>
 <?php js_end(); ?>
