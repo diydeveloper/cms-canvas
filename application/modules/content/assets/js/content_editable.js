@@ -43,13 +43,19 @@ jq_admin_toolbar(document).ready( function() {
             url: ADMIN_URL + "/content/entries/save-inline-content", 
             data: data,
             type: 'post',
+            dataType: 'json',
             error: function(XMLHttpRequest, textStatus, errorThrown){
-                jq_admin_toolbar('#admin-save-status').html('Error: ' + XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText).show();
+                jq_admin_toolbar('#admin-save-status').html('Error').show();
                 alert('Error: ' + XMLHttpRequest.status + ' ' + XMLHttpRequest.statusText);
             },
-            success: function(data){
-                cc_editable_page_dirty = false;
-                jq_admin_toolbar('#admin-save-status').html('Saved').show().delay(5000).fadeOut();
+            success: function(response){
+                if (response.status == 'success') {
+                    cc_editable_page_dirty = false;
+                    jq_admin_toolbar('#admin-save-status').html('Saved').show().delay(5000).fadeOut();
+                } else {
+                    jq_admin_toolbar('#admin-save-status').html('Error').show();
+                    alert('Error: \n' + response.message);
+                }
             }
         });
         

@@ -623,6 +623,7 @@ class Entries extends Admin_Controller {
         $this->load->model('entries_model');
         $this->load->model('entry_revisions_model');
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
+        $response['status'] = 'success';
         $data = array();
 
         foreach ($this->input->post() as $key => $content)
@@ -710,6 +711,14 @@ class Entries extends Admin_Controller {
             }
         }
 
+        // Check if there were any validation errors
+        if (validation_errors())
+        {
+            $validation_errors = validation_errors("-", " ");
+            $response['status'] = 'error';
+            $response['message'] = $validation_errors;
+        }
+
         // Clear cache so updates will show on next page load
         $this->load->library('cache');
         $this->cache->delete_all('entries');
@@ -717,6 +726,8 @@ class Entries extends Admin_Controller {
         // Clear navigation cache so updates will show on next page load
         $this->load->library('navigations/navigations_library');
         $this->navigations_library->clear_cache();
+
+        echo json_encode($response);
     }
 
     // ------------------------------------------------------------------------
