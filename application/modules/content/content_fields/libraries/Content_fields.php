@@ -30,7 +30,7 @@ class Content_fields
     {
         $this->fields = $this->CI->content_fields_model
             ->order_by('sort', 'ASC')
-            ->include_related('content_field_types', array('model_name', 'array_post'))
+            ->include_related('content_field_types', array('model_name'))
             ->get_by_content_type_id($config['content_type_id']);
 
         $this->Entry = $config['Entry'];
@@ -61,16 +61,39 @@ class Content_fields
      *
      * @return bool
      */
-    function run()
+    function validate()
     {
         $return = TRUE;
 
         foreach($this->fields as $Field)
         {
-            $this->CI->form_validation->set_rules('field_id_' . $Field->id . (($Field->content_field_types_array_post) ? '[]' : ''), $Field->label, 'trim' . (($Field->required) ? '|required' : ''));
-
             // Validate field command
             if ($this->field_types['field_id_' . $Field->id]->validate() === FALSE)
+            {
+                $return = FALSE;
+            }
+        }
+
+        return $return;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Inline Validate
+     *
+     * Validates field and preps data executed at entry edit
+     *
+     * @return bool
+     */
+    function inline_validate()
+    {
+        $return = TRUE;
+
+        foreach($this->fields as $Field)
+        {
+            // Validate inline content
+            if ($this->field_types['field_id_' . $Field->id]->inline_validate() === FALSE)
             {
                 $return = FALSE;
             }
@@ -237,7 +260,7 @@ class Content_fields
             // be used for validating and processing instead of the fields array
             $this->old_fields = new Content_fields_model();
             $this->old_fields->order_by('sort', 'ASC')
-                ->include_related('content_field_types', array('model_name', 'array_post'))
+                ->include_related('content_field_types', array('model_name'))
                 ->get_by_content_type_id($old_content_type_id);
 
             // Get entry data

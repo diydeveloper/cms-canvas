@@ -5,6 +5,14 @@ class Field_type extends CI_Model
     protected $Entry = null;
     protected $Field = null;
     protected $content = null;
+    protected $CI = null;
+
+    public function __construct()
+    {
+        $this->CI =& get_instance();     
+    }
+
+    // ------------------------------------------------------------------------
     
     /*
      * Factory
@@ -50,31 +58,103 @@ class Field_type extends CI_Model
         return $Field_type;
     }
 
-    public function view()
+    // ------------------------------------------------------------------------
+
+    /*
+     * Display Field
+     *
+     * Returns the administrative field used to edit the content
+     *
+     * @return string
+     */
+    public function display_field()
     {
         return '';
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Output
+     *
+     * Returns the final rendering of the content
+     *
+     * @return string
+     */
     public function output() 
     { 
         return $this->content;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Save
+     *
+     * Returns the content in its format that is to be stored in the database
+     *
+     * @return string
+     */
     public function save() 
     { 
         return $this->content;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Settings
+     *
+     * Returns additional administrative setting fields for the field type
+     *
+     * @return string
+     */
     public function settings() 
     { 
         return '';
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Validate
+     *
+     * Form validation for the display field. Returns true if everything is good.
+     *
+     * @return bool
+     */
     public function validate()
     {
+        $this->CI->form_validation->set_rules('field_id_' . $this->Field->id, $this->Field->label, 'trim' . (($this->Field->required) ? '|required' : ''));
+
         return TRUE;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Inline Validate
+     *
+     * Validation for inline content. Returns true if everything is good.
+     *
+     * @return bool
+     */
+    public function inline_validate()
+    {
+        $this->CI->form_validation->set_rules('cc_field_' . $this->Entry->id . '_' . $this->Field->id, $this->Field->label, 'trim');
+
+        return TRUE;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Set Entry
+     *
+     * Used by factory to format and set a consistent stdClass with the entry data
+     *
+     * @return void
+     */
     public function set_entry($Entry_mixed)
     {
         $entry_properties = array(
@@ -102,6 +182,15 @@ class Field_type extends CI_Model
         $this->Entry = $Entry;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Set Field
+     *
+     * Used by factory to format and set a consistent stdClass of the field data
+     *
+     * @return void
+     */
     public function set_field($Field_mixed)
     {
         $field_properties = array(
@@ -127,11 +216,29 @@ class Field_type extends CI_Model
         $this->Field = $Field;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Set Content
+     *
+     * Used to set the current field type's content as a class variable
+     *
+     * @return void
+     */
     public function set_content($content)
     {
         $this->content = ($content != '') ? $content : null;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*
+     * Is Inline Editable
+     *
+     * Checks if the current field type, user permissions, and current settings allow for inline editing of the content
+     *
+     * @return bool
+     */
     public function is_inline_editable()
     {
         if (empty($this->Entry->content_type_id))

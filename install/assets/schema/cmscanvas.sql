@@ -92,7 +92,6 @@ CREATE TABLE IF NOT EXISTS `content_field_types` (
   `title` varchar(50) NOT NULL,
   `model_name` varchar(50) NOT NULL,
   `datatype` varchar(50) NOT NULL DEFAULT 'text',
-  `array_post` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
@@ -100,22 +99,22 @@ CREATE TABLE IF NOT EXISTS `content_field_types` (
 -- Dumping data for table `content_field_types`
 --
 
-INSERT INTO `content_field_types` (`id`, `title`, `model_name`, `datatype`, `array_post`) VALUES
-(1, 'CKEditor', 'ckeditor', 'text', 0),
-(2, 'TinyMCE', 'tinymce', 'text', 0),
-(3, 'Text', 'text', 'text', 0),
-(4, 'Dropdown', 'dropdown', 'text', 0),
-(5, 'Radio', 'radio', 'text', 0),
-(6, 'Textarea', 'textarea', 'text', 0),
-(7, 'HTML', 'html', 'text', 0),
-(8, 'Image', 'image', 'text', 0),
-(9, 'File', 'file', 'text', 0),
-(10, 'Date', 'date', 'date', 0),
-(11, 'Date Time', 'datetime', 'datetime', 0),
-(12, 'Page URL', 'page_url', 'text', 0),
-(13, 'Gallery', 'gallery_id', 'int', 0),
-(14, 'Checkbox', 'checkbox', 'text', 1),
-(15, 'Integer', 'text', 'int', 0);
+INSERT INTO `content_field_types` (`id`, `title`, `model_name`, `datatype`) VALUES
+(1, 'CKEditor', 'ckeditor', 'text'),
+(2, 'TinyMCE', 'tinymce', 'text'),
+(3, 'Text', 'text', 'text'),
+(4, 'Dropdown', 'dropdown', 'text'),
+(5, 'Radio', 'radio', 'text'),
+(6, 'Textarea', 'textarea', 'text'),
+(7, 'HTML', 'html', 'text'),
+(8, 'Image', 'image', 'text'),
+(9, 'File', 'file', 'text'),
+(10, 'Date', 'date', 'date'),
+(11, 'Date Time', 'datetime', 'datetime'),
+(12, 'Page URL', 'page_url', 'text'),
+(13, 'Gallery', 'gallery_id', 'int'),
+(14, 'Checkbox', 'checkbox', 'text'),
+(15, 'Integer', 'text', 'int');
 
 -- --------------------------------------------------------
 
@@ -269,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `entry_revisions` (
   `author_id` int(11) DEFAULT NULL,
   `author_name` varchar(150) NOT NULL,
   `revision_date` datetime NOT NULL,
-  `revision_data` text NOT NULL,
+  `revision_data` longtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `entry_id` (`entry_id`),
   KEY `content_type_id` (`content_type_id`)

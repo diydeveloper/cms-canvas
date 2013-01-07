@@ -283,7 +283,7 @@ class Entries extends Admin_Controller {
         }
 
         // Get content fields html
-        $field_validation = $Content_fields->run();
+        $field_validation = $Content_fields->validate();
 
         // Validation and process form
         if ($this->form_validation->run() == TRUE && $field_validation)
@@ -669,7 +669,7 @@ class Entries extends Admin_Controller {
             $Content_fields->initialize($config);
 
             // Get content fields html
-            $field_validation = $Content_fields->run();
+            $field_validation = $Content_fields->inline_validate();
 
             // Validation and process form
             if ($this->form_validation->run() == TRUE && $field_validation)
@@ -684,29 +684,29 @@ class Entries extends Admin_Controller {
 
                 $Content_fields->from_array($fields);
                 $Content_fields->save();
-            }
 
-            // Add Revision if versioing enabled
-            if ($Content_type->enable_versioning)
-            {
-                // Delete old revsions so that not to exceed max revisions setting
-                $Revision = new Entry_revisions_model();
-                $Revision->where('entry_id', $entry_id)
-                    ->order_by('id', 'desc')
-                    ->limit(25, $Content_type->max_revisions - 1)
-                    ->get()
-                    ->delete_all();
-                    
-                // Serialize and save post data to entry revisions table
-                $User = $this->secure->get_user_session();
-                $Revision = new Entry_revisions_model();
-                $Revision->entry_id = $Entry->id;
-                $Revision->content_type_id = $Entry->content_type_id;
-                $Revision->author_id = $User->id;
-                $Revision->author_name = $User->first_name . ' ' . $User->last_name;
-                $Revision->revision_date = date('Y-m-d H:i:s');
-                $Revision->revision_data = serialize($this->input->post());
-                $Revision->save();
+                // Add Revision if versioing enabled
+                if ($Content_type->enable_versioning)
+                {
+                    // Delete old revsions so that not to exceed max revisions setting
+                    $Revision = new Entry_revisions_model();
+                    $Revision->where('entry_id', $entry_id)
+                        ->order_by('id', 'desc')
+                        ->limit(25, $Content_type->max_revisions - 1)
+                        ->get()
+                        ->delete_all();
+                        
+                    // Serialize and save post data to entry revisions table
+                    $User = $this->secure->get_user_session();
+                    $Revision = new Entry_revisions_model();
+                    $Revision->entry_id = $Entry->id;
+                    $Revision->content_type_id = $Entry->content_type_id;
+                    $Revision->author_id = $User->id;
+                    $Revision->author_name = $User->first_name . ' ' . $User->last_name;
+                    $Revision->revision_date = date('Y-m-d H:i:s');
+                    $Revision->revision_data = serialize($this->input->post());
+                    $Revision->save();
+                }
             }
         }
 
@@ -769,7 +769,7 @@ class Entries extends Admin_Controller {
 
         $Field = new Content_fields_model();
         $Field->order_by('sort', 'ASC')
-            ->include_related('content_field_types', array('model_name', 'array_post'))
+            ->include_related('content_field_types', array('model_name'))
             ->get_by_id($field_id);
 
         if ( ! $Field->exists())
