@@ -253,12 +253,19 @@
         <?php endif; ?>
 
         heading_pos = $('.heading').offset().top;
+        position_top = false;
 
         $(window).scroll(function () {
             if (heading_pos - $(window).scrollTop() <= 0) {
-                $('.heading').addClass('position_top');
+                if (!position_top) {
+                    $('.heading').addClass('position_top');
+                    position_top = true;
+                }
             } else {
-                $('.heading').removeClass('position_top');
+                if (position_top) {
+                    $('.heading').removeClass('position_top');
+                    position_top = false;
+                }
             }
         });
     });
