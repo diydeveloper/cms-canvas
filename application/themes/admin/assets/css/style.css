@@ -1187,6 +1187,10 @@ div.multi_fields {
     width: 50px;
 }
 
+.no_underline {
+    text-decoration: none;
+}
+
 .smoothness .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .smoothness .ui-timepicker-div dl { text-align: left; }
 .smoothness .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }

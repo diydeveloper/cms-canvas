@@ -16,6 +16,10 @@
             <a style="float: right; z-index: 1; position: relative;" target="_blank" href="<?php echo site_url("$Entry->slug"); ?>"><img src="<?php echo theme_url('assets/images/preview-icon-medium.png') ?>" /></a>
         <?php endif; ?>
 
+        <div class="fright" style="margin-top: 4px; margin-right: 10px;">
+            <a id="collapse_all" class="no_underline" href="javascript:void(0);">Collapse All</a> &nbsp;|&nbsp; <a id="expand_all" class="no_underline" href="javascript:void(0);">Expand All</a>
+        </div>
+
         <?php echo form_open(null, 'id="entry_edit"'); ?>
         <div class="tabs">
             <ul class="htabs">
@@ -267,6 +271,14 @@
                     position_top = false;
                 }
             }
+        });
+
+        $('#collapse_all').click( function() {
+            $('.arrow_expand').trigger('click');
+        });
+
+        $('#expand_all').click( function() {
+            $('.arrow_collapse').trigger('click');
         });
     });
 </script>
