@@ -29,7 +29,7 @@
             handle: 'div span.sortable_handle',
             helper: 'clone',
             items: 'li',
-            maxLevels: 4,
+            maxLevels: 50,
             opacity: .6,
             placeholder: 'placeholder',
             revert: 250,
