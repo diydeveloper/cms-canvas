@@ -191,11 +191,11 @@ $packages = array(
     ),
     'admin_jqueryui' => array(
         'javascript' => array(
-            '/application/themes/admin/assets/js/jqueryui/jquery-ui-1.8.17.custom.min.js',
+            '/application/themes/admin/assets/js/jqueryui/jquery-ui-1.9.2.custom.min.js',
             '/application/themes/admin/assets/js/jquery-ui-timepicker-addon.js',
         ),
         'stylesheet' => array(
-            '/application/themes/admin/assets/js/jqueryui/smoothness/jquery-ui-1.8.17.custom.css',
+            '/application/themes/admin/assets/js/jqueryui/smoothness/jquery-ui-1.9.2.custom.css',
         ),
     ),
 );
