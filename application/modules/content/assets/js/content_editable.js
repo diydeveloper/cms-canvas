@@ -17,7 +17,7 @@ jq_admin_toolbar(document).ready( function() {
     };
 
     jq_admin_toolbar('.cc_admin_editable.cc_text_editable').each(function(index) {
-        CKEDITOR.inline($(this).attr('id'), cc_text_config); 
+        CKEDITOR.inline(jq_admin_toolbar(this).attr('id'), cc_text_config); 
     });
 
     jq_admin_toolbar('#admin-save-changes').click(function() {
@@ -68,7 +68,7 @@ jq_admin_toolbar(document).ready( function() {
         if (typeof CKEDITOR.instances[id] !== 'undefined') {
             before = CKEDITOR.instances[id].getData();
         } else {
-            before = $(this).html();
+            before = jq_admin_toolbar(this).html();
         }
     }).live('blur keyup paste DOMNodeInserted', function() { 
         if (!cc_editable_page_dirty) {
@@ -77,7 +77,7 @@ jq_admin_toolbar(document).ready( function() {
             if (typeof CKEDITOR.instances[id] !== 'undefined') {
                 new_content = CKEDITOR.instances[id].getData();
             } else {
-                new_content = $(this).html();
+                new_content = jq_admin_toolbar(this).html();
             }
 
             if (typeof before !== 'undefined' && before != new_content) { 
