@@ -27,6 +27,6 @@ jq_admin_toolbar(document).ready( function() {
     };
 
     jq_admin_toolbar('.cc_admin_editable.cc_ck_editable').each(function(index) {
-        CKEDITOR.inline($(this).attr('id'), cc_ckeditor_config); 
+        CKEDITOR.inline(jq_admin_toolbar(this).attr('id'), cc_ckeditor_config); 
     });
 });
