@@ -45,7 +45,10 @@ class Clear_cache extends Admin_Controller
 
                         if ( file_exists(FCPATH . IMAGE_CACHE) ) 
                         {
-                            delete_files(FCPATH . IMAGE_CACHE, TRUE);
+                            foreach (glob(FCPATH . IMAGE_CACHE . '/*') as $file)
+                            {
+                                @unlink($file);
+                            }
                         }
                         break;
                     case "navigations":

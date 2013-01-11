@@ -142,11 +142,14 @@ class Cache
      */
     function delete_all($dir = '')
     {
-         $this->CI->load->helper('file');
+        $this->CI->load->helper('file');
 
-         if ( file_exists(FCPATH . $this->cms_cache . $dir) ) 
-         {
-             delete_files(FCPATH . $this->cms_cache . $dir, TRUE);
-         }
+        if ( file_exists(FCPATH . $this->cms_cache . $dir) ) 
+        {
+            foreach (glob(FCPATH . $this->cms_cache . $dir . '/*') as $file)
+            {
+                @unlink($file);
+            }
+        }
     }
 }
