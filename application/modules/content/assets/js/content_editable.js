@@ -70,7 +70,7 @@ jq_admin_toolbar(document).ready( function() {
         } else {
             before = jq_admin_toolbar(this).html();
         }
-    }).live('blur keyup paste DOMNodeInserted', function() { 
+    }).live('blur keyup paste', function() { 
         if (!cc_editable_page_dirty) {
             id = jq_admin_toolbar(this).attr('id');
 
