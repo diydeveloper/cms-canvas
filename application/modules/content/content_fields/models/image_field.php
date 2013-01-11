@@ -49,7 +49,7 @@ class Image_field extends Field_type
             $id = ($settings['id']) ? ' id="' . $settings['id'] . '"' : '';
             $alt = ($this->content['alt']) ? ' alt="' . $this->content['alt'] . '"' : '';
 
-             if ($this->is_inline_editable())
+             if ($this->is_inline_editable() && ( ! isset($settings['inline_editing']) || $settings['inline_editing']))
              {
                  $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image_inline_editable.js');
                  $_SESSION['KCFINDER'] = array();
