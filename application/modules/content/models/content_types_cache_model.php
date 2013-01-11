@@ -103,7 +103,7 @@ class Content_types_cache_model extends CI_Model
     function cacheable_content_fields()
     {
         // Get Content Fields
-        $this->db->select('content_fields.id, short_tag, content_type_id, content_types.short_name, content_field_types.model_name')
+        $this->db->select('content_fields.*, content_types.short_name, content_field_types.model_name')
             ->from('content_fields')
             ->join('content_types', 'content_fields.content_type_id = content_types.id')
             ->join('content_field_types', 'content_fields.content_field_type_id = content_field_types.id');
