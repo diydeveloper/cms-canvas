@@ -820,8 +820,6 @@ class Navigations_library
             }
             else
             {
-                _pr($crumbs);
-                exit;
                 return $crumbs;
             }
         }
@@ -910,8 +908,8 @@ class Navigations_library
             // List Item Attributes
             $Item->class = trim($Item->class);
             $Item->id = trim($Item->tag_id);
-            $Item->url = ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url;
-            $Item->path = ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url;
+            $Item->url = $Item->url;
+            $Item->path = $Item->url;
 
             $crumbs[] = object_to_array($Item);
         } 
