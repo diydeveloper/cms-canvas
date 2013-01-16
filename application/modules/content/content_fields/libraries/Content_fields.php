@@ -3,7 +3,7 @@
 class Content_fields
 {
     public $fields = array();
-    public $field_types;
+    public $field_types = array();
     public $Entry;
     public $Entry_data;
     public $CI;
