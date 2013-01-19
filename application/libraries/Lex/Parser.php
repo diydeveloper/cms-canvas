@@ -15,7 +15,7 @@ class Lex_Parser
 	protected $regex_setup = false;
 	protected $scope_glue = '.';
 	protected $tag_regex = '';
-	protected $cumulative_noparse = false;
+	protected $cumulative_noparse = true;
 
 	protected $in_condition = false;
 

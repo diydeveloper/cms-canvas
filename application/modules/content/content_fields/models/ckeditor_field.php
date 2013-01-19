@@ -33,7 +33,7 @@ class Ckeditor_field extends Field_type
                             ],
                 entities : true,
                 extraPlugins : 'stylesheetparser'," .
-                (($this->settings->editor_stylesheet) ? "contentsCss : ['" . site_url(ADMIN_PATH . '/content/entries/css/' . $this->Entry->id) . "?' + new Date().getTime()  ]," : "")
+                (($this->settings->editor_stylesheet) ? "contentsCss : ['" . site_url(APPPATH . 'themes/admin/assets/js/ckeditor/contents.css') . "', '" . site_url(ADMIN_PATH . '/content/entries/css/' . $this->Entry->id) . "?' + new Date().getTime()  ]," : "")
                  . "stylesSet : [],
                 height : '300px',
                 filebrowserBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=files') . "',
