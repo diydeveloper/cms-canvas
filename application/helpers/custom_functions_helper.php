@@ -120,7 +120,7 @@ if ( ! function_exists('image_thumb'))
         $CI =& get_instance();
         $CI->load->library('image_cache');
 
-        $props['source_image'] = $source_image;
+        $props['source_image'] = '/' . str_replace(base_url(), '', $source_image);
         $props['width'] = $width;
         $props['height'] = $height;
         $props['crop'] = $crop;
