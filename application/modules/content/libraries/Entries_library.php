@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Entries_library 
+class Entries_library
 {
     private $CI;
     private $pagenum_segment = NULL;
@@ -37,6 +37,8 @@ class Entries_library
 
         $this->CI->parser->set_callback('categories', array($this, 'categories_callback'));
         $this->CI->parser->set_callback('author', array($this, 'author_callback'));
+        $this->CI->parser->set_callback('created_date', array($this, 'date_format_callback'));
+        $this->CI->parser->set_callback('modified_date', array($this, 'date_format_callback'));
     }
 
     // ------------------------------------------------------------------------
@@ -150,6 +152,9 @@ class Entries_library
             // Define tags for entries
             $this->build_entry_data($Query->result());
 
+            $this->_before_iteration();
+            $this->_after_iteration();
+
             $this->_paginate($Query_clone);
         }
 
@@ -184,13 +189,14 @@ class Entries_library
 
             if (is_inline_editable($Entry->content_type_id))
             {
-                $content['title'] = '<div id="cc_field_' . $Entry->id . '_title" class="cc_admin_editable cc_text_editable" contenteditable="true">{{ noparse }}' . $Entry->title . '{{ /noparse }}</div>';
+                $content['title_editable'] = '<div id="cc_field_' . $Entry->id . '_title" class="cc_admin_editable cc_text_editable" contenteditable="true">{{ noparse }}' . $Entry->title . '{{ /noparse }}</div>';
             }
             else
             {
-                $content['title'] = $Entry->title;
+                $content['title_editable'] = $Entry->title;
             }
 
+            $content['title'] = $Entry->title;
             $content['created_date'] = $Entry->created_date;
             $content['modified_date'] = $Entry->modified_date;
             $content['url_title'] = $Entry->url_title;
@@ -209,7 +215,13 @@ class Entries_library
                 // Only define tags that belong to this content type
                 if ($Field->content_type_id == $Entry->content_type_id)
                 {
-                    $content[$Field->short_tag] = Field_type::factory($Field->model_name, $Field, $Entry)->output();
+                    $field_type = Field_type::factory($Field->model_name, $Field, $Entry);
+                    $content[$Field->short_tag] = $field_type->output();
+
+                    if (method_exists($field_type, 'parser_callback'))
+                    {
+                        $content['_callbacks'][$Field->short_tag] = array($field_type, 'parser_callback');
+                    }
                 }
             }
 
@@ -233,8 +245,9 @@ class Entries_library
 
             if ($count == $total_results && $this->backspace)
             {
-                $this->_content = substr($this->_content, 0, $this->backspace * -1);
-                $content['_content'] = $this->_content;
+                $stripped_content = preg_replace('/\n?\s*?\{\{\s*(paginate|before_iteration|after_iteration|no_results)\s*\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms', '', $this->_content);
+                $stripped_content = substr($stripped_content, 0, $this->backspace * -1);
+                $content['_content'] = $stripped_content;
             }
             
             $this->entries[] = $content;
@@ -674,6 +687,51 @@ class Entries_library
         return '';
     }
 
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Before Iteration
+     *
+     * Parse content to check for before_iteration tag
+     *
+     * @return string
+     */
+    private function _before_iteration()
+    {
+        // Find and match paginate tags in the content
+        $paginate_match = preg_match('/\{\{\s*before_iteration\s*\}\}(.*?)\{\{\s*\/before_iteration\s*\}\}/ms', $this->_content, $matches);
+
+        // Check if no_results tags found and set content
+        if ($paginate_match && isset($matches[1]))
+        {
+            $content['_content'] = $matches[1];
+            array_unshift($this->entries, $content);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * After Iteration
+     *
+     * Parse content to check for after_iteration tag
+     *
+     * @return string
+     */
+    private function _after_iteration()
+    {
+        // Find and match paginate tags in the content
+        $paginate_match = preg_match('/\{\{\s*after_iteration\s*\}\}(.*?)\{\{\s*\/after_iteration\s*\}\}/ms', $this->_content, $matches);
+
+        // Check if no_results tags found and set content
+        if ($paginate_match && isset($matches[1]))
+        {
+            $content['_content'] = $matches[1];
+            $this->entries[] = $content;
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     /*
@@ -812,6 +870,34 @@ class Entries_library
     // ------------------------------------------------------------------------
 
     /*
+     * Date/Time Format Callback
+     *
+     * Callback to format a datetime
+     *
+     * @return void
+     */
+    public function date_format_callback($trigger, $parameters, $content, $data)
+    {
+        if (isset($data[$trigger]) && $data[$trigger] != '')
+        {
+            $date = $data[$trigger];
+
+            if (isset($parameters['format']))
+            {
+                return date($parameters['format'], strtotime($date));
+            }
+            else
+            {
+                return $date;
+            }
+        }
+
+        return '';
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
      * Category Filter
      *
      * Queries entries based on a category specified in the URL
@@ -839,4 +925,5 @@ class Entries_library
             $this->db->where('`categories`.`url_title`', $url_title);
         } 
     }
+
 }

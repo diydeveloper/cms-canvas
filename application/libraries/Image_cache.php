@@ -70,11 +70,11 @@ class Image_cache
 
         // The first time the image is requested
         // Or the original image is newer than our cache image
-        if (( ! file_exists(FCPATH . $this->new_image)) || filemtime(FCPATH . $this->new_image) < filemtime(FCPATH . $this->source_image) || $this->replace_original) 
+        if (( ! file_exists(CMS_ROOT . $this->new_image)) || filemtime(CMS_ROOT . $this->new_image) < filemtime(CMS_ROOT . $this->source_image) || $this->replace_original) 
         {
-            if ( ! is_dir(FCPATH . dirname($this->new_image)))
+            if ( ! is_dir(CMS_ROOT . dirname($this->new_image)))
             {
-                mkdir(FCPATH . dirname($this->new_image), 0777, TRUE);
+                mkdir(CMS_ROOT . dirname($this->new_image), 0777, TRUE);
             }
                 
             if ($this->crop)
@@ -97,7 +97,7 @@ class Image_cache
         $this->source_image = trim(urldecode($this->source_image), '/');
 
         // Alternative image if file was not found
-        if ( ! file_exists(FCPATH . $this->source_image) || $this->source_image == '')
+        if ( ! file_exists(CMS_ROOT . $this->source_image) || $this->source_image == '')
         {
             $this->source_image = trim(urldecode($this->no_image_image), '/');
         }
@@ -164,7 +164,7 @@ class Image_cache
     function _crop()
     {
         //The original sizes
-        $original_size = getimagesize(FCPATH . $this->source_image);
+        $original_size = getimagesize(CMS_ROOT . $this->source_image);
         $original_width = $original_size[0];
         $original_height = $original_size[1];
         $ratio = $original_width / $original_height;
@@ -253,7 +253,7 @@ class Image_cache
     function _resize()
     {
         //The original sizes
-        $original_size = getimagesize(FCPATH . $this->source_image);
+        $original_size = getimagesize(CMS_ROOT . $this->source_image);
         $original_width = $original_size[0];
         $original_height = $original_size[1];
         $ratio = $original_width / $original_height;

@@ -232,6 +232,20 @@ class Fields extends Admin_Controller {
 
     function unique_short_tag($short_tag, $current_short_tag = '')
     {
+        $reserved = array('site_url', 'base_url', 'theme_url', 'title', 'created_date', 'modified_date', 'url_title', 'slug', 'dynamic_route', 'content_type', 'count', 'total_results', 'author_id', 'meta_title', 'meta_description', 'meta_keywords', '_content', '_callbacks');
+
+        if ($this->config->item('global_tags') && is_array($this->config->item('global_tags')))
+        {
+            $reserved = array_merge($reserved, array_keys($this->config->item('global_tags')));
+        }
+
+        // Check that the short tag is not a reserved CMS name
+        if (in_array(strtolower($short_tag), $reserved))
+        {
+            $this->form_validation->set_message('unique_short_tag', 'The %s provided is reserved by the CMS.');
+            return FALSE;
+        }
+
         $Content_fields = new Content_fields_model();
 
         // If in edit mode ignore its current name

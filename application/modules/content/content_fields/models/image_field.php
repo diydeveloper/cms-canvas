@@ -28,47 +28,63 @@ class Image_field extends Field_type
         return $this->load->view('image', $data, TRUE);
     }
 
-    function output()
+    function output($attributes = array())
     {
         $settings = $this->Field->settings;
 
-        if ($settings['output'] == 'image')
+        // Image thumbnail size override
+        if ( ! empty($attributes['width']) || ! empty($attributes['height']))
         {
-            if ( ! empty($settings['max_width']) || ! empty($settings['max_height']))
-            {
-                $max_width = ( ! empty($settings['max_width'])) ? $settings['max_width'] : 0;
-                $max_height = ( ! empty($settings['max_height'])) ? $settings['max_height'] : 0;
-                $crop = ($settings['crop'] == '1') ? TRUE : FALSE;
-                $image_src = image_thumb($this->content['src'], $max_width, $max_height, $crop);
-            }
-            else
-            {
-                $image_src = base_url($this->content['src']);
-            }
-
-            $id = ($settings['id']) ? ' id="' . $settings['id'] . '"' : '';
-            $alt = ($this->content['alt']) ? ' alt="' . $this->content['alt'] . '"' : '';
-
-             if ($this->is_inline_editable() && ( ! isset($settings['inline_editing']) || $settings['inline_editing']))
-             {
-                 $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image_inline_editable.js');
-                 $_SESSION['KCFINDER'] = array();
-                 $_SESSION['KCFINDER']['disabled'] = false;
-                 $_SESSION['isLoggedIn'] = true;
-
-                 $class = ($settings['class']) ? ' class="' . $settings['class'] . ' cc_image_editable' . '"' : ' class="cc_image_editable"';
-
-                 return '<img' . $id . $class . $alt . ' src="' . $image_src . '" /><input id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_hidden_editable" type="hidden" value="' . $this->content['src'] . '" />';
-             }
-             else
-             {
-                 $class = ($settings['class']) ? ' class="' . $settings['class'] . '"' : '';
-                 return '<img' . $id . $class . $alt . ' src="' . $image_src . '" />';
-             }
+            $max_width = ( ! empty($attributes['width'])) ? $attributes['width'] : 0;
+            $max_height = ( ! empty($attributes['height'])) ? $attributes['height'] : 0;
+            $crop = (isset($attributes['crop']) && str_to_bool($attributes['crop'])) ? TRUE : FALSE;
+            $image_src = image_thumb($this->content['src'], $max_width, $max_height, $crop);
+        }
+        // Image settings thumbnail size
+        else if ( ! empty($settings['max_width']) || ! empty($settings['max_height']))
+        {
+            $max_width = ( ! empty($settings['max_width'])) ? $settings['max_width'] : 0;
+            $max_height = ( ! empty($settings['max_height'])) ? $settings['max_height'] : 0;
+            $crop = (isset($settings['crop']) && $settings['crop'] == '1') ? TRUE : FALSE;
+            $image_src = image_thumb($this->content['src'], $max_width, $max_height, $crop);
         }
         else
         {
-            return base_url($this->content['src']);
+            $image_src = base_url($this->content['src']);
+        }
+
+        // Show output with image tags
+        if ($settings['output'] == 'image')
+        {
+            // Inline editing callback override
+            if (isset($attributes['editable'])) 
+            {
+                if (str_to_bool($attributes['editable']))
+                {
+                    return $this->_inline_editable($image_src, TRUE);
+                }
+                else
+                {
+                    return $this->_inline_editable($image_src, FALSE);
+                }
+            }
+            // Inline editing defined by settings
+            else
+            {
+                if ( ! isset($settings['inline_editing']) || $settings['inline_editing'])
+                {
+                    return $this->_inline_editable($image_src, TRUE);
+                }
+                else
+                {
+                    return $this->_inline_editable($image_src, FALSE);
+                }
+            }
+        }
+        // Only return the image URL
+        else
+        {
+            return $image_src;
         }
     }
 
@@ -106,6 +122,36 @@ class Image_field extends Field_type
                 // If the string wasn't unserializeable then we will just assume it was the src
                 $this->content['src'] = $content;
             }
+        }
+    }
+
+    function parser_callback($tag, $attributes, $content, $data)
+    {
+        return $this->output($attributes);
+    }
+
+    private function _inline_editable($image_src, $editable)
+    {
+        $settings = $this->Field->settings;
+
+        $id = ($settings['id']) ? ' id="' . $settings['id'] . '"' : '';
+        $alt = ($this->content['alt']) ? ' alt="' . $this->content['alt'] . '"' : '';
+
+        if ($this->is_inline_editable() && $editable)
+        {
+            $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image_inline_editable.js');
+            $_SESSION['KCFINDER'] = array();
+            $_SESSION['KCFINDER']['disabled'] = false;
+            $_SESSION['isLoggedIn'] = true;
+
+            $class = ($settings['class']) ? ' class="' . $settings['class'] . ' cc_image_editable' . '"' : ' class="cc_image_editable"';
+
+            return '<img' . $id . $class . $alt . ' src="' . $image_src . '" /><input id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_hidden_editable" type="hidden" value="' . $this->content['src'] . '" />';
+        }
+        else
+        {
+            $class = ($settings['class']) ? ' class="' . $settings['class'] . '"' : '';
+            return '<img' . $id . $class . $alt . ' src="' . $image_src . '" />';
         }
     }
 }

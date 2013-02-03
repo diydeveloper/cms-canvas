@@ -9,7 +9,7 @@
         <?php endif; ?>
 
         <div class="buttons">
-            <a class="button" href="#" id="save" onClick="$('#form').submit();"><span>Save</span></a>
+            <a class="button" href="javascript:void(0);" id="save" onClick="$('#form').submit();"><span>Save</span></a>
             <a class="button" href="<?php echo site_url(ADMIN_PATH . '/content/fields/index/' . $Type->id); ?>"><span>Cancel</span></a>
         </div>
     </div>

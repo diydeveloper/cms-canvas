@@ -37,8 +37,8 @@ class Galleries_model extends DataMapper
         {
             // Delete image thumbs
             $info = pathinfo($filename);
-            delete_files(FCPATH . ltrim($this->directory, '/') . '/thumbs/' . $info['filename'] . '_' . $info['extension'], TRUE);
-            @rmdir(FCPATH . ltrim($this->directory, '/') . '/thumbs/' . $info['filename'] . '_' . $info['extension']);
+            delete_files(CMS_ROOT . ltrim($this->directory, '/') . '/thumbs/' . $info['filename'] . '_' . $info['extension'], TRUE);
+            @rmdir(CMS_ROOT . ltrim($this->directory, '/') . '/thumbs/' . $info['filename'] . '_' . $info['extension']);
 
             // Delete image from database
             $Gallery_image = new Gallery_images_model();

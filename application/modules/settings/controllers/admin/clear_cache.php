@@ -43,9 +43,9 @@ class Clear_cache extends Admin_Controller
                         // due to strict security restrictions on the cache folder
                         $this->load->helper('file');
 
-                        if ( file_exists(FCPATH . IMAGE_CACHE) ) 
+                        if ( file_exists(CMS_ROOT . IMAGE_CACHE) ) 
                         {
-                            foreach (glob(FCPATH . IMAGE_CACHE . '/*') as $file)
+                            foreach (glob(CMS_ROOT . IMAGE_CACHE . '/*') as $file)
                             {
                                 @unlink($file);
                             }

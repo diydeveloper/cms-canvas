@@ -26,7 +26,7 @@ class Gallery_images_model extends DataMapper
     function directory_images($directory)
     {
         $this->load->helper('file');
-        $dir = get_dir_file_info(FCPATH . ltrim($directory, '/'));
+        $dir = get_dir_file_info(CMS_ROOT . ltrim($directory, '/'));
 
         if ( ! is_array($dir))
         {

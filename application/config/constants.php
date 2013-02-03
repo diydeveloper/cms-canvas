@@ -48,26 +48,13 @@ define('CC_VERSION', '1.0.0');
 
 /*
 |--------------------------------------------------------------------------
-| Base URL
+| CMS Root Folder
 |--------------------------------------------------------------------------
 |
-| Attemtps to figure the root web address
+| Defines the absolute path to the root folder of cms canvas
 |
 */
-if (isset($_SERVER['HTTP_HOST']))
-{
-    $base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
-    $base_url .= '://'. $_SERVER['HTTP_HOST'];
-    $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-}
-else
-{
-    $base_url = 'http://localhost/';
-}
-
-define('BASE_URL', $base_url);
-
-unset($base_url);
+define('CMS_ROOT', dirname(BASEPATH) . '/');
 
 /*
 |--------------------------------------------------------------------------

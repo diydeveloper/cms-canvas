@@ -28,18 +28,17 @@ class MY_Parser extends CI_Parser {
     /**
      *  Parse a view file
      *
-     * Parses pseudo-variables contained in the specified template,
+     * Parses short tags contained in the specified view,
      * replacing them with the data in the second param
      *
-     * @access  public
-     * @param   string
-     * @param   array
-     * @param   bool
-     * @return  string
+     * @param string
+     * @param array
+     * @param bool
+     * @return string
      */
-    function parse($template, $data = array(), $return = FALSE, $inject_noparse = FALSE)
+    function parse($view, $data = array(), $return = FALSE, $inject_noparse = FALSE)
     {
-        $string = $this->_ci->load->view($template, $data, TRUE);
+        $string = $this->_ci->load->view($view, $data, TRUE);
 
         return $this->_parse($string, $data, $return, $inject_noparse);
     }
@@ -49,14 +48,13 @@ class MY_Parser extends CI_Parser {
     /**
      *  String parse
      *
-     * Parses pseudo-variables contained in the string content,
+     * Parses short tags contained in the string content,
      * replacing them with the data in the second param
      *
-     * @access  public
-     * @param   string
-     * @param   array
-     * @param   bool
-     * @return  string
+     * @param string
+     * @param array
+     * @param bool
+     * @return string
      */
     function parse_string($string, $data = array(), $return = FALSE, $inject_noparse = FALSE)
     {
@@ -68,14 +66,13 @@ class MY_Parser extends CI_Parser {
      /**
       *  Parse
       *
-      * Parses pseudo-variables contained in the specified template,
+      * Parses short tags contained in the specified template,
       * replacing them with the data in the second param
       *
-      * @access  public
-      * @param   string
-      * @param   array
-      * @param   bool
-      * @return  string
+      * @param string
+      * @param array
+      * @param bool
+      * @return string
       */
      function _parse($string, $data, $return = FALSE, $inject_noparse = FALSE)
      {
@@ -90,6 +87,11 @@ class MY_Parser extends CI_Parser {
          $data['base_url'] = trim(base_url(), '/');
          $data['theme_url'] = trim(theme_url(), '/');
 
+         if ($this->_ci->config->item('global_tags') && is_array($this->_ci->config->item('global_tags')))
+         {
+            $data = array_merge($data, $this->_ci->config->item('global_tags'));
+         }
+
          // Not sure if needed
          // ALERT THIS MAY CAUSE INFINITE LOOP
          $data = array_merge($data, $this->_ci->load->_ci_cached_vars);
@@ -98,13 +100,12 @@ class MY_Parser extends CI_Parser {
          Lex_Autoloader::register();
 
          $parser = new Lex_Parser();
-         $parser->scope_glue(':');
-         $parser->cumulative_noparse(TRUE);
+         $parser->scopeGlue(':');
          $parsed = $parser->parse($string, $data, array($this, 'parser_callback'), TRUE);
 
          if ($inject_noparse)
          {
-             $parsed = Lex_Parser::inject_noparse($parsed);
+             $parsed = Lex_Parser::injectNoparse($parsed);
          }
 
          // Return results or not ?
@@ -122,16 +123,26 @@ class MY_Parser extends CI_Parser {
     /**
      * Callback from template parser
      *
-     * @param   array
-     * @return   mixed
+     * @param array
+     * @return mixed
      */
     public function parser_callback($plugin, $attributes, $content, $data)
     {
         $this->_ci->load->library('plugins');
         $return_data = '';
 
-        // Check if there were any custom callbacks defined
-        if (isset($this->callbacks[$plugin]))
+        // Check if there were local data callbacks defined
+        if (isset($data['_callbacks'][$plugin]))
+        {
+            $callback = $data['_callbacks'][$plugin];
+
+            if (is_callable($callback))
+            {
+                $return_data = call_user_func_array($callback, array($plugin, $attributes, $content, $data));
+            }
+        }
+        // Check if there were custom global callbacks defined
+        else if (isset($this->callbacks[$plugin]))
         {
             $callback = $this->callbacks[$plugin];
 
@@ -163,7 +174,7 @@ class MY_Parser extends CI_Parser {
             $parsed_return = '';
 
             $parser = new Lex_Parser();
-            $parser->scope_glue(':');
+            $parser->scopeGlue(':');
 
             foreach ($return_data as $result)
             {
@@ -185,7 +196,7 @@ class MY_Parser extends CI_Parser {
 
             $return_data = $parsed_return;
         }
-
+        
         return $return_data ? $return_data : NULL;
     }
 
@@ -194,8 +205,8 @@ class MY_Parser extends CI_Parser {
      /**
       * Ensure we have a multi array
       *
-      * @param   array
-      * @return   int
+      * @param array
+      * @return int
       */
      private function _is_multi($array)
      {
@@ -207,9 +218,9 @@ class MY_Parser extends CI_Parser {
      /**
       * Forces a standard array in multidimensional.
       *
-      * @param   array
-      * @param   int     Used for recursion
-      * @return  array   The multi array
+      * @param array
+      * @param int      Used for recursion
+      * @return array   The multi array
       */
      private function _make_multi($flat, $i=0)
      {
@@ -227,9 +238,9 @@ class MY_Parser extends CI_Parser {
      /**
       * Forces a standard array in multidimensional.
       *
-      * @param   array
-      * @param   int     Used for recursion
-      * @return  array   The multi array
+      * @param array
+      * @param int      Used for recursion
+      * @return array   The multi array
       */
      public function set_callback($trigger, $callback)
      {

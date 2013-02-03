@@ -32,4 +32,16 @@ class Datetime_field extends Field_type
             return null;
         }
     }
+
+    function parser_callback($tag, $attributes, $content, $data)
+    {
+        if (isset($attributes['format']) && $this->content != '')
+        {
+            return date($attributes['format'], strtotime($this->content));
+        }
+        else
+        {
+            return $this->content;
+        }
+    }
 }

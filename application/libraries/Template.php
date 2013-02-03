@@ -627,7 +627,7 @@ class Template
         $this->CI->load->helper('file');
         $themes_array = array();
 
-        $themes = glob(FCPATH . 'themes/*', GLOB_ONLYDIR);
+        $themes = glob(CMS_ROOT . 'themes/*', GLOB_ONLYDIR);
 
         if (is_array($themes))
         {
@@ -666,7 +666,7 @@ class Template
             );
         }
 
-        $layout_files = get_dir_file_info(FCPATH . 'themes/' . $theme . '/views/layouts/', FALSE);
+        $layout_files = get_dir_file_info(CMS_ROOT . 'themes/' . $theme . '/views/layouts/', FALSE);
 
         if (is_array($layout_files))
         {
@@ -675,7 +675,7 @@ class Template
                 $layout = pathinfo($file_info['name'], PATHINFO_FILENAME);
 
                 // Incase there are any subdirectories with layouts
-                $relative_path = str_replace(FCPATH . 'themes/' . $theme . '/views/layouts/', '', $file_info['relative_path']);
+                $relative_path = str_replace(CMS_ROOT . 'themes/' . $theme . '/views/layouts/', '', $file_info['relative_path']);
 
                 // Don't show the default layout so that it will automatically 
                 // be selected if no layout is chosen

@@ -11,8 +11,14 @@ class Checkbox_field extends Field_type
 
     function save()
     {
+        // If the hidden checkbox indicator field is posted but the field is not, this means that no checkboxes were selected
+        if ($this->input->post('field_id_' . $this->Field->id . '_checkbox') !== FALSE && $this->input->post('field_id_' . $this->Field->id) === FALSE)
+        {
+            return NULL;
+        }
+
         // Convert data array to pipe delimited string
-        if ($this->content != '')
+        if ( ! empty($this->content))
         {
             return implode('|', $this->content);
         }
@@ -48,10 +54,8 @@ class Checkbox_field extends Field_type
     {
         $value_array = array();
 
-        if ($this->content != '')
+        if ( ! empty($this->content))
         {
-            $this->parser->set_callback($this->Field->short_tag, array($this, 'checkbox_callback'));
-
             foreach($this->content as $value)
             {
                 $value_array[] = array('item' => $value);
@@ -73,21 +77,25 @@ class Checkbox_field extends Field_type
         {
             $this->content = explode('|', $content);
         }
+        else
+        {
+            $this->content = array();
+        }
     }
 
-    function checkbox_callback($trigger, $parameters, $content, $data)
+    function parser_callback($tag, $attributes, $content, $data)
     {
-        if ( ! isset($data[$trigger]))
+        if ( ! isset($data[$tag]))
         {
             return '';
         }
 
-        $values = $data[$trigger];
+        $values = $data[$tag];
 
         // Check if the last element needs to be trimmed
-        if (is_array($values) && isset($parameters['backspace']))
+        if (is_array($values) && isset($attributes['backspace']))
         {
-            $values[count($values) - 1]['_content'] = substr($content, 0, $parameters['backspace'] * -1);
+            $values[count($values) - 1]['_content'] = substr($content, 0, $attributes['backspace'] * -1);
         } 
 
         return $values;

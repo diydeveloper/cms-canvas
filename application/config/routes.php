@@ -41,7 +41,7 @@
 // Redirect to the installer if the installed config item is set to false or is missing
 if ( ! config_item('installed'))
 {
-    if (file_exists(FCPATH . 'install'))
+    if (file_exists(CMS_ROOT . 'install'))
     {
         header('Location: /install/index.php');
     }

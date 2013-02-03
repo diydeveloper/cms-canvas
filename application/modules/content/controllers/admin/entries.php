@@ -626,7 +626,7 @@ class Entries extends Admin_Controller {
         $response['status'] = 'success';
         $data = array();
 
-        foreach ($this->input->post() as $key => $content)
+        foreach ($_POST as $key => $content)
         {
             // Preg match the entry id and the field id from the html element's id attribute
             if (preg_match("/cc_field_(\d+)_(\d+|title)/", $key, $matches))

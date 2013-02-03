@@ -26,7 +26,7 @@ $config['all_array_uses_ids'] = FALSE;
 $config['db_params'] = '';
 // Uncomment to enable the production cache
 // $config['production_cache'] = 'datamapper/cache';
-$config['production_cache'] = FCPATH . '/assets/cms/cache/datamapper';
+$config['production_cache'] = CMS_ROOT . '/assets/cms/cache/datamapper';
 $config['extensions_path'] = 'third_party/datamapper';
 $config['extensions'] = array('array');
 

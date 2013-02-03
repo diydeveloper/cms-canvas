@@ -19,7 +19,7 @@ class MY_Loader extends MX_Loader
      */
     public function theme($view, $vars = array(), $return = FALSE, $path = 'themes') 
     {
-        $absolute_path = FCPATH . trim($path, '/') . '/';
+        $absolute_path = CMS_ROOT . trim($path, '/') . '/';
 		
         $this->_ci_view_paths = array($absolute_path => TRUE) + $this->_ci_view_paths;
 		
@@ -41,7 +41,7 @@ class MY_Loader extends MX_Loader
      */
     public function theme_xml($view, $vars = array(), $return = FALSE, $path = 'themes')
     {
-        $absolute_path = FCPATH . trim($path, '/') . '/';
+        $absolute_path = CMS_ROOT . trim($path, '/') . '/';
 		
         $this->_ci_view_paths = array($absolute_path => TRUE) + $this->_ci_view_paths;
 		

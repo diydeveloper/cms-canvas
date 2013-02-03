@@ -197,7 +197,7 @@ class Users extends Admin_Controller
 
             foreach ($User as $My_user)
             {
-                $upload_path = FCPATH . USER_DATA . $My_user->id . '/';
+                $upload_path = CMS_ROOT . USER_DATA . $My_user->id . '/';
                 delete_files($upload_path, TRUE);
                 @rmdir($upload_path);
             }

@@ -87,9 +87,9 @@ class Cache
         $cache_dir = $this->cms_cache . trim($dir, '/') . '/';
 
         // Read cached file if it exists
-        if (file_exists(FCPATH . $cache_dir . $id . '.cache'))
+        if (file_exists(CMS_ROOT . $cache_dir . $id . '.cache'))
         {
-            $content = read_file(FCPATH . $cache_dir . $id . '.cache');
+            $content = read_file(CMS_ROOT . $cache_dir . $id . '.cache');
 
             return @unserialize($content);
         }
@@ -115,13 +115,13 @@ class Cache
 
         // Check if the cache directory exists
         // If not create it
-        if ( ! file_exists(FCPATH . $cache_dir))
+        if ( ! file_exists(CMS_ROOT . $cache_dir))
         {
-            @mkdir(FCPATH . $cache_dir);
+            @mkdir(CMS_ROOT . $cache_dir);
         }
 
         // Write data to cache file
-        if ( ! write_file(FCPATH . $cache_dir . $id . '.cache', @serialize($data)))
+        if ( ! write_file(CMS_ROOT . $cache_dir . $id . '.cache', @serialize($data)))
         {
             $this->CI->session->set_flashdata('message', '<p class="error">Error compiling: ' . $cache_dir . ' is not writable.</p>');
             return FALSE;
@@ -144,9 +144,9 @@ class Cache
     {
         $this->CI->load->helper('file');
 
-        if ( file_exists(FCPATH . $this->cms_cache . $dir) ) 
+        if ( file_exists(CMS_ROOT . $this->cms_cache . $dir) ) 
         {
-            foreach (glob(FCPATH . $this->cms_cache . $dir . '/*') as $file)
+            foreach (glob(CMS_ROOT . $this->cms_cache . $dir . '/*') as $file)
             {
                 @unlink($file);
             }

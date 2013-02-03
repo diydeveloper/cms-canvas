@@ -61,7 +61,32 @@ class Ckeditor_field extends Field_type
 
     function output()
     {
-        if ($this->is_inline_editable() && ( ! isset($this->Field->settings['inline_editing']) || $this->Field->settings['inline_editing']))
+        if ( ! isset($this->Field->settings['inline_editing']) || $this->Field->settings['inline_editing'])
+        {
+            return $this->_inline_editable(TRUE);
+        }
+        else
+        {
+            return $this->_inline_editable(FALSE);
+        }
+    }
+
+    function parser_callback($tag, $attributes, $content, $data)
+    {
+        // This is a inline editable override used only for special cases
+        if (isset($attributes['editable']) && str_to_bool($attributes['editable']))
+        {
+            return $this->_inline_editable(TRUE);
+        }
+        else
+        {
+            return $this->_inline_editable(FALSE);
+        }
+    }
+
+    private function _inline_editable($editable)
+    {
+        if ($this->is_inline_editable() && $editable)
         {
             $this->template->add_javascript('/application/modules/content/content_fields/assets/js/ckeditor_inline_editable.js');
             $_SESSION['KCFINDER'] = array();

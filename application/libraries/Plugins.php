@@ -111,26 +111,7 @@ class Plugins
 	{
         if (strpos($plugin, ':') === FALSE)
         {
-            // Special Case Interceptions
-            // Check if user was attempting to format a date
-            if (array_key_exists('format', $attributes) && isset($data[$plugin]) 
-                && preg_match('/^\d{4}-\d{2}-\d{2}(\s\d{2}:\d{2}:\d{2})?$/', $data[$plugin]))
-            {
-                $attributes['date'] = $data[$plugin];
-                $plugin = 'helper:date';
-            }
-            // Check if user was trying to cache an image
-            else if ((array_key_exists('width', $attributes) || array_key_exists('width', $attributes))
-                && isset($data[$plugin])
-                && in_array(strtolower(pathinfo($data[$plugin], PATHINFO_EXTENSION)), array('gif', 'jpg', 'png', 'jpeg')))
-            {
-                $attributes['image'] = $data[$plugin];
-                $plugin = 'helper:image_thumb';
-            }
-            else
-            {
-                return FALSE;
-            }
+            return FALSE;
         }
 
         // Setup our paths from the data array

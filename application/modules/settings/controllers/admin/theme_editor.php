@@ -19,7 +19,7 @@ class Theme_editor extends Admin_Controller
     {
         $data = array();
         $data['breadcrumb'] = set_crumbs(array(current_url() => 'Theme Editor'));
-        $theme_dir = FCPATH . 'themes/' . $this->settings->theme . '/';
+        $theme_dir = CMS_ROOT . 'themes/' . $this->settings->theme . '/';
 
         $data['files_found'] = TRUE;
         $data['file_readable'] = TRUE;

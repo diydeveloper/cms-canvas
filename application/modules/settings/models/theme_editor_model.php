@@ -12,7 +12,7 @@ class Theme_editor_model extends CI_Model
 {	
     function get_theme_files($extension = 'php', $directory = '/')
     {
-        $theme_dir = FCPATH . 'themes/' . $this->settings->theme . '/';
+        $theme_dir = CMS_ROOT . 'themes/' . $this->settings->theme . '/';
         $pattern = $theme_dir . trim($directory, '/') . '/*.' . $extension;
 
         $file_array = array();

@@ -24,7 +24,10 @@
                 <tbody>
                     <tr>
                         <td>Entry Title</td>
-                        <td><span style="position:relative;"><a class="copy_text" href="#">{{ title }}</a></span></td>
+                        <td>
+                            <span style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ title }}</a></span> &nbsp; or &nbsp;
+                            <span style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ title_editable }}</a></span>
+                        </td>
                     </tr>
                     <?php foreach($Fields as $Field): ?>
                         <tr>
