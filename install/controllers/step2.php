@@ -28,12 +28,12 @@ class Step2 extends CI_Controller
 
         foreach ($this->writable_dirs as $path => $is_writable)
         {
-            $this->writable_dirs[$path] = is_writable(ROOT . $path);
+            $this->writable_dirs[$path] = is_writable(CMS_ROOT . $path);
         }
 
         foreach ($this->writable_subdirs as $path => $is_writable)
         {
-            if ( ! file_exists(ROOT . $path) || (file_exists(ROOT . $path) && is_writable(ROOT . $path)))
+            if ( ! file_exists(CMS_ROOT . $path) || (file_exists(CMS_ROOT . $path) && is_writable(CMS_ROOT . $path)))
             {
                 unset($this->writable_subdirs[$path]);
             }
@@ -55,14 +55,14 @@ class Step2 extends CI_Controller
 
     private function validate()
     {
-        if ( ! is_writable(ROOT . 'application/config/config.php'))
+        if ( ! is_writable(CMS_ROOT . 'application/config/config.php'))
         {
-            $this->errors[] =  ROOT . 'application/config/config.php is not writable.';
+            $this->errors[] =  CMS_ROOT . 'application/config/config.php is not writable.';
         }
 
-        if ( ! is_writable(ROOT . 'application/config/database.php'))
+        if ( ! is_writable(CMS_ROOT . 'application/config/database.php'))
         {
-            $this->errors[] =  ROOT . 'application/config/database.php is not writable.';
+            $this->errors[] =  CMS_ROOT . 'application/config/database.php is not writable.';
         }
 
         $writable_dirs = array_merge($this->writable_dirs, $this->writable_subdirs);
@@ -70,7 +70,7 @@ class Step2 extends CI_Controller
         {
             if ( ! $is_writable)
             {
-                $this->errors[] = ROOT . $path . ' is not writable.';
+                $this->errors[] = CMS_ROOT . $path . ' is not writable.';
             }
         }
 

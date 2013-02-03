@@ -27,39 +27,25 @@ define('DIR_WRITE_MODE', 0777);
 |
 */
 
-define('FOPEN_READ',							'rb');
-define('FOPEN_READ_WRITE',						'r+b');
-define('FOPEN_WRITE_CREATE_DESTRUCTIVE',		'wb'); // truncates existing file data, use with care
-define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE',	'w+b'); // truncates existing file data, use with care
-define('FOPEN_WRITE_CREATE',					'ab');
-define('FOPEN_READ_WRITE_CREATE',				'a+b');
-define('FOPEN_WRITE_CREATE_STRICT',				'xb');
-define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
+define('FOPEN_READ',                            'rb');
+define('FOPEN_READ_WRITE',                      'r+b');
+define('FOPEN_WRITE_CREATE_DESTRUCTIVE',        'wb'); // truncates existing file data, use with care
+define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE',   'w+b'); // truncates existing file data, use with care
+define('FOPEN_WRITE_CREATE',                    'ab');
+define('FOPEN_READ_WRITE_CREATE',               'a+b');
+define('FOPEN_WRITE_CREATE_STRICT',             'xb');
+define('FOPEN_READ_WRITE_CREATE_STRICT',        'x+b');
 
 /*
 |--------------------------------------------------------------------------
-| Base URL
+| CMS Root Folder
 |--------------------------------------------------------------------------
 |
-| Attemtps to figure the root web address
+| Defines the absolute path to the root folder of cms canvas
 |
 */
-if (isset($_SERVER['HTTP_HOST']))
-{
-    $base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
-    $base_url .= '://'. $_SERVER['HTTP_HOST'];
-    $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-}
-else
-{
-    $base_url = 'http://localhost/';
-}
+define('CMS_ROOT', dirname(BASEPATH) . '/');
 
-define('BASE_URL', $base_url);
-
-unset($base_url);
-
-define('ROOT', dirname(FCPATH) . '/');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

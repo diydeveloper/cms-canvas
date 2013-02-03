@@ -90,7 +90,7 @@ class Installer
 
         $template = str_replace(array_keys($replace), $replace, $template);
 
-        $handle = @fopen(ROOT . 'application/config/database.php', 'w+');
+        $handle = @fopen(CMS_ROOT . 'application/config/database.php', 'w+');
 
         if ($handle !== FALSE)
         {
@@ -103,7 +103,7 @@ class Installer
             }
         }
 
-        throw new Exception('Failed to write to ' . ROOT . 'application/config/database.php');
+        throw new Exception('Failed to write to ' . CMS_ROOT . 'application/config/database.php');
     }
 
     public function write_ci_config()
@@ -129,7 +129,7 @@ class Installer
 
         $template = str_replace(array_keys($replace), $replace, $template);
 
-        $handle = @fopen(ROOT . 'application/config/config.php', 'w+');
+        $handle = @fopen(CMS_ROOT . 'application/config/config.php', 'w+');
 
         if ($handle !== FALSE)
         {
@@ -142,7 +142,7 @@ class Installer
             }
         }
 
-        throw new Exception('Failed to write to ' . ROOT . 'application/config/config.php');
+        throw new Exception('Failed to write to ' . CMS_ROOT . 'application/config/config.php');
     }
 
     public function import_schema()

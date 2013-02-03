@@ -75,6 +75,29 @@ if (defined('ENVIRONMENT'))
 	$application_folder = './';
 
 /*
+*--------------------------------------------------------------------------
+* Base URL
+*--------------------------------------------------------------------------
+*
+* Attemtps to figure the root web address
+*
+*/
+	if (isset($_SERVER['HTTP_HOST']))
+	{
+	    $base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
+	    $base_url .= '://'. $_SERVER['HTTP_HOST'];
+	    $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+	}
+	else
+	{
+	    $base_url = 'http://localhost/';
+	}
+
+	define('BASE_URL', $base_url);
+
+	unset($base_url);
+
+/*
  * --------------------------------------------------------------------
  * DEFAULT CONTROLLER
  * --------------------------------------------------------------------
@@ -121,6 +144,7 @@ if (defined('ENVIRONMENT'))
  *
  */
 	// $assign_to_config['name_of_config_item'] = 'value of config item';
+	$assign_to_config['global_tags']['lang'] = 'en';
 
 
 
@@ -190,6 +214,13 @@ if (defined('ENVIRONMENT'))
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
+	
+/*
+ * --------------------------------------------------------------------
+ * LOAD THE DATAMAPPER BOOTSTRAP FILE
+ * -------------------------------------------------------------------- *
+ */
+require_once dirname(BASEPATH).'/application/third_party/datamapper/bootstrap.php';
 
 /*
  * --------------------------------------------------------------------

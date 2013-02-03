@@ -113,12 +113,12 @@
         </thead>
         <tbody>
             <tr>
-                <td><?php echo ROOT . 'application/config/config.php'; ?></td>
-                <td class="align_center"><?php echo is_writable(ROOT . 'application/config/config.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
+                <td><?php echo CMS_ROOT . 'application/config/config.php'; ?></td>
+                <td class="align_center"><?php echo is_writable(CMS_ROOT . 'application/config/config.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
             </tr>
             <tr>
-                <td><?php echo ROOT . 'application/config/database.php'; ?></td>
-                <td class="align_center"><?php echo is_writable(ROOT . 'application/config/database.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
+                <td><?php echo CMS_ROOT . 'application/config/database.php'; ?></td>
+                <td class="align_center"><?php echo is_writable(CMS_ROOT . 'application/config/database.php') ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
             </tr>
         </tbody>
     </table>
@@ -135,7 +135,7 @@
         <tbody>
             <?php foreach ($writable_dirs as $path => $is_writable): ?>
             <tr>
-                <td><?php echo ROOT . $path; ?></td>
+                <td><?php echo CMS_ROOT . $path; ?></td>
                 <td class="align_center"><?php echo $is_writable ? '<span class="good">Writable</span>' : '<span class="bad">Unwritable</span>'; ?></td>
             </tr>
             <?php endforeach; ?>
