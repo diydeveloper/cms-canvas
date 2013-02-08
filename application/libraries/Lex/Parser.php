@@ -327,9 +327,10 @@ class Lex_Parser
 
 
             // Re-process for variables, we trick processConditionVar so that it will return null
-            $this->inCondition = false;
-            $condition = preg_replace_callback('/\b('.$this->variableRegex.')\b/', array($this, 'processConditionVar'), $condition);
-            $this->inCondition = true;
+            // CMS Canvas don't need to parse variables again
+            // $this->inCondition = false;
+            // $condition = preg_replace_callback('/\b('.$this->variableRegex.')\b/', array($this, 'processConditionVar'), $condition);
+            // $this->inCondition = true;
 
             // Re-inject any strings we extracted
             $condition = $this->injectExtractions($condition, '__cond_str');
