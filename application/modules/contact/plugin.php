@@ -122,6 +122,7 @@ class Contact_plugin extends Plugin
         // Remove Spam Check
         unset($_POST['spam_check']);
         unset($_POST['form_id']);
+        unset($_POST['captcha_input']);
 
         // Build message from $_POST array
         $message = '';
