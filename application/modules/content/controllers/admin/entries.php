@@ -193,13 +193,12 @@ class Entries extends Admin_Controller {
             {
                 $revision_data = @unserialize($Revision->revision_data);
 
-                // Update Entry and Entrys data data from revision
+                // Update Entry and content fields from revision
                 // Entries data gets queiried in the content_fields library initialize
-                // Thank God for pass by reference
                 if (is_array($revision_data))
                 {
                     $Entry->from_array($revision_data);
-                    $Entry->entries_data->from_array($revision_data);
+                    $Content_fields->from_array($revision_data);
                 }
             }
         }
