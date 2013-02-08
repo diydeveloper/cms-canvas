@@ -263,11 +263,13 @@
             if (heading_pos - $(window).scrollTop() <= 0) {
                 if (!position_top) {
                     $('.heading').addClass('position_top');
+                    $('.content').addClass('position_top');
                     position_top = true;
                 }
             } else {
                 if (position_top) {
                     $('.heading').removeClass('position_top');
+                    $('.content').removeClass('position_top');
                     position_top = false;
                 }
             }

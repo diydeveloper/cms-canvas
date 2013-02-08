@@ -402,6 +402,10 @@ body > #container {
 	border-bottom: 1px solid #CCCCCC;
 }
 
+.box > .content.position_top {
+    padding-top: 48px;
+}
+
 .box > .content h2 {
     font-weight: bold;
     font-size: 20px;
