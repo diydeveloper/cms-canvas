@@ -25,14 +25,14 @@
                     <tr>
                         <td>Entry Title</td>
                         <td>
-                            <span style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ title }}</a></span> &nbsp; or &nbsp;
-                            <span style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ title_editable }}</a></span>
+                            <div style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ title }}</a> &nbsp; or &nbsp;
+                            <a class="copy_text" href="javascript:void(0);">{{ title_editable }}</a></div>
                         </td>
                     </tr>
                     <?php foreach($Fields as $Field): ?>
                         <tr>
                             <td><?php echo $Field->label; ?></td>
-                            <td><span style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ <?php echo $Field->short_tag; ?> }}</a></span></td>
+                            <td><div style="position:relative;"><a class="copy_text" href="javascript:void(0);">{{ <?php echo $Field->short_tag; ?> }}</a></div></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
