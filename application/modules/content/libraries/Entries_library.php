@@ -473,7 +473,7 @@ class Entries_library
             $content = array();
             $content['pagination_links'] = $Pagination->create_links();
             $content['total_pages'] = $total_pages = ($this->limit != NULL) ? ceil($total_results / $this->limit) : 0;
-            $content['current_page'] = $current_page = $Pagination->cur_page;
+            $content['current_page'] = $current_page = ($Pagination->cur_page > 1) ? $Pagination->cur_page : 1;
 
             // Check if next page conditional found and set content
             if (preg_match('/\{\{\s*if\s*next_page\s*\}\}(.*?)\{\{\s*endif\s*\}\}/ms', $pagination_content, $next_page_cond_matches))
