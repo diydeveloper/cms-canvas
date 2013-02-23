@@ -18,11 +18,6 @@ class Entries_model extends DataMapper
             'other_field' => 'entries',
             'join_self_as' => 'entry',
         ),
-        'entry_revisions' => array(
-            'class' => 'entry_revisions_model',
-            'other_field' => 'entries',
-            'join_self_as' => 'entry',
-        ),
         'categories' => array(
             'class' => 'categories_model',
             'other_field' => 'entries',
@@ -31,4 +26,17 @@ class Entries_model extends DataMapper
             'join_table' => 'categories_entries',
         ),
     );
+
+    public function get_entry_revisions() {
+        $CI =& get_instance();
+        $CI->load->model('revisions_model');
+
+        $Revisions = new Revisions_model();
+        $Revisions->where_related('revision_resource_types', 'key_name', 'ENTRY')
+                  ->where('resource_id', $this->id)
+                  ->order_by('id', 'desc')
+                  ->get();
+
+        return $Revisions;
+    }
 }

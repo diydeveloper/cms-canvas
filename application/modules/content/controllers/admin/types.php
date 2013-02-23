@@ -64,8 +64,8 @@ class Types extends Admin_Controller {
         // Load a revision if a revision id was provided in the URL
         if ( ! empty($revision_id))
         {
-            $this->load->model('content_type_revisions_model');
-            $Revision = new content_type_revisions_model();
+            $this->load->model('revisions_model');
+            $Revision = new Revisions_model();
             $Revision->get_by_id($revision_id);
 
             if ($Revision->exists())
@@ -242,6 +242,9 @@ class Types extends Admin_Controller {
                     $Content_types_admin_groups = new Content_types_admin_groups_model();
                     $Content_types_admin_groups->where('content_type_id', $Content_type->id)->get();
                     $Content_types_admin_groups->delete_all();
+
+                    // Delete content type revisions
+                    $Content_type->delete_revisions();
 
                     // Delete content type
                     $Content_type->delete();

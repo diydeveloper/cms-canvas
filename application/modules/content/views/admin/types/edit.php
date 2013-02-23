@@ -54,7 +54,7 @@
                     <?php echo form_textarea(array('name'=>'page_head', 'id'=>'page_head', 'value'=>set_value('page_head', !empty($Content_type->page_head) ? $Content_type->page_head : ''))); ?>
                 </div>
                 <div id="revisions-tab">
-                    <?php $Content_type->content_type_revisions->order_by('id', 'desc')->get(); $r = $Content_type->content_type_revisions->result_count(); ?>
+                    <?php $Revisions = $Content_type->get_revisions(); $r = $Revisions->result_count(); ?>
                     <table class="list">
                         <thead>
                             <tr>
@@ -65,18 +65,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if ($Content_type->content_type_revisions->exists()): ?>
-                                <?php foreach($Content_type->content_type_revisions as $Revision): ?>
+                            <?php if ($Revisions->exists()): ?>
+                                <?php foreach($Revisions as $Revision): ?>
                                     <tr>
                                         <td>Revision <?php echo $r; ?></td>
                                         <td><?php echo $Revision->author_name; ?></td>
                                         <td><?php echo date('m/d/Y h:i a', strtotime($Revision->revision_date)); ?></td>
                                         <td class="right">
-                                            <?php if ( ($revision_id == '' && $r == $Content_type->content_type_revisions->result_count()) 
+                                            <?php if ( ($revision_id == '' && $r == $Revisions->result_count()) 
                                                 || $Revision->id == $revision_id): ?>
                                                 <strong>Currently Loaded</strong>
                                             <?php else: ?>
-                                                [ <a href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $Revision->content_type_id . '/' . $Revision->id); ?> ">Load Revision</a> ]</td>
+                                                [ <a href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $Revision->resource_id . '/' . $Revision->id); ?> ">Load Revision</a> ]</td>
                                             <?php endif; ?>
                                     </tr>
                                     <?php $r--; ?>

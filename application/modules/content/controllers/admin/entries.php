@@ -24,7 +24,7 @@ class Entries extends Admin_Controller {
         // Load libraries and models
         $this->load->model('entries_model');
         $this->load->model('content_types_model');
-        $this->load->model('entry_revisions_model');
+        $this->load->model('revisions_model');
         $this->load->library('pagination');
         $data['query_string'] = ( ! empty($_SERVER['QUERY_STRING'])) ? '?' . $_SERVER['QUERY_STRING'] : '';
         $data['content_types_filter'] = array('' => '');
@@ -186,7 +186,7 @@ class Entries extends Admin_Controller {
         // Check if versioning is enabled and whether a revision is loaded
         if ($Content_type->enable_versioning && is_numeric($revision_id))
         {
-            $Revision = new Entry_revisions_model(); 
+            $Revision = new Revisions_model(); 
             $Revision->get_by_id($revision_id);
 
             if ($Revision->exists())
@@ -311,12 +311,13 @@ class Entries extends Admin_Controller {
             $Content_fields->from_array($this->input->post());
             $Content_fields->save();
 
-            // Add Revision if versioing enabled
+            // Add Revision if versioning enabled
             if ($Content_type->enable_versioning)
             {
                 // Delete old revsions so that not to exceed max revisions setting
-                $Revision = new Entry_revisions_model();
-                $Revision->where('entry_id', $entry_id)
+                $Revision = new Revisions_model();
+                $Revision->where_related('revision_resource_types', 'key_name', 'ENTRY')
+                    ->where('resource_id', $entry_id)
                     ->order_by('id', 'desc')
                     ->limit(25, $Content_type->max_revisions - 1)
                     ->get()
@@ -324,8 +325,9 @@ class Entries extends Admin_Controller {
                     
                 // Serialize and save post data to entry revisions table
                 $User = $this->secure->get_user_session();
-                $Revision = new Entry_revisions_model();
-                $Revision->entry_id = $Entry->id;
+                $Revision = new Revisions_model();
+                $Revision->resource_id = $Entry->id;
+                $Revision->revision_resource_type_id = Revision_resource_types_model::ENTRY;
                 $Revision->content_type_id = $Entry->content_type_id;
                 $Revision->author_id = $User->id;
                 $Revision->author_name = $User->first_name . ' ' . $User->last_name;
@@ -456,7 +458,7 @@ class Entries extends Admin_Controller {
                     $Entries_data = $Entry->entries_data->get();
                     $Entries_data->delete_all();
 
-                    $Entry_revisions = $Entry->entry_revisions->get();
+                    $Entry_revisions = $Entry->get_entry_revisions();
                     $Entry_revisions->delete_all();
 
                     $Entry->delete();
@@ -620,7 +622,7 @@ class Entries extends Admin_Controller {
         }
 
         $this->load->model('entries_model');
-        $this->load->model('entry_revisions_model');
+        $this->load->model('revisions_model');
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
         $response['status'] = 'success';
         $data = array();
@@ -689,8 +691,9 @@ class Entries extends Admin_Controller {
                 if ($Content_type->enable_versioning)
                 {
                     // Delete old revsions so that not to exceed max revisions setting
-                    $Revision = new Entry_revisions_model();
-                    $Revision->where('entry_id', $entry_id)
+                    $Revision = new Revisions_model();
+                    $Revision->where_related('revision_resource_types', 'key_name', 'ENTRY')
+                        ->where('resource_id', $entry_id)
                         ->order_by('id', 'desc')
                         ->limit(25, $Content_type->max_revisions - 1)
                         ->get()
@@ -698,8 +701,9 @@ class Entries extends Admin_Controller {
                         
                     // Serialize and save post data to entry revisions table
                     $User = $this->secure->get_user_session();
-                    $Revision = new Entry_revisions_model();
-                    $Revision->entry_id = $Entry->id;
+                    $Revision = new Revisions_model();
+                    $Revision->resource_id = $Entry->id;
+                    $Revision->revision_resource_type_id = Revision_resource_types_model::ENTRY;
                     $Revision->content_type_id = $Entry->content_type_id;
                     $Revision->author_id = $User->id;
                     $Revision->author_name = $User->first_name . ' ' . $User->last_name;

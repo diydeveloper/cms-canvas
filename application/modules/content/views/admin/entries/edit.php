@@ -93,7 +93,7 @@
             <!-- Revisions Tab -->
             <?php if ($Content_type->enable_versioning): ?>
             <div id="revisions-tab">
-                <?php $Entry->entry_revisions->order_by('id', 'desc')->get(); $r = $Entry->entry_revisions->result_count(); ?>
+                <?php $Entry_revisions = $Entry->get_entry_revisions(); $r = $Entry_revisions->result_count(); ?>
                 <table class="list">
                     <thead>
                         <tr>
@@ -104,18 +104,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($Entry->entry_revisions->exists()): ?>
-                            <?php foreach($Entry->entry_revisions as $Revision): ?>
+                        <?php if ($Entry_revisions->exists()): ?>
+                            <?php foreach($Entry_revisions as $Revision): ?>
                                 <tr>
                                     <td>Revision <?php echo $r; ?></td>
                                     <td><?php echo $Revision->author_name; ?></td>
                                     <td><?php echo date('m/d/Y h:i a', strtotime($Revision->revision_date)); ?></td>
                                     <td class="right">
-                                        <?php if ( ($revision_id == '' && $r == $Entry->entry_revisions->result_count()) 
+                                        <?php if ( ($revision_id == '' && $r == $Entry_revisions->result_count()) 
                                             || $Revision->id == $revision_id): ?>
                                             <strong>Currently Loaded</strong>
                                         <?php else: ?>
-                                            [ <a href="<?php echo site_url(ADMIN_PATH . '/content/entries/edit/' . $Revision->content_type_id . '/' . $Revision->entry_id . '/' . $Revision->id); ?> ">Load Revision</a> ]</td>
+                                            [ <a href="<?php echo site_url(ADMIN_PATH . '/content/entries/edit/' . $Revision->content_type_id . '/' . $Revision->resource_id . '/' . $Revision->id); ?> ">Load Revision</a> ]</td>
                                         <?php endif; ?>
                                 </tr>
                                 <?php $r--; ?>

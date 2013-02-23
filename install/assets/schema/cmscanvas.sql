@@ -170,31 +170,6 @@ CREATE TABLE IF NOT EXISTS `content_types_admin_groups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `content_type_revisions`
---
-
-CREATE TABLE IF NOT EXISTS `content_type_revisions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `content_type_id` int(11) NOT NULL,
-  `author_id` int(11) NOT NULL,
-  `author_name` varchar(150) NOT NULL,
-  `revision_date` datetime NOT NULL,
-  `revision_data` longtext NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `content_type_id` (`content_type_id`,`author_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `content_type_revisions`
---
-
-INSERT INTO `content_type_revisions` (`id`, `content_type_id`, `author_id`, `author_name`, `revision_date`, `revision_data`) VALUES
-(1, 2, 1, 'Administrator', '2013-01-01 00:00:00', 'a:12:{s:6:"layout";s:39:"<h1>{{ title }}</h1>\n{{ contact:form }}";s:9:"page_head";s:0:"";s:5:"title";s:12:"Contact Page";s:10:"short_name";s:12:"contact_page";s:12:"theme_layout";s:7:"default";s:13:"dynamic_route";s:0:"";s:17:"enable_versioning";s:1:"1";s:13:"max_revisions";s:1:"5";s:15:"entries_allowed";s:0:"";s:17:"category_group_id";s:0:"";s:21:"restrict_admin_access";s:1:"0";s:6:"access";s:1:"0";}'),
-(2, 1, 1, 'Administrator', '2013-01-01 00:00:00', 'a:12:{s:6:"layout";s:176:"<div id="left_column">\n    <article>\n	<h1>{{ title }}</h1>\n	{{ left_column }}\n    </article>\n</div>\n\n<div id="right_column">\n    <aside>\n	{{ right_column }}\n    </aside>\n</div>";s:9:"page_head";s:0:"";s:5:"title";s:4:"Page";s:10:"short_name";s:4:"page";s:12:"theme_layout";s:7:"default";s:13:"dynamic_route";s:0:"";s:17:"enable_versioning";s:1:"1";s:13:"max_revisions";s:1:"5";s:15:"entries_allowed";s:0:"";s:17:"category_group_id";s:0:"";s:21:"restrict_admin_access";s:1:"0";s:6:"access";s:1:"0";}');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `entries`
 --
 
@@ -254,35 +229,6 @@ INSERT INTO `entries_data` (`id`, `entry_id`, `field_id_1`, `field_id_2`) VALUES
 (2, 2, NULL, NULL),
 (3, 3, NULL, NULL),
 (4, 4, '<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>', '<h2>\n	Lorem Ipsum</h2>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `entry_revisions`
---
-
-CREATE TABLE IF NOT EXISTS `entry_revisions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `entry_id` int(11) NOT NULL,
-  `content_type_id` int(11) NOT NULL,
-  `author_id` int(11) DEFAULT NULL,
-  `author_name` varchar(150) NOT NULL,
-  `revision_date` datetime NOT NULL,
-  `revision_data` longtext NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `entry_id` (`entry_id`),
-  KEY `content_type_id` (`content_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `entry_revisions`
---
-
-INSERT INTO `entry_revisions` (`id`, `entry_id`, `content_type_id`, `author_id`, `author_name`, `revision_date`, `revision_data`) VALUES
-(1, 1, 1, 1, 'Albert Einstein', '2012-03-11 16:26:38', 'a:10:{s:5:"title";s:4:"Home";s:10:"field_id_2";s:992:"<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna <a href="#">aliquam</a> erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde <a href="#">omnis</a> iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<h1>\n	H1 Tag</h1>\n<h2>\n	H2 Tag</h2>\n<h3>\n	H3 Tag</h3>\n<h4>\n	H4 Tag</h4>\n<p>\n	<strong>Strong</strong></p>\n<ul>\n	<li>\n		List Item 1\n		<ul>\n			<li>\n				Indented Item 1</li>\n			<li>\n				Indented Item 2</li>\n		</ul>\n	</li>\n	<li>\n		List Item 2</li>\n	<li>\n		List Item 3</li>\n	<li>\n		List Item 4</li>\n</ul>";s:10:"field_id_1";s:684:"<h2>\n	Lorem Ipsum</h2>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:4:"slug";s:4:"home";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/06/2012 09:07:07 pm";}'),
-(2, 4, 1, 1, 'Albert Einstein', '2012-03-11 16:27:01', 'a:10:{s:5:"title";s:5:"About";s:10:"field_id_2";s:2647:"<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:10:"field_id_1";s:684:"<h2>\n	Lorem Ipsum</h2>\n<p>\n	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n	Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:4:"slug";s:5:"about";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/11/2012 04:06:40 pm";}'),
-(3, 3, 2, 1, 'Albert Einstein', '2012-03-11 16:27:31', 'a:8:{s:5:"title";s:7:"Contact";s:4:"slug";s:7:"contact";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"2";s:12:"created_date";s:22:"03/07/2012 09:45:48 pm";}'),
-(4, 2, 1, 1, 'Albert Einstein', '2012-03-11 16:27:52', 'a:10:{s:5:"title";s:14:"Page Not Found";s:10:"field_id_2";s:0:"";s:10:"field_id_1";s:0:"";s:4:"slug";s:0:"";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/06/2012 10:55:06 pm";}');
 
 -- --------------------------------------------------------
 
@@ -397,6 +343,62 @@ INSERT INTO `navigation_items` (`id`, `type`, `entry_id`, `title`, `url`, `tag_i
 (1, 'page', 1, NULL, NULL, NULL, NULL, NULL, 0, 1, 'show', 0, 0, 0, 0),
 (2, 'page', 4, NULL, NULL, NULL, NULL, NULL, 1, 1, 'show', 0, 0, 0, 1),
 (3, 'page', 3, NULL, NULL, NULL, NULL, NULL, 0, 1, 'show', 0, 0, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `revisions`
+--
+
+CREATE TABLE IF NOT EXISTS `revisions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `revision_resource_type_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `content_type_id` int(11) DEFAULT NULL,
+  `author_id` int(11) NOT NULL,
+  `author_name` varchar(150) NOT NULL,
+  `revision_date` datetime NOT NULL,
+  `revision_data` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `revision_resource_type_id` (`revision_resource_type_id`),
+  KEY `content_type_id` (`content_type_id`),
+  KEY `resource_id` (`resource_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `revisions`
+--
+
+INSERT INTO `revisions` (`id`, `revision_resource_type_id`, `resource_id`, `content_type_id`, `author_id`, `author_name`, `revision_date`, `revision_data`) VALUES
+(1, 1, 1, 1, 1, 'Albert Einstein', '2012-03-11 16:26:38', 'a:10:{s:5:"title";s:4:"Home";s:10:"field_id_2";s:992:"<p>\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna <a href="#">aliquam</a> erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde <a href="#">omnis</a> iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<h1>\n  H1 Tag</h1>\n<h2>\n H2 Tag</h2>\n<h3>\n H3 Tag</h3>\n<h4>\n H4 Tag</h4>\n<p>\n  <strong>Strong</strong></p>\n<ul>\n <li>\n    List Item 1\n   <ul>\n      <li>\n        Indented Item 1</li>\n      <li>\n        Indented Item 2</li>\n    </ul>\n </li>\n <li>\n    List Item 2</li>\n  <li>\n    List Item 3</li>\n  <li>\n    List Item 4</li>\n</ul>";s:10:"field_id_1";s:684:"<h2>\n  Lorem Ipsum</h2>\n<p>\n Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:4:"slug";s:4:"home";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/06/2012 09:07:07 pm";}'),
+(2, 1, 4, 1, 1, 'Albert Einstein', '2012-03-11 16:27:01', 'a:10:{s:5:"title";s:5:"About";s:10:"field_id_2";s:2647:"<p>\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>\n<p>\n Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:10:"field_id_1";s:684:"<h2>\n Lorem Ipsum</h2>\n<p>\n Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>\n<p>\n Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>";s:4:"slug";s:5:"about";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/11/2012 04:06:40 pm";}'),
+(3, 1, 3, 2, 1, 'Albert Einstein', '2012-03-11 16:27:31', 'a:8:{s:5:"title";s:7:"Contact";s:4:"slug";s:7:"contact";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"2";s:12:"created_date";s:22:"03/07/2012 09:45:48 pm";}'),
+(4, 1, 2, 1, 1, 'Albert Einstein', '2012-03-11 16:27:52', 'a:10:{s:5:"title";s:14:"Page Not Found";s:10:"field_id_2";s:0:"";s:10:"field_id_1";s:0:"";s:4:"slug";s:0:"";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";s:6:"status";s:9:"published";s:15:"content_type_id";s:1:"1";s:12:"created_date";s:22:"03/06/2012 10:55:06 pm";}'),
+(5, 2, 2, NULL, 1, 'Administrator', '2013-01-01 00:00:00', 'a:12:{s:6:"layout";s:39:"<h1>{{ title }}</h1>\n{{ contact:form }}";s:9:"page_head";s:0:"";s:5:"title";s:12:"Contact Page";s:10:"short_name";s:12:"contact_page";s:12:"theme_layout";s:7:"default";s:13:"dynamic_route";s:0:"";s:17:"enable_versioning";s:1:"1";s:13:"max_revisions";s:1:"5";s:15:"entries_allowed";s:0:"";s:17:"category_group_id";s:0:"";s:21:"restrict_admin_access";s:1:"0";s:6:"access";s:1:"0";}'),
+(6, 2, 1, NULL, 1, 'Administrator', '2013-01-01 00:00:00', 'a:12:{s:6:"layout";s:176:"<div id="left_column">\n    <article>\n <h1>{{ title }}</h1>\n  {{ left_column }}\n    </article>\n</div>\n\n<div id="right_column">\n    <aside>\n {{ right_column }}\n    </aside>\n</div>";s:9:"page_head";s:0:"";s:5:"title";s:4:"Page";s:10:"short_name";s:4:"page";s:12:"theme_layout";s:7:"default";s:13:"dynamic_route";s:0:"";s:17:"enable_versioning";s:1:"1";s:13:"max_revisions";s:1:"5";s:15:"entries_allowed";s:0:"";s:17:"category_group_id";s:0:"";s:21:"restrict_admin_access";s:1:"0";s:6:"access";s:1:"0";}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `revision_resource_types`
+--
+
+CREATE TABLE IF NOT EXISTS `revision_resource_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `key_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `key_name` (`key_name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `revision_resource_types`
+--
+
+INSERT INTO `revision_resource_types` (`id`, `name`, `key_name`) VALUES
+(1, 'Entry', 'ENTRY'),
+(2, 'Content Type', 'CONTENT_TYPE'),
+(3, 'Snippet', 'SNIPPET');
 
 -- --------------------------------------------------------
 

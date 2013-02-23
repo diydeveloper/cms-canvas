@@ -24,11 +24,6 @@ class Content_types_model extends DataMapper
             'other_field' => 'content_types',
             'join_self_as' => 'content_type',
         ),
-        'content_type_revisions' => array(
-            'class' => 'content_type_revisions_model',
-            'other_field' => 'content_types',
-            'join_self_as' => 'content_type',
-        ),
     );
     
     /*
@@ -79,21 +74,22 @@ class Content_types_model extends DataMapper
     /*
      * Add Revision
      *
-     * Adds the content type data to the content type revisions table
+     * Adds the content type data to the revisions table
      *
      * @return void
      */
     public function add_revision()
     {
         $CI =& get_instance();
-        $CI->load->model('content_type_revisions_model');
+        $CI->load->model('revisions_model');
 
         $_POST['layout'] = (isset($_POST['layout'])) ? $CI->input->post('layout') : '';
         $_POST['page_head'] = (isset($_POST['page_head'])) ? $CI->input->post('page_head') : '';
 
         // Delete old revsions so that not to exceed 5 revisions
-        $Revision = new Content_type_revisions_model();
-        $Revision->where('content_type_id', $this->id)
+        $Revision = new Revisions_model();
+        $Revision->where_related('revision_resource_types', 'key_name', 'CONTENT_TYPE')
+            ->where('resource_id', $this->id)
             ->order_by('id', 'desc')
             ->limit(25, 5 - 1)
             ->get()
@@ -101,12 +97,56 @@ class Content_types_model extends DataMapper
             
         // Serialize and save post data to content type revisions table
         $User = $CI->secure->get_user_session();
-        $Revision = new Content_type_revisions_model();
-        $Revision->content_type_id = $this->id;
+        $Revision = new Revisions_model();
+        $Revision->revision_resource_type_id = Revision_resource_types_model::CONTENT_TYPE;
+        $Revision->resource_id = $this->id;
         $Revision->author_id = $User->id;
         $Revision->author_name = $User->first_name . ' ' . $User->last_name;
         $Revision->revision_date = date('Y-m-d H:i:s');
         $Revision->revision_data = serialize($CI->input->post());
         $Revision->save();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Get Revisions
+     *
+     * Gets past revisions for the content type
+     *
+     * @return void
+     */
+    public function get_revisions() {
+        $CI =& get_instance();
+        $CI->load->model('revisions_model');
+
+        $Revisions = new Revisions_model();
+        $Revisions->where_related('revision_resource_types', 'key_name', 'CONTENT_TYPE')
+                  ->where('resource_id', $this->id)
+                  ->order_by('id', 'desc')
+                  ->get();
+
+        return $Revisions;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Delete Revisions
+     *
+     * Deletes the current content type's revisions
+     *
+     * @return void
+     */
+    public function delete_revisions() {
+        $CI =& get_instance();
+        $CI->load->model('revisions_model');
+
+        $Revisions = new Revisions_model();
+        $Revisions->where_related('revision_resource_types', 'key_name', 'CONTENT_TYPE')
+                  ->where('resource_id', $this->id)
+                  ->get();
+
+        $Revisions->delete_all();
     }
 }
