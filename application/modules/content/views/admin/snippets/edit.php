@@ -98,7 +98,7 @@
         <?php if ( ! $edit_mode): ?>
             // Auto Generate Url Title
             $('#title').keyup( function(e) {
-                $('#short_name').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))
+                $('#short_name').val($(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, ''))
             });
         <?php endif; ?>
 
