@@ -265,6 +265,7 @@ $admin_access_options = array(
     ADMIN_PATH . '/users'                => 'Users',
     ADMIN_PATH . '/users/groups'         => 'User Groups',
     ADMIN_PATH . '/content/types'        => 'Tools / Content Types',
+    ADMIN_PATH . '/content/snippets'     => 'Tools / Code Snippets',
     ADMIN_PATH . '/categories'           => 'Tools / Categories',
     ADMIN_PATH . '/settings/theme-editor' => 'Tools / Theme Editor',
     ADMIN_PATH . '/settings/general-settings' => 'General Settings',

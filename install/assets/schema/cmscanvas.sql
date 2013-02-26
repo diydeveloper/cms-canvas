@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
 
 INSERT INTO `groups` (`id`, `name`, `type`, `permissions`, `required`, `modifiable_permissions`) VALUES
 (1, 'Super Admin', 'super_admin', NULL, 1, 0),
-(2, 'Administrator', 'administrator', 'a:1:{s:6:"access";a:10:{i:0;s:23:"sitemin/content/entries";i:1;s:21:"sitemin/content/types";i:2;s:18:"sitemin/navigation";i:3;s:13:"sitemin/users";i:4;s:20:"sitemin/users/groups";i:5;s:33:"sitemin/settings/general-settings";i:6;s:28:"sitemin/settings/clear-cache";i:7;s:29:"sitemin/settings/theme-editor";i:8;s:28:"sitemin/settings/server-info";i:9;s:17:"sitemin/galleries";}}', 1, 0);
+(2, 'Administrator', 'administrator', 'a:1:{s:6:"access";a:12:{i:0;s:23:"sitemin/content/entries";i:1;s:19:"sitemin/navigations";i:2;s:17:"sitemin/galleries";i:3;s:13:"sitemin/users";i:4;s:20:"sitemin/users/groups";i:5;s:21:"sitemin/content/types";i:6;s:24:"sitemin/content/snippets";i:7;s:18:"sitemin/categories";i:8;s:29:"sitemin/settings/theme-editor";i:9;s:33:"sitemin/settings/general-settings";i:10;s:28:"sitemin/settings/clear-cache";i:11;s:28:"sitemin/settings/server-info";}}', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -437,6 +437,21 @@ INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
 (17, 'notification_email', '', NULL),
 (18, 'editor_stylesheet', 'assets/css/content.css', NULL),
 (19, 'enable_inline_editing', '0', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snippets`
+--
+
+CREATE TABLE IF NOT EXISTS `snippets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL,
+  `short_name` varchar(50) NOT NULL,
+  `snippet` text NOT NULL,
+  PRIMARY KEY (`id`)
+  KEY `short_name` (`short_name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
