@@ -449,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `snippets` (
   `title` varchar(50) NOT NULL,
   `short_name` varchar(50) NOT NULL,
   `snippet` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   KEY `short_name` (`short_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
