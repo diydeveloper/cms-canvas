@@ -72,7 +72,7 @@ class Snippets extends Admin_Controller {
         if ($this->form_validation->run() == TRUE)
         {
             $Snippet->from_array($this->input->post());
-            if ($edit_mode) {
+            if ($data['edit_mode']) {
                 $Snippet->id = $snippet_id;
             }
             $Snippet->save();
