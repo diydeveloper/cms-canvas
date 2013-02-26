@@ -805,7 +805,13 @@ class Navigations_library
 
         if ($Current_crumb !== FALSE)
         {
-            $crumbs = $this->_breadcrumb($Current_crumb);
+            $crumbs = $this->_breadcrumb($Current_crumb, 1, $config);
+
+            // Return empty string if there is only one crumb and parameter hide_single set true
+            if (isset($config['hide_single']) && str_to_bool($config['hide_single']) && count($crumbs) <= 1)
+            {
+                return '';
+            }
 
             if ($this->_content == '')
             {
@@ -885,7 +891,7 @@ class Navigations_library
      * @access protected
      * @return string
      */
-    protected function _breadcrumb($Item, $depth = 1)
+    protected function _breadcrumb($Item, $depth = 1, $config = array())
     {
         $crumbs = array();
 
@@ -914,13 +920,25 @@ class Navigations_library
             $crumbs[] = object_to_array($Item);
         } 
 
-        // Check if item has a parent to process
-        if ($Item->parent_id > 0)
+        // Check if item has a parent to process or if include_home is set true
+        if ($Item->parent_id > 0
+            || (isset($config['include_home']) && str_to_bool($config['include_home']) 
+            && $Item->parent_id == 0 && $Item->id != $this->CI->settings->content_module->site_homepage)
+        )
         {
+            if (isset($config['include_home']) && str_to_bool($config['include_home']) && $Item->parent_id == 0)
+            {
+                $entry_id = $this->CI->settings->content_module->site_homepage;
+            }
+            else
+            {
+                $entry_id = $Item->parent_id;
+            }
+
             $query = $this->CI->db->select('navigation_items.*, entries.title as entry_title, entries.slug')
                 ->from('navigation_items')
                 ->join('entries', 'entries.id = navigation_items.entry_id', 'left')
-                ->where('navigation_items.id', $Item->parent_id)
+                ->where('navigation_items.id', $entry_id)
                 ->limit(1)
                 ->get();
 
@@ -932,7 +950,7 @@ class Navigations_library
             }
 
             $query->free_result();
-        }
+        } 
 
         return $crumbs;
     }
