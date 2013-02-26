@@ -52,6 +52,10 @@
                         'hidden' => TRUE, // Used for selected parents for this section
                     ),
                     array(
+                        'title' => 'Code Snippets',
+                        'url'   => 'content/snippets',
+                    ),
+                    array(
                         'title' => 'Categories',
                         'url'   => 'content/categories/groups',
                     ),

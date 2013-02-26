@@ -11,6 +11,7 @@ class Step2 extends CI_Controller
     );
     public $writable_subdirs = array(
         'assets/cms/cache/content_types' => FALSE,
+        'assets/cms/cache/snippets' => FALSE,
         'assets/cms/cache/datamapper' => FALSE,
         'assets/cms/cache/entries' => FALSE,
         'assets/cms/cache/navigations' => FALSE,

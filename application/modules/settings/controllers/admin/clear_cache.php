@@ -38,6 +38,9 @@ class Clear_cache extends Admin_Controller
                     case "content_types":
                         $this->cache->delete_all('content_types');
                         break;
+                    case "snippets":
+                        $this->cache->delete_all('snippets');
+                        break;
                     case "images":
                         // Cached images are located outside the cache directory 
                         // due to strict security restrictions on the cache folder

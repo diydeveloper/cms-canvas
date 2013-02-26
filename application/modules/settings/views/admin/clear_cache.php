@@ -27,6 +27,11 @@
                 </div>
                 <div>
                     <span>
+                        <label><?php echo form_checkbox(array('name' => 'cache[snippets]', 'value' => '1', 'checked' => set_checkbox('cache[snippets]', '1', TRUE))); ?> Code Snippets</label>
+                    </span>
+                </div>
+                <div>
+                    <span>
                         <label><?php echo form_checkbox(array('name' => 'cache[navigations]', 'value' => '1', 'checked' => set_checkbox('cache[navigations]', '1', TRUE))); ?> Navigations</label>
                     </span>
                 </div>

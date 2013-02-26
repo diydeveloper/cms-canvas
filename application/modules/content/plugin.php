@@ -94,5 +94,20 @@ class Content_plugin extends Plugin
 
         return archive($attributes);
     }
+
+    // ------------------------------------------------------------------------
+
+    /*
+     * Snippet
+     *
+     * Returns resusable code snippets
+     *
+     * @return array
+     */
+    public function snippets($data)
+    {
+        $attributes = $this->attributes();
+        return snippets($attributes, $data);
+    }
 }
 

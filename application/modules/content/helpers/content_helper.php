@@ -161,3 +161,42 @@ if ( ! function_exists('is_home'))
         }
     }
 }
+
+// ------------------------------------------------------------------------
+
+/*
+ * Snippets
+ *
+ * Returns a reusable code snippet
+ *
+ * @return string
+ */
+if ( ! function_exists('snippets'))
+{
+    function snippets($config, $data)
+    {
+        $CI =& get_instance();
+        $CI->load->library('parser');
+
+        $Snippet = $CI->cache->model('snippets_cache_model', 'cacheable_get_by_short_name', array('short_name' => $config['snippet']), 'snippets');
+        unset($config['snippet']);
+
+        $rename_tags = array_flip($config);
+
+        foreach ($data as $tag => $value)
+        {
+            if (isset($rename_tags[$tag]))
+            {
+                $refactord_data[$rename_tags[$tag]] = $value;
+            }
+            else
+            {
+                $refactord_data[$tag] = $value;
+            }
+        }
+
+        $parsed_content = $CI->parser->parse_string($Snippet->snippet, $refactord_data, TRUE);
+
+        return $parsed_content;
+    }
+}
