@@ -179,8 +179,8 @@ if ( ! function_exists('snippets'))
         $CI->load->library('parser');
 
         $Snippet = $CI->cache->model('snippets_cache_model', 'cacheable_get_by_short_name', array('short_name' => $config['snippet']), 'snippets');
-        unset($config['snippet']);
 
+        // Refactor data array renaming parent tags to snippet tag names
         $rename_tags = array_flip($config);
 
         foreach ($data as $tag => $value)
@@ -188,11 +188,22 @@ if ( ! function_exists('snippets'))
             if (isset($rename_tags[$tag]))
             {
                 $refactord_data[$rename_tags[$tag]] = $value;
+                unset($rename_tags[$tag]);
             }
             else
             {
                 $refactord_data[$tag] = $value;
             }
+        }
+
+        // Add literal values to the refactored data array
+        $literals = array_flip($rename_tags);
+
+        foreach ($literals as $tag => $literal_value)
+        {
+            $literal_value = trim($literal_value, '"');
+            $literal_value = trim($literal_value, "'");
+            $refactord_data[$tag] = $literal_value;
         }
 
         $parsed_content = $CI->parser->parse_string($Snippet->snippet, $refactord_data, TRUE);
