@@ -27,7 +27,8 @@ if ( ! function_exists('nav'))
         // Set the id as the config attribute id;
         $config['id'] = $nav_id;
 
-        return $CI->navigations_library->list_nav($config);
+        $Navigations_library = new Navigations_library;
+        return $Navigations_library->list_nav($config);
     }
 }
 
@@ -60,6 +61,7 @@ if ( ! function_exists('breadcrumb'))
         // Set the id as the config attribute id;
         $config['id'] = $id;
 
-        return $CI->navigations_library->breadcrumb($config);
+        $Navigations_library = new Navigations_library;
+        return $Navigations_library->breadcrumb($config);
     }
 }

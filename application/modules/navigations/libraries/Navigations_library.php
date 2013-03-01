@@ -683,7 +683,7 @@ class Navigations_library
             if ( ! empty($this->_content))
             {
                 $item_array = array(
-                    'category_id' => $Item->id,
+                    'node_id' => $Item->id,
                     'title' => $Item->title,
                     'target' => $Item->target,
                     'id' => $Item->tag_id,
