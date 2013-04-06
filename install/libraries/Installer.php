@@ -22,7 +22,7 @@ class Installer
     public $encryption_key = null;
     private $_conn = null;
 
-    public function __construct($db)
+    public function __construct($config)
     {
         $this->CI =& get_instance();
         $this->server = $config['server'];
