@@ -1,6 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
 
+    # Tell PHP that the mod_rewrite module is ENABLED
+    SetEnv HTTP_MOD_REWRITE On
+
     RewriteBase /install
 
     # Check if user is accessing a file or folder that already exists

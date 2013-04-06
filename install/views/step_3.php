@@ -5,11 +5,15 @@
     <p class="error"><?php echo $error; ?></p>
 <?php endforeach; ?>
 <?php echo form_open(); ?>
-<p>1 . Please enter name of your website.</p>
+<p>1 . Please enter site and server information.</p>
 <div class="box form">
     <div>
         <label for="site_name">Site Name:<span class="required">*</span></label>
         <?php echo form_input(array('name' => 'site_name', 'id' => 'site_name', 'value' => set_value('site_name'))); ?>
+    </div>
+    <div>
+        <label for="site_name">Server:<span class="required">*</span></label>
+        <?php echo form_dropdown('server', array('' => '-- Select One --', 'apache_wo' => 'Apache (Without mod_rewrite)', 'apache_w' => 'Apache (With mod_rewrite)', 'other' => 'Other'), set_value('server', ($rewrite_support) ? 'apache_w' : 'apache_wo')); ?>
     </div>
 </div>
 <p>2 . Please enter your database connection details.</p>

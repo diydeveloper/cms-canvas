@@ -11,6 +11,7 @@
 class Installer
 {
     public $CI;
+    public $server;
     public $hostname;
     public $username;
     public $password;
@@ -24,12 +25,13 @@ class Installer
     public function __construct($db)
     {
         $this->CI =& get_instance();
-        $this->hostname = $db['hostname'];
-        $this->username = $db['username'];
-        $this->password = $db['password'];
-        $this->database = $db['database'];
-        $this->port = $db['port'];
-        $this->prefix = $db['prefix'];
+        $this->server = $config['server'];
+        $this->hostname = $config['db']['hostname'];
+        $this->username = $config['db']['username'];
+        $this->password = $config['db']['password'];
+        $this->database = $config['db']['database'];
+        $this->port = $config['db']['port'];
+        $this->prefix = $config['db']['prefix'];
     }
 
     public function test_db_connection()
@@ -110,11 +112,11 @@ class Installer
     {
         $this->encryption_key = md5(uniqid('', true));
 
-        $test_mod_rewrite = @file_get_contents(base_url() . '/step1');
+        $enable_mod_rewrite = ($this->server == 'apache_w') ? TRUE : FALSE;
 
         $index_page = 'index.php';
 
-        if ($test_mod_rewrite !== FALSE)
+        if ($enable_mod_rewrite !== FALSE)
         {
             $index_page = '';
         }

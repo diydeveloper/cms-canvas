@@ -9,6 +9,7 @@ class Step3 extends CI_Controller
         $data = array();
 
         $this->form_validation->set_rules('site_name', 'Site Name', 'trim|required');
+        $this->form_validation->set_rules('server', 'Server', 'trim|required');
         $this->form_validation->set_rules('hostname', 'Database Host', 'trim|required');
         $this->form_validation->set_rules('username', 'Database Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Database Password', 'trim|required');
@@ -23,13 +24,14 @@ class Step3 extends CI_Controller
 
         if ($this->form_validation->run())
         {
-            $db['hostname'] = $this->input->post('hostname');
-            $db['username'] = $this->input->post('username');
-            $db['password'] = $this->input->post('password');
-            $db['database'] = $this->input->post('database');
-            $db['prefix'] = $this->input->post('prefix');
-            $db['port'] = $this->input->post('port');
-            $this->load->library('installer', $db);
+            $config['db']['hostname'] = $this->input->post('hostname');
+            $config['db']['username'] = $this->input->post('username');
+            $config['db']['password'] = $this->input->post('password');
+            $config['db']['database'] = $this->input->post('database');
+            $config['db']['prefix'] = $this->input->post('prefix');
+            $config['db']['port'] = $this->input->post('port');
+            $config['server'] = $this->input->post('server');
+            $this->load->library('installer', $config);
 
             try 
             {
@@ -51,8 +53,25 @@ class Step3 extends CI_Controller
             }
         }
 
+        $data['rewrite_support'] = $this->test_mod_rewrite();
         $data['errors'] = $this->errors;
         $data['content'] = $this->load->view('step_3', $data, TRUE);
         $this->load->view('global', $data);
+    }
+
+    private function test_mod_rewrite() 
+    {
+        if (function_exists('apache_get_modules') && is_array(apache_get_modules()) && in_array('mod_rewrite', apache_get_modules())) 
+        {
+            return true;
+        } 
+        else if (getenv('HTTP_MOD_REWRITE') !== false)
+        {
+            return (getenv('HTTP_MOD_REWRITE') == 'On') ? true : false ;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

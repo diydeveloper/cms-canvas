@@ -208,6 +208,12 @@ span.good {
     width: 200px;
 }
 
+.form select {
+    border: 1px solid #DDDDDD;
+    padding: 5px;
+    width: 210px;
+}
+
 .required {
     color: red;
 }
