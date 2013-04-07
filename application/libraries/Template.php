@@ -29,7 +29,8 @@ class Template
     public $meta_keywords;
     public $theme_path = 'themes';
 
-    private $_js_order = array();  // Tracks the order in which javascripts and inline scripts were added
+    private $_header_js_order = array();  // Tracks the order in which javascripts and inline scripts were added for header includes
+    private $_footer_js_order = array();  // Tracks the order in which javascripts and inline scripts were added for footer includes
     private $_css_order = array();  // Tracks the order in which stylesheets and inline css were added
 
     function __construct()
@@ -307,7 +308,7 @@ class Template
      * @param string or array
      * @return object
      */
-    function add_javascript($javascripts)
+    function add_javascript($javascripts, $footer = FALSE)
     {
         if ( ! is_array($javascripts))
         {
@@ -324,11 +325,22 @@ class Template
                 $this->javascripts[] = $javascript;
                 $index = end(array_keys($this->javascripts));
 
-                // Keep track of the order in which javascripts and scripts are added
-                $this->_js_order[] = array(
+                // Determine where this script needs to be included
+                // and keep track of the order in which javascripts and scripts are added
+                if ($footer || $this->headers_sent) 
+                {
+                    $this->_footer_js_order[] = array(
                         'array' => 'javascripts',
                         'index' => $index,
                     );
+                }
+                else
+                {
+                    $this->_header_js_order[] = array(
+                        'array' => 'javascripts',
+                        'index' => $index,
+                    );
+                }
             }
         }
 
@@ -345,7 +357,7 @@ class Template
      * @param string or array
      * @return object
      */
-    function add_script($scripts)
+    function add_script($scripts, $footer = FALSE)
     {
         if ( ! is_array($scripts))
         {
@@ -357,11 +369,22 @@ class Template
             $this->scripts[] = $javascript;
             $index = end(array_keys($this->scripts));
 
-            // Keep track of the order in which javascripts and scripts are added
-            $this->_js_order[] = array(
+            // Determine where this script needs to be included
+            // and keep track of the order in which javascripts and scripts are added
+            if ($footer || $this->headers_sent) 
+            {
+                $this->_footer_js_order[] = array(
                     'array' => 'scripts',
                     'index' => $index,
                 );
+            }
+            else
+            {
+                $this->_header_js_order[] = array(
+                    'array' => 'scripts',
+                    'index' => $index,
+                );
+            }
         }
 
         return $this;
@@ -471,11 +494,20 @@ class Template
      *
      * @return string
      */
-    function javascripts()
+    function javascripts($footer = FALSE)
     {
+        if ($footer)
+        {
+            $js_order_array = '_footer_js_order';
+        }
+        else
+        {
+            $js_order_array = '_header_js_order';
+        }
+
         $js_includes = "\n\t<script>var BASE_HREF=\"" . base_url() . "\"</script>";
 
-        foreach ($this->_js_order as $js_order) 
+        foreach ($this->$js_order_array as $js_order) 
         {
             if ($js_order['array'] == 'javascripts')
             {
@@ -497,7 +529,10 @@ class Template
             }
         }
 
-        $this->headers_sent = TRUE;
+        if ( ! $footer)
+        {
+            $this->headers_sent = TRUE;
+        }
 
         return $js_includes;
     }
@@ -609,6 +644,24 @@ class Template
         $return .= $this->javascripts();
         $return .= $this->page_head();
         $return .= $this->analytics();
+
+        return $return;
+    }
+
+    // --------------------------------------------------------------------
+
+    /*
+     * Footer
+     *
+     * Commonly used in the footer template file immediately before the closing </body> tag
+     * Outputs the footer javascripts
+     *
+     * @return string
+     */
+    function footer()
+    {
+        $return = '';
+        $return .= $this->javascripts(TRUE);
 
         return $return;
     }

@@ -6,6 +6,7 @@
 
         </div><!-- container -->
 
+        {{ template:footer }}
     </body>
 
 </html>

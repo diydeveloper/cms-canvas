@@ -88,6 +88,11 @@ class Template_plugin extends Plugin
         return $this->template->head();
     }
 
+    public function footer()
+    {
+        return $this->template->footer();
+    }
+
     public function xml_output()
     {
         return xml_output();
