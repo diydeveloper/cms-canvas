@@ -29,16 +29,16 @@ class Content_fields_model extends DataMapper
     {
         if ($this->exists())
         {
-            $column_query = $this->db->query("Show columns from `entries_data` like 'field_id_" . $this->id . "'");
+            $column_query = $this->db->query("Show columns from `" . $this->db->dbprefix('entries_data') . "` like 'field_id_" . $this->id . "'");
 
             if ($column_query->num_rows() == 0)
             {
-                $sql = "ALTER TABLE `entries_data` ADD `field_id_" . $this->id . "` $datatype NULL";
+                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` ADD `field_id_" . $this->id . "` $datatype NULL";
                 $this->db->query($sql);
             }
             else
             {
-                $sql = "ALTER TABLE `entries_data` MODIFY `field_id_" . $this->id . "` $datatype NULL";
+                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` MODIFY `field_id_" . $this->id . "` $datatype NULL";
                 $this->db->query($sql);
             }
 
@@ -62,11 +62,11 @@ class Content_fields_model extends DataMapper
     {
         if ($this->exists())
         {
-            $column_query = $this->db->query("Show columns from `entries_data` like 'field_id_" . $this->id . "'");
+            $column_query = $this->db->query("Show columns from `" . $this->db->dbprefix('entries_data') . "` like 'field_id_" . $this->id . "'");
 
             if ($column_query->num_rows() > 0)
             {
-                $sql = "ALTER TABLE `entries_data` DROP `field_id_" . $this->id ."`";
+                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` DROP `field_id_" . $this->id ."`";
                 $this->db->query($sql);
             }
 
