@@ -75,7 +75,7 @@
                         <td><?php echo date('m/d/Y h:i a', strtotime($Entry->modified_date)); ?></td>
                         <td class="right"><?php if ($Entry->slug != ''): ?>[ <?php echo anchor("$Entry->slug", 'View', 'target="_blank"'); ?> ]<?php endif; ?> [ <?php echo anchor(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id, 'Edit'); ?> ]</td>
                     </tr>
-                    <? endforeach ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <tr class="center"><td colspan="8">No results found.</td></tr>
                 <?php endif; ?>

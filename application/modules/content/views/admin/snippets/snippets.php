@@ -28,7 +28,7 @@
                             <td><?php echo $Snippet->short_name; ?></td>
                             <td class="right">[ <a href="<?php echo site_url(ADMIN_PATH . '/content/snippets/edit/' . $Snippet->id); ?>">Edit</a> ]</td>
                         </tr>
-                        <?endforeach?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td class="center" colspan="4">No snippets have been added.</td>

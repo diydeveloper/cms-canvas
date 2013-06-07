@@ -30,7 +30,7 @@
                             <td class="right"><?php echo $Type->entries->count() . ' / ' . (($Type->entries_allowed == '') ? 'Unlimited' : $Type->entries_allowed); ?></td>
                             <td class="right">[ <a href="<?php echo site_url(ADMIN_PATH . '/content/fields/index/' . $Type->id); ?>">Fields</a> ] [ <a href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $Type->id); ?>">Edit</a> ]</td>
                         </tr>
-                        <?endforeach?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td class="center" colspan="4">No content types have been added.</td>

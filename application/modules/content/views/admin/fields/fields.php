@@ -34,7 +34,7 @@
                             <td><?php echo $Field->content_field_types_title; ?></td>
                             <td class="right">[ <a href="<?php echo site_url(ADMIN_PATH . '/content/fields/edit/' . $Type->id . '/' . $Field->id); ?>">Edit</a> ]</td>
                         </tr>
-                        <?endforeach?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td class="center" colspan="6">No content fields have been added.</td>
