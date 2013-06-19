@@ -33,12 +33,12 @@ class Content_fields_model extends DataMapper
 
             if ($column_query->num_rows() == 0)
             {
-                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` ADD `field_id_" . $this->id . "` $datatype NULL";
+                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` ADD `field_id_" . $this->id . "` $datatype DEFAULT NULL";
                 $this->db->query($sql);
             }
             else
             {
-                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` MODIFY `field_id_" . $this->id . "` $datatype NULL";
+                $sql = "ALTER TABLE `" . $this->db->dbprefix('entries_data') . "` MODIFY `field_id_" . $this->id . "` $datatype DEFAULT NULL";
                 $this->db->query($sql);
             }
 
