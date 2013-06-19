@@ -12,7 +12,7 @@
         <div class="form">
             <?php echo form_open(null, 'id="image_form"'); ?>
             <div>
-                <?php echo form_label('Title:', 'title'); ?>
+                <?php echo form_label('<span class="required">*</span> Title:', 'title'); ?>
                 <?php echo form_input(array( 'name' => 'title', 'value' => set_value('title', isset($Image->title) ? $Image->title : ''))); ?>
             </div>
 
@@ -65,7 +65,7 @@
             };
             var left = (screen.width/2)-(800/2);
             var top = (screen.height/2)-(600/2);
-            window.open('/assets/js/kcfinder/browse.php?type=images',
+            window.open(THEME_URL + '/assets/js/kcfinder/browse.php?type=images',
                 'kcfinder_image', 'status=0, toolbar=0, location=0, menubar=0, ' +
                 'directories=0, resizable=1, scrollbars=0, width=800, height=600, top=' + top + ', left=' + left
             );

@@ -91,6 +91,7 @@ class Images extends Admin_Controller
         
         // Validate Form
         $this->form_validation->set_rules('title', 'Title', "trim|required");
+        $this->form_validation->set_rules('alt', 'Alternative Text', "trim");
         $this->form_validation->set_rules('description', 'Description', 'trim');
         $this->form_validation->set_rules('filename', 'filename', 'trim|required');
         $this->form_validation->set_rules('hide', 'Hide', 'trim|integer');
