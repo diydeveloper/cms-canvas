@@ -43,7 +43,7 @@ if ( ! config_item('installed'))
 {
     if (file_exists(CMS_ROOT . 'install'))
     {
-        header('Location: /install/index.php');
+       header('Location: ' . BASE_URL . 'install/index.php');
     }
     else
     {
