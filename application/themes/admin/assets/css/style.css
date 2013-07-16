@@ -639,6 +639,7 @@ table.form > tbody > tr > td {
 	margin-right: 2px;
     float: left;
     border-radius: 3px 3px 0 0;
+    outline: 0;
 }
 
 .htabs li.ui-tabs-active a {
