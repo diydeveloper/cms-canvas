@@ -76,6 +76,23 @@ class Pages_model extends CI_Model
     {
         $this->template->add_package('ckeditor');
         $this->template->add_javascript('/application/modules/content/assets/js/content_editable.js');
+
+        // Disable all links while inline editing unless they are in the admin toolbar
+        if ($this->settings->enable_inline_editing)
+        {
+            $script = 
+            "jq_admin_toolbar(document).ready(function() {
+                jq_admin_toolbar('a').click(function() {
+                    if ($(this).closest('#admin-toolbar').length) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            });";
+
+            $this->template->add_script($script);
+        }
     }
 
     // ------------------------------------------------------------------------
