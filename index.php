@@ -75,13 +75,13 @@ if (defined('ENVIRONMENT'))
 	$application_folder = 'application';
 
 /*
-*--------------------------------------------------------------------------
-* Base URL
-*--------------------------------------------------------------------------
-*
-* Attemtps to figure the root web address
-*
-*/
+ *--------------------------------------------------------------------------
+ * Base URL
+ *--------------------------------------------------------------------------
+ *
+ * Attemtps to figure the root web address
+ *
+ */
 	if (isset($_SERVER['HTTP_HOST']))
 	{
 	    $base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
@@ -96,6 +96,7 @@ if (defined('ENVIRONMENT'))
 	define('BASE_URL', $base_url);
 
 	unset($base_url);
+
 
 /*
  * --------------------------------------------------------------------
@@ -214,7 +215,7 @@ if (defined('ENVIRONMENT'))
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
-	
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE DATAMAPPER BOOTSTRAP FILE

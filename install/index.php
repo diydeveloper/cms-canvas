@@ -56,7 +56,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = '../system';
+	$system_path = 'system';
 
 /*
  *---------------------------------------------------------------
@@ -72,16 +72,16 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = './';
+	$application_folder = 'application';
 
 /*
-*--------------------------------------------------------------------------
-* Base URL
-*--------------------------------------------------------------------------
-*
-* Attemtps to figure the root web address
-*
-*/
+ *--------------------------------------------------------------------------
+ * Base URL
+ *--------------------------------------------------------------------------
+ *
+ * Attemtps to figure the root web address
+ *
+ */
 	if (isset($_SERVER['HTTP_HOST']))
 	{
 	    $base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
