@@ -431,6 +431,20 @@ class Navigations_library
                     {
                         $subset = $nav;
                     }
+                    else if ($Item->current)
+                    {
+                        // If we reach this point, the starting parent depth is greater
+                        // than the current page's depth. Go ahead and return the children of the
+                        // current item. If there are no children then return its siblings.
+                        if (count($Item->sub) > 0)
+                        {
+                            $subset = $Item->sub;
+                        }
+                        else
+                        {
+                            $subset = $nav;
+                        }
+                    }
                     else
                     {
                         $subset = $this->_current_parent_subset($Item->sub, $depth + 1);
