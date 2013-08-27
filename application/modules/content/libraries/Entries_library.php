@@ -373,11 +373,11 @@ class Entries_library
 
             if (is_numeric($url_param))
             {
-                $this->db->where('`entries`.id', $url_param);
+                $this->db->where('entries.id', $url_param);
             }
             else
             {
-                $this->db->where('`entries`.url_title', $url_param);
+                $this->db->where('entries.url_title', $url_param);
             }
         } 
     }
@@ -794,7 +794,7 @@ class Entries_library
 
             // A valid year was found so filter entries
             $year = $parameters[$archive_index + 1];
-            $this->db->where('YEAR(`entries`.`created_date`)', $year);
+            $this->db->where('YEAR(`' . $this->CI->db->dbprefix('entries') . '`.`created_date`)', $year);
 
             /// Check if a month was specified and validate the month
             if ( ! isset($parameters[$archive_index + 2]) || ! preg_match('/^0[1-9]|1[012]$/', $parameters[$archive_index + 2]))
@@ -804,7 +804,7 @@ class Entries_library
 
             // A valid month was found so filter entries
             $month = $parameters[$archive_index + 2];
-            $this->db->where('MONTH(`entries`.`created_date`)', $month);
+            $this->db->where('MONTH(`' . $this->CI->db->dbprefix('entries') . '`.`created_date`)', $month);
         } 
     }
 
@@ -823,7 +823,7 @@ class Entries_library
         $this->db->select('categories.*');
         $this->db->from('categories');
         $this->db->join('categories_entries', 'categories.id = categories_entries.category_id');
-        $this->db->where('`categories_entries`.`entry_id`', $data['entry_id']);
+        $this->db->where('categories_entries.`entry_id`', $data['entry_id']);
         $Query = $this->db->get();
         $category_array = array();
 
@@ -922,7 +922,7 @@ class Entries_library
 
             $this->db->join('categories_entries', 'entries.id = categories_entries.entry_id');
             $this->db->join('categories', 'categories_entries.category_id = categories.id');
-            $this->db->where('`categories`.`url_title`', $url_title);
+            $this->db->where('categories.`url_title`', $url_title);
         } 
     }
 
