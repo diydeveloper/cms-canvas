@@ -553,7 +553,7 @@ class Entries extends Admin_Controller {
     {
         $slug = trim($slug, '/');
 
-        $regex = "(([a-zA-Z0-9+\$_-]\.?)+)*\/?"; // Path
+        $regex = "(\/?([a-zA-Z0-9+\$_-]\.?)+)*\/?"; // Path
         $regex .= "(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:@&%=+\/\$_.-]*)?"; // GET Query
         $regex .= "(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?"; // Anchor 
 
