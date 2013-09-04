@@ -1,3 +1,5 @@
+Options -Indexes 
+
 <IfModule mod_rewrite.c>
     RewriteEngine on
 
@@ -13,6 +15,11 @@
 
     # Allow access to asset directories
     RewriteCond $1 ^application.*
+    RewriteCond $1 !(assets.*)
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+
+    # Allow access to asset directories
+    RewriteCond $1 ^themes.*
     RewriteCond $1 !(assets.*)
     RewriteRule ^(.*)$ /index.php/$1 [L]
 
