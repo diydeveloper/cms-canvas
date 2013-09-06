@@ -44,7 +44,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 | Defines the version number for cms canvas
 |
 */
-define('CC_VERSION', '1.1.4');
+define('CC_VERSION', '1.1.5');
 
 /*
 |--------------------------------------------------------------------------
