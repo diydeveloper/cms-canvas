@@ -12,7 +12,7 @@ class Step3 extends CI_Controller
         $this->form_validation->set_rules('server', 'Server', 'trim|required');
         $this->form_validation->set_rules('hostname', 'Database Host', 'trim|required');
         $this->form_validation->set_rules('username', 'Database Username', 'trim|required');
-        $this->form_validation->set_rules('password', 'Database Password', 'trim|required');
+        $this->form_validation->set_rules('password', 'Database Password', 'trim');
         $this->form_validation->set_rules('database', 'Database Name', 'trim|required');
         $this->form_validation->set_rules('port', 'Database Port', 'trim|required');
         $this->form_validation->set_rules('prefix', 'Database Prefix', 'trim');
