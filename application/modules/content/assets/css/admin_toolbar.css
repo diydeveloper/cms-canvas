@@ -3,7 +3,7 @@ body {
 }
 
 #admin-toolbar {
-    background: url("/application/modules/content/assets/images/toolbar/menu.png") repeat-x scroll 0 0 transparent;
+    background: url("../images/toolbar/menu.png") repeat-x scroll 0 0 transparent;
     clear: both;
     height: 45px;
     min-width: 900px;
@@ -18,7 +18,7 @@ body {
 
 #admin-toolbar #admin-toolbar-shadow {
     clear: both;
-    background: url("/application/modules/content/assets/images/toolbar/admin-toolbar-shadow.png") repeat-x scroll 0 0px;
+    background: url("../images/toolbar/admin-toolbar-shadow.png") repeat-x scroll 0 0px;
     height: 11px;
     margin: 0 -30px;
 }
@@ -41,7 +41,7 @@ body {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	background: url('/application/modules/content/assets/images/toolbar/transparent.png');
+	background: url('../images/toolbar/transparent.png');
 }
 
 #admin-toolbar > ul a {
@@ -52,7 +52,7 @@ body {
 }
 
 #admin-toolbar > ul > li + li {
-	background: url('/application/modules/content/assets/images/toolbar/split.png') center left no-repeat;
+	background: url('../images/toolbar/split.png') center left no-repeat;
 }
 
 #admin-toolbar > ul .admin-toolbar-top, #admin-toolbar > ul li li.sfhover {
@@ -72,7 +72,7 @@ body {
 }
 
 #admin-toolbar > ul .selected .admin-toolbar-top {
-	background: url('/application/modules/content/assets/images/toolbar/selected.png') repeat-x;
+	background: url('../images/toolbar/selected.png') repeat-x;
 	color: #FFFFFF;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 #admin-toolbar > ul .parent {
-	background: url('/application/modules/content/assets/images/toolbar/arrow-right.png') 95% center no-repeat;
+	background: url('../images/toolbar/arrow-right.png') 95% center no-repeat;
 }
 
 #admin-toolbar > ul li {
@@ -123,7 +123,7 @@ body {
     display: block;
     width: 15px;
     height: 15px;
-    background: url('/application/modules/content/assets/images/toolbar/settings.png') no-repeat center center;
+    background: url('../images/toolbar/settings.png') no-repeat center center;
 }
 
 #admin-save-status {
