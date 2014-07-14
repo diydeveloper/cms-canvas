@@ -312,9 +312,14 @@ if ( ! function_exists('glob_recursive'))
     {
         $files = glob($pattern, $flags);
         
-        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+         if($files)
         {
-            $files = array_merge($files, glob_recursive($dir.'/'.basename($pattern), $flags));
+            $glob=glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT);
+            if($glob)
+                foreach ($glob as $dir)
+                {
+                    $files = array_merge($files, glob_recursive($dir.'/'.basename($pattern), $flags));
+                }
         }
         
         return $files;
