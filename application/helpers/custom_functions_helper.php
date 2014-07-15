@@ -290,7 +290,15 @@ if ( ! function_exists('domain_name'))
         $info = parse_url($CI->config->item('base_url'));
         $host = $info['host'];
         $host_names = explode(".", $host);
-        return $host_names[count($host_names)-2] . "." . $host_names[count($host_names)-1];
+	
+        if (count($host_names) <= 1)
+        {
+            return ( ! empty($host_names)) ? current($host_names) : 'localhost';
+        }
+        else
+        {
+            return $host_names[count($host_names) - 2] . "." . $host_names[count($host_names) - 1];
+        }
     }
 }
 
