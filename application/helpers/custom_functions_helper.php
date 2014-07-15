@@ -311,10 +311,22 @@ if ( ! function_exists('glob_recursive'))
     function glob_recursive($pattern, $flags = 0)
     {
         $files = glob($pattern, $flags);
+
+	if ( ! is_array($files)) 
+	{
+	    $files = array();
+        }
         
-        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+	$directories = glob(dirname($pattern) . '/*', GLOB_ONLYDIR|GLOB_NOSORT);
+
+	if ( ! is_array($directories)) 
+	{
+	    $directories = array();
+        }
+
+        foreach ($directories as $directory)
         {
-            $files = array_merge($files, glob_recursive($dir.'/'.basename($pattern), $flags));
+	    $files = array_merge($files, glob_recursive($directory . '/' . basename($pattern), $flags));
         }
         
         return $files;
