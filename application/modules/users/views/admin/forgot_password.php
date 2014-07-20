@@ -3,7 +3,7 @@
     <div class="heading">
         <h1><img src="<?php echo theme_url('assets/images/user.png'); ?>" alt="" /> Forgot Your Password?</h1>
         <div class="buttons">
-            <a onclick="$('#forgotten').submit();" class="button"><span>Reset</span></a>
+            <a onclick="document.getElementById('forgotten').submit();" class="button"><span>Reset</span></a>
             <a href="<?php echo site_url(ADMIN_PATH . '/users/login'); ?>" class="button"><span>Cancel</span></a>
         </div>
     </div>
