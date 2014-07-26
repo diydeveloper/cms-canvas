@@ -1,0 +1,219 @@
+/**
+ * CMS Canvas
+ *
+ * @author      Mark Price
+ * @copyright   Copyright (c) 2012
+ * @license     MIT License
+ * @link        http://cmscanvas.com
+ */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.clear {
+    height: 0px;
+    clear: both;
+}
+
+#container {
+    width: 960px;
+    margin: 0 auto; 
+    background-color: #FFFFFF;
+    padding: 15px;
+}
+
+header ul, footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#logo {
+    display: block;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 20px 0;
+    color: #000000;
+}
+
+#content_wrapper {
+    padding: 20px 0;
+}
+
+#left_column {
+    float: left;
+    width: 699px;
+    padding-right: 20px;
+    border-right: 1px solid #CCCCCC;
+}
+
+#right_column {
+    float: left;
+    width: 220px;
+    padding-left: 20px;
+}
+
+footer {
+    padding: 15px 0;
+    text-align: center;
+}
+
+/* NAVIGATION */
+nav {
+	background: #000000;
+	position: relative;
+	z-index: 1;
+	clear: both;
+}
+
+nav > ul.left {
+	float: left;
+}
+
+nav > ul.right {
+	float: right;
+}
+
+nav > ul {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+nav > ul ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	background: #000000;
+    opacity: .8;
+}
+
+nav > ul a, nav ul a:hover {
+    color: #FFFFFF;
+}
+
+nav > ul ul a, nav > ul ul a:hover {
+	display: block;
+	color: #FFFFFF;
+	text-decoration: none;
+	padding: 5px;
+}
+
+nav > ul > li + li {
+    border-left: 1px solid #333333;
+}
+
+nav > ul > li > a, nav > ul li li.sfhover {
+	display: block;
+	color: #FFFFFF;
+	text-decoration: none;
+	padding: 10px 15px 9px 17px;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+nav > ul ul li {
+	padding: 2px;
+}
+
+nav > ul > li.current > a {
+	background: #333333;
+	color: #FFFFFF;
+}
+
+nav > ul > li.current:hover > a, nav > ul > li.sfHover > a {
+}
+
+nav > ul li {
+    margin: 0;
+	float: left;
+	list-style: none;
+}
+
+nav > ul li ul {
+	position: absolute;
+}
+
+nav > ul li li {
+	clear: both;
+}
+
+nav > ul li ul a {
+	color: #FFFFFF;
+	height: 15px;
+	width: 145px;
+}
+
+nav > ul li ul ul {
+	margin: -27px 0 0 157px;
+}
+
+nav > ul li li:hover, nav > ul li li.sfhover {
+	background: #333333;
+	color: #000000;
+}
+/* END NAVIGATION */
+
+/* FORMS */
+form input[type="text"], 
+form input[type="password"] {
+    width: 210px;
+    vertical-align: middle;
+}
+
+form textarea {
+    width: 400px;
+    height: 80px;
+    vertical-align: top;
+}
+
+form input[type="text"], 
+form input[type="password"],
+form select, form textarea {
+    padding: 3px;
+}
+
+form > div, form fieldset > div {
+    margin-bottom: 5px;
+}
+
+form > div > label, 
+form fieldset > div > label {
+    display: inline-block;
+    width: 100px;
+    vertical-align: middle;
+}
+
+form span.required {
+    color: red;
+}
+/* END FORMS */
+
+/* NOTICES */
+p.success {
+	padding: 10px 10px 10px 33px;
+	margin-bottom: 15px;
+	background: #EAF7D9 url('../images/success.png') 10px center no-repeat;
+	border: 1px solid #BBDF8D;
+	color: #555555;
+}
+
+p.warning, p.error {
+	padding: 10px 10px 10px 33px;
+	margin-bottom: 15px;
+	background: #FFD1D1 url('../images/warning.png') 10px center no-repeat;
+	border: 1px solid #F8ACAC;
+	color: #555555;
+}
+
+p.attention {
+	padding: 10px 10px 10px 33px;
+	margin-bottom: 15px;
+	background: #FFF5CC url('../images/attention.png') 10px center no-repeat;
+	border: 1px solid #F2DD8C;
+	color: #555555;
+}
+/* END NOTICES */

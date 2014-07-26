@@ -1,0 +1,26 @@
+{
+    "name": "diyphpdeveloper/cmscanvas",
+    "description": "Laravel CMS",
+    "keywords": ["laravel", "CMS", "Content Management System"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "diyphpdeveloper",
+            "email": "contact@cmscanvas.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/controllers",
+            "src/models"
+        ],
+        "psr-0": {
+            "CmsCanvas": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
