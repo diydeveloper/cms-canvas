@@ -154,8 +154,16 @@ class TypeController extends AdminController {
         $contentType->fill(Input::all());
         $contentType->save();
 
-        return Redirect::route('admin.content.type.edit', $contentType->id)
-            ->with('message', "{$contentType->title} was successfully updated.");
+        if (Input::get('save_exit'))
+        {
+            return Redirect::route('admin.content.type.types')
+                ->with('message', "{$contentType->title} was successfully updated.");
+        }
+        else
+        {
+            return Redirect::route('admin.content.type.edit', $contentType->id)
+                ->with('message', "{$contentType->title} was successfully updated.");
+        }
     }
 
 }

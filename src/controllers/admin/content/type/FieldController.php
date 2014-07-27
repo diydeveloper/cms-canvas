@@ -44,11 +44,11 @@ class FieldController extends AdminController {
      *
      * @return View
      */
-    public function postFields()
+    public function postFields($contentType)
     {
         Type::processFilterRequest();
 
-        return Redirect::route('admin.content.type.types');
+        return Redirect::route('admin.content.type.field.fields', array($contentType->id));
     }
 
     /**
@@ -56,20 +56,20 @@ class FieldController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete($contentType)
     {
         $selected = Input::get('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.type.types')
-                ->with('notice', 'You must select at least one content type to delete.');
+            return Redirect::route('admin.content.type.field.fields', array($contentType->id))
+                ->with('notice', 'You must select at least one field to delete.');
         }
 
         $selected = array_values($selected);
 
-        Type::destroy($selected);
+        Field::destroy($selected);
 
-        return Redirect::route('admin.content.type.types')
+        return Redirect::route('admin.content.type.field.fields', array($contentType->id))
             ->with('message', 'The selected content type(s) were sucessfully deleted.');;
     }
 
@@ -121,7 +121,7 @@ class FieldController extends AdminController {
 
         if ($validator->fails())
         {
-            return Redirect::route('admin.content.type.field.edit', $contentType->id)
+            return Redirect::route('admin.content.type.field.add', $contentType->id)
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
@@ -197,14 +197,6 @@ class FieldController extends AdminController {
         }
 
         $contentTypeField->fill(Input::all());
-        $settings = Input::get('settings');
-        $contentTypeField->settings = null;
-
-        if ( ! empty($settings))
-        {
-            $contentTypeField->settings = json_encode($settings);
-        }
-
         $contentTypeField->save();
 
         return Redirect::route('admin.content.type.field.fields', $contentType->id)
@@ -231,7 +223,7 @@ class FieldController extends AdminController {
     }
 
     /**
-     * Updates the sort order for the content type fields
+     * Updates the setting fields on a field type change
      *
      * @return void
      */
