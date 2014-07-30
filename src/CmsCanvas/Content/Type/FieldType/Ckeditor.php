@@ -5,12 +5,22 @@ use CmsCanvas\Content\Type\FieldType;
 
 class Ckeditor extends FieldType {
 
-    function settings()
+    /**
+     * Returns a view of additional settings for the ckeditor field
+     *
+     * @return \Illuminate\View\View
+     */
+    public function settings()
     {
         return View::make('CmsCanvas\Content\Type\FieldType::ckeditor.settings')
             ->with('fieldType', $this);
     }
 
+    /**
+     * Returns a view of the ckeditor field input
+     *
+     * @return \Illuminate\View\View
+     */
     public function inputField()
     {
         Theme::addPackage('ckeditor');
@@ -57,6 +67,11 @@ class Ckeditor extends FieldType {
             ->with('fieldType', $this);
     }
 
+    /**
+     * Returns the rendered data for the field
+     *
+     * @return string
+     */
     public function render()
     {
         if ( ! isset($this->field->settings->inline_editing) || $this->field->settingsinline_editing)
@@ -70,6 +85,12 @@ class Ckeditor extends FieldType {
         }
     }
 
+    /**
+     * Returns the inline editable field
+     * @todo - Need to get this working
+     *
+     * @return string
+     */
     private function inlineEditable()
     {
         if ($this->isInlineEditable())
@@ -79,7 +100,7 @@ class Ckeditor extends FieldType {
             $_SESSION['KCFINDER']['disabled'] = false;
             $_SESSION['isLoggedIn'] = true;
 
-            return '<div id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_admin_editable cc_ck_editable" contenteditable="true">{{ noparse }}' . $this->content . '{{ /noparse }}</div>';
+            return '<div id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_admin_editable cc_ck_editable" contenteditable="true">{{ noparse }}' . $this->data . '{{ /noparse }}</div>';
         }
     }
 

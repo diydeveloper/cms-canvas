@@ -79,4 +79,21 @@ class Checkbox extends FieldType {
         return null;
     }
 
+    /**
+     * Returns the rendered data for the field
+     *
+     * @return mixed
+     */
+    public function render()
+    {
+        $itemArray = array();
+
+        foreach ($this->data as $value)
+        {
+            $itemArray[] = array('item' => $value);
+        }
+
+        return $itemArray;
+    }
+
 }

@@ -128,14 +128,6 @@ class FieldController extends AdminController {
 
         $contentTypeField = new Field();
         $contentTypeField->fill(Input::all());
-        $settings = Input::get('settings');
-        $contentTypeField->settings = null;
-
-        if ( ! empty($settings))
-        {
-            $contentTypeField->settings = json_encode($settings);
-        }
-
         $contentTypeField->content_type_id = $contentType->id;
         $contentTypeField->save();
 
