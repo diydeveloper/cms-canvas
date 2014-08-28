@@ -3,6 +3,20 @@
 class Content_plugin extends Plugin
 {
     /*
+     * Entry ID
+     *
+     * Returns ID for a specified entry id
+     *
+     * @return int
+     */
+    public function entry_id()
+    {
+        return $this->attribute('entry_id');
+    }
+
+    // ------------------------------------------------------------------------
+    
+    /*
      * Entry URL
      *
      * Returns URL for a specified entry id
