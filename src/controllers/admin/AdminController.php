@@ -28,6 +28,14 @@ class AdminController extends BaseController {
     {
         // Load jQuery by default
         Theme::addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
+
+        // Set up the session for KCFinder
+        if (session_id() == '') {
+            @session_start();
+        }
+        $_SESSION['KCFINDER'] = array(
+            'disabled' => false
+        );
     }
 
 }

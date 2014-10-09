@@ -80,26 +80,7 @@ class FieldController extends AdminController {
      */
     public function getAdd($contentType)
     {
-        $content = View::make('cmscanvas::admin.content.type.field.edit');
-        $content->contentType = $contentType;
-
-        $types = Type::orderBy('name', 'asc')
-            ->get();
-
-        $selectedType = $types->first();
-
-        $fieldType = FieldType::baseFactory($selectedType->key_name);
-
-        $content->fieldTypeSettings = $fieldType->settings();
-        $content->fieldTypeSelectOptions = $types->getKeyValueArray('id', 'name', false);
-
-
-        $this->layout->breadcrumbs = array(
-            '/content/type' => 'Content Types',
-            '/content/type/'.$contentType->id.'/field' => 'Content Type Fields',
-            Request::path() => 'Add Field'
-        );
-        $this->layout->content = $content;
+        // Routed to getEdit
     }
 
     /**
@@ -109,38 +90,15 @@ class FieldController extends AdminController {
      */
     public function postAdd($contentType)
     {
-        $rules = array(
-            'content_type_field_type_id' => 'required',
-            'label' => 'required',
-            'short_tag' => 'required',
-            'required' => 'required',
-            'translate' => 'required',
-        );
-
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails())
-        {
-            return Redirect::route('admin.content.type.field.add', $contentType->id)
-                ->withInput()
-                ->with('error', $validator->messages()->all());
-        }
-
-        $contentTypeField = new Field();
-        $contentTypeField->fill(Input::all());
-        $contentTypeField->content_type_id = $contentType->id;
-        $contentTypeField->save();
-
-        return Redirect::route('admin.content.type.field.fields', $contentType->id)
-            ->with('message', "{$contentTypeField->label} was successfully updated.");
+        // Routed to postEdit
     }
 
     /**
-     * Display add content type form
+     * Display edit content type form
      *
      * @return View
      */
-    public function getEdit($contentType, $contentTypeField)
+    public function getEdit($contentType, $contentTypeField = null)
     {
         $content = View::make('cmscanvas::admin.content.type.field.edit');
         $content->contentType = $contentType;
@@ -149,7 +107,14 @@ class FieldController extends AdminController {
         $types = Type::orderBy('name', 'asc')
             ->get();
 
-        $selectedType = $types->getFirstWhere('id', $contentTypeField->content_type_field_type_id);
+        if ($contentTypeField == null)
+        {
+            $selectedType = $types->first();
+        }
+        else
+        {
+            $selectedType = $types->getFirstWhere('id', $contentTypeField->content_type_field_type_id);
+        }
 
         $fieldType = FieldType::baseFactory($selectedType->key_name, $contentTypeField);
 
@@ -159,17 +124,17 @@ class FieldController extends AdminController {
         $this->layout->breadcrumbs = array(
             '/content/type' => 'Content Types',
             '/content/type/'.$contentType->id.'/field' => 'Content Type Fields',
-            Request::path() => 'Edit Field'
+            Request::path() => (($contentTypeField == null) ? 'Add' : 'Edit') . 'Field'
         );
         $this->layout->content = $content;
     }
 
     /**
-     * Update an existing content type
+     * Add or update a content type
      *
      * @return View
      */
-    public function postEdit($contentType, $contentTypeField)
+    public function postEdit($contentType, $contentTypeField = null)
     {
         $rules = array(
             'content_type_field_type_id' => 'required',
@@ -179,16 +144,42 @@ class FieldController extends AdminController {
             'translate' => 'required',
         );
 
+        $typeId = Input::get('content_type_field_type_id');
+        if ( ! empty($typeId))
+        {
+            $type = Type::find($typeId);
+            $fieldType = FieldType::baseFactory($type->key_name, $contentTypeField);
+            $settingsValidationRules = $fieldType->getSettingsValidationRules();
+            $rules = array_merge($rules, $settingsValidationRules);
+        }
+
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::route('admin.content.type.field.edit', array($contentType->id, $contentTypeField->id))
-                ->withInput()
-                ->with('error', $validator->messages()->all());
+            if ($contentTypeField == null)
+            {
+                return Redirect::route('admin.content.type.field.add', $contentType->id)
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
+            else
+            {
+                return Redirect::route('admin.content.type.field.edit', array($contentType->id, $contentTypeField->id))
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
         }
 
-        $contentTypeField->fill(Input::all());
+        if ($contentTypeField == null)
+        {
+            $contentTypeField = new Field();
+        }
+        $contentTypeField->fill(Input::except('settings'));
+        $fieldType->setSettings(Input::get('settings'), true);
+        $saveSettings = $fieldType->getSaveSettings();
+        $contentTypeField->settings = ($saveSettings !== null && $saveSettings !== '') ? $saveSettings : null;
+        $contentTypeField->content_type_id = $contentType->id;
         $contentTypeField->save();
 
         return Redirect::route('admin.content.type.field.fields', $contentType->id)

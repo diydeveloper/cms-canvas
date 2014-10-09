@@ -24,6 +24,13 @@ abstract class FieldType {
     public $data;
 
     /**
+     * A object containing metadata for the field type
+     *
+     * @var object
+     */
+    public $metadata;
+
+    /**
      * A object containing additional settings for the field type
      *
      * @var object
@@ -43,13 +50,15 @@ abstract class FieldType {
         \CmsCanvas\Models\Content\Type\Field $field = null, 
         \CmsCanvas\Models\Content\Entry $entry = null,
         $locale = null,
-        $data = ''
+        $data = '',
+        $metadata = null 
     )
     {
         $this->setField($field);
         $this->setEntry($entry);
         $this->setLocale($locale);
         $this->setData($data);
+        $this->setMetadata($metadata);
     }
 
     /**
@@ -65,12 +74,13 @@ abstract class FieldType {
         \CmsCanvas\Models\Content\Type\Field $field, 
         \CmsCanvas\Models\Content\Entry $entry = null,
         $locale = null,
-        $data = ''
+        $data = '',
+        $metadata = null 
     )
     {
         $className = '\CmsCanvas\Content\Type\FieldType\\'.ucfirst(strtolower($field->type->key_name));
 
-        return new $className($field, $entry, $locale, $data);
+        return new $className($field, $entry, $locale, $data, $metadata);
     }
 
     /**
@@ -115,6 +125,62 @@ abstract class FieldType {
     }
 
     /**
+     * Returns a unique metadata identifier for the field type
+     *
+     * @param string $property|null
+     * @return string
+     */
+    public function getMetadataKey($property = null)
+    {
+        $metadataKey = 'field_id_'.$this->field->id.'_'.$this->locale.'_metadata';
+
+        if ($property != null)
+        {
+            $metadataKey .= '['.$property.']';
+        }
+
+        return $metadataKey;
+    }
+
+    /**
+     * Returns a unique setting identifier for the field type
+     *
+     * @param string $property|null
+     * @return string
+     */
+    public function getSettingsKey($property = null)
+    {
+        $settingsKey = 'settings';
+
+        if ($property != null)
+        {
+            $settingsKey .= '['.$property.']';
+        }
+
+        return $settingsKey;
+    }
+
+    /**
+     * Returns the metadata value for the provided property
+     *
+     * @param string $property
+     * @return string
+     */
+    public function getMetadata($property, $defaultValue = null)
+    {
+        if (isset($this->metadata->$property) && $this->metadata->$property !== '' 
+            && $this->metadata->$property !== null
+        )
+        {
+            return $this->metadata->$property;
+        }
+        else
+        {
+            return $defaultValue;
+        }
+    }
+
+    /**
      * Sets the entry class variable
      *
      * @param \CmsCanvas\Models\Content\Type\Field $field
@@ -156,9 +222,10 @@ abstract class FieldType {
      * Sets the data class variable
      *
      * @param string $data
+     * @param bool $fromFormData
      * @return void
      */
-    public function setData($data)
+    public function setData($data, $fromFormData = false)
     {
         $this->data = $data;
     }
@@ -169,13 +236,71 @@ abstract class FieldType {
      * @param string $settings
      * @return void
      */
-    public function setSettings($settings)
+    public function setSettings($settings, $fromFormData = false)
     {
-        $settings = @json_decode($settings);
-
-        if (is_object($settings))
+        if ($fromFormData)
         {
-            $this->settings = $settings;
+            $filteredSettings = array();
+            foreach ($settings as $key => $value) {
+                if ($value !== '' && $value !== null)
+                {
+                    $filteredSettings[$key] = $value;
+                }
+            }
+            $this->settings = (count($filteredSettings) > 0) ? (object) $filteredSettings : null;
+        }
+        else
+        {
+            $settings = @json_decode($settings);
+            $this->settings = (is_object($settings)) ? $settings : null;
+        }
+    }
+
+    /**
+     * Returns the setting value for the provided property
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function getSetting($property, $defaultValue = null)
+    {
+        if (isset($this->settings->$property) && $this->settings->$property !== '' 
+            && $this->settings->$property !== null
+        )
+        {
+            return $this->settings->$property;
+        }
+        else
+        {
+            return $defaultValue;
+        }
+    }
+
+    /**
+     * Sets the settings object for the field type
+     *
+     * @param string $settings
+     * @param bool $fromFormData
+     * @return void
+     */
+    public function setMetadata($metadata, $fromFormData = false)
+    {
+        // The data is an array when being set from a form post
+        if ($fromFormData)
+        {
+            $filteredMetadata = array();
+            foreach ($metadata as $key => $value) {
+                if ($value !== '' && $value !== null)
+                {
+                    $filteredMetadata[$key] = $value;
+                }
+            }
+            $this->metadata = (count($filteredMetadata) > 0) ? (object) $filteredMetadata : null;
+        }
+        else
+        {
+            $metadata = @json_decode($metadata);
+            $this->metadata = (is_object($metadata)) ? $metadata : null;
         }
     }
 
@@ -197,6 +322,16 @@ abstract class FieldType {
     }
 
     /**
+     * Returns an array of validation rules for settings
+     *
+     * @return array
+     */
+    public function getSettingsValidationRules()
+    {
+        return array();
+    }
+
+    /**
      * Returns the data to be saved to the database
      *
      * @return string
@@ -204,6 +339,36 @@ abstract class FieldType {
     public function getSaveData()
     {
         return $this->data;
+    }
+
+    /**
+     * Returns a serialized metadata object to be saved to the database
+     *
+     * @return string
+     */
+    public function getSaveMetadata()
+    {
+        if ($this->metadata !== null && $this->metadata !== '')
+        {
+            return @json_encode($this->metadata);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a serialized settings object to be saved to the database
+     *
+     * @return string
+     */
+    public function getSaveSettings()
+    {
+        if ($this->settings !== null && $this->settings !== '')
+        {
+            return @json_encode($this->settings);
+        }
+
+        return null;
     }
 
     /**

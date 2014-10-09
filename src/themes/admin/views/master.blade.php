@@ -15,7 +15,7 @@
         <script type="text/javascript">
             var ADMIN_PATH = '{{ Admin::getUrlPrefix() }}';
             var ADMIN_URL = '{{ Admin::url() }}';
-            var THEME_URL = '<?php //echo theme_url(); ?>';
+            var THEME_URL = '{{ Theme::asset() }}';
         </script>
 
         <!-- Controller Defined JS Files -->

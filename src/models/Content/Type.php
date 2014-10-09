@@ -288,8 +288,10 @@ class Type extends Model {
             {
                 $dataItem = $fieldDataItems->getFirstWhere('locale', $locale);
                 $data = ($dataItem != null) ? $dataItem->data : '';
+                $metadata = ($dataItem != null) ? $dataItem->metadata : '';
 
                 $fieldType->setData($data);
+                $fieldType->setMetadata($metadata);
             }
 
             $fieldViews[] = View::make('cmscanvas::admin.content.entry.editField')

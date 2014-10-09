@@ -88,22 +88,4 @@ class Field extends Model {
         return $this->belongsTo('\CmsCanvas\Models\Content\Type\Field\Type', 'content_type_field_type_id');
     }
 
-    /**
-     * Mutates the settings attribute to a JSON encoded string
-     *
-     * @param string
-     * @return void
-     */
-    public function setSettingsAttribute($value)
-    {
-        if ( ! empty($value)) 
-        {
-            $this->attributes['settings'] = json_encode($value);
-        }
-        else
-        {
-            $this->attributes['settings'] = null;
-        }
-    }
-
 }

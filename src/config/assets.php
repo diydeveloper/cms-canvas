@@ -92,6 +92,11 @@ return array(
                 Theme::asset('js/jqueryui/smoothness/jquery-ui-1.9.2.custom.css', 'admin'),
             ),
         ),
+        'image_field' => array(
+            'javascript' => array(
+                Theme::asset('js/image_field.js', 'admin'),
+            )
+        ),
     )
 
 );

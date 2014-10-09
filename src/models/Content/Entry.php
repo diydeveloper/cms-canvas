@@ -105,7 +105,7 @@ class Entry extends Model {
     public function getRenderedData()
     {
         $query = $this->contentTypeFields()
-            ->select('content_type_fields.*', 'entry_data.data')
+            ->select('content_type_fields.*', 'entry_data.data', 'entry_data.metadata')
             ->leftJoin('entry_data', 'entry_data.content_type_field_id', '=', 'content_type_fields.id')
             ->leftJoin('languages', 'entry_data.language_id', '=', 'languages.id')
             ->whereNull('languages.default')
@@ -130,7 +130,13 @@ class Entry extends Model {
 
         foreach ($contentTypeFields as $contentTypeField) 
         {
-            $fieldType = FieldType::factory($contentTypeField, $this, $locale, $contentTypeField->data);
+            $fieldType = FieldType::factory(
+                $contentTypeField, 
+                $this, 
+                $locale, 
+                $contentTypeField->data, 
+                $contentTypeField->metadata
+            );
             $data[$contentTypeField->short_tag] = $fieldType->render();
         }
 

@@ -41,10 +41,10 @@ class Checkbox extends FieldType {
      * @param string $data
      * @return void
      */
-    public function setData($data)
+    public function setData($data, $fromFormData = false)
     {
         // The data is already an array when being set from a form post
-        if (is_array($data))
+        if ($fromFormData)
         {
             $this->data = $data;
         }

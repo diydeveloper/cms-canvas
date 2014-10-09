@@ -115,7 +115,9 @@ class Theme {
             $theme = $this->theme;
         }
 
-        return asset('packages/diyphpdeveloper/cmscanvas/themes/'.$theme.'/'.ltrim($path, '/'));
+        $themeAssets = trim(Config::get('cmscanvas::config.themeAssets'), '/').'/';
+
+        return asset($themeAssets.$theme.'/'.ltrim($path, '/'));
     }
 
     /**

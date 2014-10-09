@@ -13,9 +13,11 @@
 			    		<?php
 					    	$dataItem = $fieldDataItems->getFirstWhere('locale', $language->locale);
 					    	$data = ($dataItem != null) ? $dataItem->data : '';
+                            $metadata = ($dataItem != null) ? $dataItem->metadata : '';
 
 				    		$fieldType->setLocale($language->locale);
 				    		$fieldType->setData($data);
+                            $fieldType->setMetadata($metadata);
 			    		?>
 				        {{ $fieldType->inputField() }}
 			    	</div>

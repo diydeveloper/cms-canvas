@@ -5,7 +5,7 @@
             $fieldType->data,
             array(
                 'class' => 'textarea_content ckeditor_textarea', 
-                'style' => ( ! empty($fieldType->settings->height)) ? 'height: ' . $fieldType->settings->height . 'px;' : 'height: 300px;', 
+                'style' => 'height: ' . $fieldType->getSetting('height', '300') . 'px;', 
             )
         )
     }}

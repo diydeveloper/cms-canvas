@@ -1,12 +1,13 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass;
+use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App;
 use CmsCanvas\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Models\User;
+use Content;
 
 class EntryController extends AdminController {
 
@@ -173,6 +174,27 @@ class EntryController extends AdminController {
             return Redirect::route('admin.content.entry.edit', array($contentType->id, $entry->id))
                 ->with('message', "{$entry->title} was successfully updated.");
         }
+    }
+
+    /**
+     * Update an existing entry
+     *
+     * @return View
+     */
+    public function postCreateThumbnail()
+    {
+        if ( ! Request::ajax())
+        {
+            App::abort(404);
+        }
+
+        return Content::thumbnail(
+            Input::get('image_path'), 
+            150, 
+            150, 
+            false, 
+            array('noImage' => Theme::asset('images/no_image.jpg'))
+        );
     }
 
 }

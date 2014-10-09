@@ -56,6 +56,7 @@ Route::group(array('prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.aut
             Route::post('/', array('as' => 'admin.content.entry.entries.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\EntryController@postEntries'));
 
             Route::post('delete', array('as' => 'admin.content.entry.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\EntryController@postDelete'));
+            Route::post('create-thumbnail', array('as' => 'admin.content.entry.create.thumbnail.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\EntryController@postCreateThumbnail'));
 
         });
 
@@ -87,8 +88,8 @@ Route::group(array('prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.aut
 
                 Route::post('delete', array('as' => 'admin.content.type.field.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@postDelete'));
 
-                Route::get('add', array('as' => 'admin.content.type.field.add', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@getAdd'));
-                Route::post('add', array('as' => 'admin.content.type.field.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@postAdd'));
+                Route::get('add', array('as' => 'admin.content.type.field.add', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@getEdit'));
+                Route::post('add', array('as' => 'admin.content.type.field.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@postEdit'));
 
                 Route::get('{contentTypeField}/edit', array('as' => 'admin.content.type.field.edit', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@getEdit'));
                 Route::post('{contentTypeField}/edit', array('as' => 'admin.content.type.field.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\Type\FieldController@postEdit'));

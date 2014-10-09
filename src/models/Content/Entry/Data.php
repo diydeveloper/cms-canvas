@@ -16,7 +16,7 @@ class Data extends Model {
      *
      * @var array
      */
-    protected $fillable = array('title', 'route');
+    protected $fillable = array('entry_id', 'content_type_field_id', 'language_id', 'data', 'metadata');
 
     /**
      * The columns that can NOT be mass-assigned.

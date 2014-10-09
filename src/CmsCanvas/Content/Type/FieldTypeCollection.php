@@ -17,7 +17,12 @@ class FieldTypeCollection extends CmsCanvasCollection {
 		{
 			if (isset($array[$item->getKey()]))
 			{
-				$item->setData($array[$item->getKey()]);
+				$item->setData($array[$item->getKey()], true);
+			}
+
+			if (isset($array[$item->getMetadataKey()]))
+			{
+				$item->setMetadata($array[$item->getMetadataKey()], true);
 			}
 		}
 	}
@@ -43,15 +48,17 @@ class FieldTypeCollection extends CmsCanvasCollection {
 			}
 
 			$data = $item->getSaveData();
+			$metadata = $item->getSaveMetadata();
 
-			// Only insert data if it is not an empty string
-			if ($data !== '')
+			// Only insert data if it is not an empty string and not null
+			if (($data !== '' && $data !== null) || ($metadata !== '' && $metadata !== null))
 			{
 				$entryData = new \CmsCanvas\Models\Content\Entry\Data;
 				$entryData->entry_id = $item->entry->id;
 				$entryData->content_type_field_id = $item->field->id;
 				$entryData->language_id = $localeIds[$item->locale];
-				$entryData->data = $data;
+				$entryData->data = ($data === '' || $data === null) ? null : $data;
+				$entryData->metadata = ($metadata === '' || $metadata === null) ? null : $metadata;
 				$entryData->save();
 			}
 		}
