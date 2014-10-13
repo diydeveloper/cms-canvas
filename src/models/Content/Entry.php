@@ -1,8 +1,9 @@
 <?php namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, stdClass, View, Cache;
+use Lang, StringView, stdClass, View, Cache, DB;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
+use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 
 class Entry extends Model {
@@ -75,17 +76,6 @@ class Entry extends Model {
     }
 
     /**
-     * Defines a has many through relationship with content type fields
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function contentTypeFields()
-    {
-        return $this->hasManyThrough('CmsCanvas\Models\Content\Type\Field', 'CmsCanvas\Models\Content\Type', 'id', 'content_type_id')
-            ->with('type');
-    }
-
-    /**
      * Returns all data for all lanaguages for the current entry
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -98,33 +88,42 @@ class Entry extends Model {
     }
 
     /**
+     * Queries for content type fields with entry data
+     *
+     * @return \CmsCanvas\Models\Content\Type\Field|Collection
+     */
+    public function getContentTypeFields()
+    {
+        $entry = $this;
+        $locale = Lang::getLocale();
+
+        $query = Field::with('type')
+            ->select('content_type_fields.*', 'entry_data.data', 'entry_data.metadata')
+            ->join('content_types', 'content_types.id', '=', 'content_type_fields.content_type_id')
+            ->leftJoin(
+                DB::raw('(`entry_data` inner join `languages` on `entry_data`.`language_id` = `languages`.`id` and `languages`.`locale` = \''.$locale.'\')'), 
+                function($join) use($entry)
+                {
+                    $join->on('entry_data.content_type_field_id', '=', 'content_type_fields.id')
+                        ->where('entry_data.entry_id', '=', $entry->id);
+                }
+            )
+            ->where('content_types.id', $entry->content_type_id);
+
+        return $query->get();
+    }
+
+    /**
      * Returns an array of transalated data for the current entry
      *
      * @return array
      */
-    public function getRenderedData()
+    public function getRenderedData($contentTypeFields = null)
     {
-        $query = $this->contentTypeFields()
-            ->select('content_type_fields.*', 'entry_data.data', 'entry_data.metadata')
-            ->leftJoin('entry_data', 'entry_data.content_type_field_id', '=', 'content_type_fields.id')
-            ->leftJoin('languages', 'entry_data.language_id', '=', 'languages.id')
-            ->whereNull('languages.default')
-            ->orWhere('languages.default', 1);
-
-        $locale = Lang::getLocale();
-        $fallbackLocale = Lang::getFallback();
-
-        if ($locale != $fallbackLocale)
-        {          
-            $query->where('content_type_fields.translate', 0)
-                ->orWhere(function($query) use ($locale)
-                {
-                    $query->where('content_type_fields.translate', 1)
-                          ->where('languages.locale', $locale);
-                });
+        if ($contentTypeFields == null)
+        {
+            $contentTypeFields = $this->getContentTypeFields();
         }
-
-        $contentTypeFields = $query->get();
 
         $data = array();
 
@@ -133,7 +132,7 @@ class Entry extends Model {
             $fieldType = FieldType::factory(
                 $contentTypeField, 
                 $this, 
-                $locale, 
+                Lang::getLocale(), 
                 $contentTypeField->data, 
                 $contentTypeField->metadata
             );
@@ -148,28 +147,30 @@ class Entry extends Model {
     /**
      * Generates a view with the entry's data
      *
+     * @param array $parameters
      * @return \CmsCanvas\StringView\StringView
      */
-    public function render()
+    public function render($parameters = array())
     {
         $data = $this->getRenderedData();
+        $data = array_merge($data, $parameters);
 
         return $this->contentType->render($data);
     }
 
     /**
-     * Caches the entry's render
+     * Renders an entry page from cache
      *
+     * @param \CmsCanvas\Container\Cache\Page $cache
+     * @param array $parameters
      * @return \CmsCanvas\StringView\StringView
      */
-    public function cacheRender()
+    public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
     {
-        $entry = $this;
+        $data = $this->getRenderedData($cache->getContentTypeFields());
+        $data = array_merge($data, $parameters);
 
-        return Cache::rememberForever($this->getRouteName(), function() use($entry)
-        {
-            return $entry->render();
-        });
+        return $this->contentType->render($data);
     }
 
     /**

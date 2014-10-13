@@ -243,25 +243,21 @@ class Type extends Model {
     }
 
     /**
-     * Caches the content type's render
+     * Renders a content type page from cache
      *
+     * @param \CmsCanvas\Container\Cache\Page $cache
+     * @param array $parameters
      * @return \CmsCanvas\StringView\StringView
      */
-    public function cacheRender($data = array())
+    public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
     {
-        $contentType = $this;
-
-        return Cache::rememberForever($this->getRouteName(), function() use($contentType)
-        {
-            return $contentType->render($data);
-        });
+        return $this->render($parameters);
     }
 
     /**
      * Builds an array of views for administrative editing
      *
      * @param \CmsCanvas\Models\Content\Entry $entry
-     *
      * @return \Illuminate\View\View|array
      */
     public function getAdminFieldViews(\CmsCanvas\Models\Content\Entry $entry = null)
@@ -308,7 +304,6 @@ class Type extends Model {
      * current entry including translations
      *
      * @param \CmsCanvas\Models\Content\Entry $entry
-     *
      * @return \CmsCanvas\Content\Type\FieldType|FieldTypeCollection
      */
     public function getAllFieldTypeInstances(\CmsCanvas\Models\Content\Entry $entry = null)

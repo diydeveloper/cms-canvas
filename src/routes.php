@@ -47,7 +47,7 @@ if (in_array($firstSegment, $locales))
     
 Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
 {
-    foreach($contentTypes as $contentType)
+    foreach ($contentTypes as $contentType)
     {
         Route::any(
             $contentType->getRoute(), 
@@ -58,7 +58,7 @@ Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
         );
     }
 
-    foreach($entries as $entry)
+    foreach ($entries as $entry)
     {
         Route::any(
             $entry->getRoute(), 

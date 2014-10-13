@@ -8,11 +8,10 @@ class Content {
 
     public function entries($config)
     {
-        // $entries = new Entries()
-        // $entries->build($config)
-        // $entries->get();
+        // $entries = new Entries($config);
+        // $view = $entries->get();
 
-        // return $entries;
+        // return $view;
     }
 
     public function thumbnail($source, $width = null, $height = null, $crop = false, $additionalArguments = array())
@@ -26,11 +25,18 @@ class Content {
 
         $sourceModificationTime = @filemtime($sourceImage);
 
-        if ($source == false || isset($additionalArguments['noImage']) && $sourceModificationTime === false) 
+        if ($source == false || $sourceModificationTime === false) 
         {
-            $additionalArguments['noImage'] = str_replace(asset(null), '', $additionalArguments['noImage']);
-            $sourceImage = public_path($additionalArguments['noImage']);
-            $sourceModificationTime = @filemtime($sourceImage);
+            if (isset($additionalArguments['noImage']))
+            {
+                $additionalArguments['noImage'] = str_replace(asset(null), '', $additionalArguments['noImage']);
+                $sourceImage = public_path($additionalArguments['noImage']);
+                $sourceModificationTime = @filemtime($sourceImage);
+            }
+            else
+            {
+                return '';
+            }
         }
 
         //The new generated filename we want

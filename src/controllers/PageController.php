@@ -1,8 +1,9 @@
 <?php namespace CmsCanvas\Controllers;
 
-use Theme, Route, Cache, Config;
+use Theme, Route, Cache, Config, stdClass, Content;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
+use CmsCanvas\Container\Cache\Page;
 
 class PageController extends PublicController {
 
@@ -14,21 +15,12 @@ class PageController extends PublicController {
 
         list($objectType, $objectId) = $routeArray;
 
-        $content = Cache::rememberForever($routeName, function() use($objectType, $objectId)
+        $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId)
         {
-            if ($objectType == 'contentType')
-            {
-                $object = Type::find($objectId);
-            }
-            else
-            {
-                $object = Entry::find($objectId);
-            }
-
-            return $object->render();
+            return new Page($objectId, $objectType);
         });
 
-        $content->mergeData($parameters);
+        $content = $cache->render($parameters);
         $this->layout->content = $content;
 
         print_pre(\DB::getQueryLog());
@@ -39,7 +31,7 @@ class PageController extends PublicController {
         $entryId = Config::get('cmscanvas::config.custom_404');
 
         $entry = Entry::find($entryId);
-        $content = $entry->cacheRender();
+        $content = $entry->render();
 
         $this->layout->content = $content;
     }
