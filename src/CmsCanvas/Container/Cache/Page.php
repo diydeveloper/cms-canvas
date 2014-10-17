@@ -26,7 +26,7 @@ class Page {
      * @param string $objectType
      * @return void
      */
-    public function __construct($objectId, $objectType)
+    public function __construct($objectId, $objectType = 'entry')
     {
         if ($objectType == 'contentType')
         {
@@ -36,8 +36,9 @@ class Page {
         {
             $this->object = Entry::find($objectId);
             $this->object->contentType;
-            $this->contentTypeFields = $this->object->getContentTypeFields();
         }
+
+        $this->contentTypeFields = $this->object->getContentTypeFields();
     }
 
     /**
@@ -49,6 +50,16 @@ class Page {
     public function render($parameters = array())
     {
         return $this->object->renderFromCache($this, $parameters);
+    }
+
+    /**
+     * Returns an array of transalated data for the current entry or content type
+     *
+     * @return array
+     */
+    public function getRenderedData()
+    {
+        return $this->object->getRenderedData($this);
     }
 
     /**

@@ -5,6 +5,7 @@ use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
+use CmsCanvas\Container\Cache\Page;
 
 class Entry extends Model {
 
@@ -36,6 +37,13 @@ class Entry extends Model {
      * @var array
      */
     protected $guarded = array('id', 'created_at', 'updated_at');
+
+    /**
+     * Manually manage the timestamps on this class
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The columns that can sorted with the query builder orderBy method.
@@ -88,6 +96,20 @@ class Entry extends Model {
     }
 
     /**
+     * Save the model to the database.
+     *
+     * @param array $options
+     * @return bool
+     */
+    public function save(array $options = array())
+    {
+        $time = $this->freshTimestamp();
+        $this->setUpdatedAt($time);
+
+        return parent::save($options);
+    }
+
+    /**
      * Queries for content type fields with entry data
      *
      * @return \CmsCanvas\Models\Content\Type\Field|Collection
@@ -116,15 +138,21 @@ class Entry extends Model {
     /**
      * Returns an array of transalated data for the current entry
      *
+     * @param \CmsCanvas\Container\Cache\Page $cache
      * @return array
      */
-    public function getRenderedData($contentTypeFields = null)
+    public function getRenderedData(\CmsCanvas\Container\Cache\Page $cache = null)
     {
-        if ($contentTypeFields == null)
+        if ($cache != null)
+        {
+            $contentTypeFields = $cache->getContentTypeFields();
+        }
+        else
         {
             $contentTypeFields = $this->getContentTypeFields();
         }
 
+        $locale = Lang::getLocale();
         $data = array();
 
         foreach ($contentTypeFields as $contentTypeField) 
@@ -132,7 +160,7 @@ class Entry extends Model {
             $fieldType = FieldType::factory(
                 $contentTypeField, 
                 $this, 
-                Lang::getLocale(), 
+                $locale, 
                 $contentTypeField->data, 
                 $contentTypeField->metadata
             );
@@ -148,14 +176,29 @@ class Entry extends Model {
      * Generates a view with the entry's data
      *
      * @param array $parameters
+     * @param bool $skipCache
      * @return \CmsCanvas\StringView\StringView
      */
-    public function render($parameters = array())
+    public function render($parameters = array(), $skipCache = false)
     {
-        $data = $this->getRenderedData();
-        $data = array_merge($data, $parameters);
+        if ($skipCache)
+        {
+            $data = $this->getRenderedData();
+            $data = array_merge($data, $parameters);
 
-        return $this->contentType->render($data);
+            return $this->contentType->render($data);
+        }
+        else
+        {
+            $entry = $this;
+
+            $cache = Cache::rememberForever($this->getRouteName(), function() use($entry)
+            {
+                return new Page($entry->id, 'entry');
+            });
+
+            return $cache->render($parameters);
+        }
     }
 
     /**
@@ -167,7 +210,7 @@ class Entry extends Model {
      */
     public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
     {
-        $data = $this->getRenderedData($cache->getContentTypeFields());
+        $data = $this->getRenderedData($cache);
         $data = array_merge($data, $parameters);
 
         return $this->contentType->render($data);

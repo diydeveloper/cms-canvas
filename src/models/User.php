@@ -1,5 +1,6 @@
 <?php namespace CmsCanvas\Models;
 
+use Content, Theme;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use CmsCanvas\Database\Eloquent\Model;
@@ -215,6 +216,19 @@ class User extends Model implements UserInterface, RemindableInterface {
     public function getDates()
     {
         return array('created_at', 'updated_at', 'last_login');
+    }
+
+    /**
+     * Returns a portrait image URL of the user
+     *
+     * @param int $width
+     * @param int $height
+     * @param bool $crop
+     * @return string
+     */
+    public function portrait($width = null, $height = null, $crop = false)
+    {
+        return Content::thumbnail('', $width, $height, $crop, array('noImage' => Theme::asset('images/portrait.jpg')));
     }
 
 }

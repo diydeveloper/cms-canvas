@@ -1,12 +1,13 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App;
+use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App, Auth, Config;
 use CmsCanvas\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Models\User;
+use Carbon\Carbon;
 use Content;
 
 class EntryController extends AdminController {
@@ -31,7 +32,6 @@ class EntryController extends AdminController {
             ->applyOrderBy($orderBy);
 
         $contentTypes = Type::getAvailableForNewEntry();
-        $queries = DB::getQueryLog();
         $entryStatuses = Status::orderBy('id', 'asc')->get();
         $contentTypesAll = Type::orderBy('title', 'asc')->get();
 
@@ -158,6 +158,9 @@ class EntryController extends AdminController {
         $entry = ($entry == null) ? new Entry : $entry;
         $entry->fill(Input::all());
         $entry->content_type_id = $contentType->id;
+        $date = Carbon::createFromFormat('m/d/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
+        $date->setTimezone(config::get('app.timezone'));
+        $entry->created_at = $date;
         $entry->save();
 
         $contentFields->setEntry($entry);

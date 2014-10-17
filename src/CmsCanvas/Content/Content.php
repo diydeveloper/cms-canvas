@@ -8,14 +8,28 @@ class Content {
 
     public function entries($config)
     {
-        // $entries = new Entries($config);
-        // $view = $entries->get();
+        $entries = new Entries($config);
+        $view = $entries->get();
 
-        // return $view;
+        return $view;
     }
 
+    /**
+     * Resizes and caches an images to the specified dimensions
+     *
+     * @param string $source
+     * @param int $width
+     * @param int $height
+     * @param bool $crop
+     * @param array $additionalArguments
+     * @return string
+     */
     public function thumbnail($source, $width = null, $height = null, $crop = false, $additionalArguments = array())
     {
+        if ($width == null || $height == null) {
+            return $source;
+        }
+
         $publicRootConfig = trim(Config::get('cmscanvas::config.publicRoot'), '/').'/';
         $thumbnailsConfig = trim(Config::get('cmscanvas::config.thumbnails'), '/').'/';
 
@@ -67,7 +81,7 @@ class Content {
             {
                 $image->fit($width, $height, function ($constraint) {
                     $constraint->upsize();
-                });
+                }, 'center');
             } else {
                 $image->resize($width, $height, function ($constraint) {
                     $constraint->aspectRatio();

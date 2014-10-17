@@ -67,6 +67,7 @@
         </div><!-- container -->
 
         {{ Theme::footer() }}
+        {{ print_pre(DB::getQueryLog()) }}
     </body>
 
 </html>

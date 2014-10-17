@@ -22,7 +22,15 @@ class Type extends Model {
      *
      * @var array
      */
-    protected $fillable = array('title', 'layout', 'page_head', 'short_name', 'entries_allowed');
+    protected $fillable = array(
+        'title', 
+        'layout', 
+        'page_head', 
+        'short_name', 
+        'entries_allowed', 
+        'route',
+        'route_prefix',
+    );
 
     /**
      * The columns that can NOT be mass-assigned.
@@ -213,6 +221,47 @@ class Type extends Model {
     }
 
     /**
+     * Returns content type fields
+     *
+     * @return \CmsCanvas\Models\Content\Type\Field|Collection
+     */
+    public function getContentTypeFields()
+    {
+        return $this->fields()->with('type')->get();
+    }
+
+    /**
+     * Returns an array of transalated data for the current content type
+     *
+     * @param \CmsCanvas\Container\Cache\Page $cache
+     * @return array
+     */
+    public function getRenderedData(\CmsCanvas\Container\Cache\Page $cache = null)
+    {
+        if ($cache != null)
+        {
+            $contentTypeFields = $cache->getContentTypeFields();
+        }
+        else
+        {
+            $contentTypeFields = $this->getContentTypeFields();
+        }
+
+        $locale = Lang::getLocale();
+        $data = array();
+
+        foreach ($contentTypeFields as $contentTypeField) 
+        {
+            $fieldType = FieldType::factory($contentTypeField, null, $locale);
+            $data[$contentTypeField->short_tag] = $fieldType->render();
+        }
+
+        $data['title'] = $this->title;
+
+        return $data;
+    }
+
+    /**
      * Generates a view of the content type's layout
      *
      * @return \CmsCanvas\StringView\StringView
@@ -221,13 +270,7 @@ class Type extends Model {
     {
         if (empty($data))
         {
-            $locale = Lang::getLocale();
-
-            foreach ($this->fields as $field) 
-            {
-                $fieldType = FieldType::factory($field, null, $locale);
-                $data[$field->short_tag] = $fieldType->render();
-            }
+            $data = $this->getRenderedData();
         }
 
         $content = StringView::make(
@@ -251,7 +294,10 @@ class Type extends Model {
      */
     public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
     {
-        return $this->render($parameters);
+        $data = $this->getRenderedData($cache);
+        $data = array_merge($data, $parameters);
+
+        return $this->render($data);
     }
 
     /**

@@ -240,6 +240,11 @@ abstract class FieldType {
     {
         if ($fromFormData)
         {
+            if ( ! is_array($settings))
+            {
+                return null;
+            }
+
             $filteredSettings = array();
             foreach ($settings as $key => $value) {
                 if ($value !== '' && $value !== null)
@@ -288,6 +293,11 @@ abstract class FieldType {
         // The data is an array when being set from a form post
         if ($fromFormData)
         {
+            if ( ! is_array($metadata))
+            {
+                return null;
+            }
+
             $filteredMetadata = array();
             foreach ($metadata as $key => $value) {
                 if ($value !== '' && $value !== null)

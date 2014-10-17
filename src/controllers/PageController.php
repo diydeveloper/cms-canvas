@@ -22,8 +22,6 @@ class PageController extends PublicController {
 
         $content = $cache->render($parameters);
         $this->layout->content = $content;
-
-        print_pre(\DB::getQueryLog());
     }
 
     public function show404Page($exception)

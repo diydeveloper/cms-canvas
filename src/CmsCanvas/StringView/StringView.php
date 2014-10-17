@@ -13,6 +13,13 @@ class StringView extends \Illuminate\View\View implements ArrayAccess, Renderabl
     {
         $cache = App::make('path.storage').'/views';
         $compiler = new StringViewCompiler(App::make('files'), $cache);
+
+        $compiler->extend(function($view, $compiler)
+        {
+            $pattern = $compiler->createMatcher('entries');
+
+            return preg_replace($pattern, '<?php echo Content::entries($2) ?>', $view);
+        });
         $this->engine = new StringViewCompilerEngine($compiler);
     }
 
@@ -196,17 +203,6 @@ class StringView extends \Illuminate\View\View implements ArrayAccess, Renderabl
     public function offsetUnset($key)
     {
         unset($this->data[$key]);
-    }
-
-    /**
-     * Merges an array with the current data array.
-     *
-     * @param  array  $key
-     * @return void
-     */
-    public function mergeData($data)
-    {
-        $this->data = array_merge($this->data, $this->parseData($data));
     }
 
    /**

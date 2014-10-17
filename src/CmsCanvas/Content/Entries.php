@@ -7,38 +7,15 @@ class Entries {
     /**
      * @var int
      */
-    protected $entryId
-
-    /**
-     * @var string
-     */
-    protected $contentType
-
-    /**
-     * @var int
-     */
-    protected $limit
-
-    /**
-     * @var int
-     */
-    protected $offset
-
-    /**
-     * @var string
-     */
-    protected $orderBy
-
-    /**
-     * @var string
-     */
-    protected $sort
+    protected $entry;
 
     /**
      * @return void
      */
-    public function buildFromArray($config)
+    public function __construct($config)
     {
+        $this->entry = new Entry;
+
         foreach ($config as $key => $value)
         {
             switch ($key) {
@@ -67,7 +44,37 @@ class Entries {
 
     public function get()
     {
+        $entries = $this->entry->get();
 
+        // $renderings = '';
+        // foreach ($entries as $entry) {
+        //     $renderings .= $entry->render();
+        // }
+        return $entries;
+    }
+
+    public function setContentType($contentType)
+    {
+        $this->entry = $this->entry->whereHas('contentType', function($query) use($contentType)
+        {
+            $query->where('short_name', $contentType);
+
+        });
+    }
+
+    public function setLimit($limit)
+    {
+        $this->entry = $this->entry->take($limit);
+    }
+
+    public function setOffset($offset)
+    {
+        $this->entry = $this->entry->skip($offset);
+    }
+
+    public function setEntryId($entryId)
+    {
+        $this->entry = $this->entry->where('id', $entryId);
     }
 
 }
