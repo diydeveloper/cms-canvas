@@ -16,7 +16,9 @@
     "autoload": {
         "classmap": [
             "src/controllers",
-            "src/models"
+            "src/models",
+	    "src/migrations",
+            "src/database/seeds"
         ],
         "psr-0": {
             "CmsCanvas": "src/"
