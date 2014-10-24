@@ -87,7 +87,7 @@
                         <td class="right">{{ $entry->id }}</td>
                         <td>{{ $entry->content_type_title }}</td>
                         <td>{{ $entry->entry_status_name }}</td>
-                        <td>{{ $entry->updated_at->format('m/d/Y h:i a') }}</td>
+                        <td>{{ $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i a') }}</td>
                         <td class="right">
                             @if ($entry->route != '')
                                 [ <a target="_blank" href="{{ url($entry->route) }}">View</a> ]

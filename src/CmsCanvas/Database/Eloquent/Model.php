@@ -194,25 +194,4 @@ class Model extends Eloquent {
         return parent::fill($attributes);
     }
 
-    /**
-     * Return a timestamp as DateTime object in the user's timezone.
-     *
-     * @param mixed $value
-     * @return \Carbon\Carbon
-     */
-    protected function asDateTime($value)
-    {
-        $timezone = config::get('app.timezone');
-
-        // if the user is logged in, get it's timezone
-        if (auth::check()) {
-            $timezone = auth::user()->timezone->identifier;
-        }
-
-        $dateTime = parent::asDateTime($value);
-        $dateTime->setTimeZone($timezone);
-
-        return $dateTime;
-    }
-
 }

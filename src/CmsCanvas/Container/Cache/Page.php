@@ -1,9 +1,10 @@
 <?php namespace CmsCanvas\Container\Cache;
 
+use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 
-class Page {
+class Page implements PageInterface  {
 
     /**
      * An Entry or Content Type
@@ -45,25 +46,40 @@ class Page {
      * Renders the cached page
      *
      * @param array $parameters
-     * @return \CmsCanvas\StringView\StringView
+     * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\StringView\StringView
      */
     public function render($parameters = array())
     {
-        return $this->object->renderFromCache($this, $parameters);
+        return $this->object
+            ->setCache($this)
+            ->render($parameters);
     }
 
     /**
-     * Returns an array of transalated data for the current entry or content type
+     * Get the contents of the page
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function renderContents($parameters = array())
+    {
+        //
+    }
+
+    /**
+     * Get an array of transalated data for the current object
      *
      * @return array
      */
     public function getRenderedData()
     {
-        return $this->object->getRenderedData($this);
+        return $this->object
+            ->setCache($this)
+            ->getRenderedData();
     }
 
     /**
-     * Returns content type fields with entry data
+     * Get content type fields with data
      *
      * @return \CmsCanvas\Models\Content\Type\Field|Collection
      */

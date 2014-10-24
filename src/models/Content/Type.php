@@ -1,6 +1,7 @@
 <?php namespace CmsCanvas\Models\Content;
 
 use Lang, StringView, View;
+use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Models\Language;
@@ -8,7 +9,7 @@ use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
 
-class Type extends Model {
+class Type extends Model implements PageInterface {
 
     /**
      * The database table used by the model.
@@ -52,6 +53,13 @@ class Type extends Model {
      * @var string
      */
     protected static $defaultSortColumn = 'title';
+
+    /**
+     * An object used to retrive cached data
+     *
+     * @var \CmsCanvas\Container\Cache\Page
+     */
+    protected $cache;
 
     /**
      * Defines a one to many relationship with entries
@@ -227,25 +235,22 @@ class Type extends Model {
      */
     public function getContentTypeFields()
     {
+        if ($this->cache != null)
+        {
+            return $this->cache->getContentTypeFields();
+        }
+
         return $this->fields()->with('type')->get();
     }
 
     /**
      * Returns an array of transalated data for the current content type
      *
-     * @param \CmsCanvas\Container\Cache\Page $cache
      * @return array
      */
-    public function getRenderedData(\CmsCanvas\Container\Cache\Page $cache = null)
+    public function getRenderedData()
     {
-        if ($cache != null)
-        {
-            $contentTypeFields = $cache->getContentTypeFields();
-        }
-        else
-        {
-            $contentTypeFields = $this->getContentTypeFields();
-        }
+        $contentTypeFields = $this->getContentTypeFields();
 
         $locale = Lang::getLocale();
         $data = array();
@@ -264,20 +269,31 @@ class Type extends Model {
     /**
      * Generates a view of the content type's layout
      *
+     * @param array $parameters
+     * @param array $data
      * @return \CmsCanvas\StringView\StringView
      */
-    public function render($data = array())
+    public function renderContents($parameters = array(), $data = array())
     {
         if (empty($data))
         {
             $data = $this->getRenderedData();
         }
 
+        $data = array_merge($data, $parameters);
+
+        StringView::extend(function($view, $compiler)
+        {
+            $pattern = $compiler->createMatcher('entries');
+
+            return preg_replace($pattern, '<?php echo Content::entries($2) ?>', $view);
+        });
+
         $content = StringView::make(
             array(
                 'template' => ($this->layout === null) ? '' : $this->layout, 
-                'cache_key' => 'content.type.'.$this->id, 
-                'updated_at' => time() - 1
+                'cache_key' => $this->getRouteName(), 
+                'updated_at' => $this->updated_at->timestamp
             ), 
             $data
         ); 
@@ -286,18 +302,40 @@ class Type extends Model {
     }
 
     /**
-     * Renders a content type page from cache
+     * Generates a view of the content type's layout
      *
-     * @param \CmsCanvas\Container\Cache\Page $cache
      * @param array $parameters
+     * @param array $data
      * @return \CmsCanvas\StringView\StringView
      */
-    public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
+    public function render($parameters = array(), $data = array())
     {
-        $data = $this->getRenderedData($cache);
-        $data = array_merge($data, $parameters);
+        return $this->renderContents($parameters, $data);
+    }
 
-        return $this->render($data);
+    /**
+     * Sets a cache object used to render the content type
+     *
+     * @param \CmsCanvas\Container\Cache\Page $cache
+     * @return self
+     */
+    public function setCache(\CmsCanvas\Container\Cache\Page $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * Unsets the cache object on the current content type
+     *
+     * @return self
+     */
+    public function clearCache()
+    {
+        $this->cache = null;
+
+        return $this;
     }
 
     /**

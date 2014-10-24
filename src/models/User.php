@@ -231,4 +231,14 @@ class User extends Model implements UserInterface, RemindableInterface {
         return Content::thumbnail('', $width, $height, $crop, array('noImage' => Theme::asset('images/portrait.jpg')));
     }
 
+    /**
+     * Returns the user's timezone identifier
+     *
+     * @return string
+     */
+    public function getTimezoneIdentifier()
+    {
+        return $this->timezone->identifier;
+    }
+
 }

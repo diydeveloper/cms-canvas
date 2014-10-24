@@ -1,13 +1,15 @@
 <?php namespace CmsCanvas\Models\Content;
 
 use Lang, StringView, stdClass, View, Cache, DB;
+use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Container\Cache\Page;
+use CmsCanvas\Content\Entry\Render;
 
-class Entry extends Model {
+class Entry extends Model implements PageInterface {
 
     /**
      * The database table used by the model.
@@ -74,6 +76,13 @@ class Entry extends Model {
     protected static $defaultSortOrder = 'desc';
 
     /**
+     * An object used to retrive cached data
+     *
+     * @var \CmsCanvas\Container\Cache\Page
+     */
+    protected $cache;
+
+    /**
      * Defines a one to many relationship with content types
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -116,6 +125,11 @@ class Entry extends Model {
      */
     public function getContentTypeFields()
     {
+        if ($this->cache != null)
+        {
+            return $this->cache->getContentTypeFields();
+        }
+
         $entry = $this;
         $locale = Lang::getLocale();
 
@@ -138,57 +152,11 @@ class Entry extends Model {
     /**
      * Returns an array of transalated data for the current entry
      *
-     * @param \CmsCanvas\Container\Cache\Page $cache
      * @return array
      */
-    public function getRenderedData(\CmsCanvas\Container\Cache\Page $cache = null)
+    public function getRenderedData()
     {
-        if ($cache != null)
-        {
-            $contentTypeFields = $cache->getContentTypeFields();
-        }
-        else
-        {
-            $contentTypeFields = $this->getContentTypeFields();
-        }
-
-        $locale = Lang::getLocale();
-        $data = array();
-
-        foreach ($contentTypeFields as $contentTypeField) 
-        {
-            $fieldType = FieldType::factory(
-                $contentTypeField, 
-                $this, 
-                $locale, 
-                $contentTypeField->data, 
-                $contentTypeField->metadata
-            );
-            $data[$contentTypeField->short_tag] = $fieldType->render();
-        }
-
-        $data['title'] = $this->title;
-
-        return $data;
-    }
-
-    /**
-     * Generates a view with the entry's data
-     *
-     * @param array $parameters
-     * @param bool $skipCache
-     * @return \CmsCanvas\StringView\StringView
-     */
-    public function render($parameters = array(), $skipCache = false)
-    {
-        if ($skipCache)
-        {
-            $data = $this->getRenderedData();
-            $data = array_merge($data, $parameters);
-
-            return $this->contentType->render($data);
-        }
-        else
+        if ($this->cache == null)
         {
             $entry = $this;
 
@@ -197,23 +165,94 @@ class Entry extends Model {
                 return new Page($entry->id, 'entry');
             });
 
-            return $cache->render($parameters);
+            return $cache->getRenderedData();
         }
+        else
+        {
+            $contentTypeFields = $this->getContentTypeFields();
+
+            $locale = Lang::getLocale();
+            $data = array();
+
+            foreach ($contentTypeFields as $contentTypeField) 
+            {
+                $fieldType = FieldType::factory(
+                    $contentTypeField, 
+                    $this, 
+                    $locale, 
+                    $contentTypeField->data, 
+                    $contentTypeField->metadata
+                );
+                $data[$contentTypeField->short_tag] = $fieldType->render();
+            }
+
+            $data['title'] = $this->title;
+
+            return $data;
+        }
+    }
+
+    /**
+     * Generates a view with the entry's data
+     *
+     * @param array $parameters
+     * @return \CmsCanvas\StringView\StringView
+     */
+    public function renderContents($parameters = array())
+    {
+        $data = $this->getRenderedData();
+
+        $content = $this->contentType->render($parameters, $data);
+
+        if ($this->templateFlag)
+        {
+            $content = StringView::make(
+                array(
+                    'template' => (string) $content, 
+                    'cache_key' => $this->getRouteName(), 
+                    'updated_at' => $this->updated_at->timestamp
+                ), 
+                $data
+            );
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns a render instance
+     *
+     * @param array $parameters
+     * @return \CmsCanvas\Content\Entry\Render
+     */
+    public function render($parameters = array())
+    {
+        return new Render($this, $parameters);
     }
 
     /**
      * Renders an entry page from cache
      *
      * @param \CmsCanvas\Container\Cache\Page $cache
-     * @param array $parameters
-     * @return \CmsCanvas\StringView\StringView
+     * @return self
      */
-    public function renderFromCache(\CmsCanvas\Container\Cache\Page $cache, $parameters = array())
+    public function setCache(\CmsCanvas\Container\Cache\Page $cache)
     {
-        $data = $this->getRenderedData($cache);
-        $data = array_merge($data, $parameters);
+        $this->cache = $cache;
 
-        return $this->contentType->render($data);
+        return $this;
+    }
+
+    /**
+     * Unsets the cache object on the current entry
+     *
+     * @return self
+     */
+    public function clearCache()
+    {
+        $this->cache = null;
+
+        return $this;
     }
 
     /**

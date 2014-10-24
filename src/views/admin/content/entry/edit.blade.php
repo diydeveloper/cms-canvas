@@ -90,7 +90,14 @@
                     </div>
                     <div>
                         {{ HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) }}
-                        {{ Form::text('created_at', ( ! empty($entry->created_at)) ? date('m/d/Y h:i:s a', strtotime($entry->created_at)) : date('m/d/Y h:i:s a'), array('class' => 'datetime')) }}
+                        {{ Form::text(
+                            'created_at', 
+                            ( ! empty($entry->created_at)) ? 
+                                $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a') 
+                            : 
+                                Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a'), 
+                            array('class' => 'datetime')) 
+                        }}
                     </div>
                     <div>
                         {{ Form::label('author_id', 'Author:') }}

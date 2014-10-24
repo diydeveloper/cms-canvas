@@ -1,6 +1,7 @@
 <?php namespace CmsCanvas\Content;
 
 use CmsCanvas\Models\Content\Entry;
+use CmsCanvas\Content\Entry\RenderCollection;
 
 class Entries {
 
@@ -10,9 +11,20 @@ class Entries {
     protected $entry;
 
     /**
+     * @var int
+     */
+    protected $paginate;
+
+    /**
+     * @var int
+     */
+    protected $simplePaginate;
+
+    /**
+     * @param array $config
      * @return void
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->entry = new Entry;
 
@@ -38,19 +50,35 @@ class Entries {
                 case 'offset':
                     $this->setOffset($value);
                     break;
+
+                case 'paginate':
+                    $this->paginate = $value;
+                    break;
+
+                case 'simple_paginate':
+                    $this->simplePaginate = $value;
+                    break;
             }
         }
     }
 
     public function get()
     {
-        $entries = $this->entry->get();
+        if ($this->paginate !== null)
+        {
+            $entries = $this->entry->paginate($this->paginate);
+        }
+        else if ($this->simplePaginate !== null)
+        {
+            $entries = $this->entry->simplePaginate($this->simplePaginate);
+        }
+        else
+        {
+            $entries = $this->entry->get();
+        }
 
-        // $renderings = '';
-        // foreach ($entries as $entry) {
-        //     $renderings .= $entry->render();
-        // }
-        return $entries;
+
+        return new RenderCollection($entries);
     }
 
     public function setContentType($contentType)

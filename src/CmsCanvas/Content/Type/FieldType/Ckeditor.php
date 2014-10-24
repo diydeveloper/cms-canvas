@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Theme, Admin;
+use View, Theme, Admin, StringView;
 use CmsCanvas\Content\Type\FieldType;
 
 class Ckeditor extends FieldType {
@@ -86,34 +86,7 @@ class Ckeditor extends FieldType {
      */
     public function render()
     {
-        if ( ! isset($this->field->settings->inline_editing) || $this->field->settingsinline_editing)
-        {
-            // return $this->inlineEditable();
-            return $this->data;
-        }
-        else
-        {
-            return $this->data;
-        }
-    }
-
-    /**
-     * Returns the inline editable field
-     * @todo - Need to get this working
-     *
-     * @return string
-     */
-    private function inlineEditable()
-    {
-        if ($this->isInlineEditable())
-        {
-            Theme::addJavascript(Admin::asset('js/ckeditor_inline_editable.js'));
-            $_SESSION['KCFINDER'] = array();
-            $_SESSION['KCFINDER']['disabled'] = false;
-            $_SESSION['isLoggedIn'] = true;
-
-            return '<div id="cc_field_' . $this->Entry->id . '_'. $this->Field->id  . '" class="cc_admin_editable cc_ck_editable" contenteditable="true">{{ noparse }}' . $this->data . '{{ /noparse }}</div>';
-        }
+        return $this->data;
     }
 
 }
