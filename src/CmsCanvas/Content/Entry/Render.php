@@ -31,6 +31,13 @@ class Render {
     protected $lastFlag = true;
 
     /**
+     * The position the entry is in a collection
+     *
+     * @var bool
+     */
+    protected $index = 0;
+
+    /**
      * Defines the order in which to sort.
      *
      * @param \CmsCanvas\Models\Content\Entry $entry
@@ -91,6 +98,8 @@ class Render {
     }
 
     /**
+     * Reutrns the firstFlag class property
+     *
      * @return bool
      */
     public function isFirst()
@@ -99,6 +108,8 @@ class Render {
     }
 
     /**
+     * Reutrns the lastFlag class property
+     *
      * @return bool
      */
     public function isLast()
@@ -107,25 +118,46 @@ class Render {
     }
 
     /**
+     * Reutrns the index class property
+     *
+     * @return int
+     */
+    public function index()
+    {
+        return $this->index;
+    }
+
+    /**
      * Sets the firstFlag class variable
      *
      * @param bool $value
-     * @return bool
+     * @return void
      */
     public function setFirstFlag($value)
     {
-        return $this->firstFlag = (bool) $value;
+        $this->firstFlag = (bool) $value;
     }
 
     /**
      * Sets the lastFlag class variable
      *
      * @param bool $value
-     * @return bool
+     * @return void
      */
     public function setLastFlag($value)
     {
-        return $this->lastFlag = (bool) $value;
+        $this->lastFlag = (bool) $value;
+    }
+
+    /**
+     * Sets the entry's position in the collection
+     *
+     * @param int $value
+     * @return void
+     */
+    public function setIndex($value)
+    {
+        $this->index = $value;
     }
 
 }
