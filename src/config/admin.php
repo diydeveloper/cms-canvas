@@ -20,7 +20,7 @@ return array(
                     ),
                     array(
                         'title' => 'Navigations',
-                        'url'   => 'navigation',
+                        'url'   => 'content/navigation',
                     ),
                 ),
         ),

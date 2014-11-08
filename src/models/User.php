@@ -228,7 +228,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public function portrait($width = null, $height = null, $crop = false)
     {
-        return Content::thumbnail('', $width, $height, $crop, array('noImage' => Theme::asset('images/portrait.jpg')));
+        return Content::thumbnail('', $width, $height, $crop, array('no_image' => Theme::asset('images/portrait.jpg')));
     }
 
     /**

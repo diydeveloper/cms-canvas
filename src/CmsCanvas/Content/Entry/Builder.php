@@ -1,9 +1,9 @@
-<?php namespace CmsCanvas\Content;
+<?php namespace CmsCanvas\Content\Entry;
 
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Content\Entry\RenderCollection;
 
-class Entries {
+class Builder {
 
     /**
      * @var \Illuminate\Database\Eloquent\Builder

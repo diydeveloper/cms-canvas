@@ -1,14 +1,14 @@
 <?php namespace CmsCanvas\Content;
 
 use View, Config;
-use CmsCanvas\Content\Entries;
+use CmsCanvas\Content\Entry\Builder as EntryBuilder;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Content {
 
     public function entries($config)
     {
-        $entries = new Entries($config);
+        $entries = new EntryBuilder($config);
         $view = $entries->get();
 
         return $view;
@@ -41,10 +41,10 @@ class Content {
 
         if ($source == false || $sourceModificationTime === false) 
         {
-            if (isset($additionalArguments['noImage']))
+            if (isset($additionalArguments['no_image']))
             {
-                $additionalArguments['noImage'] = str_replace(asset(null), '', $additionalArguments['noImage']);
-                $sourceImage = public_path($additionalArguments['noImage']);
+                $additionalArguments['no_image'] = str_replace(asset(null), '', $additionalArguments['no_image']);
+                $sourceImage = public_path($additionalArguments['no_image']);
                 $sourceModificationTime = @filemtime($sourceImage);
             }
             else

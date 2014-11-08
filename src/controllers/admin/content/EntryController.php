@@ -196,7 +196,7 @@ class EntryController extends AdminController {
             150, 
             150, 
             false, 
-            array('noImage' => Theme::asset('images/no_image.jpg'))
+            array('no_image' => Theme::asset('images/no_image.jpg'))
         );
     }
 

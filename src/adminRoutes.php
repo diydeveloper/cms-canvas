@@ -7,6 +7,7 @@ Route::model('userGroup', 'CmsCanvas\Models\User\Group');
 Route::model('contentType', 'CmsCanvas\Models\Content\Type');
 Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
+Route::model('navigation', 'CmsCanvas\Models\Content\Navigation');
 
 Route::group(array('prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth'), function()
 {
@@ -48,6 +49,21 @@ Route::group(array('prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.aut
 
     Route::group(array('prefix' => 'content'), function()
     {
+        Route::group(array('prefix' => 'navigation'), function()
+        {
+
+            Route::get('/', array('as' => 'admin.content.navigation.navigations', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@getNavigations'));
+            Route::post('/', array('as' => 'admin.content.navigation.navigations.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@postNavigations'));
+
+            Route::get('add', array('as' => 'admin.content.navigation.add', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@getEdit'));
+            Route::post('add', array('as' => 'admin.content.navigation.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@postEdit'));
+
+            Route::get('{navigation}/edit', array('as' => 'admin.content.navigation.edit', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@getEdit'));
+            Route::post('{navigation}/edit', array('as' => 'admin.content.navigation.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@postEdit'));
+
+            Route::post('delete', array('as' => 'admin.content.navigation.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\Content\NavigationController@postDelete'));
+
+        });
 
         Route::group(array('prefix' => 'entry'), function()
         {

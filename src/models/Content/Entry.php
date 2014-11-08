@@ -93,6 +93,16 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * Defines a many to one relationship with user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function author()
+    {
+        return $this->hasOne('\CmsCanvas\Models\User', 'id', 'author_id');
+    }
+
+    /**
      * Returns all data for all lanaguages for the current entry
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -187,6 +197,10 @@ class Entry extends Model implements PageInterface {
             }
 
             $data['title'] = $this->title;
+            $data['entry_id'] = $this->id;
+            $data['author'] = $this->author;
+            $data['created_at'] = $this->created_at;
+            $data['updated_at'] = $this->updated_at;
 
             return $data;
         }

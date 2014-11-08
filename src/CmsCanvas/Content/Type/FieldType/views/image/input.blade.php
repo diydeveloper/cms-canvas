@@ -1,6 +1,6 @@
 <div style="width: 150px; text-align: center; float: left;">
     <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
-        <img class="image_thumbnail" src="{{ Content::thumbnail(Input::old($fieldType->getKey(), $fieldType->data), 150, 150, false, array('noImage' => Theme::asset('images/no_image.jpg'))) }}" />
+        <img class="image_thumbnail" src="{{ Content::thumbnail(Input::old($fieldType->getKey(), $fieldType->data), 150, 150, false, array('no_image' => Theme::asset('images/no_image.jpg'))) }}" />
     </a>
 
     <a class="remove_image" href="javascript:void(0);"><span>Remove Image</span></a><br />
