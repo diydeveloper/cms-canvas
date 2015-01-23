@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content\Type;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass;
-use CmsCanvas\Controllers\Admin\AdminController;
+use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Content\Type\Field\Type;
 use CmsCanvas\Content\Type\FieldType;
@@ -119,7 +119,7 @@ class FieldController extends AdminController {
         $fieldType = FieldType::baseFactory($selectedType->key_name, $contentTypeField);
 
         $content->fieldTypeSettings = $fieldType->settings();
-        $content->fieldTypeSelectOptions = $types->getKeyValueArray('id', 'name', false);
+        $content->fieldTypes = $types;
 
         $this->layout->breadcrumbs = array(
             '/content/type' => 'Content Types',

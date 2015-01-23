@@ -27,7 +27,6 @@ class User extends Model implements UserInterface, RemindableInterface {
      * @var array
      */
     protected $fillable = array(
-        'user_group_id',
         'timezone_id',
         'first_name', 
         'last_name', 
@@ -58,7 +57,6 @@ class User extends Model implements UserInterface, RemindableInterface {
         'first_name', 
         'last_name', 
         'email', 
-        'group_name', // Requires group to be joined to sort
         'last_login'
     );
 
@@ -70,13 +68,13 @@ class User extends Model implements UserInterface, RemindableInterface {
     protected static $defaultSortColumn = 'last_name';
 
     /**
-     * Defines a one to many relationship with groups
+     * Defines a many to many relationship with roles
      *
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function group()
+    public function roles()
     {
-        return $this->belongsTo('\CmsCanvas\Models\User\Group', 'user_group_id');
+        return $this->belongsToMany('\CmsCanvas\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
 
     /**
@@ -174,8 +172,11 @@ class User extends Model implements UserInterface, RemindableInterface {
             $query->whereRaw("(concat_ws(' ', first_name, last_name) LIKE '%{$filter->search}%' OR email LIKE '%{$filter->search}%')");
         }
 
-        if ( ! empty($filter->user_group_id)) {
-            $query->where('user_group_id', $filter->user_group_id); 
+        if ( ! empty($filter->role_id)) 
+        {
+            $query->whereHas('roles', function($query) use($filter) {
+                $query->where('roles.id', $filter->role_id);
+            });
         }
 
         return $query;
@@ -241,4 +242,44 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $this->timezone->identifier;
     }
 
+    /**
+     * Check if the user is assigned to the specified role
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function hasRole($name)
+    {
+        foreach ($this->roles as $role) 
+        {
+            if ($role->name == $name) 
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user has a permission.
+     *
+     * @param string $permission
+     * @return bool
+     */
+    public function can($keyName)
+    {
+        foreach ($this->roles as $role) 
+        {
+            foreach ($role->permissions as $permission)
+            {
+                if ($permission->key_name == $keyName)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

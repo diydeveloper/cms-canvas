@@ -1,6 +1,6 @@
 <?php namespace Cmscanvas;
 
-use Event, DateTime, View, Request, Admin;
+use App, Event, DateTime, View, Request, Admin, Theme;
 use Illuminate\Support\ServiceProvider;
 
 class CmscanvasServiceProvider extends ServiceProvider {
@@ -32,6 +32,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
         {
             include __DIR__.'/../routes.php';
         }
+        
         include __DIR__.'/../filters.php';
     }
 
@@ -42,6 +43,26 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+        App::error(function(\Exception $exception)
+        {
+            $heading = 'Error';
+
+            $layout = Theme::getLayout();
+            
+            if ($layout != null)
+            {
+                $layout->content = View::make('cmscanvas::admin.error')
+                    ->with(
+                        array(
+                            'heading' => $heading,
+                            'exception' => $exception
+                        )
+                    );
+
+                return $layout;
+            }
+        });
+
         Event::listen('auth.login', function($user) {
             $user->last_login = new DateTime;
 

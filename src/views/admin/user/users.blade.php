@@ -16,8 +16,8 @@
                 </div>
 
                 <div class="left">
-                    <div><label>Group:</label></div> 
-                    {{ Form::select('filter[user_group_id]', $groupSelectOptions) }}
+                    <div><label>Role:</label></div> 
+                    {{ Form::select('filter[role_id]', ['' => ''] + $roles->lists('name', 'id')) }}
                 </div>
 
                 <div class="left filter_buttons">
@@ -45,7 +45,7 @@
                             <a rel="email" class="sortable{{ $orderBy->getElementClass('email') }}" href="javascript:void(0);">Email</a>
                         </th>
                         <th>
-                            <a rel="group_name" class="sortable{{ $orderBy->getElementClass('group_name') }}" href="javascript:void(0);">Group</a>
+                            Roles
                         </th>
                         <th>
                             <a rel="last_login" class="sortable{{ $orderBy->getElementClass('last_login') }}" href="javascript:void(0);">Last Login</a>
@@ -61,7 +61,11 @@
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->last_name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->group_name }}</td>
+                                <td>
+                                    @foreach ($user->roles as $role)
+                                        {{ $role->name }},
+                                    @endforeach
+                                </td>
                                 <td>{{ (empty($user->last_login)) ? '' : $user->last_login->setTimezone(Auth::user()->getTimezoneIdentifier())->format('M j, Y h:i a') }}</td>
                                 <td class="right">[ <a href="{{ Admin::url("user/{$user->id}/impersonate") }}">Login</a> ] [ <a href="{{ Admin::url("user/{$user->id}/edit") }}">Edit</a> ]</td>
                             </tr>

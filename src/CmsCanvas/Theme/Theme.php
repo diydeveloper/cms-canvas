@@ -478,6 +478,7 @@ class Theme {
      * Commonly used in the <head> HTML tags of a theme file.
      * Outputs javascript includes from the javascript array.
      *
+     * @param bool $footer
      * @return string
      */
     public function javascripts($footer = false)
@@ -627,7 +628,7 @@ class Theme {
     public function footer()
     {
         $return = '';
-        $return .= $this->javascripts(TRUE);
+        $return .= $this->javascripts(true);
 
         return $return;
     }

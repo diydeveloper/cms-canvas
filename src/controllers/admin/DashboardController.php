@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Controllers\Admin;
 
 use View, Theme, Config, Admin;
-use CmsCanvas\Controllers\Admin\AdminController;
+use CmsCanvas\Routing\AdminController;
 
 class DashboardController extends AdminController {
 

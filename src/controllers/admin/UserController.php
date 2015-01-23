@@ -2,8 +2,9 @@
 
 use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass;
 use CmsCanvas\Models\User;
-use CmsCanvas\Models\User\Group;
+use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
+use CmsCanvas\Routing\AdminController;
 
 class UserController extends AdminController {
 
@@ -72,18 +73,17 @@ class UserController extends AdminController {
         $orderBy = User::getSessionOrderBy();
 
         $users = new User;
-        $users = $users->join('user_groups', 'users.user_group_id', '=', 'user_groups.id')
-            ->select(DB::raw('users.*, user_groups.name as group_name'))
+        $users = $users->with('roles')
             ->applyFilter($filter)
             ->applyOrderBy($orderBy);
 
-        $groups = Group::all();
+        $roles = Role::all();
 
         $content->users = $users->paginate(50);
         $content->filter = new stdClass();
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
-        $content->groupSelectOptions = $groups->getKeyValueArray('id', 'name');
+        $content->roles = $roles;
 
         $this->layout->breadcrumbs = array(Request::path() => 'Users');
         $this->layout->content = $content;
@@ -137,34 +137,7 @@ class UserController extends AdminController {
      */
     public function getAdd()
     {
-        $groups = Group::all();
-        $timezones = Timezone::all();
-
-        $content = View::make('cmscanvas::admin.user.edit');
-        $content->editMode = false;
-        $content->groupSelectOptions = $groups->getKeyValueArray('id', 'name');
-        $content->timezoneSelectOptions = $timezones->getKeyValueArray('id', 'name');
-
-        $this->layout->content = $content;
-    }
-
-    /**
-     * Display add user form
-     *
-     * @return View
-     */
-    public function getEdit($user)
-    {
-        $groups = Group::all();
-        $timezones = Timezone::all();
-        
-        $content = View::make('cmscanvas::admin.user.edit');
-        $content->editMode = true;
-        $content->groupSelectOptions = $groups->getKeyValueArray('id', 'name');
-        $content->timezoneSelectOptions = $timezones->getKeyValueArray('id', 'name');
-        $content->user = $user;
-
-        $this->layout->content = $content;
+        // Routed to getEdit
     }
 
     /**
@@ -174,36 +147,26 @@ class UserController extends AdminController {
      */
     public function postAdd()
     {
-        $rules = array(
-            'user_group_id' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'password' => 'required|confirmed|min:6',
-            'password_confirmation' => 'required',
-            'email' => 'required|email|unique:users',
-            'phone' => 'regex:/[0-9]{10,11}/'
-        );
+        // Routed to postEdit
+    }
 
-        $attributeNames = array(
-            'user_group_id' => 'group'
-        );
+    /**
+     * Display add user form
+     *
+     * @return View
+     */
+    public function getEdit($user = null)
+    {
+        $roles = Role::all();
+        $timezones = Timezone::all();
+        
+        $content = View::make('cmscanvas::admin.user.edit');
+        $content->editMode = true;
+        $content->roles = $roles;
+        $content->timezones = $timezones;
+        $content->user = $user;
 
-        $validator = Validator::make(Input::all(), $rules, array(), $attributeNames);
-
-        if ($validator->fails())
-        {
-            return Redirect::route('admin.user.add')
-                ->withInput()
-                ->with('error', $validator->messages()->all());
-        }
-
-        $user = new User();
-        $user->fill(Input::all());
-        $user->password = Hash::make(Input::get('password'));
-        $user->save();
-
-        return Redirect::route('admin.user.users')
-            ->with('message', "{$user->getFullName()} was successfully added.");
+        $this->layout->content = $content;
     }
 
     /**
@@ -211,35 +174,40 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($user)
+    public function postEdit($user = null)
     {
         $rules = array(
-            'user_group_id' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => "required|email|unique:users,email,{$user->id}",
             'phone' => 'regex:/[0-9]{10,11}/'
         );
 
-        if (Input::get('password'))
-        {
+        // Require password to be set for a new user
+        if ($user == null || Input::get('password')) {
             $rules['password'] = 'required|confirmed|min:6';
             $rules['password_confirmation'] = 'required';
         }
 
-        $attributeNames = array(
-            'user_group_id' => 'group'
-        );
-
-        $validator = Validator::make(Input::all(), $rules, array(), $attributeNames);
+        $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::route('admin.user.edit', $user->id)
-                ->withInput()
-                ->with('error', $validator->messages()->all());
+            if ($user == null)
+            {
+                return Redirect::route('admin.user.add')
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
+            else
+            {
+                return Redirect::route('admin.user.edit', $user->id)
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
         }
 
+        $user = ($user == null) ? new User : $user;
         $user->fill(Input::all());
 
         if (Input::get('password'))
@@ -248,6 +216,7 @@ class UserController extends AdminController {
         }
 
         $user->save();
+        $user->roles()->sync(Input::get('user_roles', array()));
 
         return Redirect::route('admin.user.users')
             ->with('message', "{$user->getFullName()} was successfully updated.");

@@ -33,8 +33,8 @@ return array(
                         'url'   => 'user',
                     ),
                     array(
-                        'title' => 'User Groups',
-                        'url'   => 'user/group',
+                        'title' => 'Roles',
+                        'url'   => 'user/role',
                     ),
                 ),
         ),

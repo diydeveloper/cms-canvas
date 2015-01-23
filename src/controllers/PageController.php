@@ -1,16 +1,29 @@
 <?php namespace CmsCanvas\Controllers;
 
-use Theme, Route, Cache, Config, stdClass, Content;
+use Theme, Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Container\Cache\Page;
+use CmsCanvas\Routing\PublicController;
 
 class PageController extends PublicController {
 
-    public function showPage()
+    public function showPage($exception = null)
     {
         $routeName = Route::currentRouteName();
-        $parameters = Route::current()->parameters();
+
+        if ($routeName == null)
+        {
+            // Route not found. Show 404 page.
+            $entryId = Config::get('cmscanvas::config.custom_404');
+            $routeName = 'entry.'.$entryId.'.'.Lang::getLocale();
+            $parameters = array();
+        }
+        else
+        {
+            $parameters = Route::current()->parameters();
+        }
+
         $routeArray = explode('.', $routeName);
 
         list($objectType, $objectId) = $routeArray;
@@ -21,16 +34,6 @@ class PageController extends PublicController {
         });
 
         $content = $cache->render($parameters);
-        $this->layout->content = $content;
-    }
-
-    public function show404Page($exception)
-    {
-        $entryId = Config::get('cmscanvas::config.custom_404');
-
-        $entry = Entry::find($entryId);
-        $content = $entry->render();
-
         $this->layout->content = $content;
     }
 

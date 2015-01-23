@@ -6,7 +6,7 @@ use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Route\ModelBindings;
 
-list($defaultLocale, $locales, $contentTypes, $entries, $modelBindings) = Cache::rememberForever('cmscanvas.routes', function()
+list($defaultLocale, $locales, $contentTypes, $entries) = Cache::rememberForever('cmscanvas.routes', function()
 {
     $languages = Language::where('active', 1)
         ->get();
@@ -15,7 +15,7 @@ list($defaultLocale, $locales, $contentTypes, $entries, $modelBindings) = Cache:
         ->locale;
 
     $locales = $languages->getWhere('default', 0)
-        ->getKeyValueArray('id', 'locale');
+        ->lists('locale', 'id');
 
     $contentTypes = Type::whereNotNull('route')
         ->get();
@@ -24,15 +24,8 @@ list($defaultLocale, $locales, $contentTypes, $entries, $modelBindings) = Cache:
         ->whereNotNull('route')
         ->get();
 
-    $modelBindings = ModelBindings::all();
-
-    return array($defaultLocale, $locales, $contentTypes, $entries, $modelBindings);
+    return array($defaultLocale, $locales, $contentTypes, $entries);
 });
-
-foreach ($modelBindings as $modelBinding)
-{
-    Route::model($modelBinding->parameter, $modelBinding->model);
-}
 
 $firstSegment = Request::segment(1);
 $locale = null;
@@ -73,6 +66,6 @@ Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
 
 App::missing(function($exception)
 {
-    return App::make('\CmsCanvas\Controllers\PageController')->callAction('show404Page', array($exception));
+    return App::make('\CmsCanvas\Controllers\PageController')->callAction('showPage', array($exception));
 });
 

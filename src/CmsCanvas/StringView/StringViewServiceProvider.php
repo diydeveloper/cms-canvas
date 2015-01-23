@@ -1,6 +1,7 @@
 <?php namespace CmsCanvas\StringView;
 
 use Illuminate\Support\ServiceProvider;
+use StringView;
 
 class StringViewServiceProvider extends ServiceProvider {
 
@@ -31,10 +32,17 @@ class StringViewServiceProvider extends ServiceProvider {
 		$this->app->bind('stringview', 'CmsCanvas\StringView\StringView');
         
         // This removes the need to add a facade in the config\app
-        $this->app->booting(function()
-        {
-            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('StringView', 'CmsCanvas\StringView\Facades\StringView');
+        // $this->app->booting(function()
+        // {
+        //     $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        //     $loader->alias('StringView', 'CmsCanvas\StringView\Facades\StringView');
+        // });
+        StringView::extend(function($value) {
+            return preg_replace('/\@define(.+)/', '<?php ${1}; ?>', $value);
+        });
+
+        StringView::extend(function($value, $compiler) {
+            return preg_replace('/\@entries\s*\(\'?([a-zA-Z0-9_]+)\'?\s*,\s*(.+)\)/', '<?php $${1} = Content::entries(${2}); ?>', $value);
         });
 	}
 

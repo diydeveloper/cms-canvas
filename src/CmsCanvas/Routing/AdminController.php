@@ -1,9 +1,9 @@
-<?php namespace CmsCanvas\Controllers\Admin;
+<?php namespace CmsCanvas\Routing;
 
 use Theme;
-use CmsCanvas\Controllers\BaseController;
+use CmsCanvas\Routing\Controller;
 
-class AdminController extends BaseController {
+class AdminController extends Controller {
 
     /**
      * The default theme to be used with this controller

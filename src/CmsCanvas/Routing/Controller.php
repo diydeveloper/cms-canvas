@@ -1,8 +1,8 @@
-<?php namespace CmsCanvas\Controllers;
+<?php namespace CmsCanvas\Routing;
 
-use Theme, Controller;
+use Theme, Controller as BaseController;
 
-class BaseController extends Controller {
+class Controller extends BaseController {
 
     /**
      * Setup the theme and layout used by the controller.

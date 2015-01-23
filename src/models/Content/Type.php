@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, View;
+use Lang, StringView, View, Auth;
 use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
@@ -81,6 +81,16 @@ class Type extends Model implements PageInterface {
         return $this->hasMany('\CmsCanvas\Models\Content\Type\Field', 'content_type_id');
     } 
 
+    public function viewPermission()
+    {
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'view_permission_id', 'id');
+    }
+
+    public function viewRoles()
+    {
+        return $this->viewPermission->roles();
+    }
+
     /**
      * Sets data order by using a custom object
      *
@@ -124,8 +134,52 @@ class Type extends Model implements PageInterface {
      */
     public static function getAvailableForNewEntry()
     {
-        return self::has('entries', '<', new Expression('content_types.entries_allowed'))
-            ->orWhereNull('content_types.entries_allowed')
+        return self::where(function($query) {
+                $query->has('entries', '<', new Expression('content_types.entries_allowed'));
+                $query->orWhereNull('content_types.entries_allowed');
+            })
+            ->where(function($query) {
+                $query->whereNull('view_permission_id');
+
+                $roles = Auth::user()->roles;
+                if (count($roles) > 0)
+                {
+                    $query->orWhereHas('viewPermission', function($query) use($roles)
+                    {
+                        $query->whereHas('roles', function($query) use($roles)
+                        {
+                            $query->whereIn('roles.id', $roles->lists('id'));
+                        });
+                    });
+                }
+            })
+            ->orderBy('title', 'asc')
+            ->get();
+    }
+
+    /**
+     * Queries and returns all content types that the 
+     * current user has permissions to view
+     *
+     * @return \CmsCanvas\Models\Content\Type|collection
+     */
+    public static function getAllViewable()
+    {
+        return self::where(function($query) {
+                $query->whereNull('view_permission_id');
+
+                $roles = Auth::user()->roles;
+                if (count($roles) > 0)
+                {
+                    $query->orWhereHas('viewPermission', function($query) use($roles)
+                    {
+                        $query->whereHas('roles', function($query) use($roles)
+                        {
+                            $query->whereIn('roles.id', $roles->lists('id'));
+                        });
+                    });
+                }
+            })
             ->orderBy('title', 'asc')
             ->get();
     }
@@ -419,6 +473,28 @@ class Type extends Model implements PageInterface {
         }
 
         return $fieldInstances;
+    }
+
+    /**
+     * Checks the number of entries the current content type has
+     * compared to the allowed_entries setting.
+     *
+     * @throws RuntimeException
+     * @return bool
+     */
+    public function checkEntriesAllowed()
+    {
+        if ($this->entries_allowed !== null 
+            && $this->entries->count() >= $this->entries_allowed
+        )
+        {
+            throw new \RuntimeException("
+                The content type \"{$this->title}\" has the maximum number of allowed entries."
+                . " (Max: $this->entries_allowed)"
+            );
+        }
+
+        return true;
     }
 
 }

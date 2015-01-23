@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App, Auth, Config;
-use CmsCanvas\Controllers\Admin\AdminController;
+use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
@@ -26,22 +26,34 @@ class EntryController extends AdminController {
 
         $entries = new Entry;
         $entries = $entries->join('content_types', 'entries.content_type_id', '=', 'content_types.id')
+            ->leftJoin('permissions', 'content_types.view_permission_id', '=', 'permissions.id')
+            ->leftJoin('role_permissions', 'content_types.view_permission_id', '=', 'role_permissions.permission_id')
             ->join('entry_statuses', 'entries.entry_status_id', '=', 'entry_statuses.id')
             ->select(DB::raw('entries.*, content_types.title as content_type_title, entry_statuses.name as entry_status_name'))
+            ->distinct()
+            ->where(function($query) 
+            {
+                $query->whereNull('content_types.view_permission_id');
+                $roles = Auth::user()->roles;
+                if (count($roles) > 0)
+                {
+                    $query->orWhereIn('role_permissions.role_id', $roles->lists('id'));
+                }
+            })
             ->applyFilter($filter)
             ->applyOrderBy($orderBy);
 
         $contentTypes = Type::getAvailableForNewEntry();
         $entryStatuses = Status::orderBy('id', 'asc')->get();
-        $contentTypesAll = Type::orderBy('title', 'asc')->get();
+        $viewableContentTypes = Type::getAllViewable();
 
         $content->entries = $entries->paginate(50);
         $content->filter = new stdClass();
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
         $content->contentTypes = $contentTypes;
-        $content->contentTypeSelectOptions = $contentTypesAll->getKeyValueArray('id', 'title');
-        $content->entryStatusSelectOptions = $entryStatuses->getKeyValueArray('id', 'name');
+        $content->viewableContentTypes = $viewableContentTypes;
+        $content->entryStatuses = $entryStatuses;
 
         $this->layout->breadcrumbs = array(Request::path() => 'Entries');
         $this->layout->content = $content;
@@ -109,6 +121,11 @@ class EntryController extends AdminController {
      */
     public function getEdit($contentType, $entry = null)
     {
+        if ($entry == null)
+        {
+            $contentType->checkEntriesAllowed();
+        }
+
         $content = View::make('cmscanvas::admin.content.entry.edit');
 
         $entryStatuses = Status::orderBy('id', 'asc')->get();
@@ -130,6 +147,11 @@ class EntryController extends AdminController {
      */
     public function postEdit($contentType, $entry = null)
     {
+        if ($entry == null)
+        {
+            $contentType->checkEntriesAllowed();
+        }
+        
         $contentFields = $contentType->getAllFieldTypeInstances($entry);
         $rules = $contentFields->getValidationRules();
 

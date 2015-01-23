@@ -3,7 +3,8 @@
 use \Admin;
 
 Route::model('user', 'CmsCanvas\Models\User');
-Route::model('userGroup', 'CmsCanvas\Models\User\Group');
+Route::model('role', 'CmsCanvas\Models\Role');
+Route::model('permission', 'CmsCanvas\Models\Permission');
 Route::model('contentType', 'CmsCanvas\Models\Content\Type');
 Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
@@ -23,25 +24,41 @@ Route::group(array('prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.aut
 
         Route::post('delete', array('as' => 'admin.user.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@postDelete'));
 
-        Route::get('add', array('as' => 'admin.user.add', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@getAdd'));
-        Route::post('add', array('as' => 'admin.user.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@postAdd'));
+        Route::get('add', array('as' => 'admin.user.add', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@getEdit'));
+        Route::post('add', array('as' => 'admin.user.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@postEdit'));
 
         Route::get('{user}/edit', array('as' => 'admin.user.edit', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@getEdit'));
         Route::post('{user}/edit', array('as' => 'admin.user.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\UserController@postEdit'));
 
-        Route::group(array('prefix' => 'group'), function()
+        Route::group(array('prefix' => 'permission'), function()
         {
 
-            Route::get('/', array('as' => 'admin.user.group.groups', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@getGroups'));
-            Route::post('/', array('as' => 'admin.user.group.groups.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@postGroups'));
+            Route::get('/', array('as' => 'admin.user.permission.permissions', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@getPermissions'));
+            Route::post('/', array('as' => 'admin.user.permission.permissions.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@postPermissions'));
 
-            Route::post('delete', array('as' => 'admin.user.group.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@postDelete'));
+            Route::post('delete', array('as' => 'admin.user.permission.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@postDelete'));
 
-            Route::get('add', array('as' => 'admin.user.group.add', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@getAdd'));
-            Route::post('add', array('as' => 'admin.user.group.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@postAdd'));
+            Route::get('add', array('as' => 'admin.user.permission.add', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@getEdit'));
+            Route::post('add', array('as' => 'admin.user.permission.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@postEdit'));
 
-            Route::get('{userGroup}/edit', array('as' => 'admin.user.group.edit', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@getEdit'));
-            Route::post('{userGroup}/edit', array('as' => 'admin.user.group.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\GroupController@postEdit'));
+            Route::get('{permission}/edit', array('as' => 'admin.user.permission.edit', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@getEdit'));
+            Route::post('{permission}/edit', array('as' => 'admin.user.permission.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\PermissionController@postEdit'));
+
+        });
+
+        Route::group(array('prefix' => 'role'), function()
+        {
+
+            Route::get('/', array('as' => 'admin.user.role.roles', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@getRoles'));
+            Route::post('/', array('as' => 'admin.user.role.roles.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@postRoles'));
+
+            Route::post('delete', array('as' => 'admin.user.role.delete.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@postDelete'));
+
+            Route::get('add', array('as' => 'admin.user.role.add', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@getEdit'));
+            Route::post('add', array('as' => 'admin.user.role.add.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@postEdit'));
+
+            Route::get('{role}/edit', array('as' => 'admin.user.role.edit', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@getEdit'));
+            Route::post('{role}/edit', array('as' => 'admin.user.role.edit.post', 'uses' => 'CmsCanvas\Controllers\Admin\User\RoleController@postEdit'));
 
         });
 

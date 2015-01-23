@@ -1,9 +1,9 @@
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="{{ Theme::asset('images/user-group.png') }}"> User Groups</h1>
+        <h1><img alt="" src="{{ Theme::asset('images/user-group.png') }}"> Permissions</h1>
 
         <div class="buttons">
-            <a class="button" href="{{ Admin::url('user/group/add') }}"><span>Add Group</span></a>
+            <a class="button" href="{{ Admin::url('user/permission/add') }}"><span>Add Permission</span></a>
             <a class="button delete" href="javascript:void(0);"><span>Delete</span></a>
         </div>
     </div>
@@ -23,7 +23,7 @@
             <div class="clear"></div>
         </div>
 
-        {{ Form::open(array('id' => 'group_delete_form')) }}
+        {{ Form::open(array('id' => 'permission_delete_form')) }}
             <table class="list">
                 <thead>
                     <tr>
@@ -33,20 +33,18 @@
                         <th>
                             <a rel="name" class="sortable{{ $orderBy->getElementClass('name') }}" href="javascript:void(0);">Name</a>
                         </th>
-                        <th>
-                            User Count
-                        </th>
+                        <th>Key Name</th>
                         <th class="right">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (count($groups) > 0)
-                        @foreach ($groups as $group)
+                    @if (count($permissions) > 0)
+                        @foreach ($permissions as $permission)
                             <tr>
-                                <td class="center"><input type="checkbox" value="{{ $group->id }}" name="selected[]" /></td>
-                                <td>{{ $group->name }}</td>
-                                <td>{{ $group->users()->count() }}</td>
-                                <td class="right">[ <a href="{{ Admin::url("user/group/{$group->id}/edit") }}">Edit</a> ]</td>
+                                <td class="center"><input type="checkbox" value="{{ $permission->id }}" name="selected[]" /></td>
+                                <td>{{ $permission->name }}</td>
+                                <td>{{ $permission->key_name }}</td>
+                                <td class="right">[ <a href="{{ Admin::url("user/permission/{$permission->id}/edit") }}">Edit</a> ]</td>
                             </tr>
                         @endforeach
                     @else
@@ -59,8 +57,8 @@
         {{ Form::close() }}
 
         <div class="pagination_footer">
-            <div class="links">{{ $groups->links() }}</div>
-            <div class="results">Showing {{ $groups->getFrom() }} to {{ $groups->getTo() }} of {{ $groups->getTotal() }} ({{ $groups->getLastPage() }}  Pages)</div>
+            <div class="links">{{ $permissions->links() }}</div>
+            <div class="results">Showing {{ $permissions->getFrom() }} to {{ $permissions->getTo() }} of {{ $permissions->getTotal() }} ({{ $permissions->getLastPage() }}  Pages)</div>
         </div>
     </div>
 </div>
@@ -69,7 +67,7 @@
     $(document).ready( function() {
         $('.delete').click( function() {
             if (confirm('Delete cannot be undone! Are you sure you want to do this?')) {
-                $('#group_delete_form').attr('action', '{{ Admin::url('user/group/delete') }}').submit()
+                $('#permission_delete_form').attr('action', '{{ Admin::url('user/permission/delete') }}').submit()
             } else {
                 return false;
             }

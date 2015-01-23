@@ -98,7 +98,8 @@ class Collection extends EloquentCollection {
     		$array = $arrayPrefix;
     	}
 
-        foreach ($this->items as $item) {
+        foreach ($this->items as $item) 
+        {
         	if ( ! isset($item->$value) && method_exists($item, $value))
         	{
 	            $array[$item->$key] = $item->$value();

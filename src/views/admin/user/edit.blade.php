@@ -25,11 +25,6 @@
             <div id="edit-user-tab">
                 <div class="form">
                     <div>
-                        {{ HTML::decode(Form::label('groups', '<span class="required">*</span> Group:')) }}
-                        {{ Form::select('user_group_id', $groupSelectOptions) }}
-                    </div>
-
-                    <div>
                         {{ HTML::decode(Form::label('email', '<span class="required">*</span> Email:')) }}
                         {{ Form::text('email') }}
                     </div>
@@ -58,7 +53,31 @@
 
                     <div>
                         {{ HTML::decode(Form::label('timezone_id', '<span class="required">*</span> Timezone:')) }}
-                        {{ Form::select('timezone_id', $timezoneSelectOptions) }}
+                        {{ Form::select('timezone_id', ['' => ''] + $timezones->lists('name', 'id')) }}
+                    </div>
+
+                    <div>
+                        {{ Form::label('roles', 'Roles:') }}
+                        <div class="fields_wrapper">
+                            <div class="scrollbox">
+                            <?php $i = 0; ?>
+                            @foreach ($roles as $role)
+                                <div class="{{ ($i % 2 == 0) ? 'even' : 'odd' }}">
+                                    <label>
+                                    {{ 
+                                        Form::checkbox(
+                                            'user_roles[]', 
+                                            $role->id, 
+                                            (($user != null && $user->hasRole($role->name)) ? true : false)
+                                        ) 
+                                    }} 
+                                    {{ $role->name }}
+                                    </label>
+                                </div>
+                                <?php $i++; ?>
+                            @endforeach
+                            </div>
+                        </div>
                     </div>
 
                     <div>

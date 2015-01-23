@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass;
-use CmsCanvas\Controllers\Admin\AdminController;
+use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Content\Type;
 
 class TypeController extends AdminController {

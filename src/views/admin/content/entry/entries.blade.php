@@ -33,12 +33,12 @@
 
             <div class="left">
                 <div><label>Content Type:</label></div> 
-                {{ Form::select('filter[content_type_id]', $contentTypeSelectOptions) }}
+                {{ Form::select('filter[content_type_id]', ['' => ''] + $viewableContentTypes->lists('title', 'id')) }}
             </div>
 
             <div class="left">
                 <div><label>Status:</label></div> 
-                {{ Form::select('filter[entry_status_id]', $entryStatusSelectOptions) }}
+                {{ Form::select('filter[entry_status_id]', ['' => ''] + $entryStatuses->lists('name', 'id')) }}
             </div>
             
             <div class="left filter_buttons">

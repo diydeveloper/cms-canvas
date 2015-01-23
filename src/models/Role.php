@@ -1,15 +1,15 @@
-<?php namespace CmsCanvas\Models\User;
+<?php namespace CmsCanvas\Models;
 
 use CmsCanvas\Database\Eloquent\Model;
 
-class Group extends Model {
+class Role extends Model {
 
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'user_groups';
+    protected $table = 'roles';
 
     /**
      * The columns that can be mass-assigned.
@@ -46,7 +46,7 @@ class Group extends Model {
      */
     public function users()
     {
-        return $this->hasMany('\CmsCanvas\Models\User', 'user_group_id');
+        return $this->belongsToMany('\CmsCanvas\Models\User', 'user_roles', 'role_id', 'user_id');
     }
 
     /**
