@@ -36,7 +36,7 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	public function save()
 	{
 		$languages = Language::all();
-		$localeIds = $languages->getKeyValueArray('locale', 'id');
+		$localeIds = $languages->lists('id', 'locale');
 		$entries = array();
 
 		foreach ($this->items as $item)

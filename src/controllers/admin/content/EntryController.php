@@ -26,14 +26,14 @@ class EntryController extends AdminController {
 
         $entries = new Entry;
         $entries = $entries->join('content_types', 'entries.content_type_id', '=', 'content_types.id')
-            ->leftJoin('permissions', 'content_types.view_permission_id', '=', 'permissions.id')
-            ->leftJoin('role_permissions', 'content_types.view_permission_id', '=', 'role_permissions.permission_id')
+            ->leftJoin('permissions', 'content_types.admin_view_permission_id', '=', 'permissions.id')
+            ->leftJoin('role_permissions', 'content_types.admin_view_permission_id', '=', 'role_permissions.permission_id')
             ->join('entry_statuses', 'entries.entry_status_id', '=', 'entry_statuses.id')
             ->select(DB::raw('entries.*, content_types.title as content_type_title, entry_statuses.name as entry_status_name'))
             ->distinct()
             ->where(function($query) 
             {
-                $query->whereNull('content_types.view_permission_id');
+                $query->whereNull('content_types.admin_view_permission_id');
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)
                 {
@@ -130,11 +130,15 @@ class EntryController extends AdminController {
 
         $entryStatuses = Status::orderBy('id', 'asc')->get();
         $authors = User::getAuthors();
+        $authorOptions = array('' => '');
+        foreach ($authors as $author) {
+            $authorOptions[$author->id] = $author->getFullName();
+        }
 
         $content->entry = $entry;
         $content->fieldViews = $contentType->getAdminFieldViews($entry);
-        $content->entryStatusSelectOptions = $entryStatuses->getKeyValueArray('id', 'name', false);
-        $content->authors = $authors->getKeyValueArray('id', 'getFullName');
+        $content->entryStatuses = $entryStatuses;
+        $content->authorOptions = $authorOptions;
         $content->contentType = $contentType;
 
         $this->layout->content = $content;

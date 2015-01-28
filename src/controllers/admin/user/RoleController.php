@@ -3,6 +3,7 @@
 use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Role;
+use CmsCanvas\Models\Permission;
 use CmsCanvas\Container\Database\OrderBy;
 
 class RoleController extends AdminController {
@@ -108,8 +109,11 @@ class RoleController extends AdminController {
      */
     public function getEdit($role = null)
     {
+        $permissions = Permission::orderBy('name', 'asc')->get();
+
         $content = View::make('cmscanvas::admin.user.role.edit');
         $content->role = $role;
+        $content->permissions = $permissions;
 
         $this->layout->content = $content;
     }
@@ -146,6 +150,7 @@ class RoleController extends AdminController {
         $role = ($role == null) ? new Role : $role;
         $role->fill(Input::all());
         $role->save();
+        $role->permissions()->sync(Input::get('role_permissions', array()));
 
         return Redirect::route('admin.user.role.roles')
             ->with('message', "{$role->name} was successfully updated.");

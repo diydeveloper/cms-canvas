@@ -73,13 +73,7 @@ class TypeController extends AdminController {
      */
     public function getAdd()
     {
-        $content = View::make('cmscanvas::admin.content.type.add');
-
-        $this->layout->breadcrumbs = array(
-            'content/type' => 'Content Types', 
-            Request::path() => 'Add Content Type'
-        );
-        $this->layout->content = $content;
+        // Routed to getEdit
     }
 
     /**
@@ -89,26 +83,7 @@ class TypeController extends AdminController {
      */
     public function postAdd()
     {
-        $rules = array(
-            'title' => 'required',
-            'short_name' => 'required',
-            'entries_allowed' => 'integer',
-        );
-
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails())
-        {
-            return Redirect::route('admin.content.type.add')
-                ->withInput()
-                ->with('error', $validator->messages()->all());
-        }
-
-        $contentType = new Type();
-        $contentType->fill(Input::all());
-        $contentType->save();
-
-        return Redirect::route('admin.content.type.edit', $contentType->id);
+        // Routed to postEdit
     }
 
     /**
@@ -116,16 +91,23 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($contentType)
+    public function getEdit($contentType = null)
     {
-        Theme::addPackage('codemirror');
+        if ($contentType == null)
+        {
+            $content = View::make('cmscanvas::admin.content.type.add');
+        }
+        else
+        {
+            Theme::addPackage('codemirror');
+            $content = View::make('cmscanvas::admin.content.type.edit');
+        }
 
-        $content = View::make('cmscanvas::admin.content.type.edit');
         $content->contentType = $contentType;
 
         $this->layout->breadcrumbs = array(
             'content/type' => 'Content Types', 
-            Request::path() => 'Edit Content Type'
+            Request::path() => (($contentType == null) ? 'Add' : 'Edit').' Content Type'
         );
         $this->layout->content = $content;
     }
@@ -135,22 +117,34 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($contentType)
+    public function postEdit($contentType = null)
     {
         $rules = array(
-            'title' => 'required',
-            'short_name' => 'required',
+            'title' => 'required|max:255',
+            'short_name' => "required|alpha_dash|max:50"
+                ."|unique:content_types,short_name".(($contentType == null) ? "" : ",{$contentType->id}"),
+            'entries_allowed' => 'integer',
         );
 
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::route('admin.content.type.edit', $contentType->id)
-                ->withInput()
-                ->with('error', $validator->messages()->all());
+            if ($contentType == null)
+            {
+                return Redirect::route('admin.content.type.add')
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
+            else
+            {
+                return Redirect::route('admin.content.type.edit', $contentType->id)
+                    ->withInput()
+                    ->with('error', $validator->messages()->all());
+            }
         }
 
+        $contentType = ($contentType == null) ? new Type() : $contentType;
         $contentType->fill(Input::all());
         $contentType->save();
 

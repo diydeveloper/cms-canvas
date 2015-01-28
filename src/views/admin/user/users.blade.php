@@ -62,9 +62,7 @@
                                 <td>{{ $user->last_name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    @foreach ($user->roles as $role)
-                                        {{ $role->name }},
-                                    @endforeach
+                                    {{ implode(', ', $user->roles->lists('name')) }}
                                 </td>
                                 <td>{{ (empty($user->last_login)) ? '' : $user->last_login->setTimezone(Auth::user()->getTimezoneIdentifier())->format('M j, Y h:i a') }}</td>
                                 <td class="right">[ <a href="{{ Admin::url("user/{$user->id}/impersonate") }}">Login</a> ] [ <a href="{{ Admin::url("user/{$user->id}/edit") }}">Edit</a> ]</td>

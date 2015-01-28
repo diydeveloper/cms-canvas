@@ -81,36 +81,4 @@ class Collection extends EloquentCollection {
 		return $getWhereCollection->first();
 	}
 
-    /**
-     * Returns an array of keys and cooresponding values for the current items
-     *
-	 * @param string $key
-	 * @param string $value
-	 * @param mixed $arrayPrefix
-     * @return array
-     */
-    public function getKeyValueArray($key, $value, $arrayPrefix = array('' => ''))
-    {
-        $array = array();
-
-    	if (is_array($arrayPrefix))
-    	{
-    		$array = $arrayPrefix;
-    	}
-
-        foreach ($this->items as $item) 
-        {
-        	if ( ! isset($item->$value) && method_exists($item, $value))
-        	{
-	            $array[$item->$key] = $item->$value();
-        	}
-        	else
-        	{
-	            $array[$item->$key] = $item->$value;
-        	}
-        }
-
-        return $array;
-    }
-
 }

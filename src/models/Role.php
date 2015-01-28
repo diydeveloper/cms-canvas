@@ -40,13 +40,42 @@ class Role extends Model {
     protected static $defaultSortColumn = 'name';
 
     /**
-     * Defines a one to many relationship with users
+     * Defines a many to many relationship with users
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
     public function users()
     {
         return $this->belongsToMany('\CmsCanvas\Models\User', 'user_roles', 'role_id', 'user_id');
+    }
+
+    /**
+     * Defines a many to many relationship with permissions
+     *
+     * @return BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany('\CmsCanvas\Models\Permission', 'role_permissions', 'role_id', 'permission_id');
+    }
+
+    /**
+     * Check if the permission is assigned to the specified role
+     *
+     * @param string $keyName
+     * @return bool
+     */
+    public function hasPermission($keyName)
+    {
+        foreach ($this->permissions as $permission) 
+        {
+            if ($permission->key_name == $keyName) 
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

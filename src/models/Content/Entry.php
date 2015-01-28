@@ -218,7 +218,7 @@ class Entry extends Model implements PageInterface {
 
         $content = $this->contentType->render($parameters, $data);
 
-        if ($this->templateFlag)
+        if ($this->template_flag)
         {
             $content = StringView::make(
                 array(

@@ -34,6 +34,7 @@
                             <a rel="name" class="sortable{{ $orderBy->getElementClass('name') }}" href="javascript:void(0);">Name</a>
                         </th>
                         <th>Key Name</th>
+                        <th>Roles</th>
                         <th class="right">Action</th>
                     </tr>
                 </thead>
@@ -44,6 +45,7 @@
                                 <td class="center"><input type="checkbox" value="{{ $permission->id }}" name="selected[]" /></td>
                                 <td>{{ $permission->name }}</td>
                                 <td>{{ $permission->key_name }}</td>
+                                <td>{{ implode(', ', $permission->roles->lists('name')) }}</td>
                                 <td class="right">[ <a href="{{ Admin::url("user/permission/{$permission->id}/edit") }}">Edit</a> ]</td>
                             </tr>
                         @endforeach

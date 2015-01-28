@@ -18,11 +18,39 @@
                 <div class="form">
                     <div>
                         {{ HTML::decode(Form::label('name', '<span class="required">*</span> Name:')) }}
-                        {{ Form::text('name') }}
+                        {{ Form::text('name', null, ['id' => 'name']) }}
                     </div>
+
                     <div>
                         {{ HTML::decode(Form::label('name', '<span class="required">*</span> Key Name:')) }}
-                        {{ Form::text('key_name') }}
+                        {{ Form::text('key_name', null, ['id' => 'key_name']) }}
+                    </div>
+
+                    <div>
+                        {{ Form::label('roles', 'Roles:') }}
+                        <div class="fields_wrapper">
+                            <div class="scrollbox">
+                            <?php $i = 0; ?>
+                            @foreach ($roles as $role)
+                                <div class="{{ ($i % 2 == 0) ? 'even' : 'odd' }}">
+                                    <label>
+                                    {{ 
+                                        Form::checkbox(
+                                            'role_permissions[]', 
+                                            $role->id, 
+                                            (($permission != null && $permission->hasRole($role->name)) ? true : false)
+                                        ) 
+                                    }} 
+                                    {{ $role->name }}
+                                    </label>
+                                </div>
+                                <?php $i++; ?>
+                            @endforeach
+                            </div>
+                            <a onclick="$(this).parent().find(':checkbox').attr('checked', true);">Select All</a> 
+                            / 
+                            <a onclick="$(this).parent().find(':checkbox').attr('checked', false);">Unselect All</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -32,3 +60,11 @@
         {{ Form::close() }}
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('#name').keyup( function(e) {
+            $('#key_name').val($(this).val().toUpperCase().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\-_]/g, ''))
+        });
+    });
+</script>

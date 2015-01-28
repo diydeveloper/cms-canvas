@@ -271,12 +271,9 @@ class User extends Model implements UserInterface, RemindableInterface {
     {
         foreach ($this->roles as $role) 
         {
-            foreach ($role->permissions as $permission)
+            if ($role->hasPermission($keyName))
             {
-                if ($permission->key_name == $keyName)
-                {
-                    return true;
-                }
+                return true;
             }
         }
 

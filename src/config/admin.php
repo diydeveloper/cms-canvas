@@ -36,6 +36,10 @@ return array(
                         'title' => 'Roles',
                         'url'   => 'user/role',
                     ),
+                    array(
+                        'title' => 'Permissions',
+                        'url'   => 'user/permission',
+                    ),
                 ),
         ),
         array(

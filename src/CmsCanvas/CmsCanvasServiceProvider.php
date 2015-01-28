@@ -43,24 +43,23 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        App::error(function(\Exception $exception)
+        App::error(function(\Exception $exception, $code)
         {
-            $heading = 'Error';
-
+            Theme::setTheme('admin');
+            Theme::setLayout('layouts.default');
+            Theme::addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
             $layout = Theme::getLayout();
-            
-            if ($layout != null)
-            {
-                $layout->content = View::make('cmscanvas::admin.error')
-                    ->with(
-                        array(
-                            'heading' => $heading,
-                            'exception' => $exception
-                        )
-                    );
 
-                return $layout;
-            }
+            $heading = 'Permission Denied';
+            $layout->content = View::make('cmscanvas::admin.error')
+                ->with(
+                    array(
+                        'heading' => $heading,
+                        'exception' => $exception
+                    )
+                );
+
+            return \Response::make($layout, $code);
         });
 
         Event::listen('auth.login', function($user) {

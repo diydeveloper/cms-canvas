@@ -23,7 +23,7 @@ class CreateEntriesTable extends Migration {
             $table->string('meta_title', 100)->nullable();
             $table->string('meta_keywords', 300)->nullable();
             $table->string('meta_description', 250)->nullable();
-            $table->boolean('templateFlag')->default(0);
+            $table->boolean('template_flag')->default(0);
             $table->timestamps();
         });
     }

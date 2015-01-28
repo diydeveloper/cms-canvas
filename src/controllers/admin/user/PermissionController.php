@@ -3,6 +3,7 @@
 use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Permission;
+use CmsCanvas\Models\Role;
 use CmsCanvas\Container\Database\OrderBy;
 
 class PermissionController extends AdminController {
@@ -99,8 +100,11 @@ class PermissionController extends AdminController {
      */
     public function getEdit($permission = null)
     {
+        $roles = Role::orderBy('name', 'asc')->get();
+
         $content = View::make('cmscanvas::admin.user.permission.edit');
         $content->permission = $permission;
+        $content->roles = $roles;
 
         $this->layout->content = $content;
     }
@@ -113,7 +117,9 @@ class PermissionController extends AdminController {
     public function postEdit($permission = null)
     {
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|max:255',
+            'key_name' => 'required|max:50'
+                ."|unique:permissions,key_name".(($permission == null) ? "" : ",{$permission->id}"),
         );
 
         $validator = Validator::make(Input::all(), $rules);
@@ -136,7 +142,9 @@ class PermissionController extends AdminController {
 
         $permission = ($permission == null) ? new Permission : $permission;
         $permission->fill(Input::all());
+        $permission->key_name = strtoupper($permission->key_name);
         $permission->save();
+        $permission->roles()->sync(Input::get('role_permissions', array()));
 
         return Redirect::route('admin.user.permission.permissions')
             ->with('message', "{$permission->name} was successfully updated.");

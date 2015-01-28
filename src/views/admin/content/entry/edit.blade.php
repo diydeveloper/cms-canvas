@@ -13,7 +13,7 @@
         <div class="buttons">
             <a class="button" href="javascript:void(0);" id="save"><span>Save</span></a>
             <a class="button" href="javascript:void(0);" id="save_exit"><span>Save &amp; Exit</span></a>
-            <a class="button" href="{{ Admin::url('content/entries') }}"><span>Cancel</span></a>
+            <a class="button" href="{{ Admin::url('content/entry') }}"><span>Cancel</span></a>
         </div>
     </div>
     <div class="content">
@@ -86,7 +86,7 @@
                 <div class="form">
                     <div>
                         {{ HTML::decode(Form::label('entry_status_id', '<span class="required">*</span> Status:')) }}
-                        {{ Form::select('entry_status_id', $entryStatusSelectOptions) }}
+                        {{ Form::select('entry_status_id', $entryStatuses->lists('name', 'id')) }}
                     </div>
                     <div>
                         {{ HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) }}
@@ -101,7 +101,7 @@
                     </div>
                     <div>
                         {{ Form::label('author_id', 'Author:') }}
-                        {{ Form::select('author_id', $authors, ( ! empty($entry->author_id) ? $entry->author_id : Auth::user()->id)) }}
+                        {{ Form::select('author_id', $authorOptions, ( ! empty($entry->author_id) ? $entry->author_id : Auth::user()->id)) }}
                     </div>
                 </div>
             </div>

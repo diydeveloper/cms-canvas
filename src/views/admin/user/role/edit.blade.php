@@ -20,6 +20,33 @@
                         {{ HTML::decode(Form::label('name', '<span class="required">*</span> Role Name:')) }}
                         {{ Form::text('name') }}
                     </div>
+
+                    <div>
+                        {{ Form::label('permissions', 'Permissions:', ['class' => 'valign_top']) }}
+                        <div class="fields_wrapper">
+                            <div class="scrollbox tall">
+                            <?php $i = 0; ?>
+                            @foreach ($permissions as $permission)
+                                <div class="{{ ($i % 2 == 0) ? 'even' : 'odd' }}">
+                                    <label>
+                                    {{ 
+                                        Form::checkbox(
+                                            'role_permissions[]', 
+                                            $permission->id, 
+                                            (($role != null && $role->hasPermission($permission->key_name)) ? true : false)
+                                        ) 
+                                    }} 
+                                    {{ $permission->name }}
+                                    </label>
+                                </div>
+                                <?php $i++; ?>
+                            @endforeach
+                            </div>
+                            <a onclick="$(this).parent().find(':checkbox').attr('checked', true);">Select All</a> 
+                            / 
+                            <a onclick="$(this).parent().find(':checkbox').attr('checked', false);">Unselect All</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 

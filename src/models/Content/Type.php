@@ -83,7 +83,7 @@ class Type extends Model implements PageInterface {
 
     public function viewPermission()
     {
-        return $this->belongsTo('\CmsCanvas\Models\Permission', 'view_permission_id', 'id');
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_view_permission_id', 'id');
     }
 
     public function viewRoles()
@@ -139,7 +139,7 @@ class Type extends Model implements PageInterface {
                 $query->orWhereNull('content_types.entries_allowed');
             })
             ->where(function($query) {
-                $query->whereNull('view_permission_id');
+                $query->whereNull('admin_view_permission_id');
 
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)
@@ -166,7 +166,7 @@ class Type extends Model implements PageInterface {
     public static function getAllViewable()
     {
         return self::where(function($query) {
-                $query->whereNull('view_permission_id');
+                $query->whereNull('admin_view_permission_id');
 
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)

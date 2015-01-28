@@ -49,6 +49,26 @@ class Permission extends Model {
         return $this->belongsToMany('\CmsCanvas\Models\Role', 'role_permissions', 'permission_id', 'role_id');
     }
 
+
+    /**
+     * Check if the permission is assigned to the specified role
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function hasRole($name)
+    {
+        foreach ($this->roles as $role) 
+        {
+            if ($role->name == $name) 
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Sets data order by using a custom object
      *
