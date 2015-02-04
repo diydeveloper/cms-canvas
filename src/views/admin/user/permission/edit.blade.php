@@ -63,8 +63,10 @@
 
 <script type="text/javascript">
     $(document).ready( function() {
+        @if (empty($permission))
         $('#name').keyup( function(e) {
             $('#key_name').val($(this).val().toUpperCase().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9\-_]/g, ''))
         });
+        @endif
     });
 </script>

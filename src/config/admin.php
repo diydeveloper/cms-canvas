@@ -59,11 +59,11 @@ return array(
         ),
         array(
             'title' => 'System',
-            'url'   => 'settings/general-settings',
+            'url'   => 'system/general-settings',
             'sub'   => array(
                     array(
                         'title' => 'General Settings',
-                        'url'   => 'settings/general-settings',
+                        'url'   => 'system/general-settings',
                     ),
                     array(
                         'title' => 'Languages',
@@ -71,7 +71,7 @@ return array(
                     ),
                     array(
                         'title' => 'Server Info',
-                        'url'   => 'settings/server-info',
+                        'url'   => 'system/server-info',
                     ),
                 ),
         ),

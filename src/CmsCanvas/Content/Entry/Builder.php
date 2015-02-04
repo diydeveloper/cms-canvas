@@ -105,7 +105,6 @@ class Builder {
             $entries = $this->entries->get();
         }
 
-
         return new RenderCollection($entries);
     }
 

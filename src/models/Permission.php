@@ -98,6 +98,7 @@ class Permission extends Model {
         if ( isset($filter->search) && $filter->search != '')
         {
             $query->where('name', 'LIKE', "%{$filter->search}%");
+            $query->orWhere('key_name', 'LIKE', "%{$filter->search}%");
         }
 
         return $query;

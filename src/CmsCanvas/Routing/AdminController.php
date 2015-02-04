@@ -10,7 +10,7 @@ class AdminController extends Controller {
      *
      * @var string
      */
-    protected $theme = 'admin';
+    protected $theme = 'cmscanvas::admin';
 
     /**
      * The default layout to be used with this controller

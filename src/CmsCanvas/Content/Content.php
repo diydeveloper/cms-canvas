@@ -30,7 +30,7 @@ class Content {
             return $source;
         }
 
-        $publicRootConfig = trim(Config::get('cmscanvas::config.publicRoot'), '/').'/';
+        $publicRootConfig = trim(Config::get('cmscanvas::config.public_root'), '/').'/';
         $thumbnailsConfig = trim(Config::get('cmscanvas::config.thumbnails'), '/').'/';
 
         $source = str_replace(asset(null), '', $source);

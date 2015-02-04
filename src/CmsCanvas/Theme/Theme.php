@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Theme;
 
-use View, Config;
+use View, Config, File;
 
 class Theme {
 
@@ -103,6 +103,20 @@ class Theme {
     protected $stylesheetOrder = array();
 
     /**
+     * Hint path delimiter value.
+     *
+     * @var string
+     */
+    const HINT_PATH_DELIMITER = '::';
+
+    /**
+     * CMSCanvas Theme Namespace
+     *
+     * @var string
+     */
+    const CMSCANVAS_THEME_NAMESPACE = 'cmscanvas';
+
+    /**
      * Generates a URL for a theme asset
      *
      * @param string
@@ -112,12 +126,15 @@ class Theme {
     {
         if ($theme == null) 
         {
+            if ($this->theme == null)
+            {
+                throw new \Exception("A theme has not been specified or set.");
+            }
+
             $theme = $this->theme;
         }
 
-        $themeAssets = trim(Config::get('cmscanvas::config.themeAssets'), '/').'/';
-
-        return asset($themeAssets.$theme.'/'.ltrim($path, '/'));
+        return asset($this->getThemeAssetsPath($theme).ltrim($path, '/'));
     }
 
     /**
@@ -148,7 +165,7 @@ class Theme {
      */
     public function setTheme($theme)
     {
-        View::addNamespace('theme', __DIR__.'/../../themes/'.$theme.'/views/');
+        View::addNamespace('theme', $this->getThemePath($theme).'/views/');
 
         $this->theme = $theme;
 
@@ -556,7 +573,7 @@ class Theme {
             }
         }
 
-        $this->headersSent = TRUE;
+        $this->headersSent = true;
 
         return $cssIncludes;
     }
@@ -631,6 +648,173 @@ class Theme {
         $return .= $this->javascripts(true);
 
         return $return;
+    }
+
+    /**
+     * Get Themes
+     *
+     * Returns all themes located in the themes folder
+     *
+     * @return array
+     */
+    public function getThemes()
+    {
+        $themes = array();
+
+        $cmsCanvasThemes = File::glob(rtrim(Config::get('cmscanvas::config.cmscanvas_themes_directory'), '/').'/*', GLOB_ONLYDIR);
+
+        if (is_array($cmsCanvasThemes))
+        {
+            foreach($cmsCanvasThemes as $cmsCanvasTheme)
+            {
+                $themeName = basename($cmsCanvasTheme);
+                $themeKey = static::CMSCANVAS_THEME_NAMESPACE.static::HINT_PATH_DELIMITER.$themeName;
+                $themes[$themeKey] = $this->getFriendlyThemeName($themeName);
+            }
+        }
+
+        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
+
+        if (is_array($userThemes))
+        {
+            foreach($userThemes as $userTheme)
+            {
+                $themeName = basename($userTheme);
+                $themes[$themeName] = $this->getFriendlyThemeName($themeName);
+            }
+        }
+
+        return $themes;
+    }
+
+    /**
+     * Returns all of the layouts for the specified theme
+     *
+     * @return array
+     */
+    public function getThemeLayouts($theme = null)
+    {
+        if ($theme == null)
+        {
+            if ($this->theme == null)
+            {
+                throw new \Exception("A theme has not been specified or set.");
+            }
+
+            $theme = $this->theme;
+        }
+
+        $layouts = array();
+
+        $themeLayouts = File::files($this->getThemePath($theme).'/views/layouts/');
+
+        foreach ($themeLayouts as $themeLayout) 
+        {
+            $filename = File::name($themeLayout);
+            $filename = str_replace('.blade', '', $filename);
+            $layouts[$filename] = $filename;
+        }
+
+        return $layouts;
+    }
+
+    /**
+     * Returns the theme name minus the namespace
+     *
+     * @param string $theme
+     * @return string
+     */
+    public function getThemePath($theme)
+    {
+        if ($this->hasHintInformation($theme, static::CMSCANVAS_THEME_NAMESPACE))
+        {
+            $themePath = Config::get('cmscanvas::config.cmscanvas_themes_directory'); 
+        }
+        else
+        {
+            $themePath = Config::get('cmscanvas::config.themes_directory'); 
+        }
+
+        return rtrim($themePath, '/').'/'.$this->getBaseThemeName($theme).'/';
+    }
+
+    /**
+     * Returns the theme name minus the namespace
+     *
+     * @param string $theme
+     * @return string
+     */
+    public function getThemeAssetsPath($theme)
+    {
+        if ($this->hasHintInformation($theme, static::CMSCANVAS_THEME_NAMESPACE))
+        {
+            $themeAssets = Config::get('cmscanvas::config.cmscanvas_theme_assets'); 
+        }
+        else
+        {
+            $themeAssets = Config::get('cmscanvas::config.theme_assets'); 
+        }
+
+        return rtrim($themeAssets, '/').'/'.$this->getBaseThemeName($theme).'/';
+    }
+
+    /**
+     * Returns the theme name minus the namespace
+     *
+     * @param string $theme
+     * @return string
+     */
+    protected function getBaseThemeName($theme)
+    {
+        if ($this->hasHintInformation($theme))
+        {
+            list($namespace, $theme) = $this->getNamespaceSegments($theme);
+        }
+
+        return $theme;
+    }
+
+    /**
+     * Returns human readable theme name with spaces
+     *
+     * @param string $theme
+     * @return string
+     */
+    protected function getFriendlyThemeName($theme)
+    {
+        return ucwords(str_replace(array('-', '_'), ' ', $theme));
+    }
+
+    /**
+     * Get the segments of a theme name.
+     *
+     * @param string $theme
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function getNamespaceSegments($theme)
+    {
+        $segments = explode(static::HINT_PATH_DELIMITER, $theme);
+
+        if (count($segments) != 2)
+        {
+            throw new \InvalidArgumentException("Theme [$theme] has an invalid name.");
+        }
+
+        return $segments;
+    }
+
+
+    /**
+     * Returns whether or not the theme name specifies hint information.
+     *
+     * @param  string  $name
+     * @return boolean
+     */
+    protected function hasHintInformation($theme, $namespace = '')
+    {
+        return strpos($theme, $namespace.static::HINT_PATH_DELIMITER) !== false;
     }
 
 }

@@ -46,8 +46,7 @@
 
             <!-- Header -->
             <header>
-                asdf
-                <a id="logo" href="{{ url() }}">{{-- settings:site_name --}}</a> 
+                <a id="logo" href="{{ url() }}">{{ Config::get('cmscanvas::config.site_name') }}</a> 
 
                 <img alt="Header Image" src="{{ Theme::asset('images/header.jpg') }}" />
 

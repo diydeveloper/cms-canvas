@@ -31,10 +31,11 @@ Route::filter('cmscanvas.cache.flush', function()
 
 /*
 |--------------------------------------------------------------------------
-| Cache Filters
+| Permission Filters
 |--------------------------------------------------------------------------
 |
-| The following filter is used to flush the cache directory
+| The following filter is used to verify the user has permission to 
+| the requested route 
 |
 */
 
@@ -53,5 +54,22 @@ Route::filter('cmscanvas.permission', function($route, $request)
                 . " (Permission: $permission)"
             );
         }
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| Ajax Filters
+|--------------------------------------------------------------------------
+|
+| The following filter is used allow ajax only requests 
+|
+*/
+
+Route::filter('cmscanvas.ajax', function()
+{
+    if ( ! \Request::ajax())
+    {
+        App::abort(404);
     }
 });

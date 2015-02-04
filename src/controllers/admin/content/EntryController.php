@@ -206,17 +206,12 @@ class EntryController extends AdminController {
     }
 
     /**
-     * Update an existing entry
+     * Generate a thumbnail from the specified image path
      *
-     * @return View
+     * @return string
      */
     public function postCreateThumbnail()
     {
-        if ( ! Request::ajax())
-        {
-            App::abort(404);
-        }
-
         return Content::thumbnail(
             Input::get('image_path'), 
             150, 
