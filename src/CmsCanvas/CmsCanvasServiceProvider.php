@@ -168,7 +168,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
 
         App::error(function(\Exception $exception, $code) use($app)
         {
-            $app['theme']->setTheme('cmscanvas::admin');
+            $app['theme']->setTheme('admin');
             $app['theme']->setLayout('default');
             $app['theme']->addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
             $layout =  $app['theme']->getLayout();
