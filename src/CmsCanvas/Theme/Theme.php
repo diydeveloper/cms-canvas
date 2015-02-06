@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Theme;
 
-use View, Config, File;
+use View, Config, File, App;
 
 class Theme {
 
@@ -14,7 +14,7 @@ class Theme {
     /**
      * The theme layout view
      * 
-     * @var View
+     * @var \Illuminate\View\View
      */
     protected $layout;
 
@@ -161,10 +161,20 @@ class Theme {
      * Sets the theme to render
      *
      * @param string
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function setTheme($theme)
     {
+        // Check if the application folder contains the specified theme folder. 
+        // If it does, we'll give that folder precedence on
+        // the loader list for the theme so the package theme can be overridden.
+        $appThemePath = $this->getAppThemePath($theme);
+
+        if (App::make('files')->isDirectory($appThemePath))
+        {
+            View::addNamespace('theme', $appThemePath.'/views/');
+        }
+
         View::addNamespace('theme', $this->getThemePath($theme).'/views/');
 
         $this->theme = $theme;
@@ -176,11 +186,11 @@ class Theme {
      * Sets the theme layout to render
      *
      * @param string
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function setLayout($layout)
     {
-        $this->layout = View::make('theme::'.$layout, array('content' => ''));
+        $this->layout = View::make('theme::layouts.'.$layout, array('content' => ''));
 
         return $this;
     }
@@ -188,7 +198,7 @@ class Theme {
     /**
      * Returns the theme layout view
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function getLayout()
     {
@@ -199,7 +209,7 @@ class Theme {
      * Specifies the page title used in the metadata output
      *
      * @param string 
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function setMetaTitle($title)
     {
@@ -215,7 +225,7 @@ class Theme {
      * Specifies the page description used in the metadata output
      *
      * @param string 
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function setMetaDescription($description)
     {
@@ -233,7 +243,7 @@ class Theme {
      * Specifies the page keywords used in the metadata output
      *
      * @param string 
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function setMetaKeywords($keywords)
     {
@@ -249,7 +259,7 @@ class Theme {
      * Used to include custom JavaScript, CSS, meta information and/or PHP in the <head> block of the template
      *
      * @param string
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     function addPageHead($code)
     {
@@ -266,7 +276,7 @@ class Theme {
      *
      * @param mixed
      * @param boolean $footer
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function addJavascript($javascripts, $footer = false)
     {
@@ -314,7 +324,7 @@ class Theme {
      * @param mixed $scripts
      * @param boolean $distinct
      * @param boolean $footer
-     * @return Theme
+     * @return \CmsCanvas\Theme\Theme
      */
     public function addInlineScript($scripts, $distinct = false, $footer = false)
     {
@@ -587,21 +597,19 @@ class Theme {
      */
     public function analytics()
     {
-        if (Config::get('cmscanvas::config.ga_account_id'))
+        if (Config::get('cmscanvas::config.ga_tracking_id'))
         {
-            return "<script type=\"text/javascript\">
-     
-                    var _gaq = _gaq || [];
-                    _gaq.push(['_setAccount', '".Config::get('cmscanvas::config.ga_account_id')."']);
-                    _gaq.push(['_trackPageview']);
-     
-                    (function() {
-                      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                    })();
-     
-                  </script>";
+
+            return "<script>
+                      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                      ga('create', '".Config::get('cmscanvas::config.ga_tracking_id')."', 'auto');
+                      ga('send', 'pageview');
+
+                    </script>";
         }
     }
 
@@ -661,19 +669,18 @@ class Theme {
     {
         $themes = array();
 
-        $cmsCanvasThemes = File::glob(rtrim(Config::get('cmscanvas::config.cmscanvas_themes_directory'), '/').'/*', GLOB_ONLYDIR);
+        $cmsCanvasThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
         if (is_array($cmsCanvasThemes))
         {
             foreach($cmsCanvasThemes as $cmsCanvasTheme)
             {
                 $themeName = basename($cmsCanvasTheme);
-                $themeKey = static::CMSCANVAS_THEME_NAMESPACE.static::HINT_PATH_DELIMITER.$themeName;
-                $themes[$themeKey] = $this->getFriendlyThemeName($themeName);
+                $themes[$themeName] = $this->getFriendlyThemeName($themeName);
             }
         }
 
-        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
+        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.app_themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
         if (is_array($userThemes))
         {
@@ -726,16 +733,22 @@ class Theme {
      */
     public function getThemePath($theme)
     {
-        if ($this->hasHintInformation($theme, static::CMSCANVAS_THEME_NAMESPACE))
-        {
-            $themePath = Config::get('cmscanvas::config.cmscanvas_themes_directory'); 
-        }
-        else
-        {
-            $themePath = Config::get('cmscanvas::config.themes_directory'); 
-        }
+        $themePath = Config::get('cmscanvas::config.themes_directory'); 
 
-        return rtrim($themePath, '/').'/'.$this->getBaseThemeName($theme).'/';
+        return rtrim($themePath, '/').'/'.$theme;
+    }
+
+    /**
+     * Returns the theme path in the app folder
+     *
+     * @param string $theme
+     * @return string
+     */
+    public function getAppThemePath($theme)
+    {
+        $themePath = Config::get('cmscanvas::config.app_themes_directory'); 
+
+        return rtrim($themePath, '/').'/'.$theme;
     }
 
     /**
@@ -746,32 +759,9 @@ class Theme {
      */
     public function getThemeAssetsPath($theme)
     {
-        if ($this->hasHintInformation($theme, static::CMSCANVAS_THEME_NAMESPACE))
-        {
-            $themeAssets = Config::get('cmscanvas::config.cmscanvas_theme_assets'); 
-        }
-        else
-        {
-            $themeAssets = Config::get('cmscanvas::config.theme_assets'); 
-        }
+        $themeAssets = Config::get('cmscanvas::config.theme_assets'); 
 
-        return rtrim($themeAssets, '/').'/'.$this->getBaseThemeName($theme).'/';
-    }
-
-    /**
-     * Returns the theme name minus the namespace
-     *
-     * @param string $theme
-     * @return string
-     */
-    protected function getBaseThemeName($theme)
-    {
-        if ($this->hasHintInformation($theme))
-        {
-            list($namespace, $theme) = $this->getNamespaceSegments($theme);
-        }
-
-        return $theme;
+        return rtrim($themeAssets, '/').'/'.$theme.'/';
     }
 
     /**
@@ -783,38 +773,6 @@ class Theme {
     protected function getFriendlyThemeName($theme)
     {
         return ucwords(str_replace(array('-', '_'), ' ', $theme));
-    }
-
-    /**
-     * Get the segments of a theme name.
-     *
-     * @param string $theme
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function getNamespaceSegments($theme)
-    {
-        $segments = explode(static::HINT_PATH_DELIMITER, $theme);
-
-        if (count($segments) != 2)
-        {
-            throw new \InvalidArgumentException("Theme [$theme] has an invalid name.");
-        }
-
-        return $segments;
-    }
-
-
-    /**
-     * Returns whether or not the theme name specifies hint information.
-     *
-     * @param  string  $name
-     * @return boolean
-     */
-    protected function hasHintInformation($theme, $namespace = '')
-    {
-        return strpos($theme, $namespace.static::HINT_PATH_DELIMITER) !== false;
     }
 
 }

@@ -54,23 +54,8 @@
             <div id="analytics-tab">
                 <div class="form">
                     <div>
-                        {{ HTML::decode(Form::label('ga_account_id', '<span class="required">*</span> GA Tracking Code:')) }}
-                        <?php //echo form_input(array('name' => 'ga_account_id', 'id' => 'ga_account_id', 'value' => set_value('site_name', isset($Settings->ga_account_id->value) ? $Settings->ga_account_id->value : ''))); ?>
-                    </div>
-
-                    <div>
-                        {{ HTML::decode(Form::label('ga_email', '<span class="required">*</span> GA Email:')) }}
-                        <?php //echo form_input(array('name' => 'ga_email', 'id' => 'ga_email', 'value' => set_value('ga_email', isset($Settings->ga_email->value) ? $Settings->ga_email->value : ''))); ?>
-                    </div>
-
-                    <div>
-                        {{ HTML::decode(Form::label('ga_password', '<span class="required">*</span> GA Password:')) }}
-                        <?php //echo form_password(array('name' => 'ga_password', 'id' => 'ga_password', 'value' => set_value('ga_password', isset($Settings->ga_password->value) ? $Settings->ga_password->value : ''))); ?>
-                    </div>
-
-                    <div>
-                        {{ HTML::decode(Form::label('ga_profile_id', '<span class="required">*</span> GA Profile ID:')) }}
-                        <?php //echo form_input(array('name' => 'ga_profile_id', 'id' => 'ga_profile_id', 'value' => set_value('ga_profile_id', isset($Settings->ga_profile_id->value) ? $Settings->ga_profile_id->value : ''))); ?>
+                        {{ Form::label('ga_tracking_id', 'GA Tracking Code:') }}
+                        {{ Form::text('ga_tracking_id') }}
                     </div>
                 </div>
             </div>

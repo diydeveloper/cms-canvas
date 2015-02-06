@@ -62,6 +62,15 @@ Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
         );
     }
 
+    $homeEntryId = \Config::get('cmscanvas::config.site_homepage');
+    Route::any(
+        '/', 
+        [
+            'as' => 'entry.'.$homeEntryId.'.'.\Lang::getLocale(), 
+            'uses' => 'CmsCanvas\Controllers\PageController@showPage'
+        ]
+    );
+
 });
 
 App::missing(function($exception)

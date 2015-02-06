@@ -1,4 +1,4 @@
-<?php namespace CmsCanvas\Theme\Facades;
+<?php namespace CmsCanvas\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

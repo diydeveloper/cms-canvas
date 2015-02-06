@@ -149,6 +149,8 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cms
     Route::group(['prefix' => 'system'], function()
     {
         Route::get('general-settings', ['as' => 'admin.system.general-settings', 'uses' => 'CmsCanvas\Controllers\Admin\SystemController@getGeneralSettings']);
+        Route::post('general-settings', ['as' => 'admin.system.general-settings.post', 'uses' => 'CmsCanvas\Controllers\Admin\SystemController@postGeneralSettings']);
+
         Route::post('theme-layouts', ['before' => 'cmscanvas.ajax', 'as' => 'admin.system.theme-layouts', 'uses' => 'CmsCanvas\Controllers\Admin\SystemController@postThemeLayouts']);
     });
 

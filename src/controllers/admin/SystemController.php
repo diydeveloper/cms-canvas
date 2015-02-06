@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Controllers\Admin;
 
-use View, Request, stdClass, Theme, Config, Input;
+use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
 use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
@@ -30,6 +30,48 @@ class SystemController extends AdminController {
 
         $this->layout->breadcrumbs = array(Request::path() => 'General Settings');
         $this->layout->content = $content;
+    }
+
+    /**
+     * Update setting values
+     *
+     * @return void
+     */
+    public function postGeneralSettings()
+    {
+        $rules = array(
+            'site_name' => 'required',
+            'notification_email' => "required|email",
+            'site_homepage' => 'required',
+            'custom_404' => 'required',
+            'theme' => 'required',
+            'layout' => 'required',
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::route('admin.system.general-settings')
+                ->withInput()
+                ->with('error', $validator->messages()->all());
+        }
+
+        $settingItems = Setting::all();
+
+        foreach ($settingItems as $settingItem) 
+        {
+            $value = Input::get($settingItem->setting);
+
+            if ($value !== null)
+            {
+                $settingItem->value = $value;
+                $settingItem->save();
+            }
+        }
+
+        return Redirect::route('admin.system.general-settings')
+            ->with('message', "Settings updated successfully.");
     }
 
     /**
