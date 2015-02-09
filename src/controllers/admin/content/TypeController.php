@@ -1,8 +1,9 @@
 <?php namespace CmsCanvas\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass;
+use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass, Config;
 use CmsCanvas\Routing\AdminController;
 use CmsCanvas\Models\Content\Type;
+use CmsCanvas\Models\Permission;
 
 class TypeController extends AdminController {
 
@@ -104,11 +105,15 @@ class TypeController extends AdminController {
         }
 
         $content->contentType = $contentType;
+        $content->themeLayouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
+        $content->defaultThemeLayout = Theme::getThemeLayouts(Config::get('cmscanvas::config.layout'));
+        $content->permissions = Permission::orderBy('name', 'asc')->get();
 
         $this->layout->breadcrumbs = array(
             'content/type' => 'Content Types', 
             Request::path() => (($contentType == null) ? 'Add' : 'Edit').' Content Type'
         );
+
         $this->layout->content = $content;
     }
 

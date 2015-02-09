@@ -279,4 +279,18 @@ class User extends Model implements UserInterface, RemindableInterface {
 
         return false;
     }
+
+    /**
+     * Abort with HTTP 403 if user does not have permission 
+     *
+     * @param string $permission
+     * @return void
+     */
+    public function checkPermission($permission)
+    {
+        if ( ! $this->can($permission))
+        {
+            throw new \CmsCanvas\Exception\PermissionDenied($permission);
+        }
+    }
 }

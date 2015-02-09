@@ -26,14 +26,14 @@ class EntryController extends AdminController {
 
         $entries = new Entry;
         $entries = $entries->join('content_types', 'entries.content_type_id', '=', 'content_types.id')
-            ->leftJoin('permissions', 'content_types.admin_view_permission_id', '=', 'permissions.id')
-            ->leftJoin('role_permissions', 'content_types.admin_view_permission_id', '=', 'role_permissions.permission_id')
+            ->leftJoin('permissions', 'content_types.admin_entry_view_permission_id', '=', 'permissions.id')
+            ->leftJoin('role_permissions', 'content_types.admin_entry_view_permission_id', '=', 'role_permissions.permission_id')
             ->join('entry_statuses', 'entries.entry_status_id', '=', 'entry_statuses.id')
             ->select(DB::raw('entries.*, content_types.title as content_type_title, entry_statuses.name as entry_status_name'))
             ->distinct()
             ->where(function($query) 
             {
-                $query->whereNull('content_types.admin_view_permission_id');
+                $query->whereNull('content_types.admin_entry_view_permission_id');
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)
                 {
@@ -80,6 +80,8 @@ class EntryController extends AdminController {
     public function postDelete()
     {
         $selected = Input::get('selected');
+        $deleteSuccessfulFlag = false;
+        $errors = array();
 
         if (empty($selected) || ! is_array($selected)) {
             return Redirect::route('admin.content.entry.entries')
@@ -88,10 +90,46 @@ class EntryController extends AdminController {
 
         $selected = array_values($selected);
 
-        Entry::destroy($selected);
+        foreach ($selected as $entryId) 
+        {
+            $entry = Entry::find($entryId);
 
-        return Redirect::route('admin.content.entry.entries')
-            ->with('message', 'The selected entry(s) were sucessfully deleted.');;
+            if ($entry != null)
+            {
+                try 
+                {
+                    $entry->delete();
+                    $deleteSuccessfulFlag = true;
+                }
+                catch (\CmsCanvas\Exception\Exception $e)
+                {
+                    $errors[] = $e->getMessage();
+                }
+            }
+        }
+
+        $redirect = Redirect::route('admin.content.entry.entries');
+
+        if (count($errors) > 0)
+        {
+            $redirect->with('error', $errors);
+        }
+
+        if ($deleteSuccessfulFlag)
+        {
+            if (count($errors) > 0)
+            {
+                $message = 'Some of the selected entry(s) were sucessfully deleted.';
+            }
+            else
+            {
+                $message = 'The selected entry(s) were sucessfully deleted.';
+            }
+
+            $redirect->with('message', $message);
+        }
+
+        return $redirect;
     }
 
     /**
@@ -124,6 +162,11 @@ class EntryController extends AdminController {
         if ($entry == null)
         {
             $contentType->checkEntriesAllowed();
+            $contentType->checkAdminEntryCreatePermissions();
+        }
+        else
+        {
+            $entry->contentType->checkAdminEntryEditPermissions();
         }
 
         $content = View::make('cmscanvas::admin.content.entry.edit');
@@ -154,6 +197,11 @@ class EntryController extends AdminController {
         if ($entry == null)
         {
             $contentType->checkEntriesAllowed();
+            $contentType->checkAdminEntryCreatePermissions();
+        }
+        else
+        {
+            $entry->contentType->checkAdminEntryEditPermissions();
         }
         
         $contentFields = $contentType->getAllFieldTypeInstances($entry);

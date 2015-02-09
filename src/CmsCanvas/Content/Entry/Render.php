@@ -3,16 +3,23 @@
 class Render {
 
     /**
-     * Defines the column name to sort.
+     * The entry to render from
      *
-     * @var string
+     * @var \CmsCanvas\Content\Entry
      */
     protected $entry;
 
     /**
-     * Defines the column name to sort.
+     * Parameters added to the route
      *
-     * @var string
+     * @var array
+     */
+    protected $parameters;
+
+    /**
+     * Rendered data
+     *
+     * @var array
      */
     protected $renderedData;
 
@@ -58,6 +65,7 @@ class Render {
      */
     public function __get($key)
     {
+        // This will only render the data if the user make a get request
         if ($this->renderedData === null)
         {
             $this->renderedData = array_merge($this->entry->getRenderedData(), $this->parameters);
@@ -92,7 +100,7 @@ class Render {
      */
     public function __toString()
     {
-        $parameters = array_merge($this->parameters, array('__entry' => $this));
+        $parameters = array_merge($this->parameters, array('self' => $this));
 
         return (string) $this->entry->renderContents($parameters);
     }
@@ -158,6 +166,36 @@ class Render {
     public function setIndex($value)
     {
         $this->index = $value;
+    }
+
+    /**
+     * Returns the full route for the entry
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return $this->entry->getRoute();
+    }
+
+    /**
+     * Used to determine if the current render is an entry
+     *
+     * @return boolean
+     */
+    public function isEntry()
+    {
+        return true;
+    }
+
+    /**
+     * Returns the author of the entry
+     *
+     * @return boolean
+     */
+    public function getAuthor()
+    {
+        return $this->entry->author;
     }
 
 }

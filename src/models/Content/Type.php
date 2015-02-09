@@ -8,6 +8,7 @@ use CmsCanvas\Models\Language;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
+use CmsCanvas\Content\Type\Render;
 
 class Type extends Model implements PageInterface {
 
@@ -31,6 +32,11 @@ class Type extends Model implements PageInterface {
         'entries_allowed', 
         'route',
         'route_prefix',
+        'theme_layout',
+        'admin_entry_view_permission_id',
+        'admin_entry_edit_permission_id',
+        'admin_entry_create_permission_id',
+        'admin_entry_delete_permission_id',
     );
 
     /**
@@ -64,7 +70,7 @@ class Type extends Model implements PageInterface {
     /**
      * Defines a one to many relationship with entries
      *
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function entries()
     {
@@ -74,21 +80,51 @@ class Type extends Model implements PageInterface {
    /**
      * Defines a one to many relationship with entries
      *
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function fields()
     {
         return $this->hasMany('\CmsCanvas\Models\Content\Type\Field', 'content_type_id');
     } 
 
-    public function viewPermission()
+   /**
+     * Defines relation to the admin view permission
+     *
+     * @return \Illuminate\Database\Eloquent\BelongsTo
+     */
+    public function adminEntryViewPermission()
     {
-        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_view_permission_id', 'id');
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_entry_view_permission_id', 'id');
     }
 
-    public function viewRoles()
+   /**
+     * Defines relation to the admin edit permission
+     *
+     * @return \Illuminate\Database\Eloquent\BelongsTo
+     */
+    public function adminEntryEditPermission()
     {
-        return $this->viewPermission->roles();
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_entry_edit_permission_id', 'id');
+    }
+
+   /**
+     * Defines relation to the admin create permission
+     *
+     * @return \Illuminate\Database\Eloquent\BelongsTo
+     */
+    public function adminEntryCreatePermission()
+    {
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_entry_create_permission_id', 'id');
+    }
+
+   /**
+     * Defines relation to the admin delete permission
+     *
+     * @return \Illuminate\Database\Eloquent\BelongsTo
+     */
+    public function adminEntryDeletePermission()
+    {
+        return $this->belongsTo('\CmsCanvas\Models\Permission', 'admin_entry_delete_permission_id', 'id');
     }
 
     /**
@@ -139,12 +175,12 @@ class Type extends Model implements PageInterface {
                 $query->orWhereNull('content_types.entries_allowed');
             })
             ->where(function($query) {
-                $query->whereNull('admin_view_permission_id');
+                $query->whereNull('admin_entry_view_permission_id');
 
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)
                 {
-                    $query->orWhereHas('viewPermission', function($query) use($roles)
+                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles)
                     {
                         $query->whereHas('roles', function($query) use($roles)
                         {
@@ -166,12 +202,12 @@ class Type extends Model implements PageInterface {
     public static function getAllViewable()
     {
         return self::where(function($query) {
-                $query->whereNull('admin_view_permission_id');
+                $query->whereNull('admin_entry_view_permission_id');
 
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0)
                 {
-                    $query->orWhereHas('viewPermission', function($query) use($roles)
+                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles)
                     {
                         $query->whereHas('roles', function($query) use($roles)
                         {
@@ -364,7 +400,8 @@ class Type extends Model implements PageInterface {
      */
     public function render($parameters = array(), $data = array())
     {
-        return $this->renderContents($parameters, $data);
+        return new Render($this, $parameters, $data);
+        // return $this->renderContents($parameters, $data);
     }
 
     /**
@@ -495,6 +532,68 @@ class Type extends Model implements PageInterface {
         }
 
         return true;
+    }
+
+    /**
+     * Checks if current user has permissions to view the 
+     * content type's entries.
+     *
+     * @return void
+     */
+    public function checkAdminEntryViewPermissions()
+    {
+        if ($this->adminEntryViewPermission != null)
+        {
+            Auth::user()->checkPermission($this->adminEntryViewPermission->key_name);
+        }
+    }
+
+    /**
+     * Checks if current user has permissions to edit the 
+     * content type's entries.
+     *
+     * @return void
+     */
+    public function checkAdminEntryEditPermissions()
+    {
+        $this->checkAdminEntryViewPermissions();
+
+        if ($this->adminEntryEditPermission != null)
+        {
+            Auth::user()->checkPermission($this->adminEntryEditPermission->key_name);
+        }
+    }
+
+    /**
+     * Checks if current user has permissions to create the 
+     * content type's entries.
+     *
+     * @return void
+     */
+    public function checkAdminEntryCreatePermissions()
+    {
+        $this->checkAdminEntryViewPermissions();
+
+        if ($this->adminEntryCreatePermission != null)
+        {
+            Auth::user()->checkPermission($this->adminEntryCreatePermission->key_name);
+        }
+    }
+
+    /**
+     * Checks if current user has permissions to delete the 
+     * content type's entries.
+     *
+     * @return void
+     */
+    public function checkAdminEntryDeletePermissions()
+    {
+        $this->checkAdminEntryViewPermissions();
+
+        if ($this->adminEntryDeletePermission != null)
+        {
+            Auth::user()->checkPermission($this->adminEntryDeletePermission->key_name);
+        }
     }
 
 }

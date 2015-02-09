@@ -82,7 +82,16 @@
                     @foreach ($entries as $entry)
                     <tr>
                         <td class="center"><input type="checkbox" value="<?php echo $entry->id ?>" name="selected[]" /></td>
-                        <td>{{ strip_tags($entry->title) }}</td>
+                        <td>
+                            {{ strip_tags($entry->title) }}
+                            @if ($entry->isHomePage())
+                                <span class="hint">Home Page</span>
+                            @endif
+
+                            @if ($entry->isCustom404Page())
+                                <span class="hint">Custom 404</span>
+                            @endif
+                        </td>
                         <td>{{ $entry->getRoute() }}</td>
                         <td class="right">{{ $entry->id }}</td>
                         <td>{{ $entry->content_type_title }}</td>
@@ -114,7 +123,7 @@
         // Delete
         $('.delete').click( function() {
             if (confirm('Delete cannot be undone! Are you sure you want to do this?')) {
-                $('#form').attr('action', '{{ Admin::url('content/entries/delete') }}').submit();
+                $('#form').attr('action', '{{ Admin::url('content/entry/delete') }}').submit();
             } else {
                 return false;
             }

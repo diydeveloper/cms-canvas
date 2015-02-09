@@ -46,14 +46,7 @@ Route::filter('cmscanvas.permission', function($route, $request)
 
     foreach ($permissions as $permission) 
     {
-        if (!Auth::user()->can($permission))
-        {
-            App::abort(
-                403, 
-                "You do not have permission to access this page, please refer to your system administrator."
-                . " (Permission: $permission)"
-            );
-        }
+        Auth::user()->checkPermission($permission);
     }
 });
 

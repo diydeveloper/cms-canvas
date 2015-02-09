@@ -25,14 +25,13 @@
                     <tr>
                         <td>Entry Title</td>
                         <td>
-                            @{{ $title }} &nbsp; or &nbsp;
-                           @{{ $title_editable }}
+                            @{{ $title }}
                         </td>
                     </tr>
                     @foreach ($contentType->fields as $field)
                         <tr>
                             <td>{{ $field->label }}</td>
-                            <td>@{{ $<?php echo $field->short_tag; ?> }}</a></div></td>
+                            <td>{{ $<?php echo $field->short_tag; ?> }}</a></div></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -43,15 +42,19 @@
                     <li><a href="#html-tab">HTML</a></li>
                     <li><a href="#page-head-tab">Page &lt;head&gt;</a></li>
                     <li><a href="#settings-tab">Settings</a></li>
+                    <li><a href="#permissions-tab">Permissions</a></li>
                 </ul>
+
                 <div id="html-tab">
                     {{ Form::textarea('layout', null, array('id' => 'layout')) }}
                 </div>
+
                 <div id="page-head-tab">
                     <p class="info">Include custom JavaScript, CSS, and/or meta information in the <strong>&lt;head&gt;</strong> block of this content type's pages.</p>
 
                     {{ Form::textarea('page_head', null, array('id' => 'page_head')) }}
                 </div>
+
                 <div id="settings-tab">
                     <div class="form">
                         <div>
@@ -64,21 +67,45 @@
                         </div>
                         <div>
                             <label for="theme_layout"><span class="required">*</span> Theme Layout:</label>
-                            {{ Form::text('short_tag') }}
-                        </div>
-                        <div>
-                            {{ HTML::decode(Form::label('route', 'Route:<span class="help">Optional route to render the content type directly without an entry.</span>')) }}
-                            {{ Form::text('route') }}
+                            {{ Form::select('theme_layout', ['' => '-- None --'] + $themeLayouts) }}
                         </div>
                         <div>
                             {{ HTML::decode(Form::label('route_prefix', 'Route Prefix:<span class="help">Optional prefix that will be prepended to the content type\'s route and associated entry routes.</span>')) }}
                             {{ Form::text('route_prefix') }}
                         </div>
                         <div>
+                            {{ HTML::decode(Form::label('route', 'Route:<span class="help">Optional route to render the content type directly without an entry.</span>')) }}
+                            {{ Form::text('route') }}
+                        </div>
+                        <div>
                             {{ HTML::decode(Form::label('entries_allowed', 'Number of Entries Allowed:<span class="help">Number of entries allowed to be created with this content type</span>')) }}
                             {{ Form::text('entries_allowed', null, array('class' => 'short')) }}
                             <span class="ex">Leave blank for unlimited</span>
                         </div>
+                    </div>
+                </div>
+
+                <div id="permissions-tab">
+                    <div class="form">
+                        <fieldset>
+                            <legend>Admin Entry Permissions</legend>
+                            <div>
+                                <label for="title">View:</label>
+                                {{ Form::select('admin_entry_view_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) }}
+                            </div>
+                            <div>
+                                <label for="title">Edit:</label>
+                                {{ Form::select('admin_entry_edit_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) }}
+                            </div>
+                            <div>
+                                <label for="title">Create:</label>
+                                {{ Form::select('admin_entry_create_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) }}
+                            </div>
+                            <div>
+                                <label for="title">Delete:</label>
+                                {{ Form::select('admin_entry_delete_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id') ) }}
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
             </div>

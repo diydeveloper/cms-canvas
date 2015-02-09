@@ -8,6 +8,7 @@ use CmsCanvas\Theme\Theme;
 use CmsCanvas\Admin\Admin;
 use CmsCanvas\Content\Content;
 use CmsCanvas\StringView\StringView;
+use CmsCanvas\Exception\Exception;
 
 class CmscanvasServiceProvider extends ServiceProvider {
 
@@ -52,7 +53,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
         $this->registerThemePublisher();
         $this->registerTheme();
         $this->registerAuthLoginEventListener();
-        // $this->registerAppError();
+        $this->registerDisplayError();
         $this->registerAdmin();
         $this->registerContent();
         $this->registerStringView();
@@ -162,27 +163,13 @@ class CmscanvasServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    protected function registerAppError()
+    protected function registerDisplayError()
     {
-        $app = $this->app;
-
-        App::error(function(\Exception $exception, $code) use($app)
+        App::error(function(\CmsCanvas\Exception\ExceptionDisplayInterface $exception, $code)
         {
-            $app['theme']->setTheme('admin');
-            $app['theme']->setLayout('default');
-            $app['theme']->addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
-            $layout =  $app['theme']->getLayout();
+            $view = $exception->getView();
 
-            $heading = 'Permission Denied';
-            $layout->content = View::make('cmscanvas::admin.error')
-                ->with(
-                    array(
-                        'heading' => $heading,
-                        'exception' => $exception
-                    )
-                );
-
-            return \Response::make($layout, $code);
+            return \Response::make($view, $code);
         });    
     }
 

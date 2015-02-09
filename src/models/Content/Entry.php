@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, stdClass, View, Cache, DB;
+use Lang, StringView, stdClass, View, Cache, DB, Auth;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
@@ -8,6 +8,8 @@ use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
+use \CmsCanvas\Exception\PermissionDenied;
+use \CmsCanvas\Exception\Exception;
 
 class Entry extends Model implements PageInterface {
 
@@ -115,6 +117,20 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function($user){
+            $user->validateForDeletion();
+        });
+    }
+
+    /**
      * Save the model to the database.
      *
      * @param array $options
@@ -198,7 +214,6 @@ class Entry extends Model implements PageInterface {
 
             $data['title'] = $this->title;
             $data['entry_id'] = $this->id;
-            $data['author'] = $this->author;
             $data['created_at'] = $this->created_at;
             $data['updated_at'] = $this->updated_at;
 
@@ -326,6 +341,48 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * Checks if the current entry can be deleted.
+     *
+     * @throws \CmsCanvas\Exception\PermissionDenied
+     * @throws \CmsCanvas\Exception\Exception
+     * @return bool|string
+     */
+    public function validateForDeletion()
+    {
+        $permission = null;
+
+        if ($this->contentType->adminEntryDeletePermission != null) 
+        {
+            $permission = $this->contentType->adminEntryDeletePermission->key_name;
+        }
+
+        if ($permission != null && ! Auth::user()->can($permission))
+        {
+            throw new PermissionDenied(
+                $permission,
+                "You do not have permission to delete the entry \"{$this->title}\","
+                . " please refer to your system administrator."
+            );
+        }
+
+        if ($this->isHomePage())
+        {
+            throw new Exception(
+                "The entry \"{$this->title}\" can not be deleted because it set as the default home page"
+            );
+        }
+
+        if ($this->isCustom404Page())
+        {
+            return Exception(
+                "The entry \"{$this->title}\" can not be deleted because it set as the default custom 404 page."
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Sets data order by using a custom object
      *
      * @param Builder $query
@@ -365,6 +422,28 @@ class Entry extends Model implements PageInterface {
         }
 
         return $query;
+    }
+
+    /**
+     * Checks if the current entry is set as the default 
+     * home page in the settings
+     *
+     * @return bool
+     */
+    public function isHomePage()
+    {
+        return ($this->id == \Config::get('cmscanvas::config.site_homepage'));
+    }
+
+    /**
+     * Checks if the current entry is set as the default 
+     * custom 404 page in the settings
+     *
+     * @return bool
+     */
+    public function isCustom404Page()
+    {
+        return ($this->id == \Config::get('cmscanvas::config.custom_404'));
     }
 
 }
