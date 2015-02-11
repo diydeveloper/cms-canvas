@@ -1,22 +1,20 @@
 <?php namespace CmsCanvas\StringView;
 
-use App, View, Closure, Config, ArrayAccess;
-use Illuminate\Support\MessageBag;
-use Illuminate\View\Engines\EngineInterface;
-use Illuminate\Support\Contracts\MessageProviderInterface;
-use Illuminate\Support\Contracts\ArrayableInterface as Arrayable;
-use Illuminate\Support\Contracts\RenderableInterface as Renderable;
+use App, View, Closure, ArrayAccess;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\View as ViewContract;
 use CmsCanvas\StringView\Compilers\StringBladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
 
 
-class StringView extends \Illuminate\View\View implements ArrayAccess, Renderable {
+class StringView extends \Illuminate\View\View implements ArrayAccess, ViewContract {
 
 	protected $template_field = 'template';
 
 	public function __construct()
 	{
-		$cache = App::make('path.storage').'/views';
+		$cache = App::make('path.storage').'/framework/views';
 		$compiler = new StringBladeCompiler(App::make('files'), $cache);
 		$this->engine = new CompilerEngine($compiler);
 	}
@@ -238,6 +236,44 @@ class StringView extends \Illuminate\View\View implements ArrayAccess, Renderabl
 	{
         $this->engine->getCompiler()->extend($compiler);
 	}
+
+    /**
+     * Sets the raw tags used for the compiler.
+     *
+     *
+     * @param  string  $openTag
+     * @param  string  $closeTag
+     * @return void
+     */
+    public function setRawTags($openTag, $closeTag)
+    {
+        $this->engine->getCompiler()->setRawTags($openTag, $closeTag);
+    }
+
+    /**
+     * Sets the escaped content tags used for the compiler.
+     *
+     * @param  string  $openTag
+     * @param  string  $closeTag
+     * @return void
+     */
+    public function setEscapedContentTags($openTag, $closeTag)
+    {
+        $this->setContentTags($openTag, $closeTag);
+    }
+
+    /**
+     * Sets the content tags used for the compiler.
+     *
+     * @param  string  $openTag
+     * @param  string  $closeTag
+     * @param  bool    $escaped
+     * @return void
+     */
+    public function setContentTags($openTag, $closeTag, $escaped = false)
+    {
+        $this->engine->getCompiler()->setContentTags($openTag, $closeTag, $escaped);
+    }
         
 }
 

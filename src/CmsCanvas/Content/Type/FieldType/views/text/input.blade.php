@@ -1,3 +1,3 @@
 <div>
-    {{ Form::text($fieldType->getKey(), $fieldType->data) }}
+    {!! Form::text($fieldType->getKey(), $fieldType->data) !!}
 </div>

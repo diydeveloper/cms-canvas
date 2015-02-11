@@ -1,16 +1,16 @@
 <div style="width: 150px; text-align: center; float: left;">
     <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
-        <img class="image_thumbnail" src="{{ Content::thumbnail(Input::old($fieldType->getKey(), $fieldType->data), 150, 150, false, array('no_image' => Theme::asset('images/no_image.jpg'))) }}" />
+        <img class="image_thumbnail" src="{!! Content::thumbnail(Input::old($fieldType->getKey(), $fieldType->data), 150, 150, false, array('no_image' => Theme::asset('images/no_image.jpg'))) !!}" />
     </a>
 
     <a class="remove_image" href="javascript:void(0);"><span>Remove Image</span></a><br />
     <a class="choose_image" href="javascript:void(0);"><span>Add Image</span></a>
-    {{ Form::hidden($fieldType->getKey(), $fieldType->data, array('class' => 'hidden_file')) }}
+    {!! Form::hidden($fieldType->getKey(), $fieldType->data, array('class' => 'hidden_file')) !!}
 </div>
 
 <div style="float: left; margin-left: 15px; width: 220px;">
     <label for="alt"><strong>Alternative Text:</strong></label>
-    {{ Form::text($fieldType->getMetadataKey('alt'), $fieldType->getMetadata('alt')) }}
+    {!! Form::text($fieldType->getMetadataKey('alt'), $fieldType->getMetadata('alt')) !!}
 </div>
 
 <div class="clear"></div>

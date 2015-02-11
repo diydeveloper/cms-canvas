@@ -1,6 +1,6 @@
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="{{ Theme::asset('images/home.png') }}"> Dashboard</h1>
+        <h1><img alt="" src="{!! Theme::asset('images/home.png') !!}"> Dashboard</h1>
     </div>
     <div class="content">
         {{-- // IE 7 display: table fix --}}

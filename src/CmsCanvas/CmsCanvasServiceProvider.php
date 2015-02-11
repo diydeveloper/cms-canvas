@@ -26,11 +26,50 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('diyphpdeveloper/cmscanvas', 'cmscanvas', __DIR__.'/../');
+        $this->setupConfig();
+        $this->setupViews();
+        $this->setupRoutes();
+        $this->setupFilters();
+    }
 
-        // Include the content tyep field views
-        View::addNamespace('CmsCanvas\Content\Type\FieldType', __DIR__.'/Content/Type/FieldType/views/');
+    /**
+     * Setup the config.
+     *
+     * @return void
+     */
+    public function setupConfig()
+    {
+        $source = realpath(__DIR__.'/../config/config.php');
+        $this->mergeConfigFrom($source, 'cmscanvas::config');
 
+        $source = realpath(__DIR__.'/../config/admin.php');
+        $this->mergeConfigFrom($source, 'cmscanvas::admin');
+
+        $source = realpath(__DIR__.'/../config/assets.php');
+        $this->mergeConfigFrom($source, 'cmscanvas::assets');
+    }
+
+    /**
+     * Setup the config.
+     *
+     * @return void
+     */
+    public function setupViews()
+    {
+        $source = realpath(__DIR__.'/../views/');
+        $this->loadViewsFrom($source, 'cmscanvas');
+
+        $source = realpath(__DIR__.'/Content/Type/FieldType/views/');
+        $this->loadViewsFrom($source, 'CmsCanvas\Content\Type\FieldType');
+    }
+
+    /**
+     * Include route files.
+     *
+     * @return void
+     */
+    public function setupRoutes()
+    {
         if ($this->app['admin']->getUrlPrefix() == Request::segment(1))
         {
             include __DIR__.'/../adminRoutes.php';
@@ -39,7 +78,15 @@ class CmscanvasServiceProvider extends ServiceProvider {
         {
             include __DIR__.'/../routes.php';
         }
-        
+    }
+
+    /**
+     * Include filter files.
+     *
+     * @return void
+     */
+    public function setupFilters()
+    {
         include __DIR__.'/../filters.php';
     }
 
@@ -165,12 +212,10 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     protected function registerDisplayError()
     {
-        App::error(function(\CmsCanvas\Exception\ExceptionDisplayInterface $exception, $code)
-        {
-            $view = $exception->getView();
-
-            return \Response::make($view, $code);
-        });    
+        $this->app->singleton(
+            'Illuminate\Contracts\Debug\ExceptionHandler',
+            'CmsCanvas\Exception\Handler'
+        );
     }
 
     /**

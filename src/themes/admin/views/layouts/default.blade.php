@@ -8,6 +8,6 @@
             @include('theme::partials.notifications')
         @endif
 
-        {{ $content }}
+        {!! $content !!}
     </div>
 @stop

@@ -38,7 +38,7 @@ if (in_array($firstSegment, $locales))
     Lang::setLocale($locale);
 }
     
-Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
+Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
 {
     foreach ($contentTypes as $contentType)
     {
@@ -73,8 +73,8 @@ Route::group(array('prefix' => $locale), function() use($contentTypes, $entries)
 
 });
 
-App::missing(function($exception)
-{
-    return App::make('\CmsCanvas\Controllers\PageController')->callAction('showPage', array($exception));
-});
+// App::missing(function($exception)
+// {
+//     return App::make('\CmsCanvas\Controllers\PageController')->callAction('showPage', array($exception));
+// });
 

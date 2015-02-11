@@ -1,5 +1,5 @@
 <div>
-    {{
+    {!!
         Form::textarea(
             $fieldType->getKey(),
             $fieldType->data,
@@ -8,5 +8,5 @@
                 'style' => 'height: ' . $fieldType->getSetting('height', '300') . 'px;', 
             )
         )
-    }}
+    !!}
 </div>

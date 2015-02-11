@@ -2,9 +2,9 @@
 
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="{{ Theme::asset('images/review.png') }}"> 
+        <h1><img alt="" src="{!! Theme::asset('images/review.png') !!}"> 
             @if ( ! empty($entry))
-                Edit Entry - {{ strip_tags($entry->title) }} (#{{ $entry->id }})
+                Edit Entry - {!! strip_tags($entry->title) !!} (#{!! $entry->id !!})
             @else
                 Add Entry
             @endif
@@ -13,13 +13,13 @@
         <div class="buttons">
             <a class="button" href="javascript:void(0);" id="save"><span>Save</span></a>
             <a class="button" href="javascript:void(0);" id="save_exit"><span>Save &amp; Exit</span></a>
-            <a class="button" href="{{ Admin::url('content/entry') }}"><span>Cancel</span></a>
+            <a class="button" href="{!! Admin::url('content/entry') !!}"><span>Cancel</span></a>
         </div>
     </div>
     <div class="content">
 
         @if ( ! empty($entry) && $entry->route != '')
-            <a style="float: right; z-index: 1; position: relative;" target="_blank" href="{{ url($entry->route) }}"><img src="{{ Theme::asset('images/preview-icon-medium.png') }}" /></a>
+            <a style="float: right; z-index: 1; position: relative;" target="_blank" href="{!! url($entry->route) !!}"><img src="{!! Theme::asset('images/preview-icon-medium.png') !!}" /></a>
         @endif
 
         <div class="fright" style="margin-top: 4px; margin-right: 10px;">
@@ -27,9 +27,9 @@
         </div>
 
         @if ( ! empty($entry))
-            {{ Form::model($entry, array('id' => 'entry_edit')) }}
+            {!! Form::model($entry, array('id' => 'entry_edit')) !!}
         @else
-            {{ Form::open(array('id' => 'entry_edit')) }}
+            {!! Form::open(array('id' => 'entry_edit')) !!}
         @endif
         <div class="tabs">
             <ul class="htabs">
@@ -41,15 +41,15 @@
             <div id="content-tab">
                 <div id="entry_fields">
                     <div>
-                        {{ HTML::decode(Form::label('title', '<div class="arrow arrow_expand"></div><span class="required">*</span> Title')) }}
+                        {!! HTML::decode(Form::label('title', '<div class="arrow arrow_expand"></div><span class="required">*</span> Title')) !!}
                         <div>
-                            {{ Form::text('title') }}
+                            {!! Form::text('title') !!}
                         </div>
                     </div>
 
                     @if ( ! empty($fieldViews))
                         @foreach ($fieldViews as $fieldView)
-                            {{ $fieldView }}
+                            {!! $fieldView !!}
                         @endforeach
                     @endif
                 </div>
@@ -59,23 +59,23 @@
             <div id="page-tab">
                 <div class="form">
                     <div>
-                        {{ Form::label('route', 'Route:') }}
-                        <span style="line-height: 24px; "> {{ url() }}{{ $contentType->getRoutePrefix() }}/ </span>
-                        {{ Form::text('route') }}
+                        {!! Form::label('route', 'Route:') !!}
+                        <span style="line-height: 24px; "> {!! url() !!}{!! $contentType->getRoutePrefix() !!}/ </span>
+                        {!! Form::text('route') !!}
                     </div>
                     <div>
-                        {{ HTML::decode(Form::label('meta_title', 'Meta Title:<br /><span class="help">65 Characters Max</span>')) }}
-                        {{ Form::text('meta_title') }}
+                        {!! HTML::decode(Form::label('meta_title', 'Meta Title:<br /><span class="help">65 Characters Max</span>')) !!}
+                        {!! Form::text('meta_title') !!}
                         &nbsp;<span id="meta_title_count" class="help" style="display: inline;">(0 Chars)</span>
                     </div>
                     <div>
-                        {{ HTML::decode(Form::label('meta_keywords', 'Keywords:<span class="help">250 Characters Max</span>')) }}
-                        {{ Form::textarea('meta_keywords', null, array('style' => 'height: 50px;')) }}
+                        {!! HTML::decode(Form::label('meta_keywords', 'Keywords:<span class="help">250 Characters Max</span>')) !!}
+                        {!! Form::textarea('meta_keywords', null, array('style' => 'height: 50px;')) !!}
                         &nbsp;<span id="meta_keywords_count" class="help" style="display: inline;">(0 Chars)</span>
                     </div>
                     <div>
-                        {{ HTML::decode(Form::label('meta_description', 'Description:<br /><span class="help">150 Characters Max</span>')) }}
-                        {{ Form::textarea('meta_description', null) }}
+                        {!! HTML::decode(Form::label('meta_description', 'Description:<br /><span class="help">150 Characters Max</span>')) !!}
+                        {!! Form::textarea('meta_description', null) !!}
                         &nbsp;<span id="meta_description_count" class="help" style="display: inline;">(0 Chars)</span>
                     </div>
                 </div>
@@ -85,28 +85,28 @@
             <div id="settings-tab">
                 <div class="form">
                     <div>
-                        {{ HTML::decode(Form::label('entry_status_id', '<span class="required">*</span> Status:')) }}
-                        {{ Form::select('entry_status_id', $entryStatuses->lists('name', 'id')) }}
+                        {!! HTML::decode(Form::label('entry_status_id', '<span class="required">*</span> Status:')) !!}
+                        {!! Form::select('entry_status_id', $entryStatuses->lists('name', 'id')) !!}
                     </div>
                     <div>
-                        {{ HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) }}
-                        {{ Form::text(
+                        {!! HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) !!}
+                        {!! Form::text(
                             'created_at', 
                             ( ! empty($entry->created_at)) ? 
                                 $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a') 
                             : 
                                 Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a'), 
                             array('class' => 'datetime')) 
-                        }}
+                        !!}
                     </div>
                     <div>
-                        {{ Form::label('author_id', 'Author:') }}
-                        {{ Form::select('author_id', $authorOptions, ( ! empty($entry->author_id) ? $entry->author_id : Auth::user()->id)) }}
+                        {!! Form::label('author_id', 'Author:') !!}
+                        {!! Form::select('author_id', $authorOptions, ( ! empty($entry->author_id) ? $entry->author_id : Auth::user()->id)) !!}
                     </div>
                 </div>
             </div>
         </div>
-        {{ Form::close() }}
+        {!! Form::close() !!}
     </div>
 </div>
 

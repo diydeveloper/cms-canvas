@@ -21,7 +21,7 @@
             "src/database/seeds",
             "src/commands"
         ],
-        "psr-0": {
+        "psr-4": {
             "CmsCanvas": "src/"
         }
     },

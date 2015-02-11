@@ -1,47 +1,47 @@
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="{{ Theme::asset('images/user.png') }}"> {{ ( ! empty($permission)) ? 'Edit' : 'Add' }} Permission</h1>
+        <h1><img alt="" src="{!! Theme::asset('images/user.png') !!}"> {!! ( ! empty($permission)) ? 'Edit' : 'Add' !!} Permission</h1>
 
         <div class="buttons">
             <a class="button" href="javascript:void(0);" id="save" onClick="$('#permission_edit_form').submit()"><span>Save</span></a>
-            <a class="button" href="{{ Admin::url('user/permission') }}"><span>Cancel</span></a>
+            <a class="button" href="{!! Admin::url('user/permission') !!}"><span>Cancel</span></a>
         </div>
     </div>
     <div class="content">
         @if ( ! empty($permission))
-            {{ Form::model($permission, array('id' => 'permission_edit_form')) }}
+            {!! Form::model($permission, array('id' => 'permission_edit_form')) !!}
         @else
-            {{ Form::open(array('id' => 'permission_edit_form')) }}
+            {!! Form::open(array('id' => 'permission_edit_form')) !!}
         @endif
 
             <div id="edit-permission-tab">
                 <div class="form">
                     <div>
-                        {{ HTML::decode(Form::label('name', '<span class="required">*</span> Name:')) }}
-                        {{ Form::text('name', null, ['id' => 'name']) }}
+                        {!! HTML::decode(Form::label('name', '<span class="required">*</span> Name:')) !!}
+                        {!! Form::text('name', null, ['id' => 'name']) !!}
                     </div>
 
                     <div>
-                        {{ HTML::decode(Form::label('name', '<span class="required">*</span> Key Name:')) }}
-                        {{ Form::text('key_name', null, ['id' => 'key_name']) }}
+                        {!! HTML::decode(Form::label('name', '<span class="required">*</span> Key Name:')) !!}
+                        {!! Form::text('key_name', null, ['id' => 'key_name']) !!}
                     </div>
 
                     <div>
-                        {{ Form::label('roles', 'Roles:') }}
+                        {!! Form::label('roles', 'Roles:') !!}
                         <div class="fields_wrapper">
                             <div class="scrollbox">
                             <?php $i = 0; ?>
                             @foreach ($roles as $role)
-                                <div class="{{ ($i % 2 == 0) ? 'even' : 'odd' }}">
+                                <div class="{!! ($i % 2 == 0) ? 'even' : 'odd' !!}">
                                     <label>
-                                    {{ 
+                                    {!! 
                                         Form::checkbox(
                                             'role_permissions[]', 
                                             $role->id, 
                                             (($permission != null && $permission->hasRole($role->name)) ? true : false)
                                         ) 
-                                    }} 
-                                    {{ $role->name }}
+                                    !!} 
+                                    {!! $role->name !!}
                                     </label>
                                 </div>
                                 <?php $i++; ?>
@@ -57,7 +57,7 @@
 
         <div class="clear"></div>
 
-        {{ Form::close() }}
+        {!! Form::close() !!}
     </div>
 </div>
 

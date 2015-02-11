@@ -1,1 +1,1 @@
-{{ Admin::nav(Config::get('cmscanvas::admin.navigation')) }}
+{!! Admin::nav(Config::get('cmscanvas::admin.navigation')) !!}

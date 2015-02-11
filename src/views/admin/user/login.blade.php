@@ -1,26 +1,26 @@
 <div id="login_box" class="box">
     <div class="heading">
-        <h1><img src="{{ Theme::asset('images/lockscreen.png') }}" alt="" /> Please enter your login details.</h1>
+        <h1><img src="{!! Theme::asset('images/lockscreen.png') !!}" alt="" /> Please enter your login details.</h1>
     </div>
     <div id="login_form" class="content">
-        {{ Form::open() }}
+        {!! Form::open() !!}
 
             @include('theme::partials.notifications')
 
             <div class="image">
-                <img src="{{ Theme::asset('images/login.png') }}" alt="Please enter your login details." />
+                <img src="{!! Theme::asset('images/login.png') !!}" alt="Please enter your login details." />
                 <br />
             </div>
 
             <div class="fields">
                 <div>
-                    {{ Form::label('email', 'Email') }}
-                    {{ Form::text('email') }}
+                    {!! Form::label('email', 'Email') !!}
+                    {!! Form::text('email') !!}
                 </div>
 
                 <div>
-                    {{ Form::label('password', 'Password') }}
-                    {{ Form::password('password') }}
+                    {!! Form::label('password', 'Password') !!}
+                    {!! Form::password('password') !!}
                 </div>
 
                 <div>
@@ -36,6 +36,6 @@
 
             </div>
 
-        {{ Form::close() }}
+        {!! Form::close() !!}
     </div>
 </div>
