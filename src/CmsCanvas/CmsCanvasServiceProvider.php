@@ -55,7 +55,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function setupViews()
     {
-        $source = realpath(__DIR__.'/../views/');
+        $source = realpath(__DIR__.'/../resources/views/');
         $this->loadViewsFrom($source, 'cmscanvas');
 
         $source = realpath(__DIR__.'/Content/Type/FieldType/views/');
@@ -176,7 +176,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
 
         $this->app->bindShared('theme.publisher', function($app)
         {
-            $viewPath = $app['path'].'/themes';
+            $viewPath = $app['path'].'/resources/themes';
 
             // Once we have created the view publisher, we will set the default packages
             // path on this object so that it knows where to find all of the packages
