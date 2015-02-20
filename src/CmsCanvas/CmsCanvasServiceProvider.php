@@ -72,11 +72,11 @@ class CmscanvasServiceProvider extends ServiceProvider {
     {
         if ($this->app['admin']->getUrlPrefix() == Request::segment(1))
         {
-            include __DIR__.'/../adminRoutes.php';
+            include __DIR__.'/Http/adminRoutes.php';
         }
         else
         {
-            include __DIR__.'/../routes.php';
+            include __DIR__.'/Http/routes.php';
         }
     }
 

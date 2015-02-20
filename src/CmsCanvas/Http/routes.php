@@ -73,8 +73,3 @@ Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
 
 });
 
-// App::missing(function($exception)
-// {
-//     return App::make('\CmsCanvas\Controllers\PageController')->callAction('showPage', array($exception));
-// });
-

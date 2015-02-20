@@ -1,4 +1,4 @@
-<?php namespace CmsCanvas\Controllers;
+<?php namespace CmsCanvas\Http\Controllers;
 
 use Theme, Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;

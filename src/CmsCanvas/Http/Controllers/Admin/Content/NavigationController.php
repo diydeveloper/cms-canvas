@@ -1,4 +1,4 @@
-<?php namespace CmsCanvas\Controllers\Admin\Content;
+<?php namespace CmsCanvas\Http\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass;
 use CmsCanvas\Routing\AdminController;
