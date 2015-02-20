@@ -28,7 +28,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
         $this->setupConfig();
         $this->setupViews();
         $this->setupRoutes();
-        $this->setupFilters();
+        $this->setupMiddleware();
     }
 
     /**
@@ -84,9 +84,12 @@ class CmscanvasServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function setupFilters()
+    public function setupMiddleware()
     {
-        include __DIR__.'/../filters.php';
+        $this->app->router->middleware('cmscanvas.auth', 'CmsCanvas\Http\Middleware\Authenticate');
+        $this->app->router->middleware('cmscanvas.permission', 'CmsCanvas\Http\Middleware\Permission');
+        $this->app->router->middleware('cmscanvas.ajax', 'CmsCanvas\Http\Middleware\Ajax');
+        $this->app->router->middleware('cmscanvas.flushCache', 'CmsCanvas\Http\Middleware\Ajax');
     }
 
     /**

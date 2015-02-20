@@ -10,7 +10,7 @@ Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
 Route::model('navigation', 'CmsCanvas\Models\Content\Navigation');
 
-Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cmscanvas.permission', 'permission' => 'ADMIN'], function()
+Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function()
 {
 
     Route::get('/', ['as' => 'admin.index', 'uses' => 'CmsCanvas\Http\Controllers\Admin\DashboardController@getDashboard']);
@@ -92,7 +92,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cms
             Route::post('/', ['as' => 'admin.content.entry.entries.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEntries']);
 
             Route::post('delete', ['as' => 'admin.content.entry.delete.post', 'permission' => 'ADMIN_ENTRY_DELETE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postDelete']);
-            Route::post('create-thumbnail', ['before' => 'cmscanvas.ajax', 'as' => 'admin.content.entry.create.thumbnail.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postCreateThumbnail']);
+            Route::post('create-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.content.entry.create.thumbnail.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postCreateThumbnail']);
 
         });
 
@@ -102,10 +102,10 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cms
             {
 
                 Route::get('{contentType}/entry/add', ['as' => 'admin.content.entry.add', 'permission' => 'ADMIN_ENTRY_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@getEdit']);
-                Route::post('{contentType}/entry/add', ['after' =>'cmscanvas.cache.flush', 'as' => 'admin.content.entry.add.post', 'permission' => 'ADMIN_ENTRY_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
+                Route::post('{contentType}/entry/add', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.add.post', 'permission' => 'ADMIN_ENTRY_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
 
                 Route::get('{contentType}/entry/{entry}/edit', ['as' => 'admin.content.entry.edit', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@getEdit']);
-                Route::post('{contentType}/entry/{entry}/edit', ['after' =>'cmscanvas.cache.flush', 'as' => 'admin.content.entry.edit.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
+                Route::post('{contentType}/entry/{entry}/edit', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
 
             });
 
@@ -117,10 +117,10 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cms
                 Route::post('delete', ['as' => 'admin.content.type.delete.post', 'permission' => 'ADMIN_CONTENT_TYPE_DELETE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postDelete']);
 
                 Route::get('add', ['as' => 'admin.content.type.add', 'permission' => 'ADMIN_CONTENT_TYPE_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@getEdit']);
-                Route::post('add', ['after' =>'cmscanvas.cache.flush', 'as' => 'admin.content.type.add.post', 'permission' => 'ADMIN_CONTENT_TYPE_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
+                Route::post('add', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.type.add.post', 'permission' => 'ADMIN_CONTENT_TYPE_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
 
                 Route::get('{contentType}/edit', ['as' => 'admin.content.type.edit', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@getEdit']);
-                Route::post('{contentType}/edit', ['after' =>'cmscanvas.cache.flush', 'as' => 'admin.content.type.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
+                Route::post('{contentType}/edit', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.type.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
             });
 
             Route::group(['prefix' => '{contentType}/field', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_VIEW'], function()
@@ -151,7 +151,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'before' => 'cmscanvas.auth|cms
         Route::get('general-settings', ['as' => 'admin.system.general-settings', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@getGeneralSettings']);
         Route::post('general-settings', ['as' => 'admin.system.general-settings.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@postGeneralSettings']);
 
-        Route::post('theme-layouts', ['before' => 'cmscanvas.ajax', 'as' => 'admin.system.theme-layouts', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@postThemeLayouts']);
+        Route::post('theme-layouts', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.system.theme-layouts', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@postThemeLayouts']);
     });
 
 });
@@ -162,6 +162,6 @@ Route::group(['prefix' => Admin::getUrlPrefix()], function()
     Route::get('user/login', ['as' => 'admin.user.login', 'uses' => 'CmsCanvas\Http\Controllers\Admin\UserController@getLogin']);
     Route::post('user/login', ['as' => 'admin.user.login.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\UserController@postLogin']);
 
-    Route::get('user/logout', ['as' => 'admin.user.logout', 'uses' => 'CmscCnvas\Controllers\Admin\UserController@getLogout']);
+    Route::get('user/logout', ['as' => 'admin.user.logout', 'uses' => 'CmsCanvas\Http\Controllers\Admin\UserController@getLogout']);
 
 });
