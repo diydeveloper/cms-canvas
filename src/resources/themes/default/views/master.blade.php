@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="{{ Lang::getLocale() }}">
+<html lang="{!! Lang::getLocale() !!}">
     <head>
         <meta charset="UTF-8" /> 
 
-        {{ Theme::head() }}
+        {!! Theme::head() !!}
 
         <!-- Stylesheet Includes -->
-        <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/reset.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/style.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/content.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/reset.css') !!}" />
+        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/style.css') !!}" />
+        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/content.css') !!}" />
 
         <!-- Javascript Includes -->
-        <script type="text/javascript" src="{{ Theme::asset('js/jquery.min.js') }}"></script>
-        <script type="text/javascript" src="{{ Theme::asset('js/superfish.js') }}"></script>
+        <script type="text/javascript" src="{!! Theme::asset('js/jquery.min.js') !!}"></script>
+        <script type="text/javascript" src="{!! Theme::asset('js/superfish.js') !!}"></script>
 
         <!--[if lt IE 9]>
-            <script src="{{ Theme::asset('js/html5.js') }}"></script>
+            <script src="{!! Theme::asset('js/html5.js') !!}"></script>
         <![endif]-->
 
         <script type="text/javascript">
@@ -46,9 +46,9 @@
 
             <!-- Header -->
             <header>
-                <a id="logo" href="{{ url() }}">{{ Config::get('cmscanvas::config.site_name') }}</a> 
+                <a id="logo" href="{!! url() !!}">{{ Config::get('cmscanvas::config.site_name') }}</a> 
 
-                <img alt="Header Image" src="{{ Theme::asset('images/header.jpg') }}" />
+                <img alt="Header Image" src="{!! Theme::asset('images/header.jpg') !!}" />
 
                 <nav>
                     {{-- navigations:nav nav_id="1" class="left" --}}
@@ -66,8 +66,10 @@
 
         </div><!-- container -->
 
-        {{ Theme::footer() }}
-        {{ print_pre(DB::getQueryLog()) }}
+        {!! Theme::footer() !!}
+        <pre>
+            {!! print_r(DB::getQueryLog()) !!}
+        </pre>
     </body>
 
 </html>
