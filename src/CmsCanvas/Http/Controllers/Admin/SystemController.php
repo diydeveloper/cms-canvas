@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Http\Controllers\Admin;
 
 use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
-use CmsCanvas\Routing\AdminController;
+use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
 

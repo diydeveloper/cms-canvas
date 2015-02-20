@@ -4,7 +4,7 @@ use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, std
 use CmsCanvas\Models\User;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
-use CmsCanvas\Routing\AdminController;
+use CmsCanvas\Http\Controllers\Admin\AdminController;
 
 class UserController extends AdminController {
 

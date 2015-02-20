@@ -46,7 +46,7 @@ Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
             $contentType->getRoute(), 
             array(
                 'as' => $contentType->getRouteName(), 
-                'uses' => 'CmsCanvas\Controllers\PageController@showPage'
+                'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
             )
         );
     }
@@ -57,7 +57,7 @@ Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
             $entry->getRoute(), 
             array(
                 'as' => $entry->getRouteName(), 
-                'uses' => 'CmsCanvas\Controllers\PageController@showPage'
+                'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
             )
         );
     }
@@ -67,7 +67,7 @@ Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
         '/', 
         [
             'as' => 'entry.'.$homeEntryId.'.'.\Lang::getLocale(), 
-            'uses' => 'CmsCanvas\Controllers\PageController@showPage'
+            'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
         ]
     );
 

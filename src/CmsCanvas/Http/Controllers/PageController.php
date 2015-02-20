@@ -4,7 +4,7 @@ use Theme, Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Container\Cache\Page;
-use CmsCanvas\Routing\PublicController;
+use CmsCanvas\Http\Controllers\PublicController;
 
 class PageController extends PublicController {
 

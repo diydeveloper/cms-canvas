@@ -1,7 +1,7 @@
 <?php namespace CmsCanvas\Http\Controllers\Admin\Content\Type;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass;
-use CmsCanvas\Routing\AdminController;
+use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Content\Type\Field\Type;
 use CmsCanvas\Content\Type\FieldType;
