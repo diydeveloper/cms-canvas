@@ -1,4 +1,4 @@
-<?php namespace CmsCanvas\Exception;
+<?php namespace CmsCanvas\Exceptions;
 
 interface ExceptionDisplayInterface
 {

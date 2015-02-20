@@ -8,7 +8,6 @@ use CmsCanvas\Theme\Theme;
 use CmsCanvas\Admin\Admin;
 use CmsCanvas\Content\Content;
 use CmsCanvas\StringView\StringView;
-use CmsCanvas\Exception\Exception;
 
 class CmscanvasServiceProvider extends ServiceProvider {
 
@@ -214,7 +213,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
     {
         $this->app->singleton(
             'Illuminate\Contracts\Debug\ExceptionHandler',
-            'CmsCanvas\Exception\Handler'
+            'CmsCanvas\Exceptions\Handler'
         );
     }
 

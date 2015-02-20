@@ -1,4 +1,4 @@
-<?php namespace CmsCanvas\Exception;
+<?php namespace CmsCanvas\Exceptions;
 
 use Exception, App;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

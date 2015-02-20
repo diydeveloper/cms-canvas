@@ -294,7 +294,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         if ( ! $this->can($permission))
         {
-            throw new \CmsCanvas\Exception\PermissionDenied($permission);
+            throw new \CmsCanvas\Exceptions\PermissionDenied($permission);
         }
     }
 }

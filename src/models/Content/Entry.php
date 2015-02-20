@@ -8,8 +8,8 @@ use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
-use \CmsCanvas\Exception\PermissionDenied;
-use \CmsCanvas\Exception\Exception;
+use \CmsCanvas\Exceptions\PermissionDenied;
+use \CmsCanvas\Exceptions\Exception;
 
 class Entry extends Model implements PageInterface {
 
@@ -343,8 +343,8 @@ class Entry extends Model implements PageInterface {
     /**
      * Checks if the current entry can be deleted.
      *
-     * @throws \CmsCanvas\Exception\PermissionDenied
-     * @throws \CmsCanvas\Exception\Exception
+     * @throws \CmsCanvas\Exceptions\PermissionDenied
+     * @throws \CmsCanvas\Exceptions\Exception
      * @return bool|string
      */
     public function validateForDeletion()

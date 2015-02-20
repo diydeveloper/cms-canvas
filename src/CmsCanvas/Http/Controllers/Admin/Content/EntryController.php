@@ -101,7 +101,7 @@ class EntryController extends AdminController {
                     $entry->delete();
                     $deleteSuccessfulFlag = true;
                 }
-                catch (\CmsCanvas\Exception\Exception $e)
+                catch (\CmsCanvas\Exceptions\Exception $e)
                 {
                     $errors[] = $e->getMessage();
                 }
