@@ -1,10 +1,11 @@
 <?php namespace CmsCanvas\Http\Controllers;
 
-use Theme, Route, Cache, Config, stdClass, Content, Lang;
+use Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Http\Controllers\PublicController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PageController extends PublicController {
 
@@ -12,7 +13,7 @@ class PageController extends PublicController {
     {
         $routeName = Route::currentRouteName();
 
-        if ($routeName == null)
+        if ($routeName == null || $exception instanceof NotFoundHttpException)
         {
             // Route not found. Show 404 page.
             $entryId = Config::get('cmscanvas::config.custom_404');
@@ -33,8 +34,7 @@ class PageController extends PublicController {
             return new Page($objectId, $objectType);
         });
 
-        $content = $cache->render($parameters);
-        $this->layout->content = $content;
+        return $cache->render($parameters);
     }
 
 }

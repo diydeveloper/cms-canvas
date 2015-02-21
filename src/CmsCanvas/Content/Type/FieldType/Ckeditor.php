@@ -12,7 +12,7 @@ class Ckeditor extends FieldType {
      */
     public function settings()
     {
-        return View::make('CmsCanvas\Content\Type\FieldType::ckeditor.settings')
+        return View::make('cmscanvas::fieldType.ckeditor.settings')
             ->with('fieldType', $this);
     }
 
@@ -75,7 +75,7 @@ class Ckeditor extends FieldType {
 
         Theme::addInlineScript($config, true);
 
-        return View::make('CmsCanvas\Content\Type\FieldType::ckeditor.input')
+        return View::make('cmscanvas::fieldType.ckeditor.input')
             ->with('fieldType', $this);
     }
 

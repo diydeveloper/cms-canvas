@@ -120,7 +120,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
                 Route::post('add', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.type.add.post', 'permission' => 'ADMIN_CONTENT_TYPE_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
 
                 Route::get('{contentType}/edit', ['as' => 'admin.content.type.edit', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@getEdit']);
-                Route::post('{contentType}/edit', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.type.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
+                Route::post('{contentType}/edit', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.content.type.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\TypeController@postEdit']);
             });
 
             Route::group(['prefix' => '{contentType}/field', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_VIEW'], function()

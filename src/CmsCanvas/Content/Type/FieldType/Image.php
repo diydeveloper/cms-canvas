@@ -12,7 +12,7 @@ class Image extends FieldType {
      */
     public function settings()
     {
-        return View::make('CmsCanvas\Content\Type\FieldType::image.settings')
+        return View::make('cmscanvas::fieldType.image.settings')
             ->with('fieldType', $this);
     }
 
@@ -25,7 +25,7 @@ class Image extends FieldType {
     {
         Theme::addPackage('image_field');
 
-        return View::make('CmsCanvas\Content\Type\FieldType::image.input')
+        return View::make('cmscanvas::fieldType.image.input')
             ->with(array('fieldType' => $this));
     }
 

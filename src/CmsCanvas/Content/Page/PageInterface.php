@@ -10,14 +10,6 @@ interface PageInterface {
     public function render();
 
     /**
-     * Get the contents of the page
-     *
-     * @param array $parameters
-     * @return \CmsCanvas\StringView\StringView
-     */
-    public function renderContents($parameters = array());
-
-    /**
      * Get an array of transalated data for the current object
      *
      * @return array

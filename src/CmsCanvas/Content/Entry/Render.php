@@ -198,4 +198,14 @@ class Render {
         return $this->entry->author;
     }
 
+    /**
+     * Returns the theme layout to use
+     *
+     * @return string
+     */
+    public function getThemeLayout()
+    {
+        return $this->entry->contentType->theme_layout;
+    }
+
 }

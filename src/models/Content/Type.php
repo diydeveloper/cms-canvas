@@ -401,7 +401,6 @@ class Type extends Model implements PageInterface {
     public function render($parameters = array(), $data = array())
     {
         return new Render($this, $parameters, $data);
-        // return $this->renderContents($parameters, $data);
     }
 
     /**

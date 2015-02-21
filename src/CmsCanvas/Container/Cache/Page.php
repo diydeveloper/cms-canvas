@@ -1,5 +1,6 @@
 <?php namespace CmsCanvas\Container\Cache;
 
+use Theme;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
@@ -46,25 +47,28 @@ class Page implements PageInterface  {
      * Renders the cached page
      *
      * @param array $parameters
-     * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\StringView\StringView
+     * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\Content\Type\Render
      */
     public function render($parameters = array())
     {
-        return $this->object
+        $content = $this->object
             ->setCache($this)
             ->render($parameters);
+
+        $layoutName = $content->getThemeLayout();
+
+        if ($layoutName != null)
+        {
+            Theme::setLayout($layoutName);
+            $layout = Theme::getLayout();
+            $layout->content = $content;
+
+            return $layout;
+        }
+
+        return $content;
     }
 
-    /**
-     * Get the contents of the page
-     *
-     * @param array $parameters
-     * @return void
-     */
-    public function renderContents($parameters = array())
-    {
-        //
-    }
 
     /**
      * Get an array of transalated data for the current object

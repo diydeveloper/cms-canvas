@@ -34,7 +34,12 @@ class FlushCache implements TerminableMiddleware {
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        $response = $next($request);
+
+        // Do to Laravel 5 middleware limitations in packages, have to manually call terminate
+        $this->terminate($request, $response);
+
+        return $response;
     }
 
     /**

@@ -25,6 +25,8 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
+        \DB::enableQueryLog();
+
         $this->setupConfig();
         $this->setupViews();
         $this->setupRoutes();
@@ -57,9 +59,6 @@ class CmscanvasServiceProvider extends ServiceProvider {
     {
         $source = realpath(__DIR__.'/../resources/views/');
         $this->loadViewsFrom($source, 'cmscanvas');
-
-        $source = realpath(__DIR__.'/Content/Type/FieldType/views/');
-        $this->loadViewsFrom($source, 'CmsCanvas\Content\Type\FieldType');
     }
 
     /**
@@ -89,7 +88,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
         $this->app->router->middleware('cmscanvas.auth', 'CmsCanvas\Http\Middleware\Authenticate');
         $this->app->router->middleware('cmscanvas.permission', 'CmsCanvas\Http\Middleware\Permission');
         $this->app->router->middleware('cmscanvas.ajax', 'CmsCanvas\Http\Middleware\Ajax');
-        $this->app->router->middleware('cmscanvas.flushCache', 'CmsCanvas\Http\Middleware\Ajax');
+        $this->app->router->middleware('cmscanvas.flushCache', 'CmsCanvas\Http\Middleware\FlushCache');
     }
 
     /**

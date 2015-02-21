@@ -113,4 +113,14 @@ class Render {
         return false;
     }
 
+    /**
+     * Returns the theme layout to use
+     *
+     * @return string
+     */
+    public function getThemeLayout()
+    {
+        return $this->contentType->theme_layout;
+    }
+
 }
