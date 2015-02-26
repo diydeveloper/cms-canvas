@@ -26,7 +26,7 @@ input[type='text'], input[type='password'] {
     border: 1px solid #abadb3;
 }
 
-#page-tab #slug {
+#page-tab #route {
     width: 350px; 
 }
 

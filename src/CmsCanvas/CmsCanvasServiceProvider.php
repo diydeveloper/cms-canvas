@@ -31,6 +31,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
         $this->setupViews();
         $this->setupRoutes();
         $this->setupMiddleware();
+        $this->setupPublishing();
     }
 
     /**
@@ -92,13 +93,27 @@ class CmscanvasServiceProvider extends ServiceProvider {
     }
 
     /**
+     * 
+     *
+     * @return void
+     */
+    public function setupPublishing()
+    {
+        $this->publishes(
+            [
+                __DIR__.'/../resources/themes/default' => base_path('/resources/themes/default')
+            ], 
+            'themes'
+        );
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
-        $this->registerThemePublisher();
         $this->registerTheme();
         $this->registerAuthLoginEventListener();
         $this->registerDisplayError();
@@ -168,45 +183,6 @@ class CmscanvasServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the theme publisher class and command.
-     *
-     * @return void
-     */
-    protected function registerThemePublisher()
-    {
-        $this->registerThemePublishCommand();
-
-        $this->app->bindShared('theme.publisher', function($app)
-        {
-            $viewPath = $app['path'].'/resources/themes';
-
-            // Once we have created the view publisher, we will set the default packages
-            // path on this object so that it knows where to find all of the packages
-            // that are installed for the application and can move them to the app.
-            $publisher = new ThemePublisher($app['files'], $viewPath);
-
-            $publisher->setPackagePath($app['path.base'].'/vendor');
-
-            return $publisher;
-        });
-
-        $this->commands('command.theme.publish');
-    }
-
-    /**
-     * Register the view publish console command.
-     *
-     * @return void
-     */
-    protected function registerThemePublishCommand()
-    {
-        $this->app->bindShared('command.theme.publish', function($app)
-        {
-            return new ThemePublishCommand($app['theme.publisher']);
-        });
-    }
-
-    /**
      * Register app error view.
      *
      * @return void
@@ -241,8 +217,6 @@ class CmscanvasServiceProvider extends ServiceProvider {
     public function provides()
     {
         return array(
-            'theme.publisher',
-            'command.theme.publish',
             'theme',
             'admin',
             'content',

@@ -30,6 +30,7 @@ class Type extends Model implements PageInterface {
         'page_head', 
         'short_name', 
         'entries_allowed', 
+        'max_revisions', 
         'route',
         'route_prefix',
         'theme_layout',

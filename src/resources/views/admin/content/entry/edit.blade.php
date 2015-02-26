@@ -35,6 +35,7 @@
             <ul class="htabs">
                 <li><a href="#content-tab">Content</a></li>
                 <li><a href="#page-tab">Page</a></li>
+                <li><a href="#revisions-tab">Revisions</a></li>
                 <li><a href="#settings-tab">Settings</a></li>
             </ul>
             <!-- Content Tab -->
@@ -79,6 +80,18 @@
                         &nbsp;<span id="meta_description_count" class="help" style="display: inline;">(0 Chars)</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Revisions Tab -->
+            <div id="revisions-tab">
+                <table class="list">
+                    <thead>
+                        <th>Revision</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                        <th class="right">Action</th>
+                    </thead>
+                </table>
             </div>
 
             <!-- Settings Tab -->

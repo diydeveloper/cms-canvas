@@ -6,10 +6,11 @@ use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
+use CmsCanvas\Models\Content\Revision;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
-use \CmsCanvas\Exceptions\PermissionDenied;
-use \CmsCanvas\Exceptions\Exception;
+use CmsCanvas\Exceptions\PermissionDenied;
+use CmsCanvas\Exceptions\Exception;
 
 class Entry extends Model implements PageInterface {
 
@@ -33,6 +34,7 @@ class Entry extends Model implements PageInterface {
         'meta_description',
         'entry_status_id',
         'author_id',
+        'created_at',
     );
 
     /**
@@ -40,7 +42,7 @@ class Entry extends Model implements PageInterface {
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = array('id', 'updated_at');
 
     /**
      * Manually manage the timestamps on this class
@@ -117,6 +119,17 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * Returns all revisions for the current entry
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function revisions()
+    {
+        return $this->hasMany('CmsCanvas\Models\Content\Revision', 'resource_id', 'id')
+            ->where('resource_type_id', Revision::ENTRY_RESOURCE_TYPE_ID);
+    }
+
+    /**
      * The "booting" method of the model.
      *
      * @return void
@@ -125,8 +138,8 @@ class Entry extends Model implements PageInterface {
     {
         parent::boot();
 
-        self::deleting(function($user){
-            $user->validateForDeletion();
+        self::deleting(function($entry) {
+            $entry->validateForDeletion();
         });
     }
 

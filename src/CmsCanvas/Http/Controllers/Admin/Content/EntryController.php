@@ -7,6 +7,7 @@ use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Models\User;
+use CmsCanvas\Models\Content\Revision;
 use Carbon\Carbon;
 use Content;
 
@@ -229,16 +230,33 @@ class EntryController extends AdminController {
             }
         }
 
+        $createdAt = Carbon::createFromFormat('m/d/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
+        $createdAt->setTimezone(config::get('app.timezone'));
+
+        $data = Input::all();
+        $data['created_at'] = $createdAt;
+
+        // Create a revision if max revisions is set
+        if ($contentType->max_revisions > 0)
+        {
+            $currentUser = Auth::user();
+
+            $revision = new Revision;
+            // $revision->resource_type_id = Revision::ENTRY_RESOURCE_TYPE_ID;
+            // $revision->content_type_id = $contentType->id;
+            // $revision->author_id = $currentUser->id;
+            // $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
+            // $revision->data = base64_encode(gzcompress(serialize($data)));
+            // $revision->save();
+        }
+
         $entry = ($entry == null) ? new Entry : $entry;
-        $entry->fill(Input::all());
+        $entry->fill($data);
         $entry->content_type_id = $contentType->id;
-        $date = Carbon::createFromFormat('m/d/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
-        $date->setTimezone(config::get('app.timezone'));
-        $entry->created_at = $date;
         $entry->save();
 
         $contentFields->setEntry($entry);
-        $contentFields->fill(Input::all());
+        $contentFields->fill($data);
         $contentFields->save();
 
         if (Input::get('save_exit'))

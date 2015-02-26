@@ -9,6 +9,7 @@ Route::model('contentType', 'CmsCanvas\Models\Content\Type');
 Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
 Route::model('navigation', 'CmsCanvas\Models\Content\Navigation');
+Route::model('language', 'CmsCanvas\Models\Language');
 
 Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function()
 {
@@ -148,10 +149,23 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
     Route::group(['prefix' => 'system'], function()
     {
-        Route::get('general-settings', ['as' => 'admin.system.general-settings', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@getGeneralSettings']);
-        Route::post('general-settings', ['as' => 'admin.system.general-settings.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@postGeneralSettings']);
+        Route::get('general-settings', ['as' => 'admin.system.settings.general-settings', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\SettingsController@getGeneralSettings']);
+        Route::post('general-settings', ['as' => 'admin.system.settings.general-settings.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\SettingsController@postGeneralSettings']);
 
-        Route::post('theme-layouts', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.system.theme-layouts', 'uses' => 'CmsCanvas\Http\Controllers\Admin\SystemController@postThemeLayouts']);
+        Route::post('theme-layouts', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.system.settings.theme-layouts', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\SettingsController@postThemeLayouts']);
+
+        Route::get('language', ['as' => 'admin.system.language.languages', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@getLanguages']);
+        Route::post('language', ['as' => 'admin.system.language.languages.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@postLanguages']);
+
+        Route::get('language/add', ['as' => 'admin.system.language.add', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@getEdit']);
+        Route::post('language/add', ['as' => 'admin.system.language.add.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@postEdit']);
+
+        Route::get('language/{language}/edit', ['as' => 'admin.system.language.edit', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@getEdit']);
+        Route::post('language/{language}/edit', ['as' => 'admin.system.language.edit.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@postEdit']);
+
+        Route::post('language/delete', ['as' => 'admin.system.language.delete.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@postDelete']);
+
+        Route::get('language/{language}/set-default', ['as' => 'admin.system.language.setDefault.post', 'uses' => 'CmsCanvas\Http\Controllers\Admin\System\LanguageController@setDefault']);
     });
 
 });

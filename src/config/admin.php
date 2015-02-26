@@ -67,7 +67,7 @@ return array(
                     ),
                     array(
                         'title' => 'Languages',
-                        'url'   => 'system/languages',
+                        'url'   => 'system/language',
                     ),
                     array(
                         'title' => 'Server Info',

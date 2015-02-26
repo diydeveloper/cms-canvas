@@ -1,11 +1,11 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin;
+<?php namespace CmsCanvas\Http\Controllers\Admin\System;
 
 use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
 
-class SystemController extends AdminController {
+class SettingsController extends AdminController {
 
     /**
      * Display general settings
@@ -14,7 +14,7 @@ class SystemController extends AdminController {
      */
     public function getGeneralSettings()
     {
-        $content = View::make('cmscanvas::admin.system.generalSettings');
+        $content = View::make('cmscanvas::admin.system.settings.generalSettings');
 
         $settingItems = Setting::all();
         $settings = new stdClass;
@@ -52,7 +52,7 @@ class SystemController extends AdminController {
 
         if ($validator->fails())
         {
-            return Redirect::route('admin.system.general-settings')
+            return Redirect::route('admin.system.settings.general-settings')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
@@ -70,7 +70,7 @@ class SystemController extends AdminController {
             }
         }
 
-        return Redirect::route('admin.system.general-settings')
+        return Redirect::route('admin.system.settings.general-settings')
             ->with('message', "Settings updated successfully.");
     }
 
