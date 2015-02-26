@@ -19,7 +19,7 @@
             "src/database/seeds"
         ],
         "psr-4": {
-            "CmsCanvas": "src/"
+            "CmsCanvas\\": "src/"
         }
     },
     "minimum-stability": "stable"
