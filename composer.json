@@ -15,11 +15,10 @@
     },
     "autoload": {
         "classmap": [
-	    "src/database/migrations",
-            "src/database/seeds"
+	    "src/database"
         ],
         "psr-4": {
-            "CmsCanvas\\": "src/"
+            "CmsCanvas\\": "src/CmsCanvas/"
         }
     },
     "minimum-stability": "stable"
