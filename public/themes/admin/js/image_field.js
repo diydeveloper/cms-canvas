@@ -6,7 +6,7 @@ $(document).ready( function() {
         window.KCFinder = {
             callBack: function(url) {
                 window.KCFinder = null;
-                $.post(ADMIN_URL + '/content/entry/create-thumbnail', {'image_path': url}, function(image_path) {
+                $.post(ADMIN_URL + '/content/entry/create-thumbnail', {'image_path': url, _token: CSRF_TOKEN}, function(image_path) {
                     link.parent().find('.image_thumbnail').attr('src', image_path);
                     link.parent().find('.hidden_file').val(url);
                 });
@@ -22,7 +22,7 @@ $(document).ready( function() {
 
     $('.remove_image').click( function() {
         var link = $(this);
-        $.post(ADMIN_URL + '/content/entry/create-thumbnail', {'image_path': ' '}, function(image_path) {
+        $.post(ADMIN_URL + '/content/entry/create-thumbnail', {'image_path': ' ', _token: CSRF_TOKEN}, function(image_path) {
             link.parent().find('.image_thumbnail').attr('src', image_path);
         });
         $(this).parent().find('.hidden_file').attr('value', '');

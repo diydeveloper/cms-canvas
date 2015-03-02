@@ -81,6 +81,12 @@ $(document).ready(function() {
             value: (sort.hasClass('asc')) ? 'desc' : 'asc'
         }).appendTo(form);
 
+        $('<input>').attr({
+            type: 'hidden',
+            name: '_token',
+            value: CSRF_TOKEN
+        }).appendTo(form);
+
         form.submit();
 
         return false;

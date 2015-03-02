@@ -35,6 +35,11 @@
                 {!! Form::text('entries_allowed', null, array('class' => 'short')) !!}
                 <span class="ex">Leave blank for unlimited</span>
             </div>
+            <div>
+                {!! HTML::decode(Form::label('max_revisions', 'Max Revisions:<span class="help">Max number of revisions to store for each entry</span>')) !!}
+                {!! Form::text('entries_allowed', null, array('class' => 'short')) !!}
+                <span class="ex">No revisions will be stored if left empty</span>
+            </div>
             {!! Form::close() !!}
         </div>
     </div>

@@ -7,64 +7,63 @@ class Collection extends EloquentCollection {
 	/**
 	 * Returns a collection of items matching the value specified for the key
 	 *
-	 * @param string $key
-	 * @param mixed $matchValue
-	 * @return \CmsCanvas\Database\Eloquent\Collection
+	 * @param  string  $key
+	 * @param  mixed   $matchValue
+	 * @return static
 	 */
 	public function getWhere($key, $matchValue)
 	{
-		$arrayItems = $this->toArray();
-		$segments = explode('.', $key);
-		$segmentCount = count($segments);
-		$firstSegment = array_shift($segments);
 		$finalResults = array();
-		$depth = 1;
 
 		foreach ($this->items as $item)
 		{
-			if ($segmentCount > 1)
+			$results = $this->getData($item, $key);
+
+			if (in_array($matchValue, $results->toArray()))
 			{
-				$array = isset($item[$firstSegment]) ? $item[$firstSegment] : array();
-
-				foreach ($segments as $segment)
-		        {
-		            $results = array();
-		 
-		            foreach ($array as $nestedArray)
-		            {
-		                $nestedArray = (array) $nestedArray;
-
-		                $value = isset($nestedArray[$segment]) ? $nestedArray[$segment] : null;
-
-		                if ($depth == $segmentCount)
-		                {
-			                if ($value == $matchValue)
-			                {
-				                $finalResults[] = $item;
-			                }
-			            }
-			            else
-			            {
-			            	$results[] = $value;
-			            }
-		            }
-		 
-		            $array = array_values($results);
-		            $depth++;
-		        }
-			}
-			else 
-			{
-				$value = isset($item[$firstSegment]) ? $item[$firstSegment] : null;
-
-	            if ($value == $matchValue)
-	            {
-	                $finalResults[] = $item;
-	            }
+				$finalResults[] = $item;
 			}
 		}
 
 		return new static(array_values($finalResults));
+	}
+
+	/**
+	 * Get a collection with the values of a given key
+	 *
+	 * @param  string  $items
+	 * @param  string  $key
+	 * @return static
+	 */
+	public function getData($items, $key)
+	{
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! ($items instanceof Collection))
+			{
+				$items = new static(array($items));
+			}
+
+			$newCollection = new static();
+
+			foreach ($items as $item) 
+			{
+				$result = data_get($item, $segment);
+
+				if ($result instanceof Collection)
+				{
+					$newCollection = $newCollection->merge($result);
+				}
+				else
+				{
+					$newCollection[] = $result;
+				}
+			}
+
+			$items = $newCollection;
+		}
+
+		return $items;
 	}
 
 	/**

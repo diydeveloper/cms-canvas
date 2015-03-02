@@ -35,7 +35,9 @@
             <ul class="htabs">
                 <li><a href="#content-tab">Content</a></li>
                 <li><a href="#page-tab">Page</a></li>
+                @if ($contentType->max_revisions > 0)
                 <li><a href="#revisions-tab">Revisions</a></li>
+                @endif
                 <li><a href="#settings-tab">Settings</a></li>
             </ul>
             <!-- Content Tab -->
@@ -83,16 +85,53 @@
             </div>
 
             <!-- Revisions Tab -->
+            @if ($contentType->max_revisions > 0)
             <div id="revisions-tab">
                 <table class="list">
                     <thead>
-                        <th>Revision</th>
-                        <th>Author</th>
-                        <th>Date</th>
-                        <th class="right">Action</th>
+                        <tr>
+                            <th>Revision</th>
+                            <th>Author</th>
+                            <th>Date</th>
+                            <th class="right">Action</th>
+                        </tr>
                     </thead>
+                    <tbody>
+                        <?php $i = 0; ?>
+                        @if (count($entry->revisions) > 0)
+                            @foreach ($entry->revisions as $revisionIteration)
+                            <tr>
+                                <td>Revision {!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
+                                <td>
+                                    @if ($revisionIteration->author != null)
+                                        {!! $revisionIteration->author->getFullName() !!}
+                                    @else
+                                        {!! $revisionIteration->author_name !!}
+                                    @endif
+                                </td>
+                                <td>{!! $revisionIteration->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a') !!}</td>
+                                <td class="right">
+                                    @if (($revision == null && $i == 0)
+                                        || ($revision != null && $revision->id == $revisionIteration->id))
+                                        <strong>Currently Loaded</strong>
+                                    @elseif ($i == 0)
+                                        [ <a href="{!! Admin::url("content/type/{$revisionIteration->content_type_id}/entry/{$entry->id}/edit") !!}">Load Revision</a> ]
+                                    @else
+                                        [ <a href="{!! Admin::url("content/type/{$revisionIteration->content_type_id}/entry/{$entry->id}/edit/revision/{$revisionIteration->id}") !!}">Load Revision</a> ]
+                                    @endif
+                                </td>
+                            </tr>
+                            <?php $i++; ?>
+                            @endforeach
+                        @else
+                            <tr class="center">
+                                <td colspan="4">No revisions found.</td>
+                            </tr>
+                        @endif
+                    </tbody>
                 </table>
             </div>
+            @endif
 
             <!-- Settings Tab -->
             <div id="settings-tab">
@@ -106,9 +145,9 @@
                         {!! Form::text(
                             'created_at', 
                             ( ! empty($entry->created_at)) ? 
-                                $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a') 
+                                $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a') 
                             : 
-                                Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i:s a'), 
+                                Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a'), 
                             array('class' => 'datetime')) 
                         !!}
                     </div>
@@ -130,7 +169,8 @@
         $( ".datetime" ).datetimepicker({
             showSecond: true,
             timeFormat: 'hh:mm:ss tt',
-            ampm: true
+            ampm: true,
+            dateFormat: 'd/M/yy'
         });
 
         // Wrap datepicker popup with a class smoothness for styleing

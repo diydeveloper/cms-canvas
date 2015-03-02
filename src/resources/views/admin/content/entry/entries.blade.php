@@ -96,10 +96,10 @@
                         <td class="right">{!! $entry->id !!}</td>
                         <td>{!! $entry->content_type_title !!}</td>
                         <td>{!! $entry->entry_status_name !!}</td>
-                        <td>{!! $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('m/d/Y h:i a') !!}</td>
+                        <td>{!! $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i a') !!}</td>
                         <td class="right">
                             @if ($entry->route != '')
-                                [ <a target="_blank" href="{!! url($entry->route) !!}">View</a> ]
+                                [ <a target="_blank" href="{!! url($entry->getRoute()) !!}">View</a> ]
                             @endif
                             [ <a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a> ]
                         </td>

@@ -10,6 +10,7 @@ Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
 Route::model('navigation', 'CmsCanvas\Models\Content\Navigation');
 Route::model('language', 'CmsCanvas\Models\Language');
+Route::model('revision', 'CmsCanvas\Models\Content\Revision');
 
 Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function()
 {
@@ -107,6 +108,9 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
                 Route::get('{contentType}/entry/{entry}/edit', ['as' => 'admin.content.entry.edit', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@getEdit']);
                 Route::post('{contentType}/entry/{entry}/edit', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
+
+                Route::get('{contentType}/entry/{entry}/edit/revision/{revision}', ['as' => 'admin.content.entry.edit.revision', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@getEdit']);
+                Route::post('{contentType}/entry/{entry}/edit/revision/{revision}', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.revision.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\EntryController@postEdit']);
 
             });
 

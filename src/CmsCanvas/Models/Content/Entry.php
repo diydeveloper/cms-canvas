@@ -120,13 +120,15 @@ class Entry extends Model implements PageInterface {
 
     /**
      * Returns all revisions for the current entry
+     * in order of newest to oldest
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function revisions()
     {
         return $this->hasMany('CmsCanvas\Models\Content\Revision', 'resource_id', 'id')
-            ->where('resource_type_id', Revision::ENTRY_RESOURCE_TYPE_ID);
+            ->where('resource_type_id', Revision::ENTRY_RESOURCE_TYPE_ID)
+            ->orderBy('id', 'desc');
     }
 
     /**

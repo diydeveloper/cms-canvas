@@ -1,6 +1,8 @@
 <?php namespace CmsCanvas\Content\Type;
 
-abstract class FieldType {
+use ArrayAccess;
+
+abstract class FieldType implements ArrayAccess {
 
     /**
      * The content type field
@@ -15,6 +17,13 @@ abstract class FieldType {
      * @var \CmsCanvas\Models\Content\Entry
      */
     public $entry;
+
+    /**
+     * The language locale that the current field is using
+     *
+     * @var string
+     */
+    public $locale;
 
     /**
      * The data associated with the field and entry
@@ -389,6 +398,51 @@ abstract class FieldType {
     public function settings()
     {
         return '';
+    }
+
+    /**
+     * Determine if the given attribute exists.
+     *
+     * @param  mixed  $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->$offset);
+    }
+
+    /**
+     * Get the value for a given offset.
+     *
+     * @param  mixed  $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->$offset;
+    }
+
+    /**
+     * Set the value for a given offset.
+     *
+     * @param  mixed  $offset
+     * @param  mixed  $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->$offset = $value;
+    }
+
+    /**
+     * Unset the value for a given offset.
+     *
+     * @param  mixed  $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->$offset);
     }
 
 }

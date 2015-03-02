@@ -74,7 +74,7 @@
             $('#layout').html('');
             $('#layout_ex').html('Loading Layouts...');
 
-            $.post('{!! Admin::url('/system/theme-layouts') !!}', {theme: $('#theme').val()}, function(response) {
+            $.post('{!! Admin::url('/system/theme-layouts') !!}', {theme: $('#theme').val(), _token: CSRF_TOKEN}, function(response) {
                 if (response.status == 'OK')
                 {
                     $.each(response.layouts, function(i , val) {

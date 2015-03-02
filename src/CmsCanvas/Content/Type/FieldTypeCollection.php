@@ -1,5 +1,6 @@
 <?php namespace CmsCanvas\Content\Type;
 
+use View;
 use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
 use CmsCanvas\Models\Language;
 
@@ -115,6 +116,37 @@ class FieldTypeCollection extends CmsCanvasCollection {
 		{
 			$item->setEntry($entry);
 		}
+	}
+
+    /**
+     * Builds an array of views for administrative editing
+     *
+     * @return \Illuminate\View\View|array
+     */
+	public function getAdminViews()
+	{
+		$fieldIds = array();
+		$fieldViews = array();
+		$languages = Language::where('active', 1)->get();
+
+		// Make a list of unique field ids
+		foreach ($this->items as $item) 
+		{
+			$fieldIds[$item->field->id] = $item->field->id;
+		}
+
+		foreach ($fieldIds as $fieldId) 
+		{
+			$relatedFieldTypes = $this->getWhere('field.id', $fieldId);
+			$fieldType = $relatedFieldTypes->first();
+
+            $fieldViews[] = View::make('cmscanvas::admin.content.entry.editField')
+                ->with('languages', $languages)
+                ->with('fieldType', $fieldType)
+                ->with('relatedFieldTypes', $relatedFieldTypes);
+		}
+
+		return $fieldViews;
 	}
 
 }

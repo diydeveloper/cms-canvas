@@ -16,6 +16,7 @@
             var ADMIN_PATH = '{!! Admin::getUrlPrefix() !!}';
             var ADMIN_URL = '{!! Admin::url() !!}';
             var THEME_URL = '{!! Theme::asset() !!}';
+            var CSRF_TOKEN = '{!! csrf_token() !!}';
         </script>
 
         <!-- Controller Defined JS Files -->

@@ -78,9 +78,14 @@
                             {!! Form::text('route') !!}
                         </div>
                         <div>
-                            {!! HTML::decode(Form::label('entries_allowed', 'Number of Entries Allowed:<span class="help">Number of entries allowed to be created with this content type</span>')) !!}
+                            {!! HTML::decode(Form::label('entries_allowed', 'Number of Entries Allowed:<span class="help">Number of entries allowed to be created with this content type.</span>')) !!}
                             {!! Form::text('entries_allowed', null, array('class' => 'short')) !!}
-                            <span class="ex">Leave blank for unlimited</span>
+                            <span class="ex">Leave empty for unlimited</span>
+                        </div>
+                        <div>
+                            {!! HTML::decode(Form::label('max_revisions', 'Max Revisions:<span class="help">Max number of revisions to store for each entry</span>')) !!}
+                            {!! Form::text('entries_allowed', null, array('class' => 'short')) !!}
+                            <span class="ex">No revisions will be kept if left empty</span>
                         </div>
                     </div>
                 </div>

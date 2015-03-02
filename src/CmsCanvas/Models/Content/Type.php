@@ -88,6 +88,19 @@ class Type extends Model implements PageInterface {
         return $this->hasMany('\CmsCanvas\Models\Content\Type\Field', 'content_type_id');
     } 
 
+    /**
+     * Returns all revisions for the current content type
+     * in order of newest to oldest
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function revisions()
+    {
+        return $this->hasMany('CmsCanvas\Models\Content\Revision', 'resource_id', 'id')
+            ->where('resource_type_id', Revision::CONTENT_TYPE_RESOURCE_TYPE_ID)
+            ->orderBy('id', 'desc');
+    }
+
    /**
      * Defines relation to the admin view permission
      *
@@ -430,51 +443,6 @@ class Type extends Model implements PageInterface {
     }
 
     /**
-     * Builds an array of views for administrative editing
-     *
-     * @param \CmsCanvas\Models\Content\Entry $entry
-     * @return \Illuminate\View\View|array
-     */
-    public function getAdminFieldViews(\CmsCanvas\Models\Content\Entry $entry = null)
-    {
-        $contentTypeFields = $this->fields()
-            ->with('type')
-            ->orderByRaw('ISNULL(`sort`) asc')
-            ->orderBy('sort', 'asc')
-            ->get();
-
-        $dataItems = ( ! empty($entry)) ? $entry->allData : new Collection();
-        $languages = Language::all();
-
-        $fieldViews = array();
-        $locale = Lang::getLocale();
-
-        foreach ($contentTypeFields as $contentTypeField)
-        {
-            $fieldDataItems = $dataItems->getWhere('content_type_field_id', $contentTypeField->id);
-
-            $fieldType = FieldType::factory($contentTypeField, $entry, $locale);
-
-            if ( ! $contentTypeField->translate)
-            {
-                $dataItem = $fieldDataItems->getFirstWhere('locale', $locale);
-                $data = ($dataItem != null) ? $dataItem->data : '';
-                $metadata = ($dataItem != null) ? $dataItem->metadata : '';
-
-                $fieldType->setData($data);
-                $fieldType->setMetadata($metadata);
-            }
-
-            $fieldViews[] = View::make('cmscanvas::admin.content.entry.editField')
-                ->with('fieldType', $fieldType)
-                ->with('languages', $languages)
-                ->with('fieldDataItems', $fieldDataItems);
-        }
-
-        return $fieldViews;
-    }
-
-    /**
      * Builds a collection of all content field types for the 
      * current entry including translations
      *
@@ -489,23 +457,39 @@ class Type extends Model implements PageInterface {
             ->orderBy('sort', 'asc')
             ->get();
 
-        $languages = Language::all();
-        $locale = Lang::getLocale();
+        $dataItems = ( ! empty($entry)) ? $entry->allData : new Collection();
+
+        $languages = Language::where('active', 1)
+            ->orderBy('default', 'desc')
+            ->orderBy('language', 'asc')
+            ->get();
+            
+        $defaultLocale = Lang::getLocale();
 
         $fieldInstances = new FieldTypeCollection();
 
         foreach ($contentTypeFields as $contentTypeField)
         {
+            $fieldDataItems = $dataItems->getWhere('content_type_field_id', $contentTypeField->id);
+
             if ($contentTypeField->translate)
             {
                 foreach ($languages as $language)                
                 {
-                    $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $language->locale);
+                    $dataItem = $fieldDataItems->getFirstWhere('locale', $language->locale);
+                    $data = ($dataItem != null) ? $dataItem->data : '';
+                    $metadata = ($dataItem != null) ? $dataItem->metadata : '';
+
+                    $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $language->locale, $data, $metadata);
                 }
             }
             else
             {
-                $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $locale);
+                $dataItem = $fieldDataItems->getFirstWhere('locale', $defaultLocale);
+                $data = ($dataItem != null) ? $dataItem->data : '';
+                $metadata = ($dataItem != null) ? $dataItem->metadata : '';
+
+                $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $defaultLocale, $data, $metadata);
             }
         }
 

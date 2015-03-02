@@ -158,7 +158,7 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($contentType, $entry = null)
+    public function getEdit($contentType, $entry = null, $revision = null)
     {
         if ($entry == null)
         {
@@ -179,11 +179,20 @@ class EntryController extends AdminController {
             $authorOptions[$author->id] = $author->getFullName();
         }
 
+        $contentFields = $contentType->getAllFieldTypeInstances($entry);
+
+        if ($revision != null)
+        {
+            $entry->fill($revision->data);
+            $contentFields->fill($revision->data);
+        }
+
         $content->entry = $entry;
-        $content->fieldViews = $contentType->getAdminFieldViews($entry);
+        $content->fieldViews = $contentFields->getAdminViews();
         $content->entryStatuses = $entryStatuses;
         $content->authorOptions = $authorOptions;
         $content->contentType = $contentType;
+        $content->revision = $revision;
 
         $this->layout->content = $content;
     }
@@ -193,7 +202,7 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($contentType, $entry = null)
+    public function postEdit($contentType, $entry = null, $revision = null)
     {
         if ($entry == null)
         {
@@ -230,25 +239,11 @@ class EntryController extends AdminController {
             }
         }
 
-        $createdAt = Carbon::createFromFormat('m/d/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
+        $createdAt = Carbon::createFromFormat('d/M/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
         $createdAt->setTimezone(config::get('app.timezone'));
 
         $data = Input::all();
         $data['created_at'] = $createdAt;
-
-        // Create a revision if max revisions is set
-        if ($contentType->max_revisions > 0)
-        {
-            $currentUser = Auth::user();
-
-            $revision = new Revision;
-            // $revision->resource_type_id = Revision::ENTRY_RESOURCE_TYPE_ID;
-            // $revision->content_type_id = $contentType->id;
-            // $revision->author_id = $currentUser->id;
-            // $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
-            // $revision->data = base64_encode(gzcompress(serialize($data)));
-            // $revision->save();
-        }
 
         $entry = ($entry == null) ? new Entry : $entry;
         $entry->fill($data);
@@ -258,6 +253,31 @@ class EntryController extends AdminController {
         $contentFields->setEntry($entry);
         $contentFields->fill($data);
         $contentFields->save();
+
+        // Create a revision if max revisions is set
+        if ($contentType->max_revisions > 0)
+        {
+            $oldRevisions = $entry->revisions()
+                ->skip($contentType->max_revisions - 1)
+                ->take(25)
+                ->get();
+
+            foreach ($oldRevisions as $oldRevision) 
+            {
+                $oldRevision->delete();
+            }
+
+            $currentUser = Auth::user();
+
+            $revision = new Revision;
+            $revision->resource_type_id = Revision::ENTRY_RESOURCE_TYPE_ID;
+            $revision->resource_id = $entry->id;
+            $revision->content_type_id = $contentType->id;
+            $revision->author_id = $currentUser->id;
+            $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
+            $revision->data = $data;
+            $revision->save();
+        }
 
         if (Input::get('save_exit'))
         {

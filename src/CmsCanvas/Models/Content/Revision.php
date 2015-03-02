@@ -42,4 +42,36 @@ class Revision extends Model {
      */
     protected $guarded = array('id', 'created_at', 'updated_at');
 
+    /**
+     * Defines a many to one relationship with user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function author()
+    {
+        return $this->hasOne('\CmsCanvas\Models\User', 'id', 'author_id');
+    }
+
+    /**
+     * Remove uncompress and unserialize the data attribute
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getDataAttribute($value)
+    {
+        return unserialize(gzuncompress(base64_decode($value)));
+    }
+
+    /**
+     * Serialize and compress the data attribute
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setDataAttribute($value)
+    {
+        $this->attributes['data'] = base64_encode(gzcompress(serialize($value)));
+    }
+
 }
