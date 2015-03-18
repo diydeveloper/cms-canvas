@@ -34,6 +34,7 @@ class Type extends Model implements PageInterface {
         'route',
         'route_prefix',
         'theme_layout',
+        'dynamic_routing_flag',
         'admin_entry_view_permission_id',
         'admin_entry_edit_permission_id',
         'admin_entry_create_permission_id',
@@ -247,31 +248,16 @@ class Type extends Model implements PageInterface {
     /**
      * Returns the full route for the content type
      *
-     * @return string
+     * @return string|null
      */
     public function getRoute()
     {
-        if ($this->route)
+        if ($this->route !== null && $this->route !== '')
         {
-            return $this->getRoutePrefix().'/'.$this->route;
+            return '/'.$this->route;
         }
 
-        return '';
-    }
-
-    /**
-     * Returns the route prefix for the content type
-     *
-     * @return string
-     */
-    public function getRoutePrefix()
-    {
-        if ($this->route_prefix)
-        {
-            return '/'.$this->route_prefix;
-        }
-
-        return '';
+        return null;
     }
 
     /**

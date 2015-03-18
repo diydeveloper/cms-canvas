@@ -92,14 +92,28 @@
                                 <span class="hint">Custom 404</span>
                             @endif
                         </td>
-                        <td>{!! $entry->getRoute() !!}</td>
+                        <td>
+                            @if ($entry->getRoute() !== null)
+                                {!! $entry->getRoute() !!}
+                            @endif
+
+                            @if ($entry->getRoute() !== null && $entry->getDynamicRoute() !== null)
+                                &nbsp;
+                            @endif
+
+                            @if ($entry->getDynamicRoute() !== null)
+                                <span style="color: darkgrey;">{!! $entry->getDynamicRoute() !!}</span>
+                            @endif
+                        </td>
                         <td class="right">{!! $entry->id !!}</td>
                         <td>{!! $entry->content_type_title !!}</td>
                         <td>{!! $entry->entry_status_name !!}</td>
                         <td>{!! $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i a') !!}</td>
                         <td class="right">
-                            @if ($entry->route != '')
+                            @if ($entry->getRoute() !== null)
                                 [ <a target="_blank" href="{!! url($entry->getRoute()) !!}">View</a> ]
+                            @elseif ($entry->getDynamicRoute() !== null)
+                                [ <a target="_blank" href="{!! url($entry->getDynamicRoute()) !!}">View</a> ]
                             @endif
                             [ <a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a> ]
                         </td>

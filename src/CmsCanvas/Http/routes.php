@@ -22,6 +22,9 @@ list($defaultLocale, $locales, $contentTypes, $entries) = Cache::rememberForever
 
     $entries = Entry::with('contentType')
         ->whereNotNull('route')
+        ->orWhereHas('contentType', function($query) {
+            $query->where('dynamic_routing_flag', 1);
+        })
         ->get();
 
     return array($defaultLocale, $locales, $contentTypes, $entries);
@@ -53,13 +56,27 @@ Route::group(['prefix' => $locale], function() use($contentTypes, $entries)
 
     foreach ($entries as $entry)
     {
-        Route::any(
-            $entry->getRoute(), 
-            array(
-                'as' => $entry->getRouteName(), 
-                'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
-            )
-        );
+        if ($entry->getRoute() !== null)
+        {
+            Route::any(
+                $entry->getRoute(), 
+                array(
+                    'as' => $entry->getRouteName(), 
+                    'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
+                )
+            );
+        }
+
+        if ($entry->getDynamicRoute() !== null)
+        {
+            Route::any(
+                $entry->getDynamicRoute(), 
+                array(
+                    'as' => $entry->getDynamicRouteName(), 
+                    'uses' => 'CmsCanvas\Http\Controllers\PageController@showPage'
+                )
+            );
+        }
     }
 
     $homeEntryId = \Config::get('cmscanvas::config.site_homepage');

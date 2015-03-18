@@ -5,6 +5,21 @@ use CmsCanvas\Database\Eloquent\Model;
 class Status extends Model {
 
     /**
+     * @var int
+     */
+    const PUBLISHED = 1;
+    
+    /**
+     * @var int
+     */
+    const DRAFT = 2;
+
+    /**
+     * @var int
+     */
+    const DISABLED = 3;
+
+    /**
      * The database table used by the model.
      *
      * @var string

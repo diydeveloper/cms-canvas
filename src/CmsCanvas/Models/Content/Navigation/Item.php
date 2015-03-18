@@ -38,11 +38,21 @@ class Item extends Model {
     /**
      * Defines a one to one relationship with navigation items
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function parent()
     {
         return $this->hasOne('CmsCanvas\Models\Content\Navigation\Item', 'id', 'parent_id');
+    }
+
+    /**
+     * Defines a one to many relationship with entries
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function entry()
+    {
+        return $this->hasOne('CmsCanvas\Models\Content\Entry', 'id', 'entry_id');
     }
 
 }

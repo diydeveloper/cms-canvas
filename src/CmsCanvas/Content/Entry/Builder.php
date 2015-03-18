@@ -1,6 +1,8 @@
 <?php namespace CmsCanvas\Content\Entry;
 
+use Auth;
 use CmsCanvas\Models\Content\Entry;
+use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Content\Entry\RenderCollection;
 
 class Builder {
@@ -222,7 +224,7 @@ class Builder {
     }
 
     /**
-     * Set query order by for entries
+     * Set query order by sort by for entries
      *
      * @param string $sort
      * @return self
@@ -235,7 +237,7 @@ class Builder {
     }
 
     /**
-     * Set query order by for entries
+     * Set query where clause for entries
      *
      * @param string $where
      * @return self
@@ -407,6 +409,24 @@ class Builder {
     }
 
     /**
+     * Adds status filter to entries query
+     *
+     * @return void
+     */
+    protected function compileStatusFilter()
+    {
+        // May need to rethink this as it causes several queries
+        if (Auth::check() && Auth::user()->can('ADMIN_ENTRY_VIEW'))
+        {
+            $this->entries->whereIn('entry_status_id', array(Status::PUBLISHED, Status::DRAFT));
+        }
+        else
+        {
+            $this->entries->where('entry_status_id', Status::PUBLISHED);
+        }
+    }
+
+    /**
      * Selects the appropriate where clause to use based on the provided container
      * and adds it to the entries query
      *
@@ -442,6 +462,7 @@ class Builder {
         $this->compileContentTypes();
         $this->compileEntryIds();
         $this->compileOrders();
+        $this->compileStatusFilter();
         $this->compileLimit();
         $this->compileOffset();
     }

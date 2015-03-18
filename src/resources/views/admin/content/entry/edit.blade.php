@@ -49,6 +49,14 @@
                             {!! Form::text('title') !!}
                         </div>
                     </div>
+                    @if ($contentType->dynamic_routing_flag)
+                    <div>
+                        {!! HTML::decode(Form::label('url_title', '<div class="arrow arrow_expand"></div><span class="required">*</span> URL Title')) !!}
+                        <div>
+                            {!! Form::text('url_title') !!}
+                        </div>
+                    </div>
+                    @endif
 
                     @if ( ! empty($fieldViews))
                         @foreach ($fieldViews as $fieldView)
@@ -63,7 +71,7 @@
                 <div class="form">
                     <div>
                         {!! Form::label('route', 'Route:') !!}
-                        <span style="line-height: 24px; "> {!! url() !!}{!! $contentType->getRoutePrefix() !!}/ </span>
+                        <span style="line-height: 24px; "> {!! url() !!}/ </span>
                         {!! Form::text('route') !!}
                     </div>
                     <div>
@@ -101,7 +109,7 @@
                         @if (count($entry->revisions) > 0)
                             @foreach ($entry->revisions as $revisionIteration)
                             <tr>
-                                <td>Revision {!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
+                                <td>{!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
                                 <td>
                                     @if ($revisionIteration->author != null)
                                         {!! $revisionIteration->author->getFullName() !!}
@@ -225,7 +233,7 @@
             }
         });
 
-        @if ( ! empty($entry))
+        @if ($entry == null)
             // Auto Generate Url Title
             $('#title').keyup( function(e) {
                 $('#url_title').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))

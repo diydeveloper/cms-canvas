@@ -27,9 +27,11 @@ class PageController extends PublicController {
 
         $routeArray = explode('.', $routeName);
 
-        list($objectType, $objectId) = $routeArray;
+        list($objectType, $objectId, $locale) = $routeArray;
 
-        $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId)
+        $cacheKey = $objectType.'.'.$objectId.'.'.$locale;
+
+        $cache = Cache::rememberForever($cacheKey, function() use($objectType, $objectId)
         {
             return new Page($objectId, $objectType);
         });

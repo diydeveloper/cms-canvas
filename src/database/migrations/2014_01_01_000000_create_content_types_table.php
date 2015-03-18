@@ -19,7 +19,6 @@ class CreateContentTypesTable extends Migration {
             $table->longText('layout')->nullable();
             $table->string('short_name', 50)->unique();
             $table->string('route', 500)->nullable();
-            $table->string('route_prefix', 500)->nullable();
             $table->longText('page_head')->nullable();
             $table->integer('entries_allowed')->nullable()->unsigned();
             $table->timestamps();

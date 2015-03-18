@@ -23,12 +23,15 @@
                 {!! Form::select('theme_layout', ['' => '-- None --'] + $themeLayouts, $defaultThemeLayout) !!}
             </div>
             <div>
-                {!! HTML::decode(Form::label('route_prefix', 'Route Prefix:<span class="help">Optional prefix that will be prepended to the content type\'s route and associated entry routes.</span>')) !!}
-                {!! Form::text('route_prefix') !!}
-            </div>
-            <div>
                 {!! HTML::decode(Form::label('route', 'Route:<span class="help">Optional route to render the content type directly without an entry.</span>')) !!}
                 {!! Form::text('route') !!}
+            </div>
+            <div>
+                {!! HTML::decode(Form::label('dynamic_routing_flag', 'Dynamic Routing: <span class="help">Dynamically generate routes for associated entries using the content type route and the entry\'s url title</span>')) !!}
+                <span>
+                    <label>{!! Form::radio('dynamic_routing_flag', '1') !!} Enabled</label>
+                    <label>{!! Form::radio('dynamic_routing_flag', '0', true) !!} Disabled</label>
+                </span>
             </div>
             <div>
                 {!! HTML::decode(Form::label('entries_allowed', 'Number of Entries Allowed:<span class="help">Number of entries allowed to be created with this content type</span>')) !!}

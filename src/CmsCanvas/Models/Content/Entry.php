@@ -7,6 +7,7 @@ use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Revision;
+use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
 use CmsCanvas\Exceptions\PermissionDenied;
@@ -28,6 +29,7 @@ class Entry extends Model implements PageInterface {
      */
     protected $fillable = array(
         'title', 
+        'url_title', 
         'route',
         'meta_title',
         'meta_keywords',
@@ -271,6 +273,21 @@ class Entry extends Model implements PageInterface {
      */
     public function render($parameters = array())
     {
+        if ($this->entry_status_id == Status::DISABLED)
+        {
+            return abort(404);
+        }
+
+        if ($this->entry_status_id == Status::DRAFT)
+        {
+            $user = Auth::user();
+
+            if ($user == null || ! $user->can('ADMIN_ENTRY_VIEW'))
+            {
+                return abort(404);
+            }
+        }
+
         return new Render($this, $parameters);
     }
 
@@ -314,16 +331,44 @@ class Entry extends Model implements PageInterface {
     /**
      * Returns the full route for the entry
      *
-     * @return string
+     * @return string|null
      */
     public function getRoute()
     {
-        if ($this->route)
+        if ($this->route !== null && $this->route !== '')
         {
-            return $this->contentType->getRoutePrefix().'/'.$this->route;
+            return '/'.$this->route;
         }
 
-        return '';
+        return null;
+    }
+
+    /**
+     * Returns the dynamic route name for the entry
+     *
+     * @return string
+     */
+    public function getDynamicRouteName()
+    {
+        return $this->getRouteName().'.dynamic';
+    }
+
+    /**
+     * Generates a dynamic route using the
+     * content type's route and the entry's url title.
+     *
+     * @return string|null
+     */
+    public function getDynamicRoute()
+    {
+        if ($this->url_title !== null && $this->url_title !== '' 
+            && $this->contentType->getRoute() !== null
+        )
+        {
+            return $this->contentType->getRoute().'/'.$this->url_title;
+        }
+
+        return null;
     }
 
     /**
