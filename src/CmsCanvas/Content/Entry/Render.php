@@ -45,7 +45,7 @@ class Render {
     protected $index = 0;
 
     /**
-     * Defines the order in which to sort.
+     * Constructor fo rthe entry render
      *
      * @param \CmsCanvas\Models\Content\Entry $entry
      * @param array $parameters

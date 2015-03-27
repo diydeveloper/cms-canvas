@@ -2,16 +2,39 @@
 
 use View, Config;
 use CmsCanvas\Content\Entry\Builder as EntryBuilder;
+use CmsCanvas\Content\Navigation\Builder as NavigationBuilder;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Content {
 
+    /**
+     * Builds and returns collection of entries based on 
+     * the provided configuration
+     *
+     * @param array $config
+     * @param \CmsCanvas\Content\Entry\RenderCollection
+     */
     public function entries($config)
     {
-        $entries = new EntryBuilder($config);
-        $view = $entries->get();
+        $builder = new EntryBuilder($config);
+        $collection = $builder->get();
 
-        return $view;
+        return $collection;
+    }
+
+    /**
+     * Builds and returns collection of entries based on 
+     * the provided configuration
+     *
+     * @param array $config
+     * @param \CmsCanvas\Content\Navigation\RenderCollection
+     */
+    public function navigation($config)
+    {
+        $builder = new NavigationBuilder($config);
+        $collection = $builder->get();
+
+        return $collection;
     }
 
     /**

@@ -43,7 +43,7 @@ class Builder {
     /**
      * @var bool
      */
-    protected $recursive = true;
+    protected $recursiveFlag = true;
 
     /**
      * @var \CmsCanvas\Models\Content\Navigation\Item|collection
@@ -57,6 +57,16 @@ class Builder {
     public function __construct(array $config)
     {
         $this->buildFromArray($config);
+    }
+
+    /**
+     * Returns collection of navigation items
+     *
+     * @return \CmsCanvas\Content\Navigation\Item\RenderCollection
+     */
+    public function get()
+    {
+        $this->compile();
     }
 
     /**
@@ -154,9 +164,9 @@ class Builder {
      * @param bool $recursive
      * @return void
      */
-    public function setRecursive($recursive)
+    public function setRecursiveFlag($recursiveFlag)
     {
-        $this->recursive = $recursive; 
+        $this->recursiveFlag = $recursiveFlag; 
     }
 
     /**
@@ -176,17 +186,34 @@ class Builder {
                 ->get();
         }
 
-        if ($this->recursive)
-        {
-            $items->load('children', 'entry');
+        $items->load('entry');
 
-            foreach ($items as $item) 
+        if ($this->recursiveFlag)
+        {
+            $items->load('children');
+        }
+
+        $itemCount = count($items);
+        $counter = 1;
+
+        foreach ($items as $item) 
+        {
+            if ($counter == 1)
             {
-                if (count($item->children) > 0)
-                {
-                    $this->buildNavigationTree($item->children, $depth++);
-                }
+                $item->setFirstFlag(true);
             }
+
+            if ($counter == $itemCount)
+            {
+                $item->setLastFlag(true);
+            }
+
+            if ($this->recursiveFlag && count($item->children) > 0)
+            {
+                $this->buildNavigationTree($item->children, $depth++);
+            }
+
+            $counter++;
         }
 
         return $items;
@@ -230,8 +257,8 @@ class Builder {
         {
             if (Request::is($item->url))
             {
-                $item->currentItem = true;
-                $item->currentAncestor = true;
+                $item->setCurrentItemFlag(true);
+                $item->setCurrentAncestorFlag(true);
                 $this->currentItemDepth = $depth;
             }
 
@@ -255,7 +282,7 @@ class Builder {
         {
             if ($this->hasCurrentDescendant($item->children))
             {
-                $item->currentAncestor = true;
+                $item->currentAncestorFlag = true;
             }
 
             if (count($item->children) > 0)
@@ -278,7 +305,7 @@ class Builder {
 
         foreach ($items as $item) 
         {
-            if ($item->currentItem)
+            if ($item->currentItemFlag)
             {
                 return true;
             }
@@ -311,13 +338,13 @@ class Builder {
 
         foreach($items as $item)
         {
-            if ($item->currentItem || $item->currentAncestor)
+            if ($item->currentItemFlag || $item->currentAncestorFlag)
             {
                 if ($depth == $this->startingParentDepth)
                 {
                     $subset = $items;
                 }
-                else if ($item->currentItem)
+                else if ($item->currentItemFlag)
                 {
                     // If we reach this point, the starting parent depth is greater
                     // than the current page's depth. Go ahead and return the children of the
@@ -392,7 +419,7 @@ class Builder {
 
         foreach($items as $item)
         {
-            if ($item->currentItem)
+            if ($item->currentItemFlag)
             {
                 $subset = $item->children;
 
@@ -480,6 +507,28 @@ class Builder {
         $this->compileCurrentItems($this->navigaitonTree);
         $this->compileCurrentItemAncestors($this->navigaitonTree);
         $this->compileSubset();
+    }
+
+    /**
+     * Builds html attributes string for the <ul> tag
+     *
+     * @return string
+     */
+    public function getAttributes()
+    {
+        $attributes = '';
+
+        if (!empty($this->idAttribute))
+        {
+            $attributes .= ' id="'.$this->idAttribute.'"';
+        }
+
+        if (!empty($this->classAttribute))
+        {
+            $attributes .= ' class="'.$this->classAttribute.'"';
+        }
+
+        return $attributes;
     }
 
 }
