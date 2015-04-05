@@ -20,9 +20,9 @@ class RenderCollection extends CmsCanvasCollection {
     {
         $this->navigationBuilder = $navigationBuilder;
 
-        foreach ($items as $item) {
-            $render = $item->render();
-            $this->items[] = $render;
+        foreach ($items as $item) 
+        {
+            $this->items[] = $item->render();
         }
     }
 
@@ -37,10 +37,10 @@ class RenderCollection extends CmsCanvasCollection {
 
         if ($this->navigationBuilder != null)
         {
-            $arguments = $this->navigationBuilder->getAttributes();
+            $attributes = $this->navigationBuilder->getAttributes();
         }
 
-        $contents = '<ul'.$arguments.'>';
+        $contents = '<ul'.$attributes.'>';
 
         foreach ($this->items as $item) 
         {

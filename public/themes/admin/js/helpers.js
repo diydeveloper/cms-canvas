@@ -35,6 +35,12 @@ function hide_status()
 }
 
 $(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
     $('#current_user').click(function() {
         if ($('#current_user_dropdown').is(":visible")) {
             $('#current_user_dropdown').hide();

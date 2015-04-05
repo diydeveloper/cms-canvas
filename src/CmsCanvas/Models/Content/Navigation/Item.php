@@ -117,7 +117,7 @@ class Item extends Model {
         $contents .= $this->title;
         $contents .= '</a>';
 
-        if (count($this->children) > 0)
+        if ($this->isChildrenLoaded() && count($this->children) > 0)
         {
             $contents .= $this->renderChildren();
         }
@@ -160,9 +160,9 @@ class Item extends Model {
     {
         $attributes = '';
 
-        if (!empty($this->target))
+        if (!empty($this->target_attribute))
         {
-            $attributes .= ' target="'.$this->target.'"';
+            $attributes .= ' target="'.$this->target_attribute.'"';
         }
 
         $attributes .= ' href="'.$this->getUrl().'"';
@@ -201,10 +201,20 @@ class Item extends Model {
 
         if (!empty($this->class_attribute))
         {
-            $classNames = array_merge($classNames, explode(' ', $this->class_attribute))
+            $classNames = array_merge($classNames, explode(' ', $this->class_attribute));
         }
 
         return $classNames;
+    }
+
+    /**
+     * Returns the full url for the item
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+
     }
 
     /**
@@ -249,6 +259,16 @@ class Item extends Model {
     public function setCurrentAncestorFlag($value)
     {
         $this->currentAncestorFlag = (bool) $value;
+    }
+
+    /**
+     * Checks if children has been loaded
+     *
+     * @return bool
+     */
+    public function isChildrenLoaded() 
+    {
+        return isset($this->relations['children']);
     }
 
 }

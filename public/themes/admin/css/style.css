@@ -705,6 +705,10 @@ table.form > tbody > tr > td {
 	float: right;
 }
 
+.scrollbox label {
+    width: auto !important;
+}
+
 .htabs {
 	padding: 0px 0px 0px 10px;
 	height: 30px;

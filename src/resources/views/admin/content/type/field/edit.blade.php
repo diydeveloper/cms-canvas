@@ -65,7 +65,7 @@
         $('#content_type_field_type_id').change( function() {
             $.post(
                 "{!! Admin::url('content/type/'.$contentType->id.'/field/settings') !!}", 
-                { content_type_field_type_id: $('#content_type_field_type_id').val() {!! ( ! empty($field)) ? ', field_id: ' . $field->id : '' !!}, _token: CSRF_TOKEN }, 
+                { content_type_field_type_id: $('#content_type_field_type_id').val() {!! ( ! empty($field)) ? ', field_id: ' . $field->id : '' !!} }, 
                 function(data) {
                     $('#config').html(data);
                 }

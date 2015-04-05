@@ -3,6 +3,7 @@
 <html>
     <head>
         <meta charset="UTF-8" /> 
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         {!! Theme::metadata() !!}
 
         <!-- CSS FILES -->
@@ -16,7 +17,6 @@
             var ADMIN_PATH = '{!! Admin::getUrlPrefix() !!}';
             var ADMIN_URL = '{!! Admin::url() !!}';
             var THEME_URL = '{!! Theme::asset() !!}';
-            var CSRF_TOKEN = '{!! csrf_token() !!}';
         </script>
 
         <!-- Controller Defined JS Files -->

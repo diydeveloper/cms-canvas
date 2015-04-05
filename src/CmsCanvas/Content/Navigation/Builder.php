@@ -1,7 +1,9 @@
 <?php namespace CmsCanvas\Content\Navigation;
 
-use Request;
+use Request, Cache;
 use CmsCanvas\Models\Content\Navigation;
+use CmsCanvas\Models\Content\Navigation\Item;
+use CmsCanvas\Content\Navigation\Item\RenderCollection;
 
 class Builder {
 
@@ -67,6 +69,20 @@ class Builder {
     public function get()
     {
         $this->compile();
+
+        return new RenderCollection($this->navigationTree);
+    }
+
+    /**
+     * Returns collection of navigation items
+     *
+     * @return \CmsCanvas\Content\Navigation\Item|collection
+     */
+    public function getNavigationTree()
+    {
+        $this->compile();
+
+        return $this->navigationTree;
     }
 
     /**
@@ -104,7 +120,7 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets the level that the navigation should start from
      *
      * @param string $startLevel
      * @return void
@@ -115,9 +131,9 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets the start level offset that the navigation should start from
      *
-     * @param int $startLevel
+     * @param int $offset
      * @return void
      */
     public function setOffset($offset)
@@ -126,7 +142,7 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets the depth at which the navigation should stop 
      *
      * @param int $maxDepth
      * @return void
@@ -137,7 +153,7 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets the navigation id to build from
      *
      * @param int $navigationId
      * @return void
@@ -148,7 +164,7 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets the item id where the navigation should start
      *
      * @param int $startNodeId
      * @return void
@@ -159,7 +175,7 @@ class Builder {
     }
 
     /**
-     * Set query limit for entries
+     * Sets a flag indicating whether the navigaiton should render children
      *
      * @param bool $recursive
      * @return void
@@ -176,16 +192,8 @@ class Builder {
      * @param \CmsCanvas\Models\Content\Navigation\Item|collection
      * @return \CmsCanvas\Models\Content\Navigation\Item|collection
      */
-    protected function buildNavigationTree($items = null, $depth = 1)
+    protected function buildNavigationTree($items, $depth = 1)
     {
-        if ($items == null)
-        {
-            $items = Item::where('navigationId', $this->navigationId)
-                ->where('parent_id', $this->startNodeId)
-                ->orderBy('sort', 'asc')
-                ->get();
-        }
-
         $items->load('entry');
 
         if ($this->recursiveFlag)
@@ -224,11 +232,16 @@ class Builder {
      * 
      * @return \CmsCanvas\Models\Content\Navigation\Item|collection
      */
-    protected function getNavigationTree()
+    protected function getCachedTree()
     {
         $cache = Cache::rememberForever($this->getCacheKey(), function()
         {
-            return $this->buildNavigationTree();
+            $items = Item::where('navigation_id', $this->navigationId)
+                ->where('parent_id', $this->startNodeId)
+                ->orderBy('sort', 'asc')
+                ->get();
+
+            return $this->buildNavigationTree($items);
         });
 
         return $cache;
@@ -241,7 +254,7 @@ class Builder {
      */
     protected function getCacheKey()
     {
-        return $this->navigationId.'.'.$this->startNodeId.'.'.$this->recursive;
+        return $this->navigationId.'.'.$this->startNodeId.'.'.$this->recursiveFlag;
     }
 
     /**
@@ -264,7 +277,7 @@ class Builder {
 
             if (count($item->children) > 0)
             {
-                $this->setCurrentItems($item->children, $depth++);
+                $this->compileCurrentItems($item->children, $depth++);
             }
         }
     }
@@ -276,7 +289,7 @@ class Builder {
      * @param int
      * @return void
      */
-    protected function compileCurrentItemAncestors($items, $depth)
+    protected function compileCurrentItemAncestors($items, $depth = 1)
     {
         foreach ($items as $item) 
         {
@@ -287,7 +300,7 @@ class Builder {
 
             if (count($item->children) > 0)
             {
-                $this->setCurrentItemAncestors($item->children, $depth++);
+                $this->compileCurrentItemAncestors($item->children, $depth++);
             }
         }
     }
@@ -473,26 +486,26 @@ class Builder {
      */
     protected function compileSubset()
     {
-        $navigaitonTree = $this->navigaitonTree;
+        $navigationTree = $this->navigationTree;
 
         switch ($this->startLevel)
         {
             case 'parent_depth':
             case 'above_current':
                 $this->compileStartingParentDepth();
-                $navigaitonTree = $this->getCurrentParentSubset($navigaitonTree);
+                $navigationTree = $this->getCurrentParentSubset($navigationTree);
                 break;
 
             case 'current':
-                $navigaitonTree = $this->getCurrentSiblingSubset($navigaitonTree);
+                $navigationTree = $this->getCurrentSiblingSubset($navigationTree);
                 break;
 
             case 'current_children':
-                $navigaitonTree = $this->getCurrentChildrenSubset($navigaitonTree);
+                $navigationTree = $this->getCurrentChildrenSubset($navigationTree);
                 break;
         }
 
-        $this->navigaitonTree = $navigaitonTree;
+        $this->navigationTree = $navigationTree;
     }
 
     /**
@@ -502,10 +515,10 @@ class Builder {
      */
     protected function compile()
     {
-        $this->navigaitonTree = $this->getNavigationTree();
+        $this->navigationTree = $this->getCachedTree();
 
-        $this->compileCurrentItems($this->navigaitonTree);
-        $this->compileCurrentItemAncestors($this->navigaitonTree);
+        $this->compileCurrentItems($this->navigationTree);
+        $this->compileCurrentItemAncestors($this->navigationTree);
         $this->compileSubset();
     }
 

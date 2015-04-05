@@ -1,33 +1,25 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content;
+<?php namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass;
+use View, Admin, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
-use CmsCanvas\Content\Navigation\Builder;
 
-class NavigationController extends AdminController {
+class ItemController extends AdminController {
 
     /**
      * Display all navigations
      *
      * @return View
      */
-    public function getNavigations()
+    public function tree($navigation)
     {
         $content = View::make('cmscanvas::admin.content.navigation.navigations');
 
-        $filter = Navigation::getSessionFilter();
-        $orderBy = Navigation::getSessionOrderBy();
-
-        $content->navigations = Navigation::applyFilter($filter)
-            ->applyOrderBy($orderBy)
-            ->paginate(50);
-        $content->filter = new stdClass();
-        $content->filter->filter = $filter;
-        $content->orderBy = $orderBy;
-
-        $this->layout->breadcrumbs = array(Request::path() => 'Navigations');
+        $this->layout->breadcrumbs = array(
+            'content/navigation' => 'Navigations', 
+            Request::path() => 'Navigation Tree'
+        );
         $this->layout->content = $content;
     }
 
@@ -132,62 +124,6 @@ class NavigationController extends AdminController {
 
         return Redirect::route('admin.content.navigation.navigations')
             ->with('message', "{$navigation->title} was successfully updated.");
-    }
-
-    /**
-     * Display navigation tree
-     *
-     * @return View
-     */
-    public function getTree($navigation)
-    {
-        Theme::addPackage('nestedSortable');
-        $builder = new Builder(array('navigation_id' => $navigation->id));
-        $navigationTree = $builder->getNavigationTree();
-
-        $content = View::make('cmscanvas::admin.content.navigation.tree');
-        $content->navigation = $navigation;
-        $content->navigationTree = $navigationTree;
-
-        $this->layout->breadcrumbs = array(
-            'content/navigation' => 'Navigations', 
-            Request::path() => 'Navigation Tree'
-        );
-        $this->layout->content = $content;
-    }
-
-    /**
-     * Post navigation tree
-     *
-     * @return string
-     */
-    public function postTree()
-    {
-        $list = Request::get('list');
-
-        if ( ! is_array($list))
-        {
-            $list = array();
-        }
-
-        $order = 0;
-
-        foreach($list as $id => $parentId)
-        {
-            $parentId = ($parentId == 'root') ? 0 : $parentId;
-
-            Item::where('id', $id)
-                ->update(
-                    array(
-                        'sort' => $order, 
-                        'parent_id' => $parentId
-                    )
-                );
-
-            $order++;
-        }
-
-        return '';
     }
 
 }

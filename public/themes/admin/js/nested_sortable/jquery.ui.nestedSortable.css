@@ -14,22 +14,22 @@ ol {
     padding-left: 30px;
 }
 
-ol.sortable, ol.sortable ol {
+ol.sortableTree, ol.sortableTree ol {
     margin: 0 0 0 25px;
     padding: 0;
     list-style-type: none;
 }
 
-ol.sortable {
+ol.sortableTree {
     margin: 5px 0 0 0;
 }
 
-.sortable li {
+.sortableTree li {
     margin: 3px 0 0 0;
     padding: 0;
 }
 
-.sortable li div  {
+.sortableTree li div  {
     border: 1px solid #CCCCCC;
     padding: 5px 5px 5px 2px;
     margin: 0;
@@ -40,7 +40,7 @@ ol.sortable {
     */
 }
 
-.sortable_handle {
+.sortableTree_handle {
     display: inline-block;
     width: 10px;
 	background: url(../../images/drag-handle.gif) center center no-repeat;
@@ -51,7 +51,7 @@ ol.sortable {
 }
 
 
-.sortable li div:hover {
+.sortableTree li div:hover {
     background-color: #FFEEDD;
 }
 

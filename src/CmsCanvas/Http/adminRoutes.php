@@ -83,6 +83,9 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::get('{navigation}/edit', ['as' => 'admin.content.navigation.edit', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@getEdit']);
             Route::post('{navigation}/edit', ['as' => 'admin.content.navigation.edit.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@postEdit']);
 
+            Route::get('{navigation}/tree', ['as' => 'admin.content.navigation.tree', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@getTree']);
+            Route::post('{navigation}/tree', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.content.navigation.tree.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@postTree']);
+
             Route::post('delete', ['as' => 'admin.content.navigation.delete.post', 'permission' => 'ADMIN_NAVIGATION_DELETE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@postDelete']);
 
         });
