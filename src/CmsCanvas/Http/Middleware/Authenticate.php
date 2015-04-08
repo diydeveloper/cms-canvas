@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Http\Middleware;
 
-use Closure;
+use Closure, Session, Cache;
 use Illuminate\Contracts\Auth\Guard;
 
 class Authenticate {

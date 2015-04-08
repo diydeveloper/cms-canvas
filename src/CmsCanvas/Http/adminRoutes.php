@@ -47,7 +47,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::post('add', ['as' => 'admin.user.permission.add.post', 'permission' => 'ADMIN_PERMISSION_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\PermissionController@postEdit']);
 
             Route::get('{permission}/edit', ['as' => 'admin.user.permission.edit', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\PermissionController@getEdit']);
-            Route::post('{permission}/edit', ['as' => 'admin.user.permission.edit.post', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\PermissionController@postEdit']);
+            Route::post('{permission}/edit', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.user.permission.edit.post', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\PermissionController@postEdit']);
 
         });
 
@@ -63,7 +63,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::post('add', ['as' => 'admin.user.role.add.post', 'permission' => 'ADMIN_ROLE_CREATE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\RoleController@postEdit']);
 
             Route::get('{role}/edit', ['as' => 'admin.user.role.edit', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\RoleController@getEdit']);
-            Route::post('{role}/edit', ['as' => 'admin.user.role.edit.post', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\RoleController@postEdit']);
+            Route::post('{role}/edit', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.user.role.edit.post', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\User\RoleController@postEdit']);
 
         });
 

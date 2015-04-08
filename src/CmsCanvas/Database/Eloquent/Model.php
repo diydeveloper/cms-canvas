@@ -3,13 +3,14 @@
 use Eloquent, Session, Input, stdClass, Config, Auth;
 use CmsCanvas\Container\Database\OrderBy;
 use CmsCanvas\Database\Eloquent\Relations\Pivot;
+use CmsCanvas\Database\Eloquent\Collection;
 
 class Model extends Eloquent {
 
     /**
      * Returns an instance of BasePivot when using pivot tables
      *
-     * @return \CmsCanvas\Models\BasePivot
+     * @return \CmsCanvas\Database\Eloquent\Relations\Pivot
      */
     public function newPivot(Eloquent $parent, array $attributes, $table, $exists)
     {
@@ -19,11 +20,11 @@ class Model extends Eloquent {
     /**
      * Returns an instance of BaseCollection when using collections
      *
-     * @return \CmsCanvas\BaseCollection
+     * @return \CmsCanvas\Database\Eloquent\Collection
      */
     public function newCollection(array $models = array())
     {
-        return new \CmsCanvas\Database\Eloquent\Collection($models);
+        return new Collection($models);
     }
 
    /**

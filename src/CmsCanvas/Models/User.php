@@ -1,6 +1,6 @@
 <?php namespace CmsCanvas\Models;
 
-use Content, Theme;
+use Content, Theme, Session, Cache, Auth;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -226,9 +226,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Returns a portrait image URL of the user
      *
-     * @param int $width
-     * @param int $height
-     * @param bool $crop
+     * @param  int  $width
+     * @param  int  $height
+     * @param  bool $crop
      * @return string
      */
     public function portrait($width = null, $height = null, $crop = false)
@@ -249,11 +249,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Check if the user is assigned to the specified role
      *
-     * @param string $name
+     * @param  string  $name
      * @return bool
      */
     public function hasRole($name)
     {
+        $this->loadRolesFromSession();
+
         foreach ($this->roles as $role) 
         {
             if ($role->name == $name) 
@@ -268,11 +270,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Check if user has a permission.
      *
-     * @param string $permission
+     * @param  string  $permission
      * @return bool
      */
     public function can($keyName)
     {
+        $this->loadRolesFromSession();
+
         foreach ($this->roles as $role) 
         {
             if ($role->hasPermission($keyName))
@@ -287,7 +291,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Abort with HTTP 403 if user does not have permission 
      *
-     * @param string $permission
+     * @param  string  $permission
      * @return void
      */
     public function checkPermission($permission)
@@ -297,4 +301,52 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             throw new \CmsCanvas\Exceptions\PermissionDenied($permission);
         }
     }
+
+    /**
+     * Loads the authenticated user's roles from cache using
+     * role ids set in the session.
+     *
+     * @return void
+     */
+    protected function loadRolesFromSession()
+    {
+        if (isset($this->relations['roles']) || Auth::user()->id != $this->id)
+        {
+            return;
+        }
+
+        $roleIds = Session::get('role_ids');
+
+        if (is_array($roleIds))
+        {
+            $roles = $this->newCollection();
+
+            foreach ($roleIds as $roleId) 
+            {
+                $role = Cache::rememberForever('role_'.$roleId, function()
+                {
+                    return Role::with('permissions')->find($roleId);
+                });
+
+                if ($role != null)
+                {
+                    $roles[] = $role;
+                }
+            }
+        }
+        else
+        {
+            $roles = $this->roles()->with('permissions')->get();
+
+            foreach ($roles as $role) 
+            {
+                Cache::forever('role_'.$role->id, $role);
+            }
+
+            Session::put('role_ids', $roles->lists('id'));
+        }
+
+        $this->setRelation('roles', $roles);
+    }
+
 }
