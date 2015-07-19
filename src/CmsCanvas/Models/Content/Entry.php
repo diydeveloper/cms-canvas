@@ -329,6 +329,26 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * Returns the full route for the entry.
+     * If a route has not been set then it will return the dynamic route.
+     *
+     * @return string|null
+     */
+    public function getPreferredRoute()
+    {
+        if ($this->getRoute() !== null)
+        {
+            return $this->getRoute();
+        }
+        else if ($this->getDynamicRoute() !== null)
+        {
+            return $this->getDynamicRoute();
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the full route for the entry
      *
      * @return string|null

@@ -2,10 +2,10 @@
     <li id="list_{!! $item->id !!}">
         <div>
             <span class="sortableTree_handle"></span>
-            {!! $item->title !!}
+            {!! $item->getTitle() !!}
             <span style="float: right;">
-                [ <a href="">Edit</a> ] 
-                [ <a class="delete" href="">Delete</a> ]
+                [ <a href="{!! Admin::url("content/navigation/{$navigation->id}/item/{$item->id}/edit") !!}">Edit</a> ] 
+                [ <a class="delete" href="{!! Admin::url("content/navigation/{$navigation->id}/item/{$item->id}/delete") !!}">Delete</a> ]
             </span>
         </div>
         @if (count($item->children) > 0)

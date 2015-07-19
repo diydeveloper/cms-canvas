@@ -42,9 +42,9 @@ class Navigation extends Model {
     /**
      * Sets data order by using a custom object
      *
-     * @param Builder $query
-     * @param OrderBy $orderBy
-     * @return Builder
+     * @param  \Illuminate\Database\Query\Builder $query
+     * @param  \CmsCanvas\Container\Database\OrderBy $orderBy
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
@@ -59,9 +59,9 @@ class Navigation extends Model {
     /**
      * Filters and queries using a custom object
      *
-     * @param Builder $query
-     * @param object $filter
-     * @return Builder
+     * @param  \Illuminate\Database\Query\Builder $query
+     * @param  object  $filter
+     * @return \Illuminate\Database\Query\Builder
      */
     public function scopeApplyFilter($query, $filter)
     {

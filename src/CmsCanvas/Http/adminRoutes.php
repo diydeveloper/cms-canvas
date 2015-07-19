@@ -9,6 +9,7 @@ Route::model('contentType', 'CmsCanvas\Models\Content\Type');
 Route::model('contentTypeField', 'CmsCanvas\Models\Content\Type\Field');
 Route::model('entry', 'CmsCanvas\Models\Content\Entry');
 Route::model('navigation', 'CmsCanvas\Models\Content\Navigation');
+Route::model('navigationItem', 'CmsCanvas\Models\Content\Navigation\Item');
 Route::model('language', 'CmsCanvas\Models\Language');
 Route::model('revision', 'CmsCanvas\Models\Content\Revision');
 
@@ -87,6 +88,19 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::post('{navigation}/tree', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.content.navigation.tree.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@postTree']);
 
             Route::post('delete', ['as' => 'admin.content.navigation.delete.post', 'permission' => 'ADMIN_NAVIGATION_DELETE', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\NavigationController@postDelete']);
+
+            Route::group(['prefix' => '{navigation}/item', 'permission' => 'ADMIN_NAVIGATION_EDIT'], function()
+            {
+
+                Route::get('add', ['as' => 'admin.content.navigation.item.add', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\Navigation\ItemController@getEdit']);
+                Route::post('add', ['as' => 'admin.content.navigation.item.add.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\Navigation\ItemController@postEdit']);
+
+                Route::get('{navigationItem}/edit', ['as' => 'admin.content.navigation.item.edit', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\Navigation\ItemController@getEdit']);
+                Route::post('{navigationItem}/edit', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.content.navigation.item.edit.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\Navigation\ItemController@postEdit']);
+
+                Route::post('{navigationItem}/delete', ['as' => 'admin.content.navigation.item.delete', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'CmsCanvas\Http\Controllers\Admin\Content\Navigation\ItemController@getDelete']);
+
+            });
 
         });
 

@@ -33,6 +33,9 @@
                         <th>
                             <a rel="title" class="sortable{!! $orderBy->getElementClass('title') !!}" href="javascript:void(0);">Title</a>
                         </th>
+                        <th>
+                            <a rel="title" class="sortable{!! $orderBy->getElementClass('short_name') !!}" href="javascript:void(0);">Short Name</a>
+                        </th>
                         <th class="right">Action</th>
                     </tr>
                 </thead>
@@ -42,8 +45,10 @@
                             <tr>
                                 <td class="center"><input type="checkbox" value="{!! $navigation->id !!}" name="selected[]" /></td>
                                 <td>{!! $navigation->title !!}</td>
+                                <td>{!! $navigation->title !!}</td>
                                 <td class="right">
                                     [ <a href="{!! Admin::url("content/navigation/{$navigation->id}/edit") !!}">Edit</a> ]
+                                    [ <a href="{!! Admin::url("content/navigation/{$navigation->id}/tree") !!}">Items</a> ]
                                 </td>
                             </tr>
                         @endforeach

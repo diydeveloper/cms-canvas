@@ -40,7 +40,7 @@ class Builder {
     /**
      * @var int
      */
-    protected $startNodeId = 0;
+    protected $startItemId = 0;
 
     /**
      * @var bool
@@ -105,15 +105,15 @@ class Builder {
                     break;
 
                 case 'start_level':
-                    $this->setStartFromParentDepth($value);
+                    $this->setStartLevel($value);
                     break;
 
                 case 'offset':
                     $this->setOffset($value);
                     break;
 
-                case 'start_node_id':
-                    $this->setStartNodeId($value);
+                case 'start_item_id':
+                    $this->setStartItemId($value);
                     break;
             }
         } 
@@ -166,12 +166,12 @@ class Builder {
     /**
      * Sets the item id where the navigation should start
      *
-     * @param int $startNodeId
+     * @param int $startItemId
      * @return void
      */
-    public function setStartNodeId($startNodeId)
+    public function setStartItemId($startItemId)
     {
-        $this->startNodeId = $startNodeId; 
+        $this->startItemId = $startItemId; 
     }
 
     /**
@@ -196,7 +196,7 @@ class Builder {
     {
         $items->load('entry');
 
-        if ($this->recursiveFlag)
+        if ($this->recursiveFlag && ($this->maxDepth === null || $this->maxDepth > $depth))
         {
             $items->load('children');
         }
@@ -216,9 +216,9 @@ class Builder {
                 $item->setLastFlag(true);
             }
 
-            if ($this->recursiveFlag && count($item->children) > 0)
+            if ($this->recursiveFlag && count($item->getLoadedChildren()) > 0)
             {
-                $this->buildNavigationTree($item->children, $depth++);
+                $this->buildNavigationTree($item->getLoadedChildren(), ++$depth);
             }
 
             $counter++;
@@ -237,7 +237,7 @@ class Builder {
         $cache = Cache::rememberForever($this->getCacheKey(), function()
         {
             $items = Item::where('navigation_id', $this->navigationId)
-                ->where('parent_id', $this->startNodeId)
+                ->where('parent_id', $this->startItemId)
                 ->orderBy('sort', 'asc')
                 ->get();
 
@@ -254,7 +254,14 @@ class Builder {
      */
     protected function getCacheKey()
     {
-        return $this->navigationId.'.'.$this->startNodeId.'.'.$this->recursiveFlag;
+        $key = $this->navigationId.'.'.$this->startItemId.'.'.$this->recursiveFlag;
+
+        if ($this->maxDepth !== null)
+        {
+            $key .= '.'.$this->maxDepth;
+        }
+
+        return $key;
     }
 
     /**
@@ -268,16 +275,15 @@ class Builder {
     {
         foreach ($items as $item) 
         {
-            if (Request::is($item->url))
+            if ( ! $item->disable_current_flag && Request::url() == $item->getUrl())
             {
                 $item->setCurrentItemFlag(true);
-                $item->setCurrentAncestorFlag(true);
                 $this->currentItemDepth = $depth;
             }
 
-            if (count($item->children) > 0)
+            if (count($item->getLoadedChildren()) > 0)
             {
-                $this->compileCurrentItems($item->children, $depth++);
+                $this->compileCurrentItems($item->getLoadedChildren(), ++$depth);
             }
         }
     }
@@ -293,14 +299,14 @@ class Builder {
     {
         foreach ($items as $item) 
         {
-            if ($this->hasCurrentDescendant($item->children))
+            if ( ! $item->disable_current_ancestor_flag && $this->hasCurrentDescendant($item->getLoadedChildren()))
             {
-                $item->currentAncestorFlag = true;
+                $item->setCurrentItemAncestorFlag(true);
             }
 
-            if (count($item->children) > 0)
+            if (count($item->getLoadedChildren()) > 0)
             {
-                $this->compileCurrentItemAncestors($item->children, $depth++);
+                $this->compileCurrentItemAncestors($item->getLoadedChildren(), ++$depth);
             }
         }
     }
@@ -318,14 +324,14 @@ class Builder {
 
         foreach ($items as $item) 
         {
-            if ($item->currentItemFlag)
+            if ($item->isCurrentItem())
             {
                 return true;
             }
 
-            if (count($item->children) > 0)
+            if (count($item->getLoadedChildren()) > 0)
             {
-                $hasDescendant = $this->hasCurrentDescendant($item->children, $depth++);
+                $hasDescendant = $this->hasCurrentDescendant($item->getLoadedChildren(), ++$depth);
 
                 if ($hasDescendant)
                 {
@@ -351,20 +357,20 @@ class Builder {
 
         foreach($items as $item)
         {
-            if ($item->currentItemFlag || $item->currentAncestorFlag)
+            if ($item->isCurrentItem() || $item->isCurrentItemAncestor())
             {
                 if ($depth == $this->startingParentDepth)
                 {
                     $subset = $items;
                 }
-                else if ($item->currentItemFlag)
+                else if ($item->isCurrentItem())
                 {
                     // If we reach this point, the starting parent depth is greater
                     // than the current page's depth. Go ahead and return the children of the
                     // current item. If there are no children then return its siblings.
-                    if (count($item->children) > 0)
+                    if (count($item->getLoadedChildren()) > 0)
                     {
-                        $subset = $item->children;
+                        $subset = $item->getLoadedChildren();
                     }
                     else
                     {
@@ -373,7 +379,7 @@ class Builder {
                 }
                 else
                 {
-                    $subset = $this->getCurrentParentSubset($item->children, $depth++);
+                    $subset = $this->getCurrentParentSubset($item->getLoadedChildren(), ++$depth);
                 }
 
                 break;
@@ -396,7 +402,7 @@ class Builder {
 
         foreach($items as $item)
         {
-            if ($item->currentItem)
+            if ($item->isCurrentItem())
             {
                 $subset = $items;
 
@@ -404,9 +410,9 @@ class Builder {
             }
             else
             {
-                if (count($item->children) > 0)
+                if (count($item->getLoadedChildren()) > 0)
                 {
-                    $subset = $this->getCurrentSiblingSubset($item->children, $depth++);
+                    $subset = $this->getCurrentSiblingSubset($item->getLoadedChildren(), ++$depth);
 
                     if (count($subset) > 0)
                     {
@@ -432,16 +438,16 @@ class Builder {
 
         foreach($items as $item)
         {
-            if ($item->currentItemFlag)
+            if ($item->isCurrentItem())
             {
-                $subset = $item->children;
+                $subset = $item->getLoadedChildren();
 
                 return $subset;
             }
 
-            if (count($item->children) > 0)
+            if (count($item->getLoadedChildren()) > 0)
             {
-                $subset = $this->getCurrentChildrenSubset($Item->children, $depth++);
+                $subset = $this->getCurrentChildrenSubset($item->getLoadedChildren(), ++$depth);
 
                 if (count($subset) > 0)
                 {

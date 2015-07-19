@@ -242,7 +242,9 @@ class Type extends Model implements PageInterface {
      */
     public function getRouteName()
     {
-        return 'contentType.'.$this->id;
+        $locale = Lang::getLocale();
+
+        return 'contentType.'.$this->id.'.'.$locale;
     }
 
     /**

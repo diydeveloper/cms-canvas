@@ -323,7 +323,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
             foreach ($roleIds as $roleId) 
             {
-                $role = Cache::rememberForever('role_'.$roleId, function()
+                $role = Cache::rememberForever('role_'.$roleId, function() use($roleId)
                 {
                     return Role::with('permissions')->find($roleId);
                 });

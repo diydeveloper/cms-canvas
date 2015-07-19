@@ -18,7 +18,19 @@ class Item extends Model {
      *
      * @var array
      */
-    protected $fillable = array('title');
+    protected $fillable = array(
+        'title',
+        'entry_id',
+        'url',
+        'type',
+        'id_attribute',
+        'class_attribute',
+        'target_attribute',
+        'children_visibility_id',
+        'disable_current_flag',
+        'disable_current_ancestor_flag',
+        'hidden_flag',
+    );
 
     /**
      * The columns that can NOT be mass-assigned.
@@ -39,7 +51,7 @@ class Item extends Model {
      *
      * @var bool
      */
-    protected $currentAncestorFlag = false;
+    protected $currentItemAncestorFlag = false;
 
     /**
      * Set true if the item is solo or first in a collection
@@ -114,7 +126,7 @@ class Item extends Model {
     {
         $contents = '<li'.$this->getListItemAttributes().'>';
         $contents .= '<a'.$this->getAnchorAttributes().'>';
-        $contents .= $this->title;
+        $contents .= $this->getTitle();
         $contents .= '</a>';
 
         if ($this->isChildrenLoaded() && count($this->children) > 0)
@@ -194,9 +206,9 @@ class Item extends Model {
             $classNames[] = 'current-item';
         }
 
-        if ($this->currentAncestorFlag)
+        if ($this->currentItemAncestorFlag)
         {
-            $classNames[] = 'current-ancestor';
+            $classNames[] = 'current-item-ancestor';
         }
 
         if (!empty($this->class_attribute))
@@ -208,13 +220,47 @@ class Item extends Model {
     }
 
     /**
+     * Returns the title for the item
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        if ($this->title == null)
+        {
+            return $this->entry->title;
+        } 
+
+        return $this->title;
+    }
+
+    /**
      * Returns the full url for the item
      *
      * @return string
      */
     public function getUrl()
     {
+        if ($this->entry != null)
+        {
+            return url($this->entry->getPreferredRoute());
+        } 
 
+        if ($this->url != null)
+        {
+            $parsed = parse_url($this->url);
+
+            if (empty($parsed['scheme'])) 
+            {
+                return url($this->url);
+            }
+            else
+            {
+                return $this->url;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -251,14 +297,49 @@ class Item extends Model {
     }
 
     /**
-     * Sets the currentAncestorFlag class variable
+     * Returns currentItemFlag class variable
+     *
+     * @return bool
+     */
+    public function isCurrentItem()
+    {
+        return $this->currentItemFlag;
+    }
+
+    /**
+     * Sets the currentItemAncestorFlag class variable
      *
      * @param bool $value
      * @return void
      */
-    public function setCurrentAncestorFlag($value)
+    public function setCurrentItemAncestorFlag($value)
     {
-        $this->currentAncestorFlag = (bool) $value;
+        $this->currentItemAncestorFlag = (bool) $value;
+    }
+
+    /**
+     * Returns currentItemAncestorFlag class variable
+     *
+     * @return bool
+     */
+    public function isCurrentItemAncestor()
+    {
+        return $this->currentItemAncestorFlag;
+    }
+
+    /**
+     * Returns children only if it has already been loaded
+     *
+     * @return \CmsCanvas\Models\Content\Navigation\Item|collection
+     */
+    public function getLoadedChildren()
+    {
+        if ($this->isChildrenLoaded())
+        {
+            return $this->children;
+        }
+
+        return $this->newCollection(); 
     }
 
     /**

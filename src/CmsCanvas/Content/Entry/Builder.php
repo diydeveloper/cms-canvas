@@ -4,6 +4,8 @@ use Auth;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Content\Entry\RenderCollection;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Builder {
 
@@ -65,6 +67,13 @@ class Builder {
     protected $limit;
 
     /**
+     * Short name of a content type
+     *
+     * @var string
+     */
+    protected $where;
+
+    /**
      * Pivots
      *
      * @var array
@@ -96,11 +105,12 @@ class Builder {
 
         if ($this->paginate !== null)
         {
-            $entries = $this->entries->paginate($this->paginate);
+            // $entries = $this->entries->paginate($this->paginate);
+            $entries = $this->paginate($this->paginate);
         }
         else if ($this->simplePaginate !== null)
         {
-            $entries = $this->entries->simplePaginate($this->simplePaginate);
+            $entries = $this->simplePaginate($this->simplePaginate);
         }
         else
         {
@@ -244,6 +254,8 @@ class Builder {
      */
     protected function setWhere($where)
     {
+        $this->where = $where;
+
         return $this;
     }
 
@@ -255,15 +267,15 @@ class Builder {
      */
     protected function addPivot($shortTag)
     {
-        if ( ! in_array($shortTag, $this->pivots))
+        if ( ! isset($this->pivots[$shortTag]))
         {
             $this->includePivotTables();
 
-            $this->entries->addSelect(
-                \DB::raw('MAX(IF(`content_type_fields`.`short_tag` = \''.$shortTag.'\', `entry_data`.`data`, NULL)) AS '.$shortTag)
-            );
+            $pivotExpression = \DB::raw('MAX(IF(`content_type_fields`.`short_tag` = \''.$shortTag.'\', `entry_data`.`data`, NULL)) AS '.$shortTag);
 
-            $this->pivots[] = $shortTag;
+            $this->entries->addSelect($pivotExpression);
+
+            $this->pivots[$shortTag] = $pivotExpression;
         }
 
         return $this;
@@ -296,6 +308,99 @@ class Builder {
         }
 
         return $this;
+    }
+
+    /**
+     * Paginate the given query into a simple paginator.
+     *
+     * @param  int  $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    protected function paginate($perPage = 15)
+    {
+        $page = Paginator::resolveCurrentPage();
+
+        $total = $this->getCountForPagination();
+
+        $results = $this->entries->forPage($page, $perPage)->get();
+
+        return new LengthAwarePaginator($results, $total, $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath()
+        ]);
+    }
+
+    /**
+     * Get a paginator only supporting simple next and previous links.
+     *
+     * This is more efficient on larger data-sets, etc.
+     *
+     * @param  int  $perPage
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    protected function simplePaginate($perPage = 15)
+    {
+        $page = Paginator::resolveCurrentPage();
+
+        $this->skip(($page - 1) * $perPage)->take($perPage + 1);
+
+        return new Paginator($this->get(), $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath()
+        ]);
+    }
+
+    /**
+     * Get the count of the total records for the paginator.
+     *
+     * @return int
+     */
+    public function getCountForPagination()
+    {
+        $this->backupFieldsForCount();
+
+        $columns = array_merge([\DB::raw('count(DISTINCT `entries`.`id`) as __aggregate_count')], $this->pivots);
+
+        $results = $this->entries->get($columns);
+
+        $this->restoreFieldsForCount();
+
+        if (isset($results[0]))
+        {
+            return $results[0]->__aggregate_count;
+        }
+    }
+
+    /**
+     * Backup some fields for the pagination count.
+     *
+     * @return void
+     */
+    protected function backupFieldsForCount()
+    {
+        $query = $this->entries->getQuery();
+
+        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field)
+        {
+            $this->backups[$field] = $query->{$field};
+
+            $query->{$field} = null;
+        }
+    }
+
+    /**
+     * Restore some fields after the pagination count.
+     *
+     * @return void
+     */
+    protected function restoreFieldsForCount()
+    {
+        $query = $this->entries->getQuery();
+
+        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field)
+        {
+            $query->{$field} = $this->backups[$field];
+        }
+
+        $this->backups = [];
     }
 
     /**
@@ -383,6 +488,20 @@ class Builder {
     }
 
     /**
+     * Adds order by to the entries query
+     *
+     * @return void
+     */
+    protected function compileWhere()
+    {
+        if ($this->where != null)
+        {
+            // $this->entries->having(\DB::raw($this->where));
+            $this->entries->having('sort_order', '>', 3);
+        }
+    }
+
+    /**
      * Adds limit to the entries query
      *
      * @return void
@@ -462,6 +581,7 @@ class Builder {
         $this->compileContentTypes();
         $this->compileEntryIds();
         $this->compileOrders();
+        $this->compileWhere();
         $this->compileStatusFilter();
         $this->compileLimit();
         $this->compileOffset();

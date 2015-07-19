@@ -1,129 +1,94 @@
 <?php namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Admin, Redirect, Validator, Request, Input, stdClass;
+use View, Admin, Redirect, Validator, Input;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
+use CmsCanvas\Models\Content\Entry;
 
 class ItemController extends AdminController {
 
     /**
-     * Display all navigations
+     * Display add navigation item form
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
-    public function tree($navigation)
+    public function getEdit($navigation, $item = null)
     {
-        $content = View::make('cmscanvas::admin.content.navigation.navigations');
+        $content = View::make('cmscanvas::admin.content.navigation.item.edit');
 
-        $this->layout->breadcrumbs = array(
-            'content/navigation' => 'Navigations', 
-            Request::path() => 'Navigation Tree'
-        );
-        $this->layout->content = $content;
-    }
-
-    /**
-     * Saves the filter request to the session
-     *
-     * @return View
-     */
-    public function postNavigations()
-    {
-        Navigation::processFilterRequest();
-
-        return Redirect::route('admin.content.navigation.navigations');
-    }
-
-    /**
-     * Deletes navigation(s) that are posted in the selected array
-     *
-     * @return View
-     */
-    public function postDelete()
-    {
-        $selected = Input::get('selected');
-
-        if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.navigation.navigations')
-                ->with('notice', 'You must select at least one group to delete.');
-        }
-
-        $selected = array_values($selected);
-
-        Navigation::destroy($selected);
-
-        return Redirect::route('admin.content.navigation.navigations')
-            ->with('message', 'The selected navigation(s) were sucessfully deleted.');;
-    }
-
-    /**
-     * Display add navigation form
-     *
-     * @return View
-     */
-    public function getAdd()
-    {
-        // Routed to getEdit
-    }
-
-    /**
-     * Create a new navigation
-     *
-     * @return View
-     */
-    public function postAdd()
-    {
-        // Routed to postEdit
-    }
-
-    /**
-     * Display add navigation form
-     *
-     * @return View
-     */
-    public function getEdit($navigation = null)
-    {
-        $content = View::make('cmscanvas::admin.content.navigation.edit');
+        $entries = Entry::with('contentType')
+            ->whereNotNull('route')
+            ->orWhereHas('contentType', function($query) {
+                $query->where('dynamic_routing_flag', 1);
+            })
+            ->get();
 
         $content->navigation = $navigation;
+        $content->item = $item;
+        $content->entries = $entries;
 
         $this->layout->content = $content;
     }
 
     /**
-     * Update an existing navigation
+     * Update or add a navigation item
      *
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEdit($navigation = null)
+    public function postEdit($navigation, $item = null)
     {
-        $rules['title'] = 'required';
+        $rules['type'] = 'required';
+        if (Input::get('type') == 'url') 
+        {
+            $rules['title'] = 'required';
+        }
+        else
+        {
+            $rules['entry_id'] = 'required';
+        }
 
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails())
         {
-            if ($navigation == null)
+            if ($item == null)
             {
-                return Redirect::route('admin.content.navigation.add', $contentType->id)
+                return Redirect::route('admin.content.navigation.item.add', array($navigation->id))
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
             else
             {
-                return Redirect::route('admin.content.navigation.edit', array($navigation->id))
+                return Redirect::route('admin.content.navigation.item.edit', array($navigation->id, $item->id))
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
-        $navigation = ($navigation == null) ? new Navigation : $navigation;
-        $navigation->fill(Input::all());
-        $navigation->save();
+        $item = ($item == null) ? new Item : $item;
+        $item->fill(Input::all());
+        if ($item->type == 'url')
+        {
+            $item->entry_id = null;
+        }
+        $item->save();
 
-        return Redirect::route('admin.content.navigation.navigations')
-            ->with('message', "{$navigation->title} was successfully updated.");
+        return Redirect::route('admin.content.navigation.tree', $navigation->id)
+            ->with('message', "Item was successfully updated.");
+    }
+
+    /**
+     * Deletes navigation item
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getDelete($navigation, $item)
+    {
+        $item->delete();
+
+        return Redirect::route('admin.content.navigation.tree', $navigation->id)
+            ->with('message', 'Navigation item deleted successfully.');;
     }
 
 }

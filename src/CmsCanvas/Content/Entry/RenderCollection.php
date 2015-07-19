@@ -17,7 +17,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function __construct($entries)
     {
-        if ($entries instanceof \Illuminate\Pagination\Paginator)
+        if ($entries instanceof \Illuminate\Pagination\AbstractPaginator)
         {
             $this->paginator = $entries;
         }
@@ -70,7 +70,7 @@ class RenderCollection extends CmsCanvasCollection {
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->links();
+            return $this->paginator->render();
         }
     }
 
@@ -79,11 +79,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getCurrentPage()
+    public function currentPage()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getCurrentPage();
+            return $this->paginator->currentPage();
         }
     }
 
@@ -92,11 +92,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getLastPage()
+    public function lastPage()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getLastPage();
+            return $this->paginator->lastPage();
         }
     }
 
@@ -105,11 +105,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getPerPage()
+    public function perPage()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getPerPage();
+            return $this->paginator->perPage();
         }
     }
 
@@ -118,11 +118,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getTotal()
+    public function total()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getTotal();
+            return $this->paginator->total();
         }
     }
 
@@ -144,11 +144,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getTo()
+    public function firstItem()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getTo();
+            return $this->paginator->firstItem();
         }
     }
 
@@ -157,11 +157,11 @@ class RenderCollection extends CmsCanvasCollection {
      *
      * @return int
      */
-    public function getFrom()
+    public function lastItem()
     {
         if ($this->paginator != null)
         {
-            return $this->paginator->getFrom();
+            return $this->paginator->lastItem();
         }
     }
 
