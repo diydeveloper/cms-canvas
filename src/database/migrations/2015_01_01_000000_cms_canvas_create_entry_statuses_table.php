@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEntryStatusesTable extends Migration {
+class CmsCanvasCreateEntryStatusesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateEntryStatusesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('entry_statuses', function($table) {
+        Schema::create('entry_statuses', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->string('name', 50);

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEntryDataTable extends Migration {
+class CmsCanvasCreateEntryDataTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateEntryDataTable extends Migration {
      */
     public function up()
     {
-        Schema::create('entry_data', function($table) {
+        Schema::create('entry_data', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->integer('entry_id')->unsigned()->index();

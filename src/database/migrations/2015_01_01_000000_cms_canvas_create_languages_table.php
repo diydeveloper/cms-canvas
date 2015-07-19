@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContentTypeFieldTypesTable extends Migration {
+class CmsCanvasCreateLanguagesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,11 +12,14 @@ class CreateContentTypeFieldTypesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('content_type_field_types', function($table) {
+        Schema::create('languages', function(Blueprint $table) {
             // Columns
             $table->increments('id');
-            $table->string('name', 50);
-            $table->string('key_name', 50)->unique();
+            $table->string('language', 255);
+            $table->string('locale', 5)->unique();
+            $table->boolean('default')->default(0);
+            $table->boolean('active')->default(0);
+            $table->timestamps();
         });
     }
 
@@ -27,7 +30,7 @@ class CreateContentTypeFieldTypesTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('content_type_field_types');
+        Schema::drop('languages');
     }
 
 }

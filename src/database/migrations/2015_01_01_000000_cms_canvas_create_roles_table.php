@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNavigationsTable extends Migration {
+class CmsCanvasCreateRolesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateNavigationsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('navigations', function($table) {
+        Schema::create('roles', function(Blueprint $table) {
             // Columns
             $table->increments('id');
-            $table->string('title', 150);
+            $table->string('name', 255);
             $table->timestamps();
         });
     }
@@ -27,7 +27,7 @@ class CreateNavigationsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('navigations');
+        Schema::drop('roles');
     }
 
 }

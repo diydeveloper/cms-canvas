@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTimezonesTable extends Migration {
+class CmsCanvasCreateTimezonesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateTimezonesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('timezones', function($table) {
+        Schema::create('timezones', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->string('name', 255);

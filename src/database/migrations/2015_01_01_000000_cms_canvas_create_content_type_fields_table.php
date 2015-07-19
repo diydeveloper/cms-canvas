@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContentTypeFieldsTable extends Migration {
+class CmsCanvasCreateContentTypeFieldsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateContentTypeFieldsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('content_type_fields', function($table) {
+        Schema::create('content_type_fields', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->integer('content_type_id')->unsigned()->index();

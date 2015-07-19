@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSettingsTable extends Migration {
+class CmsCanvasCreateSettingsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateSettingsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('settings', function($table) {
+        Schema::create('settings', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->string('setting', 65)->unique();

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContentTypesTable extends Migration {
+class CmsCanvasCreateNavigationsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,15 +12,11 @@ class CreateContentTypesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('content_types', function($table) {
+        Schema::create('navigations', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->string('title', 255);
-            $table->longText('layout')->nullable();
             $table->string('short_name', 50)->unique();
-            $table->string('route', 500)->nullable();
-            $table->longText('page_head')->nullable();
-            $table->integer('entries_allowed')->nullable()->unsigned();
             $table->timestamps();
         });
     }
@@ -32,7 +28,7 @@ class CreateContentTypesTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('content_types');
+        Schema::drop('navigations');
     }
 
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLanguagesTable extends Migration {
+class CmsCanvasCreateRevisionResourceTypesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,14 +12,11 @@ class CreateLanguagesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('languages', function($table) {
+        Schema::create('revision_resource_types', function(Blueprint $table) {
             // Columns
             $table->increments('id');
-            $table->string('language', 125);
-            $table->string('locale', 5);
-            $table->boolean('default')->default(0);
-            $table->boolean('active')->default(0);
-            $table->timestamps();
+            $table->string('name', 255);
+            $table->string('key_name', 50)->unique();
         });
     }
 
@@ -30,7 +27,7 @@ class CreateLanguagesTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('languages');
+        Schema::drop('revision_resource_types');
     }
 
 }
