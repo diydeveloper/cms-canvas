@@ -151,7 +151,7 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
         {
             $table->dropForeign('user_id');
             $table->dropForeign('role_id');
-        })
+        });
 
         // role_permissions table constraints
         Schema::table('role_permissions', function(Blueprint $table)

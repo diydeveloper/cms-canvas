@@ -12,7 +12,7 @@ class CmsCanvasCreateNavigationItemsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('navigations', function(Blueprint $table) {
+        Schema::create('navigation_items', function(Blueprint $table) {
             // Columns
             $table->increments('id');
             $table->integer('navigation_id')->unsigned()->index();
@@ -40,7 +40,7 @@ class CmsCanvasCreateNavigationItemsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('navigations');
+        Schema::drop('navigation_items');
     }
 
 }

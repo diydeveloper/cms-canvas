@@ -1,4 +1,6 @@
-<?php namespace Cmscanvas;
+<?php 
+
+namespace CmsCanvas\Providers;
 
 use App, Event, DateTime, View, Request;
 use Illuminate\Support\ServiceProvider;
@@ -9,7 +11,7 @@ use CmsCanvas\Admin\Admin;
 use CmsCanvas\Content\Content;
 use CmsCanvas\StringView\StringView;
 
-class CmscanvasServiceProvider extends ServiceProvider {
+class CmsCanvasServiceProvider extends ServiceProvider {
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -41,13 +43,13 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function setupConfig()
     {
-        $source = realpath(__DIR__.'/../config/config.php');
+        $source = realpath(__DIR__.'/../../config/config.php');
         $this->mergeConfigFrom($source, 'cmscanvas::config');
 
-        $source = realpath(__DIR__.'/../config/admin.php');
+        $source = realpath(__DIR__.'/../../config/admin.php');
         $this->mergeConfigFrom($source, 'cmscanvas::admin');
 
-        $source = realpath(__DIR__.'/../config/assets.php');
+        $source = realpath(__DIR__.'/../../config/assets.php');
         $this->mergeConfigFrom($source, 'cmscanvas::assets');
     }
 
@@ -58,7 +60,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function setupViews()
     {
-        $source = realpath(__DIR__.'/../resources/views/');
+        $source = realpath(__DIR__.'/../../resources/views/');
         $this->loadViewsFrom($source, 'cmscanvas');
     }
 
@@ -69,12 +71,9 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function setupRoutes()
     {
-        if ($this->app['admin']->getUrlPrefix() == Request::segment(1))
-        {
+        if ($this->app['admin']->getUrlPrefix() == Request::segment(1)) {
             include __DIR__.'/Http/adminRoutes.php';
-        }
-        else
-        {
+        } else {
             include __DIR__.'/Http/routes.php';
         }
     }
@@ -93,17 +92,20 @@ class CmscanvasServiceProvider extends ServiceProvider {
     }
 
     /**
-     * 
+     * Defines file groups to be published
      *
      * @return void
      */
     public function setupPublishing()
     {
         $this->publishes(
-            [
-                __DIR__.'/../resources/themes/default' => base_path('/resources/themes/default')
-            ], 
+            [__DIR__.'/../../resources/themes/default' => base_path('/resources/themes/default')],
             'themes'
+        );
+
+        $this->publishes(
+            [__DIR__.'/../../database/migrations/' => database_path('migrations')],
+            'migrations'
         );
     }
 
@@ -129,8 +131,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     protected function registerTheme()
     {
-        $this->app->bindShared('theme', function($app)
-        {
+        $this->app->bindShared('theme', function($app) {
             return new Theme;
         });
     }
@@ -142,8 +143,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     protected function registerAdmin()
     {
-        $this->app->bind('admin', function($app)
-        {
+        $this->app->bind('admin', function($app) {
             return new Admin;
         });
     }
@@ -155,8 +155,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     protected function registerContent()
     {
-        $this->app->bind('content', function()
-        {
+        $this->app->bind('content', function() {
             return new Content;
         });
     }
@@ -168,8 +167,7 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     protected function registerStringView()
     {
-        $this->app->bind('stringview', function()
-        {
+        $this->app->bind('stringview', function() {
             return new StringView;
         });
 
@@ -204,7 +202,6 @@ class CmscanvasServiceProvider extends ServiceProvider {
     {
         Event::listen('auth.login', function($user) {
             $user->last_login = new DateTime;
-
             $user->save();
         });
     }
@@ -216,11 +213,11 @@ class CmscanvasServiceProvider extends ServiceProvider {
      */
     public function provides()
     {
-        return array(
+        return [
             'theme',
             'admin',
             'content',
-        );
+        ];
     }
 
 }
