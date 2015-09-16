@@ -31,7 +31,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
 
         $this->setupConfig();
         $this->setupViews();
-        $this->setupRoutes();
         $this->setupMiddleware();
         $this->setupPublishing();
     }
@@ -62,20 +61,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     {
         $source = realpath(__DIR__.'/../../resources/views/');
         $this->loadViewsFrom($source, 'cmscanvas');
-    }
-
-    /**
-     * Include route files.
-     *
-     * @return void
-     */
-    public function setupRoutes()
-    {
-        if ($this->app['admin']->getUrlPrefix() == Request::segment(1)) {
-            include __DIR__.'/Http/adminRoutes.php';
-        } else {
-            include __DIR__.'/Http/routes.php';
-        }
     }
 
     /**

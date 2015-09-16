@@ -11,6 +11,10 @@ $paths = array(
     'thumbnails' => 'packages/diyphpdeveloper/cmscanvas/thumbnails/',
 );
 
+if ($this->app->runningInConsole()) {
+    return $paths;
+}
+
 $settings = Cache::rememberForever('settings', function() {
  
     foreach(Setting::all() as $setting)

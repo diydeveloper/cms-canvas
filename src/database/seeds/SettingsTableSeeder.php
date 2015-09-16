@@ -14,6 +14,7 @@ class SettingsTableSeeder extends Seeder {
             array('setting' => 'theme', 'value' => 'default'),
             array('setting' => 'layout', 'value' => 'layouts.default'),
             array('setting' => 'custom_404', 'value' => '2'),
+            array('setting' => 'cms_canvas_installed', 'value' => '0'),
         ));
     }
 
