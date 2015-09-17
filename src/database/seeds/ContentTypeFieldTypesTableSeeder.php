@@ -9,12 +9,12 @@ class ContentTypeFieldTypesTableSeeder extends Seeder {
     {
         DB::table('content_type_field_types')->delete();
 
-        DB::table('content_type_field_types')->insert(array(
-            array('name' => 'CKEditor', 'key_name' => 'CKEDITOR'),
-            array('name' => 'Text', 'key_name' => 'TEXT'),
-            array('name' => 'Checkbox', 'key_name' => 'CHECKBOX'),
-            array('name' => 'Image', 'key_name' => 'IMAGE'),
-        ));
+        DB::table('content_type_field_types')->insert([
+            ['name' => 'CKEditor', 'key_name' => 'CKEDITOR'],
+            ['name' => 'Text', 'key_name' => 'TEXT'],
+            ['name' => 'Checkbox', 'key_name' => 'CHECKBOX'],
+            ['name' => 'Image', 'key_name' => 'IMAGE'],
+        ]);
     }
 
 }

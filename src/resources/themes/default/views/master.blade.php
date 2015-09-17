@@ -51,7 +51,7 @@
                 <img alt="Header Image" src="{!! Theme::asset('images/header.jpg') !!}" />
 
                 <nav>
-                    {!! Content::navigation(['navigation_id' => '2']) !!}
+                    {!! Content::navigation(['navigation_id' => '2', 'start_level' => 'above_current', 'offset' => '2']) !!}
                     <div class="clear"></div>
                 </nav>
             </header>

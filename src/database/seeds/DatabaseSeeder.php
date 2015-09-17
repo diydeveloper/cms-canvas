@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder {
     {
         Eloquent::unguard();
 
-        $this->call('CmsCanvas\Database\Seeds\SettingsTableSeeder');
-        $this->call('CmsCanvas\Database\Seeds\LanguagesTableSeeder');
-        $this->call('CmsCanvas\Database\Seeds\TimezonesTableSeeder');
-        $this->call('CmsCanvas\Database\Seeds\EntryStatusesTableSeeder');
-        $this->call('CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder');
+        $this->call(CmsCanvas\Database\Seeds\SettingsTableSeeder::class);
+        $this->call(CmsCanvas\Database\Seeds\LanguagesTableSeeder::class);
+        $this->call(CmsCanvas\Database\Seeds\TimezonesTableSeeder::class);
+        $this->call(CmsCanvas\Database\Seeds\EntryStatusesTableSeeder::class);
+        $this->call(CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder::class);
     }
 
 }

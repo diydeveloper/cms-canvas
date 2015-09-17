@@ -4,17 +4,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
-class LanguagesTableSeeder extends Seeder {
+class RolesTableSeeder extends Seeder {
 
     public function run()
     {
-        DB::table('languages')->delete();
+        DB::table('roles')->delete();
 
-        DB::table('languages')->insert([
-            'language' => 'English',
-            'locale' => 'en',
-            'default' => 1,
-            'active' => 1,
+        DB::table('roles')->insert([
+            'name' => 'Administrator',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

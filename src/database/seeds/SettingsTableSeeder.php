@@ -9,12 +9,12 @@ class SettingsTableSeeder extends Seeder {
     {
         DB::table('settings')->delete();
 
-        DB::table('settings')->insert(array(
-            array('setting' => 'site_name', 'value' => 'CMS Canvas'),
-            array('setting' => 'theme', 'value' => 'default'),
-            array('setting' => 'layout', 'value' => 'layouts.default'),
-            array('setting' => 'custom_404', 'value' => '2'),
-        ));
+        DB::table('settings')->insert([
+            ['setting' => 'site_name', 'value' => 'CMS Canvas'],
+            ['setting' => 'theme', 'value' => 'default'],
+            ['setting' => 'layout', 'value' => 'layouts.default'],
+            ['setting' => 'custom_404', 'value' => '2'],
+        ]);
     }
 
 }

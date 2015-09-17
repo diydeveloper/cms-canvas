@@ -9,11 +9,11 @@ class EntryStatusesTableSeeder extends Seeder {
     {
         DB::table('entry_statuses')->delete();
 
-        DB::table('entry_statuses')->insert(array(
-            array('name' => 'Published', 'key_name' => 'PUBLISHED'),
-            array('name' => 'Draft', 'key_name' => 'DRAFT'),
-            array('name' => 'Disabled', 'key_name' => 'DISABLED'),
-        ));
+        DB::table('entry_statuses')->insert([
+            ['name' => 'Published', 'key_name' => 'PUBLISHED'],
+            ['name' => 'Draft', 'key_name' => 'DRAFT'],
+            ['name' => 'Disabled', 'key_name' => 'DISABLED'],
+        ]);
     }
 
 }
