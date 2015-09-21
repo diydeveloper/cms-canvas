@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Entry;
+<?php 
+
+namespace CmsCanvas\Content\Entry;
 
 class Render {
 
@@ -51,7 +53,7 @@ class Render {
      * @param array $parameters
      * @return void
      */
-    public function __construct(\CmsCanvas\Models\Content\Entry $entry, $parameters = array())
+    public function __construct(\CmsCanvas\Models\Content\Entry $entry, $parameters = [])
     {
         $this->entry = $entry;
         $this->parameters = $parameters;
@@ -66,17 +68,13 @@ class Render {
     public function __get($key)
     {
         // This will only render the data if the user make a get request
-        if ($this->renderedData === null)
-        {
+        if ($this->renderedData === null) {
             $this->renderedData = array_merge($this->entry->getRenderedData(), $this->parameters);
         }
 
-        if (isset($this->renderedData[$key]))
-        {
+        if (isset($this->renderedData[$key])) {
             return $this->renderedData[$key];
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
@@ -100,7 +98,7 @@ class Render {
      */
     public function __toString()
     {
-        $parameters = array_merge($this->parameters, array('self' => $this));
+        $parameters = array_merge($this->parameters, ['self' => $this]);
 
         return (string) $this->entry->renderContents($parameters);
     }

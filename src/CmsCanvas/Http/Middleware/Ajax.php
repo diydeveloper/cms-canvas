@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Middleware;
+<?php 
+
+namespace CmsCanvas\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -32,8 +34,7 @@ class Ajax {
      */
     public function handle($request, Closure $next)
     {
-        if ( ! $request->ajax())
-        {
+        if (! $request->ajax()) {
             return abort(404);
         }
 

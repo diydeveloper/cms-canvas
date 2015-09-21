@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Database\Eloquent;
+<?php 
+
+namespace CmsCanvas\Database\Eloquent;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
@@ -13,14 +15,12 @@ class Collection extends EloquentCollection {
 	 */
 	public function getWhere($key, $matchValue)
 	{
-		$finalResults = array();
+		$finalResults = [];
 
-		foreach ($this->items as $item)
-		{
+		foreach ($this->items as $item) {
 			$results = $this->getData($item, $key);
 
-			if (in_array($matchValue, $results->toArray()))
-			{
+			if (in_array($matchValue, $results->toArray())) {
 				$finalResults[] = $item;
 			}
 		}
@@ -37,25 +37,19 @@ class Collection extends EloquentCollection {
 	 */
 	public function getData($items, $key)
 	{
-		foreach (explode('.', $key) as $segment)
-		{
-			if ( ! ($items instanceof Collection))
-			{
-				$items = new static(array($items));
+		foreach (explode('.', $key) as $segment) {
+			if (! ($items instanceof Collection)) {
+				$items = new static([$items]);
 			}
 
 			$newCollection = new static();
 
-			foreach ($items as $item) 
-			{
+			foreach ($items as $item) {
 				$result = data_get($item, $segment);
 
-				if ($result instanceof Collection)
-				{
+				if ($result instanceof Collection) {
 					$newCollection = $newCollection->merge($result);
-				}
-				else
-				{
+				} else {
 					$newCollection[] = $result;
 				}
 			}

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Page;
+<?php 
+
+namespace CmsCanvas\Content\Page;
 
 interface PageInterface {
 

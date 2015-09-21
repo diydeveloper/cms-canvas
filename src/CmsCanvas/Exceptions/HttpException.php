@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Exceptions;
+<?php 
+
+namespace CmsCanvas\Exceptions;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -7,7 +9,7 @@ class HttpException extends Exception implements HttpExceptionInterface
     private $statusCode;
     private $headers;
 
-    public function __construct($statusCode, $message = null, \Exception $previous = null, array $headers = array(), $code = 0)
+    public function __construct($statusCode, $message = null, \Exception $previous = null, array $headers = [], $code = 0)
     {
         $this->statusCode = $statusCode;
         $this->headers = $headers;

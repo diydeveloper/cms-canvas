@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Navigation\Item;
+<?php 
+
+namespace CmsCanvas\Content\Navigation\Item;
 
 use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
 
@@ -20,8 +22,7 @@ class RenderCollection extends CmsCanvasCollection {
     {
         $this->navigationBuilder = $navigationBuilder;
 
-        foreach ($items as $item) 
-        {
+        foreach ($items as $item) {
             $this->items[] = $item->render();
         }
     }
@@ -35,15 +36,13 @@ class RenderCollection extends CmsCanvasCollection {
     {
         $attributes = '';
 
-        if ($this->navigationBuilder != null)
-        {
+        if ($this->navigationBuilder != null) {
             $attributes = $this->navigationBuilder->getAttributes();
         }
 
         $contents = '<ul'.$attributes.'>';
 
-        foreach ($this->items as $item) 
-        {
+        foreach ($this->items as $item) {
             $contents .= (string) $item;
         }
 

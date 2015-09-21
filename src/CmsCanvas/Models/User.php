@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models;
+<?php 
+
+namespace CmsCanvas\Models;
 
 use Content, Theme, Session, Cache, Auth;
 use Illuminate\Auth\Authenticatable;
@@ -23,14 +25,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @var array
      */
-    protected $hidden = array('password');
+    protected $hidden = ['password'];
 
     /**
      * The columns that can be mass-assigned.
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'timezone_id',
         'first_name', 
         'last_name', 
@@ -43,26 +45,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'state',
         'country',
         'zip',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'password', 'last_login', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'password', 'last_login', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array(
+    protected static $sortable = [
         'first_name', 
         'last_name', 
         'email', 
         'last_login'
-    );
+    ];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -171,13 +173,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if ( isset($filter->search) && $filter->search != '')
-        {
+        if ( isset($filter->search) && $filter->search != '') {
             $query->whereRaw("(concat_ws(' ', first_name, last_name) LIKE '%{$filter->search}%' OR email LIKE '%{$filter->search}%')");
         }
 
-        if ( ! empty($filter->role_id)) 
-        {
+        if (! empty($filter->role_id)) {
             $query->whereHas('roles', function($query) use($filter) {
                 $query->where('roles.id', $filter->role_id);
             });
@@ -195,8 +195,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -220,7 +219,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'last_login');
+        return ['created_at', 'updated_at', 'last_login'];
     }
 
     /**
@@ -233,7 +232,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function portrait($width = null, $height = null, $crop = false)
     {
-        return Content::thumbnail('', $width, $height, $crop, array('no_image' => Theme::asset('images/portrait.jpg')));
+        return Content::thumbnail('', $width, $height, $crop, ['no_image' => Theme::asset('images/portrait.jpg')]);
     }
 
     /**
@@ -256,10 +255,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $this->loadRolesFromSession();
 
-        foreach ($this->roles as $role) 
-        {
-            if ($role->name == $name) 
-            {
+        foreach ($this->roles as $role) {
+            if ($role->name == $name) {
                 return true;
             }
         }
@@ -277,10 +274,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $this->loadRolesFromSession();
 
-        foreach ($this->roles as $role) 
-        {
-            if ($role->hasPermission($keyName))
-            {
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($keyName)) {
                 return true;
             }
         }
@@ -296,8 +291,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function checkPermission($permission)
     {
-        if ( ! $this->can($permission))
-        {
+        if (! $this->can($permission)) {
             throw new \CmsCanvas\Exceptions\PermissionDenied($permission);
         }
     }
@@ -310,40 +304,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected function loadRolesFromSession()
     {
-        if (isset($this->relations['roles']) || Auth::user()->id != $this->id)
-        {
+        if (isset($this->relations['roles']) || Auth::user()->id != $this->id) {
             return;
         }
 
         $roleIds = Session::get('role_ids');
 
-        if (is_array($roleIds))
-        {
+        if (is_array($roleIds)) {
             $roles = $this->newCollection();
 
-            foreach ($roleIds as $roleId) 
-            {
-                $role = Cache::rememberForever('role_'.$roleId, function() use($roleId)
-                {
+            foreach ($roleIds as $roleId) {
+                $role = Cache::rememberForever('role_'.$roleId, function() use($roleId) {
                     return Role::with('permissions')->find($roleId);
                 });
 
-                if ($role != null)
-                {
+                if ($role != null) {
                     $roles[] = $role;
                 }
             }
-        }
-        else
-        {
+        } else {
             $roles = $this->roles()->with('permissions')->get();
 
-            foreach ($roles as $role) 
-            {
+            foreach ($roles as $role) {
                 Cache::forever('role_'.$role->id, $role);
             }
 
-            Session::put('role_ids', $roles->lists('id'));
+            Session::put('role_ids', $roles->lists('id')->all());
         }
 
         $this->setRelation('roles', $roles);

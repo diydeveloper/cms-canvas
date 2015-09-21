@@ -725,7 +725,7 @@ class browser extends uploader {
             $thumb = "themes/{$this->config['theme']}/img/files/big/$ext.png";
         }
         if (!isset($thumb) || !file_exists($thumb))
-            $thumb = "themes/{$this->config['theme']}/img/files/big/..png";
+            $thumb = "themes/{$this->config['theme']}/img/files/big/dot.png";
         header("Content-Type: image/png");
         readfile($thumb);
         die;

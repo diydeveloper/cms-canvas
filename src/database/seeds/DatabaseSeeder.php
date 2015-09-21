@@ -14,11 +14,20 @@ class DatabaseSeeder extends Seeder {
     {
         Eloquent::unguard();
 
-        $this->call(CmsCanvas\Database\Seeds\SettingsTableSeeder::class);
-        $this->call(CmsCanvas\Database\Seeds\LanguagesTableSeeder::class);
-        $this->call(CmsCanvas\Database\Seeds\TimezonesTableSeeder::class);
-        $this->call(CmsCanvas\Database\Seeds\EntryStatusesTableSeeder::class);
-        $this->call(CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\LanguagesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\TimezonesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\PermissionsTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\RolesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\RolePermissionsTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\ContentTypesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\ContentTypeFieldsTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\EntryStatusesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\EntriesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\EntryDataTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\SettingsTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\UsersTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\UserRolesTableSeeder::class);
     }
 
 }

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type\FieldType;
+<?php 
+
+namespace CmsCanvas\Content\Type\FieldType;
 
 use View, Input, Theme, Content;
 use CmsCanvas\Content\Type\FieldType;
@@ -26,7 +28,7 @@ class Image extends FieldType {
         Theme::addPackage('image_field');
 
         return View::make('cmscanvas::fieldType.image.input')
-            ->with(array('fieldType' => $this));
+            ->with(['fieldType' => $this]);
     }
 
     /**
@@ -44,33 +46,25 @@ class Image extends FieldType {
         $crop = $this->getSetting('crop', false);
         $inlineEditing = $this->getSetting('inline_editing', false);
 
-        if ($output == 'image')
-        {
-            if ($maxWidth !== null || $maxHeight !== null)
-            {
+        if ($output == 'image') {
+            if ($maxWidth !== null || $maxHeight !== null) {
                 $source = Content::thumbnail($this->data, $maxWidth, $maxHeight, $crop);
-            }
-            else
-            {
+            } else {
                 $source = $this->data;
             }
 
             $image = '<img src="'.$source.'" ';
 
-            if ($tagId != null) 
-            {
+            if ($tagId != null) {
                 $image .= 'id="'.$tagId.'" ';
             }
 
-            if ($class != null) 
-            {
+            if ($class != null) {
                 $image .= 'class="'.$class.'" ';
             }
 
             $image .= '/>';
-        }
-        else
-        {
+        } else {
             $image = $this->data;
         }
 

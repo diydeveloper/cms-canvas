@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\User;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\User;
 
 use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -29,7 +31,7 @@ class PermissionController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array('user' => 'Users', Request::path() => 'Permissions');
+        $this->layout->breadcrumbs = ['user' => 'Users', Request::path() => 'Permissions'];
         $this->layout->content = $content;
     }
 
@@ -64,8 +66,7 @@ class PermissionController extends AdminController {
         $permissions = Permission::whereIn('id', $selected)
             ->get();
 
-        foreach ($permissions as $permission)
-        {
+        foreach ($permissions as $permission) {
             $permission->delete();
         }
 
@@ -116,24 +117,20 @@ class PermissionController extends AdminController {
      */
     public function postEdit($permission = null)
     {
-        $rules = array(
+        $rules = [
             'name' => 'required|max:255',
             'key_name' => 'required|max:50'
                 ."|unique:permissions,key_name".(($permission == null) ? "" : ",{$permission->id}"),
-        );
+        ];
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($permission == null)
-            {
+        if ($validator->fails()) {
+            if ($permission == null) {
                 return Redirect::route('admin.user.permission.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
+            } else {
                 return Redirect::route('admin.user.permission.edit', $permission->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
@@ -144,7 +141,7 @@ class PermissionController extends AdminController {
         $permission->fill(Input::all());
         $permission->key_name = strtoupper($permission->key_name);
         $permission->save();
-        $permission->roles()->sync(Input::get('role_permissions', array()));
+        $permission->roles()->sync(Input::get('role_permissions', []));
 
         return Redirect::route('admin.user.permission.permissions')
             ->with('message', "{$permission->name} was successfully updated.");

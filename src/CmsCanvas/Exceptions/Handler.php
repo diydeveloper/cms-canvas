@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Exceptions;
+<?php 
+
+namespace CmsCanvas\Exceptions;
 
 use Exception, App, Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -37,22 +39,17 @@ class Handler extends ExceptionHandler {
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof \CmsCanvas\Exceptions\ExceptionDisplayInterface)
-        {
+        if ($e instanceof \CmsCanvas\Exceptions\ExceptionDisplayInterface) {
             $view = $e->getView();
 
-            if ($e instanceof HttpExceptionInterface)
-            {
+            if ($e instanceof HttpExceptionInterface) {
                 return Response::make($view, $e->getStatusCode());
-            }
-            else
-            {
+            } else {
                 return $view;
             }
         }
 
-        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
-        {
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             return Response::make(
                 App::make('\CmsCanvas\Http\Controllers\PageController')->callAction('showPage', [$e]),
                 $e->getStatusCode()

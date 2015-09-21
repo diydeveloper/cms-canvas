@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Admin;
+<?php 
+
+namespace CmsCanvas\Admin;
 
 use Route, Request, Config;
 
@@ -57,17 +59,14 @@ class Admin {
     {
         $listItem = '<ul>';
 
-        foreach($nav as $item)
-        {
+        foreach($nav as $item) {
             $item['url'] = trim($item['url'], '/');
 
-            if ($this->showNavLi($item) && empty($item['hidden']))
-            {
+            if ($this->showNavLi($item) && empty($item['hidden'])) {
                 $listItem .= '<li' . (($depth == 1 && $this->isNavLiSelected($item)) ? ' class="selected"' : '') . ((isset($item['id'])) ? ' id="' . $item['id'] . '"' : '') . '>';
                 $listItem .= '<a href="' . ($this->isPermitted(Config::get('cmscanvas::admin.url_prefix') . '/' . $item['url']) ? url(Config::get('cmscanvas::admin.url_prefix') . '/' . $item['url']) : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['title'] . (($depth == 1 && ! empty($item['sub'])) ?'<span class="down_arrow_small"></span>' : '') . '</a>';
 
-                if ( ! empty($item['sub']))
-                {
+                if (! empty($item['sub'])) {
                     $listItem .= $this->nav($item['sub'], $depth + 1);
                 }
 
@@ -89,17 +88,13 @@ class Admin {
      */
     protected function showNavLi($item, $depth = 1)
     {
-        if ($this->isPermitted(Config::get('cmscanvas::admin.url_prefix') . '/' . trim($item['url'], '/')) && empty($item['hidden']))
-        {
+        if ($this->isPermitted(Config::get('cmscanvas::admin.url_prefix') . '/' . trim($item['url'], '/')) && empty($item['hidden'])) {
             return true;
         }
 
-        if ( ! empty($item['sub']) && empty($item['hidden']))
-        {
-            foreach ($item['sub'] as $item)
-            {
-                if ($this->showNavLi($item, $depth + 1))
-                {
+        if (! empty($item['sub']) && empty($item['hidden'])) {
+            foreach ($item['sub'] as $item) {
+                if ($this->showNavLi($item, $depth + 1)) {
                     return true;
                 }
             }
@@ -122,10 +117,8 @@ class Admin {
         $segmentMatch = true;
 
         $i = 2;
-        foreach($uriSegments as $segment)
-        {
-            if (Request::segment($i) != $segment)
-            {
+        foreach($uriSegments as $segment) {
+            if (Request::segment($i) != $segment) {
                 $segmentMatch = false;
 
                 break;
@@ -134,17 +127,13 @@ class Admin {
             $i++;
         }
 
-        if ($segmentMatch)
-        {
+        if ($segmentMatch) {
             return true;
         }
 
-        if ( ! empty($item['sub']))
-        {
-            foreach ($item['sub'] as $item)
-            {
-                if ($this->isNavLiSelected($item, $depth + 1))
-                {
+        if ( ! empty($item['sub'])) {
+            foreach ($item['sub'] as $item) {
+                if ($this->isNavLiSelected($item, $depth + 1)) {
                     return true;
                 }
             }

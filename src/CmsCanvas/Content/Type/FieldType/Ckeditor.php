@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type\FieldType;
+<?php 
+
+namespace CmsCanvas\Content\Type\FieldType;
 
 use View, Theme, Admin, StringView;
 use CmsCanvas\Content\Type\FieldType;
@@ -23,9 +25,9 @@ class Ckeditor extends FieldType {
      */
     public function getSettingsValidationRules()
     {
-        return array(
+        return [
             'settings.height' => 'integer|min:0' 
-        );
+        ];
     }
 
     /**

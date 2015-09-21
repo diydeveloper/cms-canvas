@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Navigation\Item;
+<?php 
+
+namespace CmsCanvas\Content\Navigation\Item;
 
 class Render {
 

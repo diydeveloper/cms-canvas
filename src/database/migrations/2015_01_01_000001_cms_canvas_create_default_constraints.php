@@ -143,61 +143,61 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
         // users table constraints
         Schema::table('users', function(Blueprint $table)
         {
-            $table->dropForeign('timezone_id');
+            $table->dropForeign('users_timezone_id_foreign');
         });
 
         // user_roles table constraints
         Schema::table('user_roles', function(Blueprint $table)
         {
-            $table->dropForeign('user_id');
-            $table->dropForeign('role_id');
+            $table->dropForeign('user_roles_user_id_foreign');
+            $table->dropForeign('user_roles_role_id_foreign');
         });
 
         // role_permissions table constraints
         Schema::table('role_permissions', function(Blueprint $table)
         {
-            $table->dropForeign('role_id');
-            $table->dropForeign('permission_id');
+            $table->dropForeign('role_permissions_role_id_foreign');
+            $table->dropForeign('role_permissions_permission_id_foreign');
         });
 
         // entries table constraints
         Schema::table('entries', function(Blueprint $table)
         {
-            $table->dropForeign('content_type_id');
-            $table->dropForeign('entry_status_id');
-            $table->dropForeign('author_id');
+            $table->dropForeign('entries_content_type_id_foreign');
+            $table->dropForeign('entries_entry_status_id_foreign');
+            $table->dropForeign('entries_author_id_foreign');
         });
 
         // entry_data table constraints
         Schema::table('entry_data', function(Blueprint $table)
         {
-            $table->dropForeign('entry_id');
-            $table->dropForeign('content_type_field_id');
-            $table->dropForeign('language_id');
+            $table->dropForeign('entry_data_entry_id_foreign');
+            $table->dropForeign('entry_data_content_type_field_id_foreign');
+            $table->dropForeign('entry_data_language_id_foreign');
         });
 
         // content_type_fields table constraints
         Schema::table('content_type_fields', function(Blueprint $table)
         {
-            $table->dropForeign('content_type_id');
-            $table->dropForeign('content_type_field_type_id');
+            $table->dropForeign('content_type_fields_content_type_id_foreign');
+            $table->dropForeign('content_type_fields_content_type_field_type_id_foreign');
         });
 
         // revisions table constraints
         Schema::table('revisions', function(Blueprint $table)
         {
-            $table->dropForeign('resource_type_id');
-            $table->dropForeign('content_type_id');
-            $table->dropForeign('author_id');
+            $table->dropForeign('revisions_resource_type_id_foreign');
+            $table->dropForeign('revisions_content_type_id_foreign');
+            $table->dropForeign('revisions_author_id_foreign');
         });
 
 
         // navigation_items table constraints
         Schema::table('navigation_items', function(Blueprint $table)
         {
-            $table->dropForeign('navigation_id');
-            $table->dropForeign('parent_id');
-            $table->dropForeign('entry_id');
+            $table->dropForeign('navigation_items_navigation_id_foreign');
+            $table->dropForeign('navigation_items_parent_id_foreign');
+            $table->dropForeign('navigation_items_entry_id_foreign');
         });
     }
 

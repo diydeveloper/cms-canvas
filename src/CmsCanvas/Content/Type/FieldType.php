@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type;
+<?php 
+
+namespace CmsCanvas\Content\Type;
 
 use ArrayAccess;
 
@@ -143,8 +145,7 @@ abstract class FieldType implements ArrayAccess {
     {
         $metadataKey = 'field_id_'.$this->field->id.'_'.$this->locale.'_metadata';
 
-        if ($property != null)
-        {
+        if ($property != null) {
             $metadataKey .= '['.$property.']';
         }
 
@@ -161,8 +162,7 @@ abstract class FieldType implements ArrayAccess {
     {
         $settingsKey = 'settings';
 
-        if ($property != null)
-        {
+        if ($property != null) {
             $settingsKey .= '['.$property.']';
         }
 
@@ -179,12 +179,9 @@ abstract class FieldType implements ArrayAccess {
     {
         if (isset($this->metadata->$property) && $this->metadata->$property !== '' 
             && $this->metadata->$property !== null
-        )
-        {
+        ) {
             return $this->metadata->$property;
-        }
-        else
-        {
+        } else {
             return $defaultValue;
         }
     }
@@ -199,8 +196,7 @@ abstract class FieldType implements ArrayAccess {
     {
         $this->field = $field;
 
-        if (isset($field->settings))
-        {
+        if (isset($field->settings)) {
             $this->setSettings($field->settings);
         }
     }
@@ -247,24 +243,19 @@ abstract class FieldType implements ArrayAccess {
      */
     public function setSettings($settings, $fromFormData = false)
     {
-        if ($fromFormData)
-        {
-            if ( ! is_array($settings))
-            {
+        if ($fromFormData) {
+            if (! is_array($settings)) {
                 return null;
             }
 
-            $filteredSettings = array();
+            $filteredSettings = [];
             foreach ($settings as $key => $value) {
-                if ($value !== '' && $value !== null)
-                {
+                if ($value !== '' && $value !== null) {
                     $filteredSettings[$key] = $value;
                 }
             }
             $this->settings = (count($filteredSettings) > 0) ? (object) $filteredSettings : null;
-        }
-        else
-        {
+        } else {
             $settings = @json_decode($settings);
             $this->settings = (is_object($settings)) ? $settings : null;
         }
@@ -280,12 +271,9 @@ abstract class FieldType implements ArrayAccess {
     {
         if (isset($this->settings->$property) && $this->settings->$property !== '' 
             && $this->settings->$property !== null
-        )
-        {
+        ) {
             return $this->settings->$property;
-        }
-        else
-        {
+        } else {
             return $defaultValue;
         }
     }
@@ -300,24 +288,19 @@ abstract class FieldType implements ArrayAccess {
     public function setMetadata($metadata, $fromFormData = false)
     {
         // The data is an array when being set from a form post
-        if ($fromFormData)
-        {
-            if ( ! is_array($metadata))
-            {
+        if ($fromFormData) {
+            if (! is_array($metadata)) {
                 return null;
             }
 
-            $filteredMetadata = array();
+            $filteredMetadata = [];
             foreach ($metadata as $key => $value) {
-                if ($value !== '' && $value !== null)
-                {
+                if ($value !== '' && $value !== null) {
                     $filteredMetadata[$key] = $value;
                 }
             }
             $this->metadata = (count($filteredMetadata) > 0) ? (object) $filteredMetadata : null;
-        }
-        else
-        {
+        } else {
             $metadata = @json_decode($metadata);
             $this->metadata = (is_object($metadata)) ? $metadata : null;
         }
@@ -330,10 +313,9 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getValidationRules()
     {
-        $validationRules = array();
+        $validationRules = [];
 
-        if ($this->field->required)
-        {
+        if ($this->field->required) {
             $validationRules[$this->getKey()] = 'required';
         }
 
@@ -347,7 +329,7 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getSettingsValidationRules()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -367,8 +349,7 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getSaveMetadata()
     {
-        if ($this->metadata !== null && $this->metadata !== '')
-        {
+        if ($this->metadata !== null && $this->metadata !== '') {
             return @json_encode($this->metadata);
         }
 
@@ -382,8 +363,7 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getSaveSettings()
     {
-        if ($this->settings !== null && $this->settings !== '')
-        {
+        if ($this->settings !== null && $this->settings !== '') {
             return @json_encode($this->settings);
         }
 

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type\FieldType;
+<?php 
+
+namespace CmsCanvas\Content\Type\FieldType;
 
 use View;
 use CmsCanvas\Content\Type\FieldType;

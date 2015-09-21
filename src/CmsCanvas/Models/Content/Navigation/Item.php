@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content\Navigation;
+<?php 
+
+namespace CmsCanvas\Models\Content\Navigation;
 
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Navigation\Item\Render;
@@ -18,7 +20,7 @@ class Item extends Model {
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'title',
         'entry_id',
         'url',
@@ -30,14 +32,14 @@ class Item extends Model {
         'disable_current_flag',
         'disable_current_ancestor_flag',
         'hidden_flag',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Set true if the item links to the current url
@@ -129,8 +131,7 @@ class Item extends Model {
         $contents .= $this->getTitle();
         $contents .= '</a>';
 
-        if ($this->isChildrenLoaded() && count($this->children) > 0)
-        {
+        if ($this->isChildrenLoaded() && count($this->children) > 0) {
             $contents .= $this->renderChildren();
         }
 
@@ -148,15 +149,13 @@ class Item extends Model {
     {
         $attributes = '';
 
-        if (!empty($this->id_attribute))
-        {
+        if (!empty($this->id_attribute)) {
             $attributes .= ' id="'.$this->id_attribute.'"';
         }
 
         $classNames = $this->getHtmlClassNames();
 
-        if (count($classNames) > 0)
-        {
+        if (count($classNames) > 0) {
             $attributes .= ' class="'.implode(' ', $classNames).'"';
         }
 
@@ -172,8 +171,7 @@ class Item extends Model {
     {
         $attributes = '';
 
-        if (!empty($this->target_attribute))
-        {
+        if (!empty($this->target_attribute)) {
             $attributes .= ' target="'.$this->target_attribute.'"';
         }
 
@@ -189,30 +187,25 @@ class Item extends Model {
      */
     public function getHtmlClassNames()
     {
-        $classNames = array();
+        $classNames = [];
 
-        if ($this->firstFlag)
-        {
+        if ($this->firstFlag) {
             $classNames[] = 'first';
         }
 
-        if ($this->lastFlag)
-        {
+        if ($this->lastFlag) {
             $classNames[] = 'last';
         }
 
-        if ($this->currentItemFlag)
-        {
+        if ($this->currentItemFlag) {
             $classNames[] = 'current-item';
         }
 
-        if ($this->currentItemAncestorFlag)
-        {
+        if ($this->currentItemAncestorFlag) {
             $classNames[] = 'current-item-ancestor';
         }
 
-        if (!empty($this->class_attribute))
-        {
+        if (! empty($this->class_attribute)) {
             $classNames = array_merge($classNames, explode(' ', $this->class_attribute));
         }
 
@@ -226,8 +219,7 @@ class Item extends Model {
      */
     public function getTitle()
     {
-        if ($this->title == null)
-        {
+        if ($this->title == null) {
             return $this->entry->title;
         } 
 
@@ -241,21 +233,16 @@ class Item extends Model {
      */
     public function getUrl()
     {
-        if ($this->entry != null)
-        {
+        if ($this->entry != null) {
             return url($this->entry->getPreferredRoute());
         } 
 
-        if ($this->url != null)
-        {
+        if ($this->url != null) {
             $parsed = parse_url($this->url);
 
-            if (empty($parsed['scheme'])) 
-            {
+            if (empty($parsed['scheme'])) {
                 return url($this->url);
-            }
-            else
-            {
+            } else {
                 return $this->url;
             }
         }
@@ -334,8 +321,7 @@ class Item extends Model {
      */
     public function getLoadedChildren()
     {
-        if ($this->isChildrenLoaded())
-        {
+        if ($this->isChildrenLoaded()) {
             return $this->children;
         }
 

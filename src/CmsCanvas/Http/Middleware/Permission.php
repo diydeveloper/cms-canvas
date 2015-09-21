@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Middleware;
+<?php 
+
+namespace CmsCanvas\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -32,13 +34,11 @@ class Permission {
      */
     public function handle($request, Closure $next)
     {
-        if ( ! $this->auth->guest())
-        {
+        if (! $this->auth->guest()) {
             $actions = $request->route()->getAction();
-            $permissions = (isset($actions['permission'])) ? (array) $actions['permission'] : array();
+            $permissions = (isset($actions['permission'])) ? (array) $actions['permission'] : [];
 
-            foreach ($permissions as $permission) 
-            {
+            foreach ($permissions as $permission) {
                 $this->auth->user()->checkPermission($permission);
             }
         }

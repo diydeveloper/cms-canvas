@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Theme;
+<?php 
+
+namespace CmsCanvas\Theme;
 
 use View, Config, File, App;
 
@@ -51,28 +53,28 @@ class Theme {
      * 
      * @var array
      */
-    protected $javascripts = array();
+    protected $javascripts = [];
 
     /**
      * Inline scripts to be included in the theme
      * 
      * @var array
      */
-    protected $inlineScripts = array();
+    protected $inlineScripts = [];
 
     /**
      * Stylesheets requested to be included in the theme
      * 
      * @var array
      */
-    protected $stylesheets = array();
+    protected $stylesheets = [];
 
     /**
      * Inline CSS to be included in the theme
      * 
      * @var array
      */
-    protected $inlineCss = array();
+    protected $inlineCss = [];
 
     /**
      * Used to determine if HTML <head> data has already been rendered
@@ -86,21 +88,21 @@ class Theme {
      * 
      * @var array
      */
-    protected $headerJavascriptOrder = array();
+    protected $headerJavascriptOrder = [];
 
     /**
      * Tracks the order in which javascripts and inline scripts were added for footer includes
      * 
      * @var array
      */
-    protected $footerJavascriptOrder = array();
+    protected $footerJavascriptOrder = [];
 
     /**
      * Tracks the order in which stylesheets and inline scripts were added
      * 
      * @var array
      */
-    protected $stylesheetOrder = array();
+    protected $stylesheetOrder = [];
 
     /**
      * Hint path delimiter value.
@@ -124,10 +126,8 @@ class Theme {
      */
     public function asset($path = null, $theme = null)
     {
-        if ($theme == null) 
-        {
-            if ($this->theme == null)
-            {
+        if ($theme == null) {
+            if ($this->theme == null) {
                 throw new \Exception("A theme has not been specified or set.");
             }
 
@@ -170,8 +170,7 @@ class Theme {
         // the loader list for the theme so the package theme can be overridden.
         $appThemePath = $this->getAppThemePath($theme);
 
-        if (App::make('files')->isDirectory($appThemePath))
-        {
+        if (App::make('files')->isDirectory($appThemePath)) {
             View::addNamespace('theme', $appThemePath.'/views/');
         }
 
@@ -190,7 +189,7 @@ class Theme {
      */
     public function setLayout($layout)
     {
-        $this->layout = View::make('theme::layouts.'.$layout, array('content' => ''));
+        $this->layout = View::make('theme::layouts.'.$layout, ['content' => '']);
 
         return $this;
     }
@@ -213,8 +212,7 @@ class Theme {
      */
     public function setMetaTitle($title)
     {
-        if ( ! empty($title))
-        {
+        if (! empty($title)) {
             $this->metaTitle = $title;
         }
 
@@ -229,8 +227,7 @@ class Theme {
      */
     public function setMetaDescription($description)
     {
-        if ( ! empty($description))
-        {
+        if (! empty($description)) {
             $this->metaDescription = $description;
         }
 
@@ -247,8 +244,7 @@ class Theme {
      */
     public function setMetaKeywords($keywords)
     {
-        if ( ! empty($keywords))
-        {
+        if (! empty($keywords)) {
             $this->metaKeywords = $keywords;
         }
 
@@ -263,8 +259,7 @@ class Theme {
      */
     function addPageHead($code)
     {
-        if (is_string($code))
-        {
+        if (is_string($code)) {
             $this->pageHead = $code;
         }
 
@@ -280,37 +275,31 @@ class Theme {
      */
     public function addJavascript($javascripts, $footer = false)
     {
-        if ( ! is_array($javascripts))
-        {
+        if (! is_array($javascripts)) {
             $javascripts = (array) $javascripts;
         }
 
-        foreach ($javascripts as $javascript)
-        {
+        foreach ($javascripts as $javascript) {
             // If HTTP not in javascript uri add prepend url
             $javascript = (strpos($javascript, 'http') === 0 ? $javascript : url($javascript));
 
-            if ( ! in_array($javascript, $this->javascripts))
-            {
+            if ( ! in_array($javascript, $this->javascripts)) {
                 $this->javascripts[] = $javascript;
                 $javascriptKeys = array_keys($this->javascripts);
                 $index = end($javascriptKeys);
 
                 // Determine where this script needs to be included
                 // and keep track of the order in which javascripts and scripts are added
-                if ($footer || $this->headersSent) 
-                {
-                    $this->footerJavascriptOrder[] = array(
+                if ($footer || $this->headersSent) {
+                    $this->footerJavascriptOrder[] = [
                         'array' => 'javascripts',
                         'index' => $index,
-                    );
-                }
-                else
-                {
-                    $this->headerJavascriptOrder[] = array(
+                    ];
+                } else {
+                    $this->headerJavascriptOrder[] = [
                         'array' => 'javascripts',
                         'index' => $index,
-                    );
+                    ];
                 }
             }
         }
@@ -328,15 +317,12 @@ class Theme {
      */
     public function addInlineScript($scripts, $distinct = false, $footer = false)
     {
-        if ( ! is_array($scripts))
-        {
+        if (! is_array($scripts)) {
             $scripts = (array) $scripts;
         }
 
-        foreach ($scripts as $javascript)
-        {
-            if ($distinct && in_array($javascript, $this->inlineScripts))
-            {
+        foreach ($scripts as $javascript) {
+            if ($distinct && in_array($javascript, $this->inlineScripts)) {
                 continue;
             }
 
@@ -346,19 +332,16 @@ class Theme {
 
             // Determine where this script needs to be included
             // and keep track of the order in which javascripts and scripts are added
-            if ($footer || $this->headersSent) 
-            {
-                $this->footerJavascriptOrder[] = array(
+            if ($footer || $this->headersSent) {
+                $this->footerJavascriptOrder[] = [
                     'array' => 'scripts',
                     'index' => $index,
-                );
-            }
-            else
-            {
-                $this->headerJavascriptOrder[] = array(
+                ];
+            } else {
+                $this->headerJavascriptOrder[] = [
                     'array' => 'scripts',
                     'index' => $index,
-                );
+                ];
             }
         }
 
@@ -373,26 +356,23 @@ class Theme {
      */
     public function addStylesheet($stylesheets)
     {
-        if ( ! is_array($stylesheets))
-        {
+        if (! is_array($stylesheets)) {
             $stylesheets = (array) $stylesheets;
         }
 
-        foreach ($stylesheets as $stylesheet)
-        {
+        foreach ($stylesheets as $stylesheet) {
             $stylesheet = (strpos($stylesheet, 'http') === 0 ? $stylesheet : url($stylesheet));
 
-            if ( ! in_array($stylesheet, $this->stylesheets))
-            {
+            if (! in_array($stylesheet, $this->stylesheets)) {
                 $this->stylesheets[] = $stylesheet;
                 $stylesheetKeys = array_keys($this->stylesheets);
                 $index = end($stylesheetKeys);
 
                 // Keep track of the order in which stylesheets and css are added
-                $this->stylesheetOrder[] = array(
+                $this->stylesheetOrder[] = [
                     'array' => 'stylesheets',
                     'index' => $index,
-                );
+                ];
             }
         }
 
@@ -408,15 +388,12 @@ class Theme {
      */
     public function addInlineCss($css, $distinct = false)
     {
-        if ( ! is_array($css))
-        {
+        if (! is_array($css)) {
             $css = (array) $css;
         }
 
-        foreach ($css as $style)
-        {
-            if ($distinct && in_array($style, $this->inlineCss))
-            {
+        foreach ($css as $style) {
+            if ($distinct && in_array($style, $this->inlineCss)) {
                 continue;
             }
 
@@ -425,10 +402,10 @@ class Theme {
             $index = end($inlineCssKeys);
 
             // Keep track of the order in which stylesheets and css are added
-            $this->stylesheetOrder[] = array(
+            $this->stylesheetOrder[] = [
                 'array' => 'css',
                 'index' => $index,
-            );
+            ];
         }
 
         return $this;
@@ -445,24 +422,19 @@ class Theme {
     {
         $packageList = Config::get('cmscanvas::assets.packages');
 
-        if ( ! is_array($packages))
-        {
+        if (! is_array($packages)) {
             $packages = (array) $packages;
         }
 
-        foreach ($packages as $package)
-        {
-            if (isset($packageList[$package]))
-            {
+        foreach ($packages as $package) {
+            if (isset($packageList[$package])) {
                 $package = $packageList[$package];
 
-                if (isset($package['javascript']))
-                {
+                if (isset($package['javascript'])) {
                     $this->addJavascript($package['javascript']);
                 }
 
-                if (isset($package['stylesheet']))
-                {
+                if (isset($package['stylesheet'])) {
                     $this->addStylesheet($package['stylesheet']);
                 }
             }
@@ -481,18 +453,15 @@ class Theme {
     {
         $metadata = '';
 
-        if ( ! empty($this->metaTitle))
-        {
+        if (! empty($this->metaTitle)) {
             $metadata .= '<title>' . $this->metaTitle . '</title>' . "\r\n";
         }
 
-        if ( ! empty($this->metaDescription))
-        {
+        if (! empty($this->metaDescription)) {
             $metadata .= '<meta name="description" content="' . $this->metaDescription . '" />' . "\r\n";
         }
 
-        if ( ! empty($this->metaKeywords))
-        {
+        if (! empty($this->metaKeywords)) {
             $metadata .= '<meta name="keywords" content="' . $this->metaKeywords . '" />' . "\r\n";
         }
 
@@ -510,41 +479,30 @@ class Theme {
      */
     public function javascripts($footer = false)
     {
-        if ($footer)
-        {
+        if ($footer) {
             $javascriptOrderArray = 'footerJavascriptOrder';
-        }
-        else
-        {
+        } else {
             $javascriptOrderArray = 'headerJavascriptOrder';
         }
 
         $javascriptIncludes = "\n\t<script>var BASE_HREF=\"" . url() . "\"</script>";
 
-        foreach ($this->$javascriptOrderArray as $javascriptOrder) 
-        {
-            if ($javascriptOrder['array'] == 'javascripts')
-            {
+        foreach ($this->$javascriptOrderArray as $javascriptOrder) {
+            if ($javascriptOrder['array'] == 'javascripts') {
                 $javascriptIncludes .=  "\n\t<script type=\"text/javascript\" src=\"" . $this->javascripts[$javascriptOrder['index']] . "\"></script>";
-            }
-            else if ($javascriptOrder['array'] == 'scripts')
-            {
+            } elseif ($javascriptOrder['array'] == 'scripts') {
                 $script = $this->inlineScripts[$javascriptOrder['index']];
 
                 // Check if script has the script tags included
-                if (stripos(trim($script), '<script') === 0)
-                {
+                if (stripos(trim($script), '<script') === 0) {
                     $javascriptIncludes .=  "\n" . $script;
-                }
-                else
-                {
+                } else {
                     $javascriptIncludes .=  "\n\t<script type=\"text/javascript\">" . $script . "</script>";
                 }
             }
         }
 
-        if ( ! $footer)
-        {
+        if (! $footer) {
             $this->headersSent = true;
         }
 
@@ -561,23 +519,16 @@ class Theme {
     {
         $cssIncludes = '';
 
-        foreach ($this->stylesheetOrder as $cssOrder) 
-        {
-            if ($cssOrder['array'] == 'stylesheets')
-            {
+        foreach ($this->stylesheetOrder as $cssOrder) {
+            if ($cssOrder['array'] == 'stylesheets') {
                 $cssIncludes .=  "\n\t<link href=\"" . $this->stylesheets[$cssOrder['index']] . "\" rel=\"stylesheet\" type=\"text/css\" />";
-            }
-            else if ($cssOrder['array'] == 'css')
-            {
+            } elseif ($cssOrder['array'] == 'css') {
                 $style = $this->css[$cssOrder['index']];
 
                 // Check if css has the script tags included
-                if (stripos(trim($style), '<stle') === 0)
-                {
+                if (stripos(trim($style), '<stle') === 0) {
                     $cssIncludes .=  "\n" . $style;
-                }
-                else
-                {
+                } else {
                     $cssIncludes .=  "\n\t<style type=\"text/css\">" . $style . "</style>";
                 }
             }
@@ -597,8 +548,7 @@ class Theme {
      */
     public function analytics()
     {
-        if (Config::get('cmscanvas::config.ga_tracking_id'))
-        {
+        if (Config::get('cmscanvas::config.ga_tracking_id')) {
 
             return "<script>
                       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -667,14 +617,12 @@ class Theme {
      */
     public function getThemes()
     {
-        $themes = array();
+        $themes = [];
 
         $cmsCanvasThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
-        if (is_array($cmsCanvasThemes))
-        {
-            foreach($cmsCanvasThemes as $cmsCanvasTheme)
-            {
+        if (is_array($cmsCanvasThemes)) {
+            foreach($cmsCanvasThemes as $cmsCanvasTheme) {
                 $themeName = basename($cmsCanvasTheme);
                 $themes[$themeName] = $this->getFriendlyThemeName($themeName);
             }
@@ -682,10 +630,8 @@ class Theme {
 
         $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.app_themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
-        if (is_array($userThemes))
-        {
-            foreach($userThemes as $userTheme)
-            {
+        if (is_array($userThemes)) {
+            foreach($userThemes as $userTheme) {
                 $themeName = basename($userTheme);
                 $themes[$themeName] = $this->getFriendlyThemeName($themeName);
             }
@@ -701,22 +647,19 @@ class Theme {
      */
     public function getThemeLayouts($theme = null)
     {
-        if ($theme == null)
-        {
-            if ($this->theme == null)
-            {
+        if ($theme == null) {
+            if ($this->theme == null) {
                 throw new \Exception("A theme has not been specified or set.");
             }
 
             $theme = $this->theme;
         }
 
-        $layouts = array();
+        $layouts = [];
 
         $themeLayouts = File::files($this->getThemePath($theme).'/views/layouts/');
 
-        foreach ($themeLayouts as $themeLayout) 
-        {
+        foreach ($themeLayouts as $themeLayout) {
             $filename = File::name($themeLayout);
             $filename = str_replace('.blade', '', $filename);
             $layouts[$filename] = $filename;
@@ -772,7 +715,7 @@ class Theme {
      */
     protected function getFriendlyThemeName($theme)
     {
-        return ucwords(str_replace(array('-', '_'), ' ', $theme));
+        return ucwords(str_replace(['-', '_'], ' ', $theme));
     }
 
 }

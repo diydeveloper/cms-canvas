@@ -7,6 +7,7 @@ class TimezonesTableSeeder extends Seeder {
 
     public function run()
     {
+        DB::table('users')->delete();
         DB::table('timezones')->delete();
 
         DB::table('timezones')->insert([

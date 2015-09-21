@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Entry;
+<?php 
+
+namespace CmsCanvas\Content\Entry;
 
 use Auth;
 use CmsCanvas\Models\Content\Entry;
@@ -78,7 +80,7 @@ class Builder {
      *
      * @var array
      */
-    protected $pivots = array();
+    protected $pivots = [];
 
     /**
      * @var boolean
@@ -103,17 +105,12 @@ class Builder {
     {
         $this->compile();
 
-        if ($this->paginate !== null)
-        {
+        if ($this->paginate !== null) {
             // $entries = $this->entries->paginate($this->paginate);
             $entries = $this->paginate($this->paginate);
-        }
-        else if ($this->simplePaginate !== null)
-        {
+        } elseif ($this->simplePaginate !== null) {
             $entries = $this->simplePaginate($this->simplePaginate);
-        }
-        else
-        {
+        } else {
             $entries = $this->entries->get();
         }
 
@@ -128,8 +125,7 @@ class Builder {
      */
     protected function buildFromArray(array $config)
     {
-        foreach ($config as $key => $value)
-        {
+        foreach ($config as $key => $value) {
             switch ($key) {
                 case 'entry_id':
                     $this->setEntryIds($value);
@@ -267,8 +263,7 @@ class Builder {
      */
     protected function addPivot($shortTag)
     {
-        if ( ! isset($this->pivots[$shortTag]))
-        {
+        if (! isset($this->pivots[$shortTag])) {
             $this->includePivotTables();
 
             $pivotExpression = \DB::raw('MAX(IF(`content_type_fields`.`short_tag` = \''.$shortTag.'\', `entry_data`.`data`, NULL)) AS '.$shortTag);
@@ -288,8 +283,7 @@ class Builder {
      */
     protected function includePivotTables()
     {
-        if ($this->pivotTablesIncluded == false)
-        {
+        if ($this->pivotTablesIncluded == false) {
             $locale = \Lang::getLocale();
             
             $this->entries->leftJoin(
@@ -363,8 +357,7 @@ class Builder {
 
         $this->restoreFieldsForCount();
 
-        if (isset($results[0]))
-        {
+        if (isset($results[0])) {
             return $results[0]->__aggregate_count;
         }
     }
@@ -378,8 +371,7 @@ class Builder {
     {
         $query = $this->entries->getQuery();
 
-        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field)
-        {
+        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field) {
             $this->backups[$field] = $query->{$field};
 
             $query->{$field} = null;
@@ -395,8 +387,7 @@ class Builder {
     {
         $query = $this->entries->getQuery();
 
-        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field)
-        {
+        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field) {
             $query->{$field} = $this->backups[$field];
         }
 
@@ -413,8 +404,7 @@ class Builder {
         $delimiter = '|';
         $not = false;
 
-        if (stripos($string, 'not ') === 0)
-        {
+        if (stripos($string, 'not ') === 0) {
             $not = true;
             $string = substr($string, 4);
         }
@@ -443,12 +433,10 @@ class Builder {
      */
     protected function compileContentTypes()
     {
-        if (count($this->contentTypes) > 0)
-        {
+        if (count($this->contentTypes) > 0) {
             $entries = $this;
 
-            $this->entries->whereHas('contentType', function($query) use($entries)
-            {
+            $this->entries->whereHas('contentType', function($query) use($entries) {
                 $entries->buildWhere('short_name', $entries->contentTypes, $query);
             });
         }
@@ -461,8 +449,7 @@ class Builder {
      */
     protected function compileEntryIds()
     {
-        if ($this->entryIds != null)
-        {
+        if ($this->entryIds != null) {
             $this->buildWhere('id', $this->entryIds);
         }
     }
@@ -474,11 +461,9 @@ class Builder {
      */
     protected function compileOrders()
     {
-        if (count($this->orders) > 0)
-        {
+        if (count($this->orders) > 0) {
             $counter = 0;
-            foreach ($this->orders as $orderBy) 
-            {
+            foreach ($this->orders as $orderBy) {
                 $this->addPivot($orderBy);
                 $sort = (isset($this->sorts[$counter]) && $this->sorts[$counter] == 'desc') ? 'desc' : 'asc';
                 $this->entries->orderBy($orderBy, $sort);
@@ -494,8 +479,7 @@ class Builder {
      */
     protected function compileWhere()
     {
-        if ($this->where != null)
-        {
+        if ($this->where != null) {
             // $this->entries->having(\DB::raw($this->where));
             $this->entries->having('sort_order', '>', 3);
         }
@@ -508,8 +492,7 @@ class Builder {
      */
     protected function compileLimit()
     {
-        if ($this->limit != null)
-        {
+        if ($this->limit != null) {
             $this->entries->take($this->limit);
         }
     }
@@ -521,8 +504,7 @@ class Builder {
      */
     protected function compileOffset()
     {
-        if ($this->offset != null)
-        {
+        if ($this->offset != null) {
             $this->entries->skip($this->offset);
         }
     }
@@ -535,12 +517,9 @@ class Builder {
     protected function compileStatusFilter()
     {
         // May need to rethink this as it causes several queries
-        if (Auth::check() && Auth::user()->can('ADMIN_ENTRY_VIEW'))
-        {
-            $this->entries->whereIn('entry_status_id', array(Status::PUBLISHED, Status::DRAFT));
-        }
-        else
-        {
+        if (Auth::check() && Auth::user()->can('ADMIN_ENTRY_VIEW')) {
+            $this->entries->whereIn('entry_status_id', [Status::PUBLISHED, Status::DRAFT]);
+        } else {
             $this->entries->where('entry_status_id', Status::PUBLISHED);
         }
     }
@@ -553,17 +532,13 @@ class Builder {
      */
     protected function buildWhere($column, $whereContainer, $query = null)
     {
-        if ($query == null)
-        {
+        if ($query == null) {
             $query = $this->entries;
         }
 
-        if (count($whereContainer->values) > 0)
-        {
+        if (count($whereContainer->values) > 0) {
             $query->whereIn($column, $whereContainer->values, 'and', $whereContainer->not);
-        }
-        else
-        {
+        } else {
             $query->where($column, current($whereContainer->values));
         }
     }

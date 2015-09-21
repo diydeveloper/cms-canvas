@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type;
+<?php 
+
+namespace CmsCanvas\Content\Type;
 
 use View;
 use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
@@ -14,15 +16,12 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	 */
 	public function fill(array $array)
 	{
-		foreach ($this->items as $item)
-		{
-			if (isset($array[$item->getKey()]))
-			{
+		foreach ($this->items as $item) {
+			if (isset($array[$item->getKey()])) {
 				$item->setData($array[$item->getKey()], true);
 			}
 
-			if (isset($array[$item->getMetadataKey()]))
-			{
+			if (isset($array[$item->getMetadataKey()])) {
 				$item->setMetadata($array[$item->getMetadataKey()], true);
 			}
 		}
@@ -37,13 +36,11 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	public function save()
 	{
 		$languages = Language::all();
-		$localeIds = $languages->lists('id', 'locale');
-		$entries = array();
+		$localeIds = $languages->lists('id', 'locale')->all();
+		$entries = [];
 
-		foreach ($this->items as $item)
-		{
-			if (!isset($entries[$item->entry->id])) 
-			{
+		foreach ($this->items as $item) {
+			if (! isset($entries[$item->entry->id])) {
 				$item->entry->allData()->delete();
 				$entries[$item->entry->id] = $item->entry;
 			}
@@ -52,8 +49,7 @@ class FieldTypeCollection extends CmsCanvasCollection {
 			$metadata = $item->getSaveMetadata();
 
 			// Only insert data if it is not an empty string and not null
-			if (($data !== '' && $data !== null) || ($metadata !== '' && $metadata !== null))
-			{
+			if (($data !== '' && $data !== null) || ($metadata !== '' && $metadata !== null)) {
 				$entryData = new \CmsCanvas\Models\Content\Entry\Data;
 				$entryData->entry_id = $item->entry->id;
 				$entryData->content_type_field_id = $item->field->id;
@@ -72,14 +68,12 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	 */
 	public function getValidationRules()
 	{
-		$rules = array();
+		$rules = [];
 
-		foreach ($this->items as $item)
-		{
+		foreach ($this->items as $item) {
 			$itemRules = $item->getValidationRules();
 
-			if ( ! empty($itemRules))
-			{
+			if (! empty($itemRules)) {
 				$rules = array_merge($rules, $itemRules);
 			}
 		}
@@ -94,10 +88,9 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	 */
 	public function getAttributeNames()
 	{
-		$attributeNames = array();
+		$attributeNames = [];
 
-		foreach ($this->items as $item)
-		{
+		foreach ($this->items as $item) {
 			$attributeNames[$item->getKey()] = $item->field->label;
 		}
 
@@ -112,8 +105,7 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	 */
 	public function setEntry(\CmsCanvas\Models\Content\Entry $entry)
 	{
-		foreach ($this->items as $item)
-		{
+		foreach ($this->items as $item) {
 			$item->setEntry($entry);
 		}
 	}
@@ -125,18 +117,16 @@ class FieldTypeCollection extends CmsCanvasCollection {
      */
 	public function getAdminViews()
 	{
-		$fieldIds = array();
-		$fieldViews = array();
+		$fieldIds = [];
+		$fieldViews = [];
 		$languages = Language::where('active', 1)->get();
 
 		// Make a list of unique field ids
-		foreach ($this->items as $item) 
-		{
+		foreach ($this->items as $item) {
 			$fieldIds[$item->field->id] = $item->field->id;
 		}
 
-		foreach ($fieldIds as $fieldId) 
-		{
+		foreach ($fieldIds as $fieldId) {
 			$relatedFieldTypes = $this->getWhere('field.id', $fieldId);
 			$fieldType = $relatedFieldTypes->first();
 

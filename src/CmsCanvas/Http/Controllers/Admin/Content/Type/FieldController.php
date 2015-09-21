@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content\Type;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\Content\Type;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -31,10 +33,10 @@ class FieldController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array(
+        $this->layout->breadcrumbs = [
             '/content/type' => 'Content Types',
             Request::path() => 'Content Type Fields'
-        );
+        ];
         $this->layout->content = $content;
 
     }
@@ -48,7 +50,7 @@ class FieldController extends AdminController {
     {
         Type::processFilterRequest();
 
-        return Redirect::route('admin.content.type.field.fields', array($contentType->id));
+        return Redirect::route('admin.content.type.field.fields', [$contentType->id]);
     }
 
     /**
@@ -61,7 +63,7 @@ class FieldController extends AdminController {
         $selected = Input::get('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.type.field.fields', array($contentType->id))
+            return Redirect::route('admin.content.type.field.fields', [$contentType->id])
                 ->with('notice', 'You must select at least one field to delete.');
         }
 
@@ -69,7 +71,7 @@ class FieldController extends AdminController {
 
         Field::destroy($selected);
 
-        return Redirect::route('admin.content.type.field.fields', array($contentType->id))
+        return Redirect::route('admin.content.type.field.fields', [$contentType->id])
             ->with('message', 'The selected content type(s) were sucessfully deleted.');;
     }
 
@@ -107,12 +109,9 @@ class FieldController extends AdminController {
         $types = Type::orderBy('name', 'asc')
             ->get();
 
-        if ($contentTypeField == null)
-        {
+        if ($contentTypeField == null) {
             $selectedType = $types->first();
-        }
-        else
-        {
+        } else {
             $selectedType = $types->getFirstWhere('id', $contentTypeField->content_type_field_type_id);
         }
 
@@ -121,11 +120,11 @@ class FieldController extends AdminController {
         $content->fieldTypeSettings = $fieldType->settings();
         $content->fieldTypes = $types;
 
-        $this->layout->breadcrumbs = array(
+        $this->layout->breadcrumbs = [
             '/content/type' => 'Content Types',
             '/content/type/'.$contentType->id.'/field' => 'Content Type Fields',
             Request::path() => (($contentTypeField == null) ? 'Add' : 'Edit') . 'Field'
-        );
+        ];
         $this->layout->content = $content;
     }
 
@@ -136,18 +135,17 @@ class FieldController extends AdminController {
      */
     public function postEdit($contentType, $contentTypeField = null)
     {
-        $rules = array(
+        $rules = [
             'content_type_field_type_id' => 'required',
             'label' => 'required|max:50',
             'short_tag' => "required|alpha_dash|max:50"
                 ."|unique:content_type_fields,short_tag".(($contentTypeField == null) ? "" : ",{$contentTypeField->id}"),
             'required' => 'required',
             'translate' => 'required',
-        );
+        ];
 
         $typeId = Input::get('content_type_field_type_id');
-        if ( ! empty($typeId))
-        {
+        if ( ! empty($typeId)) {
             $type = Type::find($typeId);
             $fieldType = FieldType::baseFactory($type->key_name, $contentTypeField);
             $settingsValidationRules = $fieldType->getSettingsValidationRules();
@@ -156,24 +154,19 @@ class FieldController extends AdminController {
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($contentTypeField == null)
-            {
+        if ($validator->fails()) {
+            if ($contentTypeField == null) {
                 return Redirect::route('admin.content.type.field.add', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
-                return Redirect::route('admin.content.type.field.edit', array($contentType->id, $contentTypeField->id))
+            } else {
+                return Redirect::route('admin.content.type.field.edit', [$contentType->id, $contentTypeField->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
-        if ($contentTypeField == null)
-        {
+        if ($contentTypeField == null) {
             $contentTypeField = new Field();
         }
         $contentTypeField->fill(Input::except('settings'));
@@ -197,9 +190,8 @@ class FieldController extends AdminController {
         $tableOrder = Input::get('fields_table');
 
         $sort = 1;
-        foreach ($tableOrder as $id)
-        {
-            Field::where('id', $id)->update(array('sort' => $sort));
+        foreach ($tableOrder as $id) {
+            Field::where('id', $id)->update(['sort' => $sort]);
             $sort++;
         }
 

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin;
 
 use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass;
 use CmsCanvas\Models\User;
@@ -15,8 +17,7 @@ class UserController extends AdminController {
      */
     public function getLogin()
     {
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             return Redirect::route('admin.index');
         }
 
@@ -31,16 +32,15 @@ class UserController extends AdminController {
      */
     public function postLogin()
     {
-        $credentials = array(
+        $credentials = [
             'email' => Input::get('email'),
             'password' => Input::get('password'),
             'active' => 1,
-        );
+        ];
 
         $rememberMe = (Input::get('remember_me')) ? true : false;
 
-        if (Auth::attempt($credentials, $rememberMe))
-        {
+        if (Auth::attempt($credentials, $rememberMe)) {
             return Redirect::route('admin.index');
         }
 
@@ -85,7 +85,7 @@ class UserController extends AdminController {
         $content->orderBy = $orderBy;
         $content->roles = $roles;
 
-        $this->layout->breadcrumbs = array(Request::path() => 'Users');
+        $this->layout->breadcrumbs = [Request::path() => 'Users'];
         $this->layout->content = $content;
 
     }
@@ -118,8 +118,7 @@ class UserController extends AdminController {
 
         $selected = array_values($selected);
 
-        if (in_array(Auth::user()->id, $selected))
-        {
+        if (in_array(Auth::user()->id, $selected)) {
             return Redirect::route('admin.user.users')
                 ->with('error', 'Failed to delete user(s) because you cannot delete yourself.');
         }
@@ -176,12 +175,12 @@ class UserController extends AdminController {
      */
     public function postEdit($user = null)
     {
-        $rules = array(
+        $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => "required|email|unique:users,email,{$user->id}",
             'phone' => 'regex:/[0-9]{10,11}/'
-        );
+        ];
 
         // Require password to be set for a new user
         if ($user == null || Input::get('password')) {
@@ -191,16 +190,12 @@ class UserController extends AdminController {
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($user == null)
-            {
+        if ($validator->fails()) {
+            if ($user == null) {
                 return Redirect::route('admin.user.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
+            } else {
                 return Redirect::route('admin.user.edit', $user->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
@@ -210,13 +205,12 @@ class UserController extends AdminController {
         $user = ($user == null) ? new User : $user;
         $user->fill(Input::all());
 
-        if (Input::get('password'))
-        {
+        if (Input::get('password')) {
             $user->password = Hash::make(Input::get('password'));
         }
 
         $user->save();
-        $user->roles()->sync(Input::get('user_roles', array()));
+        $user->roles()->sync(Input::get('user_roles', []));
 
         return Redirect::route('admin.user.users')
             ->with('message', "{$user->getFullName()} was successfully updated.");

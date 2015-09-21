@@ -21,6 +21,13 @@ class CmsCanvasCreateContentTypesTable extends Migration {
             $table->string('route', 500)->nullable();
             $table->longText('page_head')->nullable();
             $table->integer('entries_allowed')->nullable()->unsigned();
+            $table->integer('max_revisions')->nullable()->unsigned();
+            $table->string('theme_layout', 100)->nullable();
+            $table->boolean('dynamic_routing_flag')->default(0);
+            $table->integer('admin_entry_view_permission_id')->nullable()->unsigned();
+            $table->integer('admin_entry_edit_permission_id')->nullable()->unsigned();
+            $table->integer('admin_entry_create_permission_id')->nullable()->unsigned();
+            $table->integer('admin_entry_delete_permission_id')->nullable()->unsigned();
             $table->timestamps();
         });
     }

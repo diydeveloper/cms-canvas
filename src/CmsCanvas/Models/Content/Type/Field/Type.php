@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content\Type\Field;
+<?php 
+
+namespace CmsCanvas\Models\Content\Type\Field;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -16,14 +18,14 @@ class Type extends Model {
      *
      * @var array
      */
-    protected $fillable = array('name', 'key_name');
+    protected $fillable = ['name', 'key_name'];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Defines a one to many relationship with content type fields

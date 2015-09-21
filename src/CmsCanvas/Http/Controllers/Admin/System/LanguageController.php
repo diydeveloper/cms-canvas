@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\System;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\System;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -29,7 +31,7 @@ class LanguageController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array(Request::path() => 'Languages');
+        $this->layout->breadcrumbs = [Request::path() => 'Languages'];
         $this->layout->content = $content;
 
     }
@@ -62,12 +64,9 @@ class LanguageController extends AdminController {
 
         $selected = array_values($selected);
 
-        try
-        {
+        try {
             Language::destroy($selected);
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             return Redirect::route('admin.system.language.languages')
                 ->with('error', $e->getMessage());;
         }
@@ -107,10 +106,10 @@ class LanguageController extends AdminController {
 
         $content->language = $language;
 
-        $this->layout->breadcrumbs = array(
+        $this->layout->breadcrumbs = [
             'system/language' => 'Languages', 
             Request::path() => (($language == null) ? 'Add' : 'Edit').' Language'
-        );
+        ];
 
         $this->layout->content = $content;
     }
@@ -122,24 +121,20 @@ class LanguageController extends AdminController {
      */
     public function postEdit($language = null)
     {
-        $rules = array(
+        $rules = [
             'language' => 'required|max:65',
             'locale' => "required|max:5"
                 ."|unique:languages,locale".(($language == null) ? "" : ",{$language->id}"),
-        );
+        ];
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($language == null)
-            {
+        if ($validator->fails()) {
+            if ($language == null) {
                 return Redirect::route('admin.system.language.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
+            } else {
                 return Redirect::route('admin.system.language.edit', $language->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
@@ -149,12 +144,9 @@ class LanguageController extends AdminController {
         $language = ($language == null) ? new Language() : $language;
         $language->fill(Input::all());
 
-        try 
-        {
+        try {
             $language->save();
-        } 
-        catch(Exception $e) 
-        {
+        } catch(Exception $e) {
             return Redirect::route('admin.system.language.edit', $language->id)
                 ->withInput()
                 ->with('error', $e->getMessage());
@@ -175,12 +167,9 @@ class LanguageController extends AdminController {
 
         $language->default = 1;
 
-        try
-        {
+        try {
             $language->save();
-        }
-        catch(Exception $e)
-        {
+        } catch(Exception $e) {
             return Redirect::route('admin.system.language.languages', $language->id)
                 ->with('error', "{$language->language} can not be set to the default language while \"Inactive\".");
         }

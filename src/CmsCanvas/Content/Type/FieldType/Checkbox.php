@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Type\FieldType;
+<?php 
+
+namespace CmsCanvas\Content\Type\FieldType;
 
 use View, Input;
 use CmsCanvas\Content\Type\FieldType;
@@ -24,15 +26,14 @@ class Checkbox extends FieldType {
     public function inputField()
     {
         // Build options array
-        $optionArray = array();
-        foreach (explode("\n", $this->field->options) as $option)
-        {
+        $optionArray = [];
+        foreach (explode("\n", $this->field->options) as $option) {
             $option = explode("=", $option, 2);
             $optionArray[trim($option[0])] = (count($option) == 2) ? trim($option[1]) : trim($option[0]);
         }
 
         return View::make('cmscanvas::fieldType.checkbox.input')
-            ->with(array('fieldType' => $this, 'optionArray' => $optionArray));
+            ->with(['fieldType' => $this, 'optionArray' => $optionArray]);
     }
 
     /**
@@ -44,12 +45,9 @@ class Checkbox extends FieldType {
     public function setData($data, $fromFormData = false)
     {
         // The data is already an array when being set from a form post
-        if ($fromFormData)
-        {
+        if ($fromFormData) {
             $this->data = $data;
-        }
-        else
-        {
+        } else {
             $this->data = (array) @json_decode($data, true);
         }
     }
@@ -65,14 +63,12 @@ class Checkbox extends FieldType {
         // this means that no checkboxes were selected
         if (Input::get($this->getKey().'_checkbox') !== false 
             && Input::get($this->getKey()) === false
-        )
-        {
+        ) {
             return null;
         }
 
         // Convert data array to a JSON encoded string
-        if ( ! empty($this->data))
-        {
+        if ( ! empty($this->data)) {
             return json_encode($this->data);
         }
 
@@ -86,11 +82,10 @@ class Checkbox extends FieldType {
      */
     public function render()
     {
-        $itemArray = array();
+        $itemArray = [];
 
-        foreach ($this->data as $value)
-        {
-            $itemArray[] = array('item' => $value);
+        foreach ($this->data as $value) {
+            $itemArray[] = ['item' => $value];
         }
 
         return $itemArray;

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content;
+<?php 
+
+namespace CmsCanvas\Models\Content;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -16,21 +18,21 @@ class Navigation extends Model {
      *
      * @var array
      */
-    protected $fillable = array('title');
+    protected $fillable = ['title'];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array('title');
+    protected static $sortable = ['title'];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -48,8 +50,7 @@ class Navigation extends Model {
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -65,8 +66,7 @@ class Navigation extends Model {
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if ( isset($filter->search) && $filter->search != '')
-        {
+        if (isset($filter->search) && $filter->search != '') {
             $query->where('title', 'LIKE', "%{$filter->search}%");
         }
 

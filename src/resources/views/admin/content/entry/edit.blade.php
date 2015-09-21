@@ -106,7 +106,7 @@
                     </thead>
                     <tbody>
                         <?php $i = 0; ?>
-                        @if (count($entry->revisions) > 0)
+                        @if (! empty($entry) && count($entry->revisions) > 0)
                             @foreach ($entry->revisions as $revisionIteration)
                             <tr>
                                 <td>{!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
@@ -146,7 +146,7 @@
                 <div class="form">
                     <div>
                         {!! HTML::decode(Form::label('entry_status_id', '<span class="required">*</span> Status:')) !!}
-                        {!! Form::select('entry_status_id', $entryStatuses->lists('name', 'id')) !!}
+                        {!! Form::select('entry_status_id', $entryStatuses->lists('name', 'id')->all()) !!}
                     </div>
                     <div>
                         {!! HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) !!}
@@ -155,7 +155,7 @@
                             ( ! empty($entry->created_at)) ? 
                                 $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a') 
                             : 
-                                Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a'), 
+                                \Carbon\Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a'), 
                             array('class' => 'datetime')) 
                         !!}
                     </div>
@@ -185,8 +185,7 @@
         $('body').find('#ui-datepicker-div').wrap('<div class="smoothness"></div>');
 
         $("#save, #save_exit").click( function() {
-            if ($(this).attr('id') == 'save_exit')
-            {
+            if ($(this).attr('id') == 'save_exit') {
                 $('<input>').attr({
                     type: 'hidden',
                     name: 'save_exit',
@@ -194,9 +193,7 @@
                 }).appendTo('#entry_edit');
 
                 $('#entry_edit').submit();
-            }
-            else
-            {
+            } else {
                 $('#entry_edit').submit();
             }
         });
@@ -221,13 +218,10 @@
 
         // Expand / Collapse entry fields
         $('#entry_fields > div > label').click( function() {
-            if($(this).next('div').is(":visible"))
-            {
+            if($(this).next('div').is(":visible")) {
                 $(this).next('div').slideUp();
                 $('div', this).removeClass('arrow_expand').addClass('arrow_collapse');
-            }
-            else
-            {
+            } else {
                 $(this).next('div').slideDown();
                 $('div', this).removeClass('arrow_collapse').addClass('arrow_expand');
             }

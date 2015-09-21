@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content\Type;
+<?php 
+
+namespace CmsCanvas\Models\Content\Type;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -16,7 +18,7 @@ class Field extends Model {
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'content_type_field_type_id', 
         'label', 
         'short_tag', 
@@ -24,21 +26,21 @@ class Field extends Model {
         'required', 
         'settings',
         'options',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array('id', 'label', 'updated_at');
+    protected static $sortable = ['id', 'label', 'updated_at'];
 
     /**
      * The column to sort by if no session order by is defined.

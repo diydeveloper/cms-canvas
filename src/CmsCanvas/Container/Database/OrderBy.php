@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Container\Database;
+<?php 
+
+namespace CmsCanvas\Container\Database;
 
 class OrderBy {
 
@@ -26,21 +28,15 @@ class OrderBy {
     {
         $argumentsArray = (array) $argumentsArray;
 
-        if (isset($argumentsArray['column']) && in_array($argumentsArray['column'], $className::getSortable()))
-        {
+        if (isset($argumentsArray['column']) && in_array($argumentsArray['column'], $className::getSortable())) {
             $this->column = $argumentsArray['column'];
-        }
-        else
-        {
+        } else {
             $this->column = $className::getDefaultSortColumn();
         }
 
-        if (isset($argumentsArray['sort']) && in_array($argumentsArray['sort'], array('asc', 'desc')))
-        {
+        if (isset($argumentsArray['sort']) && in_array($argumentsArray['sort'], ['asc', 'desc'])) {
             $this->sort = $argumentsArray['sort'];
-        }
-        else 
-        {
+        } else {
             $this->sort = $className::getDefaultSortOrder();
         }
     }
@@ -73,8 +69,7 @@ class OrderBy {
      */
     public function getElementClass($column)
     {
-        if ($column == $this->column)
-        {
+        if ($column == $this->column) {
             return ' ' . $this->sort;
         }
 

@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\User;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\User;
 
 use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -29,7 +31,7 @@ class RoleController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array('user' => 'Users', Request::path() => 'Role');
+        $this->layout->breadcrumbs = ['user' => 'Users', Request::path() => 'Role'];
         $this->layout->content = $content;
     }
 
@@ -64,17 +66,14 @@ class RoleController extends AdminController {
         $roles = Role::whereIn('id', $selected)
             ->get();
 
-        foreach ($roles as $role) 
-        {
-            if ($role->users()->count() > 0)
-            {
+        foreach ($roles as $role) {
+            if ($role->users()->count() > 0) {
                 return Redirect::route('admin.user.role.roles')
                     ->with('error', 'Failed to delete role(s) because one or more of the selected has users still assigned.');
             }
         }
 
-        foreach ($roles as $role)
-        {
+        foreach ($roles as $role) {
             $role->delete();
         }
 
@@ -125,22 +124,18 @@ class RoleController extends AdminController {
      */
     public function postEdit($role = null)
     {
-        $rules = array(
+        $rules = [
             'name' => 'required',
-        );
+        ];
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($role == null)
-            {
+        if ($validator->fails()) {
+            if ($role == null) {
                 return Redirect::route('admin.user.role.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
+            } else {
                 return Redirect::route('admin.user.role.edit', $role->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
@@ -150,7 +145,7 @@ class RoleController extends AdminController {
         $role = ($role == null) ? new Role : $role;
         $role->fill(Input::all());
         $role->save();
-        $role->permissions()->sync(Input::get('role_permissions', array()));
+        $role->permissions()->sync(Input::get('role_permissions', []));
 
         return Redirect::route('admin.user.role.roles')
             ->with('message', "{$role->name} was successfully updated.");

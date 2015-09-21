@@ -30,7 +30,7 @@
                                 <td class="drag_handle"></td>
                                 <td class="center"><input type="checkbox" value="{!! $field->id !!}" name="selected[]" /></td>
                                 <td>{!! $field->label !!}</td>
-                                <td>@{!! <?php echo $field->short_tag; ?> !!}</td>
+                                <td>{!! <?php echo $field->short_tag; ?> !!}</td>
                                 <td>{!! $field->type->name !!}</td>
                                 <td class="right">[ <a href="{!! Admin::url('/content/type/'.$contentType->id.'/field/'.$field->id.'/edit/') !!}">Edit</a> ]</td>
                             </tr>

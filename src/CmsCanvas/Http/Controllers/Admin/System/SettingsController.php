@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\System;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\System;
 
 use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -28,7 +30,7 @@ class SettingsController extends AdminController {
         // @todo add paginated entry search
         $content->entries = Entry::orderBy('title', 'asc')->get();
 
-        $this->layout->breadcrumbs = array(Request::path() => 'General Settings');
+        $this->layout->breadcrumbs = [Request::path() => 'General Settings'];
         $this->layout->content = $content;
     }
 
@@ -39,19 +41,18 @@ class SettingsController extends AdminController {
      */
     public function postGeneralSettings()
     {
-        $rules = array(
+        $rules = [
             'site_name' => 'required',
             'notification_email' => "required|email",
             'site_homepage' => 'required',
             'custom_404' => 'required',
             'theme' => 'required',
             'layout' => 'required',
-        );
+        ];
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Redirect::route('admin.system.settings.general-settings')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
@@ -59,12 +60,10 @@ class SettingsController extends AdminController {
 
         $settingItems = Setting::all();
 
-        foreach ($settingItems as $settingItem) 
-        {
+        foreach ($settingItems as $settingItem) {
             $value = Input::get($settingItem->setting);
 
-            if ($value !== null)
-            {
+            if ($value !== null) {
                 $settingItem->value = $value;
                 $settingItem->save();
             }
@@ -85,26 +84,19 @@ class SettingsController extends AdminController {
 
         $theme = Input::get('theme');
 
-        if ($theme != null)
-        {
+        if ($theme != null) {
             $layouts = Theme::getThemeLayouts($theme);
 
-            if (!empty($layouts))
-            {
+            if (! empty($layouts)) {
                 $response['layouts'] = $layouts;
-            }
-            else
-            {
+            } else {
                 $response['status'] = 'ERROR';
                 $response['message'] = 'No layouts found';
             }
-        }
-        else
-        {
+        } else {
             $response['status'] = 'ERROR';
             $response['message'] = 'No theme was specified';
         }
-
 
         return json_encode($response);
     }

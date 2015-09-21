@@ -45,7 +45,7 @@
                                 <td class="center"><input type="checkbox" value="{!! $permission->id !!}" name="selected[]" /></td>
                                 <td>{!! $permission->name !!}</td>
                                 <td>{!! $permission->key_name !!}</td>
-                                <td>{!! implode(', ', $permission->roles->lists('name')) !!}</td>
+                                <td>{!! implode(', ', $permission->roles->lists('name')->all()) !!}</td>
                                 <td class="right">[ <a href="{!! Admin::url("user/permission/{$permission->id}/edit") !!}">Edit</a> ]</td>
                             </tr>
                         @endforeach

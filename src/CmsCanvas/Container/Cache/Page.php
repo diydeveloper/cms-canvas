@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Container\Cache;
+<?php 
+
+namespace CmsCanvas\Container\Cache;
 
 use Theme;
 use CmsCanvas\Content\Page\PageInterface;
@@ -30,12 +32,9 @@ class Page implements PageInterface  {
      */
     public function __construct($objectId, $objectType = 'entry')
     {
-        if ($objectType == 'contentType')
-        {
+        if ($objectType == 'contentType') {
             $this->object = Type::find($objectId);
-        }
-        else
-        {
+        } else {
             $this->object = Entry::find($objectId);
             $this->object->contentType;
         }
@@ -49,7 +48,7 @@ class Page implements PageInterface  {
      * @param array $parameters
      * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\Content\Type\Render
      */
-    public function render($parameters = array())
+    public function render($parameters = [])
     {
         $content = $this->object
             ->setCache($this)
@@ -57,8 +56,7 @@ class Page implements PageInterface  {
 
         $layoutName = $content->getThemeLayout();
 
-        if ($layoutName != null)
-        {
+        if ($layoutName != null) {
             Theme::setLayout($layoutName);
             $layout = Theme::getLayout();
             $layout->content = $content;

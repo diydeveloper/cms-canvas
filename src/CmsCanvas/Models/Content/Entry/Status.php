@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content\Entry;
+<?php 
+
+namespace CmsCanvas\Models\Content\Entry;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -31,14 +33,14 @@ class Status extends Model {
      *
      * @var array
      */
-    protected $fillable = array('name', 'key_name');
+    protected $fillable = ['name', 'key_name'];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Defines a one to many relationship with entries

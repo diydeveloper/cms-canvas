@@ -99,19 +99,19 @@
                             <legend>Admin Entry Permissions</legend>
                             <div>
                                 <label for="title">View:</label>
-                                {!! Form::select('admin_entry_view_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) !!}
+                                {!! Form::select('admin_entry_view_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Edit:</label>
-                                {!! Form::select('admin_entry_edit_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) !!}
+                                {!! Form::select('admin_entry_edit_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Create:</label>
-                                {!! Form::select('admin_entry_create_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')) !!}
+                                {!! Form::select('admin_entry_create_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Delete:</label>
-                                {!! Form::select('admin_entry_delete_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id') ) !!}
+                                {!! Form::select('admin_entry_delete_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
                             </div>
                         </fieldset>
                     </div>

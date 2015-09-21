@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -28,7 +30,7 @@ class TypeController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array(Request::path() => 'Content Types');
+        $this->layout->breadcrumbs = [Request::path() => 'Content Types'];
         $this->layout->content = $content;
 
     }
@@ -94,12 +96,9 @@ class TypeController extends AdminController {
      */
     public function getEdit($contentType = null)
     {
-        if ($contentType == null)
-        {
+        if ($contentType == null) {
             $content = View::make('cmscanvas::admin.content.type.add');
-        }
-        else
-        {
+        } else {
             Theme::addPackage('codemirror');
             $content = View::make('cmscanvas::admin.content.type.edit');
         }
@@ -109,10 +108,10 @@ class TypeController extends AdminController {
         $content->defaultThemeLayout = Theme::getThemeLayouts(Config::get('cmscanvas::config.layout'));
         $content->permissions = Permission::orderBy('name', 'asc')->get();
 
-        $this->layout->breadcrumbs = array(
+        $this->layout->breadcrumbs = [
             'content/type' => 'Content Types', 
             Request::path() => (($contentType == null) ? 'Add' : 'Edit').' Content Type'
-        );
+        ];
 
         $this->layout->content = $content;
     }
@@ -124,15 +123,15 @@ class TypeController extends AdminController {
      */
     public function postEdit($contentType = null)
     {
-        $rules = array(
+        $rules = [
             'title' => 'required|max:255',
             'short_name' => "required|alpha_dash|max:50"
                 ."|unique:content_types,short_name".(($contentType == null) ? "" : ",{$contentType->id}"),
             'route' => "max:500|unique:content_types,route".(($contentType == null) ? "" : ",{$contentType->id}"),
             'entries_allowed' => 'integer',
-        );
+        ];
 
-        $messages = array();
+        $messages = [];
         
         if (!empty(Input::get('dynamic_routing_flag'))) {
             $rules['route'] .= '|required';
@@ -141,16 +140,12 @@ class TypeController extends AdminController {
 
         $validator = Validator::make(Input::all(), $rules, $messages);
 
-        if ($validator->fails())
-        {
-            if ($contentType == null)
-            {
+        if ($validator->fails()) {
+            if ($contentType == null) {
                 return Redirect::route('admin.content.type.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
+            } else {
                 return Redirect::route('admin.content.type.edit', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
@@ -161,13 +156,10 @@ class TypeController extends AdminController {
         $contentType->fill(Input::all());
         $contentType->save();
 
-        if (Input::get('save_exit'))
-        {
+        if (Input::get('save_exit')) {
             return Redirect::route('admin.content.type.types')
                 ->with('message', "{$contentType->title} was successfully updated.");
-        }
-        else
-        {
+        } else {
             return Redirect::route('admin.content.type.edit', $contentType->id)
                 ->with('message', "{$contentType->title} was successfully updated.");
         }

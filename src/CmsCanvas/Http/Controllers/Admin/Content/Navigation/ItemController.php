@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
 use View, Admin, Redirect, Validator, Input;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -39,28 +41,21 @@ class ItemController extends AdminController {
     public function postEdit($navigation, $item = null)
     {
         $rules['type'] = 'required';
-        if (Input::get('type') == 'url') 
-        {
+        if (Input::get('type') == 'url') {
             $rules['title'] = 'required';
-        }
-        else
-        {
+        } else {
             $rules['entry_id'] = 'required';
         }
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($item == null)
-            {
-                return Redirect::route('admin.content.navigation.item.add', array($navigation->id))
+        if ($validator->fails()) {
+            if ($item == null) {
+                return Redirect::route('admin.content.navigation.item.add', [$navigation->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
-                return Redirect::route('admin.content.navigation.item.edit', array($navigation->id, $item->id))
+            } else {
+                return Redirect::route('admin.content.navigation.item.edit', [$navigation->id, $item->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
@@ -68,8 +63,7 @@ class ItemController extends AdminController {
 
         $item = ($item == null) ? new Item : $item;
         $item->fill(Input::all());
-        if ($item->type == 'url')
-        {
+        if ($item->type == 'url') {
             $item->entry_id = null;
         }
         $item->save();

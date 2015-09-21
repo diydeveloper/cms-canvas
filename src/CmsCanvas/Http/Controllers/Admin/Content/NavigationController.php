@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -27,7 +29,7 @@ class NavigationController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = array(Request::path() => 'Navigations');
+        $this->layout->breadcrumbs = [Request::path() => 'Navigations'];
         $this->layout->content = $content;
     }
 
@@ -110,17 +112,13 @@ class NavigationController extends AdminController {
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
-            if ($navigation == null)
-            {
+        if ($validator->fails()) {
+            if ($navigation == null) {
                 return Redirect::route('admin.content.navigation.add', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
-                return Redirect::route('admin.content.navigation.edit', array($navigation->id))
+            } else {
+                return Redirect::route('admin.content.navigation.edit', [$navigation->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
@@ -142,17 +140,17 @@ class NavigationController extends AdminController {
     public function getTree($navigation)
     {
         Theme::addPackage('nestedSortable');
-        $builder = new Builder(array('navigation_id' => $navigation->id));
+        $builder = new Builder(['navigation_id' => $navigation->id]);
         $navigationTree = $builder->getNavigationTree();
 
         $content = View::make('cmscanvas::admin.content.navigation.tree');
         $content->navigation = $navigation;
         $content->navigationTree = $navigationTree;
 
-        $this->layout->breadcrumbs = array(
+        $this->layout->breadcrumbs = [
             'content/navigation' => 'Navigations', 
             Request::path() => 'Navigation Tree'
-        );
+        ];
         $this->layout->content = $content;
     }
 
@@ -165,23 +163,21 @@ class NavigationController extends AdminController {
     {
         $list = Request::get('list');
 
-        if ( ! is_array($list))
-        {
-            $list = array();
+        if (! is_array($list)) {
+            $list = [];
         }
 
         $order = 0;
 
-        foreach($list as $id => $parentId)
-        {
+        foreach($list as $id => $parentId) {
             $parentId = ($parentId == 'root') ? 0 : $parentId;
 
             Item::where('id', $id)
                 ->update(
-                    array(
+                    [
                         'sort' => $order, 
                         'parent_id' => $parentId
-                    )
+                    ]
                 );
 
             $order++;

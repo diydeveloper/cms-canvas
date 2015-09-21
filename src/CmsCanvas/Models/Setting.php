@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models;
+<?php 
+
+namespace CmsCanvas\Models;
 
 use CmsCanvas\Database\Eloquent\Model;
 

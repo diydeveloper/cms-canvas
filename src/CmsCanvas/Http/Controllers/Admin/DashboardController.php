@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin;
 
 use View, Theme, Config, Admin;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -14,8 +16,7 @@ class DashboardController extends AdminController {
     {
         $content = View::make('cmscanvas::admin.dashboard.dashboard');
 
-        if (Config::get('cmscanvas::config.ga_profile_id'))
-        {
+        if (Config::get('cmscanvas::config.ga_profile_id')) {
             // $this->template->add_stylesheet('application/modules/dashboard/assets/css/google_analytics.css');
 
             // try
@@ -28,7 +29,7 @@ class DashboardController extends AdminController {
             //     $data['ga_data'] = '<p class="error">Unable to connect to Google Analytics. Please ensure your <a href="' . site_url(ADMIN_PATH . '/settings/general-settings') . '">analytic settings</a> are correct.</p>';
             // }
 
-            // $data['month_year'] = array();
+            // $data['month_year'] = [];
 
             // for($i = 0; $i < 12; $i++)
             // {
@@ -37,7 +38,7 @@ class DashboardController extends AdminController {
             // }
         }
 
-        $this->layout->breadcrumbs = array();
+        $this->layout->breadcrumbs = [];
         $this->layout->content = $content;
     }
 

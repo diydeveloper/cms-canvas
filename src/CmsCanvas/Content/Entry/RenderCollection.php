@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Entry;
+<?php 
+
+namespace CmsCanvas\Content\Entry;
 
 use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
 
@@ -17,8 +19,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function __construct($entries)
     {
-        if ($entries instanceof \Illuminate\Pagination\AbstractPaginator)
-        {
+        if ($entries instanceof \Illuminate\Pagination\AbstractPaginator) {
             $this->paginator = $entries;
         }
 
@@ -29,13 +30,11 @@ class RenderCollection extends CmsCanvasCollection {
             $render = $entry->render();
             $render->setIndex($counter - 1);
 
-            if ($counter !== 1)
-            {
+            if ($counter !== 1) {
                 $render->setFirstFlag(false);
             }
 
-            if ($counter !== $entryCount)
-            {
+            if ($counter !== $entryCount) {
                 $render->setLastFlag(false);
             }
 
@@ -53,8 +52,7 @@ class RenderCollection extends CmsCanvasCollection {
     {
         $contents = '';
 
-        foreach ($this->items as $item) 
-        {
+        foreach ($this->items as $item) {
             $contents .= (string) $item;
         }
 
@@ -68,8 +66,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function links()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->render();
         }
     }
@@ -81,8 +78,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function currentPage()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->currentPage();
         }
     }
@@ -94,8 +90,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function lastPage()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->lastPage();
         }
     }
@@ -107,8 +102,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function perPage()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->perPage();
         }
     }
@@ -120,8 +114,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function total()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->total();
         }
     }
@@ -133,8 +126,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function count()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->count();
         }
     }
@@ -146,8 +138,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function firstItem()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->firstItem();
         }
     }
@@ -159,8 +150,7 @@ class RenderCollection extends CmsCanvasCollection {
      */
     public function lastItem()
     {
-        if ($this->paginator != null)
-        {
+        if ($this->paginator != null) {
             return $this->paginator->lastItem();
         }
     }

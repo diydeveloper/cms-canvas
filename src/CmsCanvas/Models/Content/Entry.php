@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content;
+<?php 
+
+namespace CmsCanvas\Models\Content;
 
 use Lang, StringView, stdClass, View, Cache, DB, Auth;
 use CmsCanvas\Content\Page\PageInterface;
@@ -27,7 +29,7 @@ class Entry extends Model implements PageInterface {
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'title', 
         'url_title', 
         'route',
@@ -37,14 +39,14 @@ class Entry extends Model implements PageInterface {
         'entry_status_id',
         'author_id',
         'created_at',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'updated_at');
+    protected $guarded = ['id', 'updated_at'];
 
     /**
      * Manually manage the timestamps on this class
@@ -58,14 +60,14 @@ class Entry extends Model implements PageInterface {
      *
      * @var array
      */
-    protected static $sortable = array(
+    protected static $sortable = [
         'id', 
         'title', 
         'route', 
         'content_type_title', 
         'entry_status_name', 
         'updated_at',
-    );
+    ];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -153,7 +155,7 @@ class Entry extends Model implements PageInterface {
      * @param array $options
      * @return bool
      */
-    public function save(array $options = array())
+    public function save(array $options = [])
     {
         $time = $this->freshTimestamp();
         $this->setUpdatedAt($time);
@@ -168,8 +170,7 @@ class Entry extends Model implements PageInterface {
      */
     public function getContentTypeFields()
     {
-        if ($this->cache != null)
-        {
+        if ($this->cache != null) {
             return $this->cache->getContentTypeFields();
         }
 
@@ -181,8 +182,7 @@ class Entry extends Model implements PageInterface {
             ->join('content_types', 'content_types.id', '=', 'content_type_fields.content_type_id')
             ->leftJoin(
                 DB::raw('(`entry_data` inner join `languages` on `entry_data`.`language_id` = `languages`.`id` and `languages`.`locale` = \''.$locale.'\')'), 
-                function($join) use($entry)
-                {
+                function($join) use($entry) {
                     $join->on('entry_data.content_type_field_id', '=', 'content_type_fields.id')
                         ->where('entry_data.entry_id', '=', $entry->id);
                 }
@@ -199,26 +199,21 @@ class Entry extends Model implements PageInterface {
      */
     public function getRenderedData()
     {
-        if ($this->cache == null)
-        {
+        if ($this->cache == null) {
             $entry = $this;
 
-            $cache = Cache::rememberForever($this->getRouteName(), function() use($entry)
-            {
+            $cache = Cache::rememberForever($this->getRouteName(), function() use($entry) {
                 return new Page($entry->id, 'entry');
             });
 
             return $cache->getRenderedData();
-        }
-        else
-        {
+        } else {
             $contentTypeFields = $this->getContentTypeFields();
 
             $locale = Lang::getLocale();
-            $data = array();
+            $data = [];
 
-            foreach ($contentTypeFields as $contentTypeField) 
-            {
+            foreach ($contentTypeFields as $contentTypeField) {
                 $fieldType = FieldType::factory(
                     $contentTypeField, 
                     $this, 
@@ -244,20 +239,19 @@ class Entry extends Model implements PageInterface {
      * @param array $parameters
      * @return \CmsCanvas\StringView\StringView
      */
-    public function renderContents($parameters = array())
+    public function renderContents($parameters = [])
     {
         $data = $this->getRenderedData();
 
         $content = $this->contentType->render($parameters, $data);
 
-        if ($this->template_flag)
-        {
+        if ($this->template_flag) {
             $content = StringView::make(
-                array(
+                [
                     'template' => (string) $content, 
                     'cache_key' => $this->getRouteName(), 
                     'updated_at' => $this->updated_at->timestamp
-                ), 
+                ], 
                 $data
             );
         }
@@ -271,19 +265,16 @@ class Entry extends Model implements PageInterface {
      * @param array $parameters
      * @return \CmsCanvas\Content\Entry\Render
      */
-    public function render($parameters = array())
+    public function render($parameters = [])
     {
-        if ($this->entry_status_id == Status::DISABLED)
-        {
+        if ($this->entry_status_id == Status::DISABLED) {
             return abort(404);
         }
 
-        if ($this->entry_status_id == Status::DRAFT)
-        {
+        if ($this->entry_status_id == Status::DRAFT) {
             $user = Auth::user();
 
-            if ($user == null || ! $user->can('ADMIN_ENTRY_VIEW'))
-            {
+            if ($user == null || ! $user->can('ADMIN_ENTRY_VIEW')) {
                 return abort(404);
             }
         }
@@ -336,12 +327,9 @@ class Entry extends Model implements PageInterface {
      */
     public function getPreferredRoute()
     {
-        if ($this->getRoute() !== null)
-        {
+        if ($this->getRoute() !== null) {
             return $this->getRoute();
-        }
-        else if ($this->getDynamicRoute() !== null)
-        {
+        } elseif ($this->getDynamicRoute() !== null) {
             return $this->getDynamicRoute();
         }
 
@@ -355,8 +343,7 @@ class Entry extends Model implements PageInterface {
      */
     public function getRoute()
     {
-        if ($this->route !== null && $this->route !== '')
-        {
+        if ($this->route !== null && $this->route !== '') {
             return '/'.$this->route;
         }
 
@@ -383,8 +370,7 @@ class Entry extends Model implements PageInterface {
     {
         if ($this->url_title !== null && $this->url_title !== '' 
             && $this->contentType->getRoute() !== null
-        )
-        {
+        ) {
             return $this->contentType->getRoute().'/'.$this->url_title;
         }
 
@@ -412,8 +398,7 @@ class Entry extends Model implements PageInterface {
     {
         $value = trim($value, '/');
 
-        if ($value === '')
-        {
+        if ($value === '') {
             $value = null;
         }
 
@@ -431,13 +416,11 @@ class Entry extends Model implements PageInterface {
     {
         $permission = null;
 
-        if ($this->contentType->adminEntryDeletePermission != null) 
-        {
+        if ($this->contentType->adminEntryDeletePermission != null) {
             $permission = $this->contentType->adminEntryDeletePermission->key_name;
         }
 
-        if ($permission != null && ! Auth::user()->can($permission))
-        {
+        if ($permission != null && ! Auth::user()->can($permission)) {
             throw new PermissionDenied(
                 $permission,
                 "You do not have permission to delete the entry \"{$this->title}\","
@@ -445,15 +428,13 @@ class Entry extends Model implements PageInterface {
             );
         }
 
-        if ($this->isHomePage())
-        {
+        if ($this->isHomePage()) {
             throw new Exception(
                 "The entry \"{$this->title}\" can not be deleted because it set as the default home page"
             );
         }
 
-        if ($this->isCustom404Page())
-        {
+        if ($this->isCustom404Page()) {
             return Exception(
                 "The entry \"{$this->title}\" can not be deleted because it set as the default custom 404 page."
             );
@@ -471,8 +452,7 @@ class Entry extends Model implements PageInterface {
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -488,8 +468,7 @@ class Entry extends Model implements PageInterface {
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if (isset($filter->search) && $filter->search != '')
-        {
+        if (isset($filter->search) && $filter->search != '') {
             $query->where('entries.title', 'LIKE', "%{$filter->search}%");
         }
 
@@ -524,6 +503,16 @@ class Entry extends Model implements PageInterface {
     public function isCustom404Page()
     {
         return ($this->id == \Config::get('cmscanvas::config.custom_404'));
+    }
+
+    /**
+     * Returns date fields as a carbon instance
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        return ['created_at', 'updated_at'];
     }
 
 }

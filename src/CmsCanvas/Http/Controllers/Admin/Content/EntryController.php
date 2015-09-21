@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin\Content;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin\Content;
 
 use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App, Auth, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
@@ -32,13 +34,11 @@ class EntryController extends AdminController {
             ->join('entry_statuses', 'entries.entry_status_id', '=', 'entry_statuses.id')
             ->select(DB::raw('entries.*, content_types.title as content_type_title, entry_statuses.name as entry_status_name'))
             ->distinct()
-            ->where(function($query) 
-            {
+            ->where(function($query) {
                 $query->whereNull('content_types.admin_entry_view_permission_id');
                 $roles = Auth::user()->roles;
-                if (count($roles) > 0)
-                {
-                    $query->orWhereIn('role_permissions.role_id', $roles->lists('id'));
+                if (count($roles) > 0) {
+                    $query->orWhereIn('role_permissions.role_id', $roles->lists('id')->all());
                 }
             })
             ->applyFilter($filter)
@@ -56,7 +56,7 @@ class EntryController extends AdminController {
         $content->viewableContentTypes = $viewableContentTypes;
         $content->entryStatuses = $entryStatuses;
 
-        $this->layout->breadcrumbs = array(Request::path() => 'Entries');
+        $this->layout->breadcrumbs = [Request::path() => 'Entries'];
         $this->layout->content = $content;
 
     }
@@ -82,7 +82,7 @@ class EntryController extends AdminController {
     {
         $selected = Input::get('selected');
         $deleteSuccessfulFlag = false;
-        $errors = array();
+        $errors = [];
 
         if (empty($selected) || ! is_array($selected)) {
             return Redirect::route('admin.content.entry.entries')
@@ -91,19 +91,14 @@ class EntryController extends AdminController {
 
         $selected = array_values($selected);
 
-        foreach ($selected as $entryId) 
-        {
+        foreach ($selected as $entryId) {
             $entry = Entry::find($entryId);
 
-            if ($entry != null)
-            {
-                try 
-                {
+            if ($entry != null) {
+                try {
                     $entry->delete();
                     $deleteSuccessfulFlag = true;
-                }
-                catch (\CmsCanvas\Exceptions\Exception $e)
-                {
+                } catch (\CmsCanvas\Exceptions\Exception $e) {
                     $errors[] = $e->getMessage();
                 }
             }
@@ -111,19 +106,14 @@ class EntryController extends AdminController {
 
         $redirect = Redirect::route('admin.content.entry.entries');
 
-        if (count($errors) > 0)
-        {
+        if (count($errors) > 0) {
             $redirect->with('error', $errors);
         }
 
-        if ($deleteSuccessfulFlag)
-        {
-            if (count($errors) > 0)
-            {
+        if ($deleteSuccessfulFlag) {
+            if (count($errors) > 0) {
                 $message = 'Some of the selected entry(s) were sucessfully deleted.';
-            }
-            else
-            {
+            } else {
                 $message = 'The selected entry(s) were sucessfully deleted.';
             }
 
@@ -160,13 +150,10 @@ class EntryController extends AdminController {
      */
     public function getEdit($contentType, $entry = null, $revision = null)
     {
-        if ($entry == null)
-        {
+        if ($entry == null) {
             $contentType->checkEntriesAllowed();
             $contentType->checkAdminEntryCreatePermissions();
-        }
-        else
-        {
+        } else {
             $entry->contentType->checkAdminEntryEditPermissions();
         }
 
@@ -174,15 +161,14 @@ class EntryController extends AdminController {
 
         $entryStatuses = Status::orderBy('id', 'asc')->get();
         $authors = User::getAuthors();
-        $authorOptions = array('' => '');
+        $authorOptions = ['' => ''];
         foreach ($authors as $author) {
             $authorOptions[$author->id] = $author->getFullName();
         }
 
         $contentFields = $contentType->getAllFieldTypeInstances($entry);
 
-        if ($revision != null)
-        {
+        if ($revision != null) {
             $entry->fill($revision->data);
             $contentFields->fill($revision->data);
         }
@@ -204,13 +190,10 @@ class EntryController extends AdminController {
      */
     public function postEdit($contentType, $entry = null, $revision = null)
     {
-        if ($entry == null)
-        {
+        if ($entry == null) {
             $contentType->checkEntriesAllowed();
             $contentType->checkAdminEntryCreatePermissions();
-        }
-        else
-        {
+        } else {
             $entry->contentType->checkAdminEntryEditPermissions();
         }
         
@@ -219,8 +202,7 @@ class EntryController extends AdminController {
 
         $rules['title'] = 'required';
 
-        if ($contentType->dynamic_routing_flag) 
-        {
+        if ($contentType->dynamic_routing_flag) {
             $rules['url_title'] = "required|alpha_dash|max:255"
                 ."|unique:entries,url_title,".(($entry == null) ? "NULL" : "{$entry->id}").",id"
                 .",content_type_id,{$contentType->id}";
@@ -228,19 +210,15 @@ class EntryController extends AdminController {
 
         $attributeNames = $contentFields->getAttributeNames();
 
-        $validator = Validator::make(Input::all(), $rules, array(), $attributeNames);
+        $validator = Validator::make(Input::all(), $rules, [], $attributeNames);
 
-        if ($validator->fails())
-        {
-            if ($entry == null)
-            {
+        if ($validator->fails()) {
+            if ($entry == null) {
                 return Redirect::route('admin.content.entry.add', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
-            }
-            else
-            {
-                return Redirect::route('admin.content.entry.edit', array($contentType->id, $entry->id))
+            } else {
+                return Redirect::route('admin.content.entry.edit', [$contentType->id, $entry->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
@@ -262,15 +240,13 @@ class EntryController extends AdminController {
         $contentFields->save();
 
         // Create a revision if max revisions is set
-        if ($contentType->max_revisions > 0)
-        {
+        if ($contentType->max_revisions > 0) {
             $oldRevisions = $entry->revisions()
                 ->skip($contentType->max_revisions - 1)
                 ->take(25)
                 ->get();
 
-            foreach ($oldRevisions as $oldRevision) 
-            {
+            foreach ($oldRevisions as $oldRevision) {
                 $oldRevision->delete();
             }
 
@@ -286,14 +262,11 @@ class EntryController extends AdminController {
             $revision->save();
         }
 
-        if (Input::get('save_exit'))
-        {
+        if (Input::get('save_exit')) {
             return Redirect::route('admin.content.entry.entries')
                 ->with('message', "{$entry->title} was successfully updated.");
-        }
-        else
-        {
-            return Redirect::route('admin.content.entry.edit', array($contentType->id, $entry->id))
+        } else {
+            return Redirect::route('admin.content.entry.edit', [$contentType->id, $entry->id])
                 ->with('message', "{$entry->title} was successfully updated.");
         }
     }
@@ -310,7 +283,7 @@ class EntryController extends AdminController {
             150, 
             150, 
             false, 
-            array('no_image' => Theme::asset('images/no_image.jpg'))
+            ['no_image' => Theme::asset('images/no_image.jpg')]
         );
     }
 

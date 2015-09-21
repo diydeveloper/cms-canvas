@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models;
+<?php 
+
+namespace CmsCanvas\Models;
 
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Exceptions\Exception;
@@ -17,25 +19,25 @@ class Language extends Model {
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'language', 
         'locale',
         'active',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array('language', 'locale');
+    protected static $sortable = ['language', 'locale'];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -70,8 +72,7 @@ class Language extends Model {
      */
     public function validateForSave()
     {
-        if ($this->default && ! $this->active)
-        {
+        if ($this->default && ! $this->active) {
             throw new Exception("The default language can not be set to \"Inactive\"");
         }
     }
@@ -84,8 +85,7 @@ class Language extends Model {
      */
     public function validateForDeletion()
     {
-        if ($this->default)
-        {
+        if ($this->default) {
             throw new Exception("{$this->language} can not be deleted because it is set as the default language");
         }
     }
@@ -99,8 +99,7 @@ class Language extends Model {
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -116,14 +115,12 @@ class Language extends Model {
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if (isset($filter->search) && $filter->search != '')
-        {
+        if (isset($filter->search) && $filter->search != '') {
             $query->where('language', 'LIKE', "%{$filter->search}%");
             $query->orWhere('locale', 'LIKE', "%{$filter->search}%");
         }
 
-        if (isset($filter->active))
-        {
+        if (isset($filter->active)) {
             $query->where('active', $filter->active);
         }
 

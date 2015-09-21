@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers\Admin;
+<?php 
+
+namespace CmsCanvas\Http\Controllers\Admin;
 
 use Theme;
 use CmsCanvas\Http\Controllers\Controller;
@@ -27,15 +29,15 @@ class AdminController extends Controller {
     public function __construct()
     {
         // Load jQuery by default
-        Theme::addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
+        Theme::addPackage(['jquery', 'jquerytools', 'admin_jqueryui']);
 
         // Set up the session for KCFinder
         if (session_id() == '') {
             @session_start();
         }
-        $_SESSION['KCFINDER'] = array(
+        $_SESSION['KCFINDER'] = [
             'disabled' => false
-        );
+        ];
     }
 
 }

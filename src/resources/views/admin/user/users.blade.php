@@ -17,7 +17,7 @@
 
                 <div class="left">
                     <div><label>Role:</label></div> 
-                    {!! Form::select('filter[role_id]', ['' => ''] + $roles->lists('name', 'id')) !!}
+                    {!! Form::select('filter[role_id]', ['' => ''] + $roles->lists('name', 'id')->all()) !!}
                 </div>
 
                 <div class="left filter_buttons">
@@ -62,7 +62,7 @@
                                 <td>{!! $user->last_name !!}</td>
                                 <td>{!! $user->email !!}</td>
                                 <td>
-                                    {!! implode(', ', $user->roles->lists('name')) !!}
+                                    {!! implode(', ', $user->roles->lists('name')->all()) !!}
                                 </td>
                                 <td>{!! (empty($user->last_login)) ? '' : $user->last_login->setTimezone(Auth::user()->getTimezoneIdentifier())->format('M j, Y h:i a') !!}</td>
                                 <td class="right">[ <a href="{!! Admin::url("user/{$user->id}/impersonate") !!}">Login</a> ] [ <a href="{!! Admin::url("user/{$user->id}/edit") !!}">Edit</a> ]</td>

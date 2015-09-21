@@ -22,6 +22,26 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'CmsCanvas\Http\Controllers';
 
     /**
+     * @var string
+     */
+    protected $defaultLocale;
+
+    /**
+     * @var Collection
+     */
+    protected $locales;
+
+    /**
+     * @var Collection
+     */
+    protected $entries;
+
+    /**
+     * @var Collection
+     */
+    protected $contentTypes;
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @param  \Illuminate\Routing\Router  $router
@@ -72,7 +92,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Lang::setFallback($this->defaultLocale);
 
-        if (in_array($firstSegment, $this->locales)) {
+        if (in_array($firstSegment, $this->locales->all())) {
             $locale = $firstSegment;
             Lang::setLocale($locale);
         }
@@ -109,7 +129,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         foreach ($this->entries as $entry) {
             if ($entry->getRoute() !== null) {
-                Route::any(
+                $router->any(
                     $entry->getRoute(), 
                     [
                         'as' => $entry->getRouteName(), 
@@ -119,7 +139,7 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             if ($entry->getDynamicRoute() !== null) {
-                Route::any(
+                $router->any(
                     $entry->getDynamicRoute(), 
                     [
                         'as' => $entry->getDynamicRouteName(), 

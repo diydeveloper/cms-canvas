@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Exceptions;
+<?php 
+
+namespace CmsCanvas\Exceptions;
 
 use Theme, View;
 
@@ -41,7 +43,7 @@ class Exception extends \RuntimeException implements ExceptionDisplayInterface {
     {
         Theme::setTheme('admin');
         Theme::setLayout('default');
-        Theme::addPackage(array('jquery', 'jquerytools', 'admin_jqueryui'));
+        Theme::addPackage(['jquery', 'jquerytools', 'admin_jqueryui']);
         $layout = Theme::getLayout();
 
         $layout->content = View::make('cmscanvas::admin.error')

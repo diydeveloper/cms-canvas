@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers;
+<?php 
+
+namespace CmsCanvas\Http\Controllers;
 
 use Theme;
 

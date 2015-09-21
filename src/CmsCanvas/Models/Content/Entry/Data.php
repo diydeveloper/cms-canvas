@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content\Entry;
+<?php 
+
+namespace CmsCanvas\Models\Content\Entry;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -16,14 +18,14 @@ class Data extends Model {
      *
      * @var array
      */
-    protected $fillable = array('entry_id', 'content_type_field_id', 'language_id', 'data', 'metadata');
+    protected $fillable = ['entry_id', 'content_type_field_id', 'language_id', 'data', 'metadata'];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Defines a one to many relationship with entries

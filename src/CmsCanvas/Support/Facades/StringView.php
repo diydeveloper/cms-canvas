@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Support\Facades;
+<?php 
+
+namespace CmsCanvas\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -9,5 +11,9 @@ class StringView extends Facade {
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'stringview'; }
+    protected static function getFacadeAccessor() 
+    { 
+        return 'stringview'; 
+    }
+    
 }

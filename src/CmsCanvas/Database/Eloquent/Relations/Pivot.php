@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Database\Eloquent\Relations;
+<?php 
+
+namespace CmsCanvas\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Relations\Pivot as EloquentPivot;
 

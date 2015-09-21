@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Database\Eloquent;
+<?php 
+
+namespace CmsCanvas\Database\Eloquent;
 
 use Eloquent, Session, Input, stdClass, Config, Auth;
 use CmsCanvas\Container\Database\OrderBy;
@@ -22,7 +24,7 @@ class Model extends Eloquent {
      *
      * @return \CmsCanvas\Database\Eloquent\Collection
      */
-    public function newCollection(array $models = array())
+    public function newCollection(array $models = [])
     {
         return new Collection($models);
     }
@@ -36,16 +38,11 @@ class Model extends Eloquent {
     {
         $class = get_called_class();
 
-        if (Input::get('clear_filter'))
-        {
+        if (Input::get('clear_filter')) {
             $class::forgetSessionFilter();
-        }
-        else if (Input::get('filter'))
-        {
+        } elseif (Input::get('filter')) {
             $class::setSessionFilter(Input::get('filter'));
-        }
-        else if (is_array(Input::get('orderBy')))
-        {
+        } elseif (is_array(Input::get('orderBy'))) {
             $class::setSessionOrderBy(Input::get('orderBy'));
         }
     }
@@ -88,8 +85,7 @@ class Model extends Eloquent {
 
         $filter = Session::get($class.'::filter');
 
-        if (empty($filter))
-        {
+        if (empty($filter)) {
             $filter = new stdClass();
         } 
 
@@ -122,8 +118,7 @@ class Model extends Eloquent {
         
         $orderBy = Session::get($class.'::orderBy');
 
-        if ( ! ($orderBy instanceof OrderBy))
-        {
+        if ( ! ($orderBy instanceof OrderBy)) {
             $orderBy = new OrderBy(null, $class);
         }
 
@@ -163,12 +158,9 @@ class Model extends Eloquent {
     {
         $class = get_called_class();
 
-        if (isset($class::$defaultSortOrder))
-        {
+        if (isset($class::$defaultSortOrder)) {
             return $class::$defaultSortOrder;
-        }
-        else
-        {
+        } else {
             return 'asc';
         }
     }
@@ -182,12 +174,10 @@ class Model extends Eloquent {
      *
      * @throws MassAssignmentException
      */
-    public function fill(array $attributes, array $takeLiteralValues = array())
+    public function fill(array $attributes, array $takeLiteralValues = [])
     {
-        foreach ($attributes as $key => $value)
-        {
-            if ($value === '' && !in_array($key, $takeLiteralValues))
-            {
+        foreach ($attributes as $key => $value) {
+            if ($value === '' && !in_array($key, $takeLiteralValues)) {
                 $attributes[$key] = null;
             }
         }

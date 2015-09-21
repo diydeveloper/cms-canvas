@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models;
+<?php 
+
+namespace CmsCanvas\Models;
 
 use CmsCanvas\Database\Eloquent\Model;
 
@@ -16,21 +18,21 @@ class Role extends Model {
      *
      * @var array
      */
-    protected $fillable = array('name');
+    protected $fillable = ['name'];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array('name');
+    protected static $sortable = ['name'];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -67,10 +69,8 @@ class Role extends Model {
      */
     public function hasPermission($keyName)
     {
-        foreach ($this->permissions as $permission) 
-        {
-            if ($permission->key_name == $keyName) 
-            {
+        foreach ($this->permissions as $permission) {
+            if ($permission->key_name == $keyName) {
                 return true;
             }
         }
@@ -87,8 +87,7 @@ class Role extends Model {
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -104,8 +103,7 @@ class Role extends Model {
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if ( isset($filter->search) && $filter->search != '')
-        {
+        if ( isset($filter->search) && $filter->search != '') {
             $query->where('name', 'LIKE', "%{$filter->search}%");
         }
 

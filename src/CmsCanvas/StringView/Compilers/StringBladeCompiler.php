@@ -14,16 +14,14 @@ class StringBladeCompiler extends BladeCompiler implements CompilerInterface {
 	 */
 	public function compile($path)
 	{
-
-                // get the template data
-                $string = $path->template;
+        // get the template data
+        $string = $path->template;
 
 		// Compile to PHP
 		$contents = $this->compileString($string);
 
-                // check/save cache
-		if ( ! is_null($this->cachePath))
-		{
+        // check/save cache
+		if ( ! is_null($this->cachePath)) {
 			$this->files->put($this->getCompiledPath($path), $contents);
 		}
 	}
@@ -57,20 +55,16 @@ class StringBladeCompiler extends BladeCompiler implements CompilerInterface {
 		// If the compiled file doesn't exist we will indicate that the view is expired
 		// so that it can be re-compiled. Else, we will verify the last modification
 		// of the views is less than the modification times of the compiled views.
-		if ( ! $this->cachePath || ! $this->files->exists($compiled))
-		{
+		if ( ! $this->cachePath || ! $this->files->exists($compiled)) {
 			return true;
 		}
 
-                // 0 timestamp for last updated is treated as force tempalte compile update
-                if ($path->updated_at == 0) {
-                    $path->updated_at = $this->files->lastModified($compiled)+1;
-                }
+        // 0 timestamp for last updated is treated as force tempalte compile update
+        if ($path->updated_at == 0) {
+            $path->updated_at = $this->files->lastModified($compiled)+1;
+        }
 
-                $lastModified = $path->updated_at;
-
-		// if ( $lastModified >= $this->files->lastModified($compiled) )
-		// echo $lastModified . ' ('.date('r', $lastModified).') > ' . $this->files->lastModified($compiled) . ' ('.date('r', $this->files->lastModified($compiled)).')<br/>';
+        $lastModified = $path->updated_at;
 
 		return $lastModified >= $this->files->lastModified($compiled);
 	}

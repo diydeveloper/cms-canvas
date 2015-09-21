@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Middleware;
+<?php 
+
+namespace CmsCanvas\Http\Middleware;
 
 use Cache;
 use Closure;

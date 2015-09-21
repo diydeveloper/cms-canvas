@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Http\Controllers;
+<?php 
+
+namespace CmsCanvas\Http\Controllers;
 
 use Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;
@@ -13,15 +15,12 @@ class PageController extends PublicController {
     {
         $routeName = Route::currentRouteName();
 
-        if ($routeName == null || $exception instanceof NotFoundHttpException)
-        {
+        if ($routeName == null || $exception instanceof NotFoundHttpException) {
             // Route not found. Show 404 page.
             $entryId = Config::get('cmscanvas::config.custom_404');
             $routeName = 'entry.'.$entryId.'.'.Lang::getLocale();
-            $parameters = array();
-        }
-        else
-        {
+            $parameters = [];
+        } else {
             $parameters = Route::current()->parameters();
         }
 
@@ -31,8 +30,7 @@ class PageController extends PublicController {
 
         $cacheKey = $objectType.'.'.$objectId.'.'.$locale;
 
-        $cache = Cache::rememberForever($cacheKey, function() use($objectType, $objectId)
-        {
+        $cache = Cache::rememberForever($cacheKey, function() use($objectType, $objectId) {
             return new Page($objectId, $objectType);
         });
 

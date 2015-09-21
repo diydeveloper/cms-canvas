@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Models\Content;
+<?php 
+
+namespace CmsCanvas\Models\Content;
 
 use Lang, StringView, View, Auth;
 use CmsCanvas\Content\Page\PageInterface;
@@ -24,7 +26,7 @@ class Type extends Model implements PageInterface {
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'title', 
         'layout', 
         'page_head', 
@@ -39,21 +41,21 @@ class Type extends Model implements PageInterface {
         'admin_entry_edit_permission_id',
         'admin_entry_create_permission_id',
         'admin_entry_delete_permission_id',
-    );
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array
      */
-    protected $guarded = array('id', 'created_at', 'updated_at');
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.
      *
      * @var array
      */
-    protected static $sortable = array('title', 'short_name');
+    protected static $sortable = ['title', 'short_name'];
 
     /**
      * The column to sort by if no session order by is defined.
@@ -151,8 +153,7 @@ class Type extends Model implements PageInterface {
      */
     public function scopeApplyOrderBy($query, \CmsCanvas\Container\Database\OrderBy $orderBy)
     {
-        if (in_array($orderBy->getColumn(), self::$sortable))
-        {
+        if (in_array($orderBy->getColumn(), self::$sortable)) {
             $query->orderBy($orderBy->getColumn(), $orderBy->getSort()); 
         }
 
@@ -168,8 +169,7 @@ class Type extends Model implements PageInterface {
      */
     public function scopeApplyFilter($query, $filter)
     {
-        if ( isset($filter->search) && $filter->search != '')
-        {
+        if ( isset($filter->search) && $filter->search != '') {
             $query->where('title', 'LIKE', "%{$filter->search}%")
                 ->orWhere('short_name', 'LIKE', "%{$filter->search}%");
         }
@@ -193,13 +193,10 @@ class Type extends Model implements PageInterface {
                 $query->whereNull('admin_entry_view_permission_id');
 
                 $roles = Auth::user()->roles;
-                if (count($roles) > 0)
-                {
-                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles)
-                    {
-                        $query->whereHas('roles', function($query) use($roles)
-                        {
-                            $query->whereIn('roles.id', $roles->lists('id'));
+                if (count($roles) > 0) {
+                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
+                        $query->whereHas('roles', function($query) use($roles) {
+                            $query->whereIn('roles.id', $roles->lists('id')->all());
                         });
                     });
                 }
@@ -220,13 +217,10 @@ class Type extends Model implements PageInterface {
                 $query->whereNull('admin_entry_view_permission_id');
 
                 $roles = Auth::user()->roles;
-                if (count($roles) > 0)
-                {
-                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles)
-                    {
-                        $query->whereHas('roles', function($query) use($roles)
-                        {
-                            $query->whereIn('roles.id', $roles->lists('id'));
+                if (count($roles) > 0) {
+                    $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
+                        $query->whereHas('roles', function($query) use($roles) {
+                            $query->whereIn('roles.id', $roles->lists('id')->all());
                         });
                     });
                 }
@@ -254,8 +248,7 @@ class Type extends Model implements PageInterface {
      */
     public function getRoute()
     {
-        if ($this->route !== null && $this->route !== '')
-        {
+        if ($this->route !== null && $this->route !== '') {
             return '/'.$this->route;
         }
 
@@ -283,8 +276,7 @@ class Type extends Model implements PageInterface {
     {
         $value = trim($value, '/');
 
-        if ($value === '')
-        {
+        if ($value === '') {
             $value = null;
         }
 
@@ -312,8 +304,7 @@ class Type extends Model implements PageInterface {
     {
         $value = trim($value, '/');
 
-        if ($value === '')
-        {
+        if ($value === '') {
             $value = null;
         }
 
@@ -327,8 +318,7 @@ class Type extends Model implements PageInterface {
      */
     public function getContentTypeFields()
     {
-        if ($this->cache != null)
-        {
+        if ($this->cache != null) {
             return $this->cache->getContentTypeFields();
         }
 
@@ -345,10 +335,9 @@ class Type extends Model implements PageInterface {
         $contentTypeFields = $this->getContentTypeFields();
 
         $locale = Lang::getLocale();
-        $data = array();
+        $data = [];
 
-        foreach ($contentTypeFields as $contentTypeField) 
-        {
+        foreach ($contentTypeFields as $contentTypeField) {
             $fieldType = FieldType::factory($contentTypeField, null, $locale);
             $data[$contentTypeField->short_tag] = $fieldType->render();
         }
@@ -365,28 +354,29 @@ class Type extends Model implements PageInterface {
      * @param array $data
      * @return \CmsCanvas\StringView\StringView
      */
-    public function renderContents($parameters = array(), $data = array())
+    public function renderContents($parameters = [], $data = [])
     {
-        if (empty($data))
-        {
+        if (empty($data)) {
             $data = $this->getRenderedData();
         }
 
         $data = array_merge($data, $parameters);
 
+        /**
         StringView::extend(function($view, $compiler)
         {
             $pattern = $compiler->createMatcher('entries');
 
             return preg_replace($pattern, '<?php echo Content::entries($2) ?>', $view);
         });
+        */
 
         $content = StringView::make(
-            array(
+            [
                 'template' => ($this->layout === null) ? '' : $this->layout, 
                 'cache_key' => $this->getRouteName(), 
                 'updated_at' => $this->updated_at->timestamp
-            ), 
+            ], 
             $data
         ); 
 
@@ -400,7 +390,7 @@ class Type extends Model implements PageInterface {
      * @param array $data
      * @return \CmsCanvas\StringView\StringView
      */
-    public function render($parameters = array(), $data = array())
+    public function render($parameters = [], $data = [])
     {
         return new Render($this, $parameters, $data);
     }
@@ -456,23 +446,18 @@ class Type extends Model implements PageInterface {
 
         $fieldInstances = new FieldTypeCollection();
 
-        foreach ($contentTypeFields as $contentTypeField)
-        {
+        foreach ($contentTypeFields as $contentTypeField) {
             $fieldDataItems = $dataItems->getWhere('content_type_field_id', $contentTypeField->id);
 
-            if ($contentTypeField->translate)
-            {
-                foreach ($languages as $language)                
-                {
+            if ($contentTypeField->translate) {
+                foreach ($languages as $language) {
                     $dataItem = $fieldDataItems->getFirstWhere('locale', $language->locale);
                     $data = ($dataItem != null) ? $dataItem->data : '';
                     $metadata = ($dataItem != null) ? $dataItem->metadata : '';
 
                     $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $language->locale, $data, $metadata);
                 }
-            }
-            else
-            {
+            } else {
                 $dataItem = $fieldDataItems->getFirstWhere('locale', $defaultLocale);
                 $data = ($dataItem != null) ? $dataItem->data : '';
                 $metadata = ($dataItem != null) ? $dataItem->metadata : '';
@@ -495,8 +480,7 @@ class Type extends Model implements PageInterface {
     {
         if ($this->entries_allowed !== null 
             && $this->entries->count() >= $this->entries_allowed
-        )
-        {
+        ) {
             throw new \RuntimeException("
                 The content type \"{$this->title}\" has the maximum number of allowed entries."
                 . " (Max: $this->entries_allowed)"
@@ -514,8 +498,7 @@ class Type extends Model implements PageInterface {
      */
     public function checkAdminEntryViewPermissions()
     {
-        if ($this->adminEntryViewPermission != null)
-        {
+        if ($this->adminEntryViewPermission != null) {
             Auth::user()->checkPermission($this->adminEntryViewPermission->key_name);
         }
     }
@@ -530,8 +513,7 @@ class Type extends Model implements PageInterface {
     {
         $this->checkAdminEntryViewPermissions();
 
-        if ($this->adminEntryEditPermission != null)
-        {
+        if ($this->adminEntryEditPermission != null) {
             Auth::user()->checkPermission($this->adminEntryEditPermission->key_name);
         }
     }
@@ -546,8 +528,7 @@ class Type extends Model implements PageInterface {
     {
         $this->checkAdminEntryViewPermissions();
 
-        if ($this->adminEntryCreatePermission != null)
-        {
+        if ($this->adminEntryCreatePermission != null) {
             Auth::user()->checkPermission($this->adminEntryCreatePermission->key_name);
         }
     }
@@ -562,8 +543,7 @@ class Type extends Model implements PageInterface {
     {
         $this->checkAdminEntryViewPermissions();
 
-        if ($this->adminEntryDeletePermission != null)
-        {
+        if ($this->adminEntryDeletePermission != null) {
             Auth::user()->checkPermission($this->adminEntryDeletePermission->key_name);
         }
     }

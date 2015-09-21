@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content;
+<?php 
+
+namespace CmsCanvas\Content;
 
 use View, Config;
 use CmsCanvas\Content\Entry\Builder as EntryBuilder;
@@ -47,7 +49,7 @@ class Content {
      * @param array $additionalArguments
      * @return string
      */
-    public function thumbnail($source, $width = null, $height = null, $crop = false, $additionalArguments = array())
+    public function thumbnail($source, $width = null, $height = null, $crop = false, $additionalArguments = [])
     {
         if ($width == null || $height == null) {
             return $source;
@@ -62,16 +64,12 @@ class Content {
 
         $sourceModificationTime = @filemtime($sourceImage);
 
-        if ($source == false || $sourceModificationTime === false) 
-        {
-            if (isset($additionalArguments['no_image']))
-            {
+        if ($source == false || $sourceModificationTime === false) {
+            if (isset($additionalArguments['no_image'])) {
                 $additionalArguments['no_image'] = str_replace(asset(null), '', $additionalArguments['no_image']);
                 $sourceImage = public_path($additionalArguments['no_image']);
                 $sourceModificationTime = @filemtime($sourceImage);
-            }
-            else
-            {
+            } else {
                 return '';
             }
         }
@@ -85,8 +83,7 @@ class Content {
 
         $thumbnailFilename = md5($dirname.'/'.$filename.'.'.$extension).'-'.$filename.'-'.$width.'x'.$height;
 
-        if ($crop == true) 
-        {
+        if ($crop == true) {
             $thumbnailFilename .= '-cropped';
         }
 
@@ -96,12 +93,10 @@ class Content {
 
         if ($sourceModificationTime !== false 
             && ($destinationModificationTime === false || $destinationModificationTime < $sourceModificationTime)
-        ) 
-        {
+        ) {
             $image = Image::make($sourceImage);
 
-            if ($crop == true) 
-            {
+            if ($crop == true) {
                 $image->fit($width, $height, function ($constraint) {
                     $constraint->upsize();
                 }, 'center');

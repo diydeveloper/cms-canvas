@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Support\Facades;
+<?php 
+
+namespace CmsCanvas\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -9,6 +11,9 @@ class Admin extends Facade {
      *
      * @return string
      */
-     protected static function getFacadeAccessor() { return 'admin'; }
+    protected static function getFacadeAccessor() 
+    { 
+        return 'admin'; 
+    }
 
 }

@@ -26,7 +26,7 @@
                     </div>
                     <div class="page_div">
                         <label for="entry_id"><span class="required">*</span> Entry Page:</label>
-                        {!! Form::select('entry_id', ['' => ''] + $entries->lists('title', 'id')) !!}
+                        {!! Form::select('entry_id', ['' => ''] + $entries->lists('title', 'id')->all()) !!}
                     </div>
                     <div>
                         <label for="title"><span class="required url_div">*</span> Link Text:<span class="help page_div">Leave blank to use the page title</span></label>

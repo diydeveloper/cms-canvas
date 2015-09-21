@@ -29,12 +29,12 @@
 
                     <div>
                         {!! HTML::decode(Form::label('site_homepage', '<span class="required">*</span> Site Homepage:')) !!}
-                        {!! Form::select('site_homepage', $entries->lists('title', 'id')) !!}
+                        {!! Form::select('site_homepage', $entries->lists('title', 'id')->all()) !!}
                     </div>
 
                     <div>
                         {!! HTML::decode(Form::label('custom_404', '<span class="required">*</span> Custom 404:')) !!}
-                        {!! Form::select('custom_404', $entries->lists('title', 'id')) !!}
+                        {!! Form::select('custom_404', $entries->lists('title', 'id')->all()) !!}
                     </div>
 
                     <div>
