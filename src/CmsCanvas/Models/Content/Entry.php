@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, stdClass, View, Cache, DB, Auth;
+use Lang, Twig, stdClass, Cache, DB, Auth;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
@@ -14,6 +14,7 @@ use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
 use CmsCanvas\Exceptions\PermissionDenied;
 use CmsCanvas\Exceptions\Exception;
+use CmsCanvas\Container\Twig\StringTemplate;
 
 class Entry extends Model implements PageInterface {
 
@@ -237,7 +238,7 @@ class Entry extends Model implements PageInterface {
      * Generates a view with the entry's data
      *
      * @param array $parameters
-     * @return \CmsCanvas\StringView\StringView
+     * @return string
      */
     public function renderContents($parameters = [])
     {
@@ -246,14 +247,8 @@ class Entry extends Model implements PageInterface {
         $content = $this->contentType->render($parameters, $data);
 
         if ($this->template_flag) {
-            $content = StringView::make(
-                [
-                    'template' => (string) $content, 
-                    'cache_key' => $this->getRouteName(), 
-                    'updated_at' => $this->updated_at->timestamp
-                ], 
-                $data
-            );
+            $stringTemplate = new StringTemplate($this->getRouteName(), (string) $content, $this->updated_at->timestamp);
+            $content = Twig::render($stringTemplate, $data);
         }
 
         return $content;

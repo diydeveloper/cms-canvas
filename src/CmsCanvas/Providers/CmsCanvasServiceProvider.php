@@ -9,7 +9,6 @@ use CmsCanvas\Commands\ThemePublishCommand;
 use CmsCanvas\Theme\Theme;
 use CmsCanvas\Admin\Admin;
 use CmsCanvas\Content\Content;
-use CmsCanvas\StringView\StringView;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
@@ -111,7 +110,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
         $this->registerDisplayError();
         $this->registerAdmin();
         $this->registerContent();
-        $this->registerStringView();
     }
 
     /**
@@ -121,7 +119,8 @@ class CmsCanvasServiceProvider extends ServiceProvider {
      */
     protected function registerTheme()
     {
-        $this->app->bindShared('theme', function($app) {
+        $this->app->alias('theme', 'CmsCanvas\Theme\Theme');
+        $this->app->singleton('theme', function($app) {
             return new Theme;
         });
     }
@@ -147,26 +146,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     {
         $this->app->bind('content', function() {
             return new Content;
-        });
-    }
-
-    /**
-     * Register string view provider.
-     *
-     * @return void
-     */
-    protected function registerStringView()
-    {
-        $this->app->bind('stringview', function() {
-            return new StringView;
-        });
-
-        $this->app['stringview']->extend(function($value) {
-            return preg_replace('/\@define(.+)/', '<?php ${1}; ?>', $value);
-        });
-
-        $this->app['stringview']->extend(function($value, $compiler) {
-            return preg_replace('/\@entries\s*\(\'?([a-zA-Z0-9_]+)\'?\s*,\s*(.+)\)/', '<?php $${1} = Content::entries(${2}); ?>', $value);
         });
     }
 

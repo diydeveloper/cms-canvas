@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin;
 
-use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass;
+use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass, Session;
 use CmsCanvas\Models\User;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
@@ -56,6 +56,7 @@ class UserController extends AdminController {
     public function getLogout()
     {
         Auth::logout();
+        Session::flush();
 
         return Redirect::route('admin.user.login');
     }

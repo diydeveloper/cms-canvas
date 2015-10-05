@@ -2,6 +2,8 @@
 
 namespace CmsCanvas\Http\Controllers;
 
+use Twig;
+use CmsCanvas\Container\Twig\StringTemplate;
 use Route, Cache, Config, stdClass, Content, Lang;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;

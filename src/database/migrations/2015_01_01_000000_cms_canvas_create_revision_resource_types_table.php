@@ -14,7 +14,7 @@ class CmsCanvasCreateRevisionResourceTypesTable extends Migration {
     {
         Schema::create('revision_resource_types', function(Blueprint $table) {
             // Columns
-            $table->increments('id');
+            $table->integer('id')->unsigned()->primary();
             $table->string('name', 255);
             $table->string('key_name', 50)->unique();
         });

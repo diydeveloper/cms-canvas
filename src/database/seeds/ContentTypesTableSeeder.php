@@ -17,7 +17,7 @@ class ContentTypesTableSeeder extends Seeder {
         DB::table('content_types')->insert([
             [
                 'title' => 'Page', 
-                'layout' => '{!! $content !!}', 
+                'layout' => '{{ content }}', 
                 'short_name' => 'page',
                 'max_revisions' => 5,
                 'theme_layout' => 'default',

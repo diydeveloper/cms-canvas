@@ -14,9 +14,10 @@ class CmsCanvasCreateSettingsTable extends Migration {
     {
         Schema::create('settings', function(Blueprint $table) {
             // Columns
-            $table->increments('id');
+            $table->integer('id')->unsigned()->primary();
             $table->string('setting', 65)->unique();
             $table->string('value', 255);
+            $table->timestamps();
         });
     }
 

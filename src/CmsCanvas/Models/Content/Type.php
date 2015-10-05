@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, View, Auth;
+use Lang, Auth, StringView;
 use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
@@ -11,6 +11,7 @@ use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
 use CmsCanvas\Content\Type\Render;
+use CmsCanvas\Container\Twig\StringTemplate;
 
 class Type extends Model implements PageInterface {
 
@@ -352,7 +353,7 @@ class Type extends Model implements PageInterface {
      *
      * @param array $parameters
      * @param array $data
-     * @return \CmsCanvas\StringView\StringView
+     * @return string
      */
     public function renderContents($parameters = [], $data = [])
     {
@@ -362,23 +363,11 @@ class Type extends Model implements PageInterface {
 
         $data = array_merge($data, $parameters);
 
-        /**
-        StringView::extend(function($view, $compiler)
-        {
-            $pattern = $compiler->createMatcher('entries');
-
-            return preg_replace($pattern, '<?php echo Content::entries($2) ?>', $view);
-        });
-        */
-
-        $content = StringView::make(
-            [
-                'template' => ($this->layout === null) ? '' : $this->layout, 
-                'cache_key' => $this->getRouteName(), 
-                'updated_at' => $this->updated_at->timestamp
-            ], 
-            $data
-        ); 
+        $template = ($this->layout === null) ? '' : $this->layout;
+        $content = StringView::make($template)
+            ->cacheKey($this->getRouteName())
+            ->updatedAt($this->updated_at->timestamp)
+            ->with($data);
 
         return $content;
     }
@@ -388,7 +377,7 @@ class Type extends Model implements PageInterface {
      *
      * @param array $parameters
      * @param array $data
-     * @return \CmsCanvas\StringView\StringView
+     * @return string
      */
     public function render($parameters = [], $data = [])
     {

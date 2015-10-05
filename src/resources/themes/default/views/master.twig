@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="{!! Lang::getLocale() !!}">
+<html lang="{{ trans_locale() }}">
     <head>
         <meta charset="UTF-8" /> 
 
-        {!! Theme::head() !!}
+        {{ theme_head() }}
 
         <!-- Stylesheet Includes -->
-        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/reset.css') !!}" />
-        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/style.css') !!}" />
-        <link rel="stylesheet" type="text/css" href="{!! Theme::asset('css/content.css') !!}" />
+        <link rel="stylesheet" type="text/css" href="{{ theme_asset('css/reset.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ theme_asset('css/style.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ theme_asset('css/content.css') }}" />
 
         <!-- Javascript Includes -->
-        <script type="text/javascript" src="{!! Theme::asset('js/jquery.min.js') !!}"></script>
-        <script type="text/javascript" src="{!! Theme::asset('js/superfish.js') !!}"></script>
+        <script type="text/javascript" src="{{ theme_asset('js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_asset('js/superfish.js') }}"></script>
 
         <!--[if lt IE 9]>
-            <script src="{!! Theme::asset('js/html5.js') !!}"></script>
+            <script src="{{ theme_asset('js/html5.js') }}"></script>
         <![endif]-->
 
         <script type="text/javascript">
@@ -46,29 +46,28 @@
 
             <!-- Header -->
             <header>
-                <a id="logo" href="{!! url() !!}">{{ Config::get('cmscanvas::config.site_name') }}</a> 
+                <a id="logo" href="{{ url() }}">{{ config('cmscanvas::config.site_name') }}</a> 
 
-                <img alt="Header Image" src="{!! Theme::asset('images/header.jpg') !!}" />
+                <img alt="Header Image" src="{{ theme_asset('images/header.jpg') }}" />
 
                 <nav>
-                    {!! Content::navigation(['navigation_id' => '2', 'start_level' => 'above_current', 'offset' => '2']) !!}
                     <div class="clear"></div>
                 </nav>
             </header>
 
-            @yield('content')
+            {% block content %} {% endblock %}
 
             <footer>
                 <ul>
-                    <li>&copy;{{ date('Y') }}  All Rights Reserved</li>
+                    <li>&copy;{{ "now"|date('Y') }}  All Rights Reserved</li>
                 </ul>
             </footer>
 
         </div><!-- container -->
 
-        {!! Theme::footer() !!}
+        {{ theme_footer() }}
         <pre>
-            {!! print_r(DB::getQueryLog()) !!}
+            {{ dump(DB.getQueryLog()) }}
         </pre>
     </body>
 

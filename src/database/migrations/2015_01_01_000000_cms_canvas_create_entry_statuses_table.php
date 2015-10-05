@@ -14,7 +14,7 @@ class CmsCanvasCreateEntryStatusesTable extends Migration {
     {
         Schema::create('entry_statuses', function(Blueprint $table) {
             // Columns
-            $table->increments('id');
+            $table->integer('id')->unsigned()->primary();
             $table->string('name', 50);
             $table->string('key_name', 25)->unique();
         });

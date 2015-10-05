@@ -39,7 +39,7 @@ class Render {
      * @param array $parameters
      * @return void
      */
-    public function __construct(\CmsCanvas\Models\Content\Type $contentType, $parameters = []), $data = [])
+    public function __construct(\CmsCanvas\Models\Content\Type $contentType, $parameters = [], $data = [])
     {
         $this->contentType = $contentType;
         $this->parameters = $parameters;

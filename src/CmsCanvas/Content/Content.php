@@ -16,12 +16,25 @@ class Content {
      * @param array $config
      * @param \CmsCanvas\Content\Entry\RenderCollection
      */
-    public function entries($config)
+    public function entries(array $config = [])
     {
         $builder = new EntryBuilder($config);
         $collection = $builder->get();
 
         return $collection;
+    }
+
+    /**
+     * Builds and returns an entry provided its ID
+     *
+     * @param int $entryId
+     * @param \CmsCanvas\Content\Entry\Render
+     */
+    public function entry($entryId)
+    {
+        $entries = $this->entries(['entry_id' => $entryId]);
+
+        return $entries->first();
     }
 
     /**
@@ -31,7 +44,7 @@ class Content {
      * @param array $config
      * @param \CmsCanvas\Content\Navigation\RenderCollection
      */
-    public function navigation($config)
+    public function navigation(array $config = [])
     {
         $builder = new NavigationBuilder($config);
         $collection = $builder->get();
