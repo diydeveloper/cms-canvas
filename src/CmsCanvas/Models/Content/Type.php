@@ -11,7 +11,6 @@ use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
 use CmsCanvas\Content\Type\Render;
-use CmsCanvas\Container\Twig\StringTemplate;
 
 class Type extends Model implements PageInterface {
 

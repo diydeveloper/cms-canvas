@@ -19,6 +19,10 @@
                     <label for="title"><span class="required">*</span> Title:</label>
                     {!! Form::text('title') !!}
                 </div>
+                <div>
+                    <label for="short_name"><span class="required">*</span> Short Name:</label>
+                    {!! Form::text('short_name') !!}
+                </div>
             </div>
         </div>
         {!! Form::close() !!}

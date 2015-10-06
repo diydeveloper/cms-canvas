@@ -25,13 +25,13 @@
                     <tr>
                         <td>Entry Title</td>
                         <td>
-                            @{!! $title !!}
+                            @{{ title }}
                         </td>
                     </tr>
                     @foreach ($contentType->fields as $field)
                         <tr>
                             <td>{!! $field->label !!}</td>
-                            <td>{!! $<?php echo $field->short_tag; ?> !!}</a></div></td>
+                            <td>{{ <?php echo $field->short_tag; ?> }}</a></div></td>
                         </tr>
                     @endforeach
                 </tbody>
