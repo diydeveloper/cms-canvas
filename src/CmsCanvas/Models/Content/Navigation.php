@@ -18,7 +18,7 @@ class Navigation extends Model {
      *
      * @var array
      */
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'short_name'];
 
     /**
      * The columns that can NOT be mass-assigned.
@@ -32,7 +32,7 @@ class Navigation extends Model {
      *
      * @var array
      */
-    protected static $sortable = ['title'];
+    protected static $sortable = ['title', 'short_name'];
 
     /**
      * The column to sort by if no session order by is defined.

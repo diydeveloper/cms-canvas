@@ -108,7 +108,11 @@ class NavigationController extends AdminController {
      */
     public function postEdit($navigation = null)
     {
-        $rules['title'] = 'required';
+        $rules = [
+            'title' => 'required|max:255',
+            'short_name' => "required|alpha_dash|max:50"
+                ."|unique:content_types,short_name".(($navigation == null) ? "" : ",{$navigation->id}"),
+        ];
 
         $validator = Validator::make(Input::all(), $rules);
 
@@ -140,7 +144,7 @@ class NavigationController extends AdminController {
     public function getTree($navigation)
     {
         Theme::addPackage('nestedSortable');
-        $builder = new Builder(['navigation_id' => $navigation->id]);
+        $builder = new Builder($navigation->short_name);
         $navigationTree = $builder->getNavigationTree();
 
         $content = View::make('cmscanvas::admin.content.navigation.tree');
@@ -170,7 +174,7 @@ class NavigationController extends AdminController {
         $order = 0;
 
         foreach($list as $id => $parentId) {
-            $parentId = ($parentId == 'root') ? 0 : $parentId;
+            $parentId = ($parentId == 'root') ? null : $parentId;
 
             Item::where('id', $id)
                 ->update(

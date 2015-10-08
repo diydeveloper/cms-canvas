@@ -41,12 +41,13 @@ class Content {
      * Builds and returns collection of entries based on 
      * the provided configuration
      *
+     * @param string $shortName
      * @param array $config
      * @param \CmsCanvas\Content\Navigation\RenderCollection
      */
-    public function navigation(array $config = [])
+    public function navigation($shortName, array $config = [])
     {
-        $builder = new NavigationBuilder($config);
+        $builder = new NavigationBuilder($shortName, $config);
         $collection = $builder->get();
 
         return $collection;

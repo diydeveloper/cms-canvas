@@ -66,6 +66,8 @@ class ItemController extends AdminController {
         if ($item->type == 'url') {
             $item->entry_id = null;
         }
+        $item->navigation_id = $navigation->id;
+        $item->parent_id = null;
         $item->save();
 
         return Redirect::route('admin.content.navigation.tree', $navigation->id)

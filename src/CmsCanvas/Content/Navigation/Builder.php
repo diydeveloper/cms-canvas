@@ -1,4 +1,6 @@
-<?php namespace CmsCanvas\Content\Navigation;
+<?php 
+
+namespace CmsCanvas\Content\Navigation;
 
 use Request, Cache;
 use CmsCanvas\Models\Content\Navigation;
@@ -8,9 +10,9 @@ use CmsCanvas\Content\Navigation\Item\RenderCollection;
 class Builder {
 
     /**
-     * @var int
+     * @var string
      */
-    protected $navigationId;
+    protected $shortName;
 
     /**
      * @var int
@@ -53,11 +55,16 @@ class Builder {
     protected $navigationTree;
 
     /**
+     * Constructor
+     *
+     * @param string $shortName
      * @param array $config
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct($shortName, array $config = [])
     {
+        $this->setShortName($shortName);
+
         $this->buildFromArray($config);
     }
 
@@ -95,10 +102,6 @@ class Builder {
     {
         foreach ($config as $key => $value) {
             switch ($key) {
-                case 'navigation_id':
-                    $this->setNavigationId($value);
-                    break;
-
                 case 'max_depth':
                     $this->setMaxDepth($value);
                     break;
@@ -152,14 +155,14 @@ class Builder {
     }
 
     /**
-     * Sets the navigation id to build from
+     * Sets the navigation short anme to build from
      *
-     * @param int $navigationId
+     * @param string $shortName
      * @return void
      */
-    public function setNavigationId($navigationId)
+    public function setShortName($shortName)
     {
-        $this->navigationId = $navigationId; 
+        $this->shortName = $shortName; 
     }
 
     /**
@@ -196,7 +199,9 @@ class Builder {
         $items->load('entry');
 
         if ($this->recursiveFlag && ($this->maxDepth === null || $this->maxDepth > $depth)) {
-            $items->load('children');
+            $items->load(['children' => function($query) {
+                $query->orderBy('sort', 'asc');
+            }]);
         }
 
         $itemCount = count($items);
@@ -229,9 +234,11 @@ class Builder {
     protected function getCachedTree()
     {
         $cache = Cache::rememberForever($this->getCacheKey(), function() {
-            $items = Item::where('navigation_id', $this->navigationId)
-                ->where('parent_id', $this->startItemId)
+            $items = Item::join('navigations', 'navigation_items.navigation_id', '=', 'navigations.id')
+                ->where('navigations.short_name', $this->shortName)
+                ->where('parent_id', ($this->startItemId ? $this->startItemId : null))
                 ->orderBy('sort', 'asc')
+                ->select('navigation_items.*')
                 ->get();
 
             return $this->buildNavigationTree($items);
@@ -247,7 +254,7 @@ class Builder {
      */
     protected function getCacheKey()
     {
-        $key = $this->navigationId.'.'.$this->startItemId.'.'.$this->recursiveFlag;
+        $key = $this->shortName.'.'.$this->startItemId.'.'.$this->recursiveFlag;
 
         if ($this->maxDepth !== null) {
             $key .= '.'.$this->maxDepth;

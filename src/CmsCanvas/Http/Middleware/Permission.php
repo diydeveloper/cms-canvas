@@ -38,8 +38,9 @@ class Permission {
             $actions = $request->route()->getAction();
             $permissions = (isset($actions['permission'])) ? (array) $actions['permission'] : [];
 
+            $authUser = $this->auth->user();
             foreach ($permissions as $permission) {
-                $this->auth->user()->checkPermission($permission);
+                $authUser->checkPermission($permission);
             }
         }
 

@@ -76,6 +76,14 @@ label {
     color: #ABADB3;
 }
 
+.hint {
+    font-size: 9px;
+    color: #CA6510;
+    float: right;
+    font-family: Verdana, Geneva, sans-serif;
+    margin-top: 2px;
+}
+
 #tree_box #status {
     height: 15px;
 }

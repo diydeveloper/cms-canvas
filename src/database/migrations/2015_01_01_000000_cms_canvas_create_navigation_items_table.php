@@ -16,8 +16,8 @@ class CmsCanvasCreateNavigationItemsTable extends Migration {
             // Columns
             $table->increments('id');
             $table->integer('navigation_id')->unsigned()->index();
-            $table->integer('parent_id')->unsigned()->index()->default(0);
-            $table->integer('entry_id')->unsigned()->index();
+            $table->integer('parent_id')->unsigned()->index()->nullable();
+            $table->integer('entry_id')->unsigned()->index()->nullable();
             $table->enum('type', ['page', 'url']);
             $table->string('title', 255)->nullable();
             $table->string('url', 500)->nullable();

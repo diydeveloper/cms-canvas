@@ -87,12 +87,12 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::group(['prefix' => '{navigation}/item', 'permission' => 'ADMIN_NAVIGATION_EDIT'], function() {
 
                 Route::get('add', ['as' => 'admin.content.navigation.item.add', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@getEdit']);
-                Route::post('add', ['as' => 'admin.content.navigation.item.add.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@postEdit']);
+                Route::post('add', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.content.navigation.item.add.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@postEdit']);
 
                 Route::get('{navigationItem}/edit', ['as' => 'admin.content.navigation.item.edit', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@getEdit']);
                 Route::post('{navigationItem}/edit', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.content.navigation.item.edit.post', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@postEdit']);
 
-                Route::post('{navigationItem}/delete', ['as' => 'admin.content.navigation.item.delete', 'permission' => 'ADMIN_NAVIGATION_EDIT', 'uses' => 'Admin\Content\Navigation\ItemController@getDelete']);
+                Route::get('{navigationItem}/delete', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.content.navigation.item.delete', 'permission' => 'ADMIN_NAVIGATION_DELETE', 'uses' => 'Admin\Content\Navigation\ItemController@getDelete']);
 
             });
 
