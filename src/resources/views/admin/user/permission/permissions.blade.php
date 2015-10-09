@@ -42,7 +42,11 @@
                     @if (count($permissions) > 0)
                         @foreach ($permissions as $permission)
                             <tr>
-                                <td class="center"><input type="checkbox" value="{!! $permission->id !!}" name="selected[]" /></td>
+                                <td class="center">
+                                    <?php if ($permission->editable_flag): ?>
+                                    <input type="checkbox" value="{!! $permission->id !!}" name="selected[]" />
+                                    <?php endif; ?>
+                                </td>
                                 <td>{!! $permission->name !!}</td>
                                 <td>{!! $permission->key_name !!}</td>
                                 <td>{!! implode(', ', $permission->roles->lists('name')->all()) !!}</td>

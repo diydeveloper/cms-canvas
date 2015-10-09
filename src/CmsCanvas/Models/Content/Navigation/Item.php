@@ -5,6 +5,7 @@ namespace CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Navigation\Item\Render;
 use CmsCanvas\Content\Navigation\Item\RenderCollection;
+use CmsCanvas\Content\Navigation\Builder\Item as BuilderItem;
 
 class Item extends Model {
 
@@ -100,218 +101,55 @@ class Item extends Model {
     }
 
     /**
+     * Creates a new builder item instance
+     *
+     * @return \CmsCanvas\Content\Navigation\Builder\Item
+     */
+    public function newBuilderItem()
+    {
+        return new BuilderItem($this);
+    }
+
+    /**
+     * Creates new builder item instances for a collection 
+     *
+     * @param  \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @return \CmsCanvas\Content\Navigation\Builder\Item|array
+     */
+    public static function newBuilderItemCollection($items)
+    {
+        $builderItems = [];
+        $itemCount = count($items);
+        $counter = 1;
+
+        foreach ($items as $item) {
+            $builderItem = $item->newBuilderItem();
+
+            $builderItem->setIndex($counter - 1);
+
+             if ($counter !== 1) {
+                $builderItem->setFirstFlag(false);
+            }
+
+            if ($counter !== $itemCount) {
+                $builderItem->setLastFlag(false);
+            }
+
+            $builderItems[] = $builderItem;
+            $counter++;
+        }
+
+        return $builderItems;
+    }
+
+    /**
      * Returns a render instance
      *
      * @return \CmsCanvas\Content\Navigation\Item\Render
      */
     public function render()
     {
-        return new Render($this);
-    }
-
-    /**
-     * Returns a render collection instance of the children
-     *
-     * @return \CmsCanvas\Content\Navigation\Item\RenderCollection
-     */
-    public function renderChildren()
-    {
-        return new RenderCollection($this->children);
-    }
-
-    /**
-     * Generates a view with the navigation item
-     *
-     * @return string
-     */
-    public function renderContents()
-    {
-        $contents = '<li'.$this->getListItemAttributes().'>';
-        $contents .= '<a'.$this->getAnchorAttributes().'>';
-        $contents .= $this->getTitle();
-        $contents .= '</a>';
-
-        if ($this->isChildrenLoaded() && count($this->children) > 0) {
-            $contents .= $this->renderChildren();
-        }
-
-        $contents .= '</li>';
-
-        return $contents;
-    }
-
-    /**
-     * Builds html attributes string for the <li> tag
-     *
-     * @return string
-     */
-    public function getListItemAttributes()
-    {
-        $attributes = '';
-
-        if (!empty($this->id_attribute)) {
-            $attributes .= ' id="'.$this->id_attribute.'"';
-        }
-
-        $classNames = $this->getHtmlClassNames();
-
-        if (count($classNames) > 0) {
-            $attributes .= ' class="'.implode(' ', $classNames).'"';
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Builds html attributes string for the <a> tag
-     *
-     * @return string
-     */
-    public function getAnchorAttributes()
-    {
-        $attributes = '';
-
-        if (!empty($this->target_attribute)) {
-            $attributes .= ' target="'.$this->target_attribute.'"';
-        }
-
-        $attributes .= ' href="'.$this->getUrl().'"';
-
-        return $attributes;
-    }
-
-    /**
-     * Generates an array of html class names for the current item
-     *
-     * @return array
-     */
-    public function getHtmlClassNames()
-    {
-        $classNames = [];
-
-        if ($this->firstFlag) {
-            $classNames[] = 'first';
-        }
-
-        if ($this->lastFlag) {
-            $classNames[] = 'last';
-        }
-
-        if ($this->currentItemFlag) {
-            $classNames[] = 'current-item';
-        }
-
-        if ($this->currentItemAncestorFlag) {
-            $classNames[] = 'current-item-ancestor';
-        }
-
-        if (! empty($this->class_attribute)) {
-            $classNames = array_merge($classNames, explode(' ', $this->class_attribute));
-        }
-
-        return $classNames;
-    }
-
-    /**
-     * Returns the title for the item
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        if ($this->title == null) {
-            return $this->entry->title;
-        } 
-
-        return $this->title;
-    }
-
-    /**
-     * Returns the full url for the item
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        if ($this->entry != null) {
-            return url($this->entry->getPreferredRoute());
-        } 
-
-        if ($this->url != null) {
-            $parsed = parse_url($this->url);
-
-            if (empty($parsed['scheme'])) {
-                return url($this->url);
-            } else {
-                return $this->url;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Sets the firstFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setFirstFlag($value)
-    {
-        $this->firstFlag = (bool) $value;
-    }
-
-    /**
-     * Sets the lastFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setLastFlag($value)
-    {
-        $this->lastFlag = (bool) $value;
-    }
-
-    /**
-     * Sets the currentItemFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setCurrentItemFlag($value)
-    {
-        $this->currentItemFlag = (bool) $value;
-    }
-
-    /**
-     * Returns currentItemFlag class variable
-     *
-     * @return bool
-     */
-    public function isCurrentItem()
-    {
-        return $this->currentItemFlag;
-    }
-
-    /**
-     * Sets the currentItemAncestorFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setCurrentItemAncestorFlag($value)
-    {
-        $this->currentItemAncestorFlag = (bool) $value;
-    }
-
-    /**
-     * Returns currentItemAncestorFlag class variable
-     *
-     * @return bool
-     */
-    public function isCurrentItemAncestor()
-    {
-        return $this->currentItemAncestorFlag;
+        $this->newBuilderItem()->render();
     }
 
     /**

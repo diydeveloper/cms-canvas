@@ -46,7 +46,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::post('add', ['as' => 'admin.user.permission.add.post', 'permission' => 'ADMIN_PERMISSION_CREATE', 'uses' => 'Admin\User\PermissionController@postEdit']);
 
             Route::get('{permission}/edit', ['as' => 'admin.user.permission.edit', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'Admin\User\PermissionController@getEdit']);
-            Route::post('{permission}/edit', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.user.permission.edit.post', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'Admin\User\PermissionController@postEdit']);
+            Route::post('{permission}/edit', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.user.permission.edit.post', 'permission' => 'ADMIN_PERMISSION_EDIT', 'uses' => 'Admin\User\PermissionController@postEdit']);
 
         });
 

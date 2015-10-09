@@ -25,7 +25,7 @@ class Permission extends Model {
      *
      * @var array
      */
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'editable_flag', 'created_at', 'updated_at'];
 
     /**
      * The columns that can sorted with the query builder orderBy method.

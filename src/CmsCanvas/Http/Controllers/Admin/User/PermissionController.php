@@ -63,15 +63,26 @@ class PermissionController extends AdminController {
 
         $selected = array_values($selected);
 
-        $permissions = Permission::whereIn('id', $selected)
-            ->get();
+        $permissions = Permission::whereIn('id', $selected)->get();
 
+        $errors = [];
         foreach ($permissions as $permission) {
-            $permission->delete();
+            if ($permission->editable_flag) {
+                $permission->delete();
+            } else {
+                $errors[] = "Failed to delete permission '{$permission->name}' because it is not editable.";
+            }
         }
 
-        return Redirect::route('admin.user.permission.permissions')
-            ->with('message', 'The selected permission(s) were sucessfully deleted.');;
+        $redirect = Redirect::route('admin.user.permission.permissions');
+
+        if (count($errors) > 0) {
+            $redirect->with('error', $errors);
+        } else {
+            $redirect->with('message', 'The selected permission(s) were sucessfully deleted.');
+        }
+
+        return $redirect;
     }
 
     /**
@@ -117,11 +128,15 @@ class PermissionController extends AdminController {
      */
     public function postEdit($permission = null)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'key_name' => 'required|max:50'
-                ."|unique:permissions,key_name".(($permission == null) ? "" : ",{$permission->id}"),
-        ];
+        $rules = [];
+        
+        if ($permission == null || $permission->editable_flag) {
+            $rules = [
+                'name' => 'required|max:255',
+                'key_name' => 'required|max:50'
+                    ."|unique:permissions,key_name".(($permission == null) ? "" : ",{$permission->id}"),
+            ];
+        }
 
         $validator = Validator::make(Input::all(), $rules);
 
@@ -137,10 +152,18 @@ class PermissionController extends AdminController {
             }
         }
 
-        $permission = ($permission == null) ? new Permission : $permission;
-        $permission->fill(Input::all());
-        $permission->key_name = strtoupper($permission->key_name);
-        $permission->save();
+        $editableFlag = true;
+        if ($permission == null) {
+            $permission = new Permission;
+        } elseif (!$permission->editable_flag) {
+            $editableFlag = false;
+        }
+
+        if ($editableFlag) {
+            $permission->fill(Input::all());
+            $permission->key_name = strtoupper($permission->key_name);
+            $permission->save();
+        }
         $permission->roles()->sync(Input::get('role_permissions', []));
 
         return Redirect::route('admin.user.permission.permissions')

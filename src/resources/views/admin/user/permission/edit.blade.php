@@ -18,12 +18,20 @@
                 <div class="form">
                     <div>
                         {!! HTML::decode(Form::label('name', '<span class="required">*</span> Name:')) !!}
-                        {!! Form::text('name', null, ['id' => 'name']) !!}
+                        <?php if (! empty($permission) && $permission->editable_flag): ?>
+                            {!! Form::text('name', null, ['id' => 'name']) !!}
+                        <?php else: ?>
+                            {!! $permission->name !!}
+                        <?php endif; ?>
                     </div>
 
                     <div>
                         {!! HTML::decode(Form::label('name', '<span class="required">*</span> Key Name:')) !!}
-                        {!! Form::text('key_name', null, ['id' => 'key_name']) !!}
+                        <?php if (! empty($permission) && $permission->editable_flag): ?>
+                            {!! Form::text('key_name', null, ['id' => 'key_name']) !!}
+                        <?php else: ?>
+                            {!! $permission->key_name !!}
+                        <?php endif; ?>
                     </div>
 
                     <div>

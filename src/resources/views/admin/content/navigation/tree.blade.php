@@ -1,6 +1,6 @@
 <div class="box">
     <div class="heading">
-        <h1><img alt="" src="{!! Theme::asset('images/category.png') !!}"> Navigation Tree - {!! $navigation->title !!} (#{!! $navigation->id !!})</h1>
+        <h1><img alt="" src="{!! Theme::asset('images/category.png') !!}"> Navigation Tree - {!! $navigation->title !!} ({!! $navigation->short_name !!})</h1>
 
         <div class="buttons">
             <a class="button" href="{!! Admin::url("content/navigation/$navigation->id/item/add") !!}" ><span>Add Item</span></a>

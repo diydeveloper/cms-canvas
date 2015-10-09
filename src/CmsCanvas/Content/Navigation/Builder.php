@@ -188,13 +188,13 @@ class Builder {
     }
 
     /**
-     * Recursively query navigation item children to build 
-     * the navigation tree
-     * 
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * Recursively Lazy load naavigation item entries and children
+     *
+     * @param  \CmsCanvas\Models\Content\Navigation\Item|collection $items
+     * @param  int $depth
      * @return \CmsCanvas\Models\Content\Navigation\Item|collection
      */
-    protected function buildNavigationTree($items, $depth = 1)
+    protected function lazyLoadNavigationTree($items, $depth = 1)
     {
         $items->load('entry');
 
@@ -204,23 +204,10 @@ class Builder {
             }]);
         }
 
-        $itemCount = count($items);
-        $counter = 1;
-
         foreach ($items as $item) {
-            if ($counter == 1) {
-                $item->setFirstFlag(true);
-            }
-
-            if ($counter == $itemCount) {
-                $item->setLastFlag(true);
-            }
-
             if ($this->recursiveFlag && count($item->getLoadedChildren()) > 0) {
-                $this->buildNavigationTree($item->getLoadedChildren(), ++$depth);
+                $this->lazyLoadNavigationTree($item->getLoadedChildren(), ++$depth);
             }
-
-            $counter++;
         }
 
         return $items;
@@ -229,7 +216,7 @@ class Builder {
     /**
      * Caches and returns the navigation tree
      * 
-     * @return \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @return \CmsCanvas\Content\Navigation\Builder\Item|array
      */
     protected function getCachedTree()
     {
@@ -241,7 +228,7 @@ class Builder {
                 ->select('navigation_items.*')
                 ->get();
 
-            return $this->buildNavigationTree($items);
+            return Item::newBuilderItemCollection($this->lazyLoadNavigationTree($items));
         });
 
         return $cache;
@@ -266,20 +253,20 @@ class Builder {
     /**
      * Finds and identifies via URL the current navigaiton item
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
      * @return void
      */
     protected function compileCurrentItems($items, $depth = 1)
     {
         foreach ($items as $item) {
-            if ( ! $item->disable_current_flag && Request::url() == $item->getUrl()) {
+            if ( ! $item->getNavigationItem()->disable_current_flag && Request::url() == $item->getUrl()) {
                 $item->setCurrentItemFlag(true);
                 $this->currentItemDepth = $depth;
             }
 
-            if (count($item->getLoadedChildren()) > 0) {
-                $this->compileCurrentItems($item->getLoadedChildren(), ++$depth);
+            if (count($item->getChildren()) > 0) {
+                $this->compileCurrentItems($item->getChildren(), ++$depth);
             }
         }
     }
@@ -287,19 +274,19 @@ class Builder {
     /**
      * Finds and identifies ancestors of the current navigation item
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
      * @return void
      */
     protected function compileCurrentItemAncestors($items, $depth = 1)
     {
         foreach ($items as $item) {
-            if ( ! $item->disable_current_ancestor_flag && $this->hasCurrentDescendant($item->getLoadedChildren())) {
+            if ( ! $item->getNavigationItem()->disable_current_ancestor_flag && $this->hasCurrentDescendant($item->getChildren())) {
                 $item->setCurrentItemAncestorFlag(true);
             }
 
-            if (count($item->getLoadedChildren()) > 0) {
-                $this->compileCurrentItemAncestors($item->getLoadedChildren(), ++$depth);
+            if (count($item->getChildren()) > 0) {
+                $this->compileCurrentItemAncestors($item->getChildren(), ++$depth);
             }
         }
     }
@@ -307,7 +294,7 @@ class Builder {
     /**
      * Detects if items is a ancestor of the current navigation item
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
      * @return bool
      */
@@ -320,8 +307,8 @@ class Builder {
                 return true;
             }
 
-            if (count($item->getLoadedChildren()) > 0) {
-                $hasDescendant = $this->hasCurrentDescendant($item->getLoadedChildren(), ++$depth);
+            if (count($item->getChildren()) > 0) {
+                $hasDescendant = $this->hasCurrentDescendant($item->getChildren(), ++$depth);
 
                 if ($hasDescendant) {
                     return $hasDescendant;
@@ -336,9 +323,9 @@ class Builder {
      * Returns a navigation subset starting with the parent of the current navigation
      * item at the nth parent depth
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      */
     protected function getCurrentParentSubset($items, $depth = 1)
     {
@@ -352,13 +339,13 @@ class Builder {
                     // If we reach this point, the starting parent depth is greater
                     // than the current page's depth. Go ahead and return the children of the
                     // current item. If there are no children then return its siblings.
-                    if (count($item->getLoadedChildren()) > 0) {
-                        $subset = $item->getLoadedChildren();
+                    if (count($item->getChildren()) > 0) {
+                        $subset = $item->getChildren();
                     } else {
                         $subset = $items;
                     }
                 } else {
-                    $subset = $this->getCurrentParentSubset($item->getLoadedChildren(), ++$depth);
+                    $subset = $this->getCurrentParentSubset($item->getChildren(), ++$depth);
                 }
 
                 break;
@@ -371,9 +358,9 @@ class Builder {
     /**
      * Returns a navigation subset starting with the siblings of the current navigation item
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      */
     protected function getCurrentSiblingSubset($items, $depth = 1)
     {
@@ -385,8 +372,8 @@ class Builder {
 
                 break;
             } else {
-                if (count($item->getLoadedChildren()) > 0) {
-                    $subset = $this->getCurrentSiblingSubset($item->getLoadedChildren(), ++$depth);
+                if (count($item->getChildren()) > 0) {
+                    $subset = $this->getCurrentSiblingSubset($item->getChildren(), ++$depth);
 
                     if (count($subset) > 0) {
                         return $subset;
@@ -401,9 +388,9 @@ class Builder {
     /**
      * Returns a navigation subset starting with the children of the current navigation item
      *
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      * @param int
-     * @param \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
      */
     protected function getCurrentChildrenSubset($items, $depth = 1)
     {
@@ -411,13 +398,13 @@ class Builder {
 
         foreach($items as $item) {
             if ($item->isCurrentItem()) {
-                $subset = $item->getLoadedChildren();
+                $subset = $item->getChildren();
 
                 return $subset;
             }
 
-            if (count($item->getLoadedChildren()) > 0) {
-                $subset = $this->getCurrentChildrenSubset($item->getLoadedChildren(), ++$depth);
+            if (count($item->getChildren()) > 0) {
+                $subset = $this->getCurrentChildrenSubset($item->getChildren(), ++$depth);
 
                 if (count($subset) > 0) {
                     return $subset;

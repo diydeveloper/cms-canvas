@@ -42,7 +42,8 @@ class CmsCanvasCreateUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('users');
+		// Laravel's default migrations will drop this table
+		// Schema::drop('users');
 	}
 
 }

@@ -46,6 +46,30 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
                 ->onDelete('cascade');
         });
 
+        // content_types table constraints
+        Schema::table('content_types', function(Blueprint $table)
+        {
+            $table->foreign('admin_entry_view_permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('set null');
+
+            $table->foreign('admin_entry_edit_permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('set null');
+
+            $table->foreign('admin_entry_create_permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('set null');
+
+            $table->foreign('admin_entry_delete_permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('set null');
+        });
+
         // entries table constraints
         Schema::table('entries', function(Blueprint $table)
         {
@@ -158,6 +182,15 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
         {
             $table->dropForeign('role_permissions_role_id_foreign');
             $table->dropForeign('role_permissions_permission_id_foreign');
+        });
+
+        // content_types table constraints
+        Schema::table('content_types', function(Blueprint $table)
+        {
+            $table->dropForeign('content_types_admin_entry_view_permission_id_foreign');
+            $table->dropForeign('content_types_admin_entry_edit_permission_id_foreign');
+            $table->dropForeign('content_types_admin_entry_create_permission_id_foreign');
+            $table->dropForeign('content_types_admin_entry_delete_permission_id_foreign');
         });
 
         // entries table constraints
