@@ -2,18 +2,18 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, StringView, stdClass, Cache, DB, Auth;
+use Lang, stdClass, Cache, DB, Auth;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Revision;
-use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Render;
 use CmsCanvas\Exceptions\PermissionDenied;
 use CmsCanvas\Exceptions\Exception;
+use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
 
 class Entry extends Model implements PageInterface {
 
@@ -234,25 +234,46 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
-     * Generates a view with the entry's data
+     * Returns a render instance
      *
      * @param array $parameters
-     * @return string
+     * @return \CmsCanvas\Content\Entry\Builder\Entry
      */
-    public function renderContents($parameters = [])
+    public function newEntryBuilder($parameters = [])
     {
-        $data = $this->getRenderedData();
+        return new EntryBuilder($this, $parameters);
+    }
 
-        $content = $this->contentType->render($parameters, $data);
+    /**
+     * Creates new builder item instances for a collection 
+     *
+     * @param  \CmsCanvas\Models\Content\Entry|collection
+     * @return \CmsCanvas\Content\Entry\Builder\Entry|array
+     */
+    public static function newEntryBuilderCollection($entries)
+    {
+        $entryBuilders = [];
+        $entryCount = count($entries);
+        $counter = 1;
 
-        if ($this->template_flag) {
-            $content = StringView::make((string) $content)
-                ->cacheKey($this->getRouteName())
-                ->updatedAt($this->updated_at->timestamp)
-                ->with($data);
+        foreach ($entries as $entry) {
+            $entryBuilder = $entry->newEntryBuilder();
+
+            $entryBuilder->setIndex($counter - 1);
+
+             if ($counter !== 1) {
+                $entryBuilder->setFirstFlag(false);
+            }
+
+            if ($counter !== $entryCount) {
+                $entryBuilder->setLastFlag(false);
+            }
+
+            $entryBuilders[] = $entryBuilder;
+            $counter++;
         }
 
-        return $content;
+        return $entryBuilders;
     }
 
     /**
@@ -263,19 +284,7 @@ class Entry extends Model implements PageInterface {
      */
     public function render($parameters = [])
     {
-        if ($this->entry_status_id == Status::DISABLED) {
-            return abort(404);
-        }
-
-        if ($this->entry_status_id == Status::DRAFT) {
-            $user = Auth::user();
-
-            if ($user == null || ! $user->can('ADMIN_ENTRY_VIEW')) {
-                return abort(404);
-            }
-        }
-
-        return new Render($this, $parameters);
+        return $this->newEntryBuilder($parameters)->render();
     }
 
     /**

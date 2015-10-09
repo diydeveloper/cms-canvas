@@ -2,26 +2,26 @@
 
 namespace CmsCanvas\Content\Navigation\Item;
 
-use CmsCanvas\Content\Navigation\Builder\Item as BuilderItem;
+use CmsCanvas\Content\Navigation\Builder\Item as ItemBuilder;
 
 class Render {
 
     /**
-     * The navigation item to render from
+     * The navigation item builder to render from
      *
      * @var \CmsCanvas\Content\Navigation\Builder\Item
      */
-    protected $item;
+    protected $itemBuilder;
 
     /**
      * Constructor of the navigation item render
      *
-     * @param  \CmsCanvas\Content\Navigation\Builder\Item  $item
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item  $itemBuilder
      * @return void
      */
-    public function __construct(BuilderItem $item)
+    public function __construct(ItemBuilder $itemBuilder)
     {
-        $this->item = $item;
+        $this->itemBuilder = $itemBuilder;
     }
 
     /**
@@ -31,7 +31,7 @@ class Render {
      */
     public function isFirst()
     {
-        return $this->item->firstFlag;
+        return $this->itemBuilder->getFirstFlag();
     }
 
     /**
@@ -41,7 +41,7 @@ class Render {
      */
     public function isLast()
     {
-        return $this->item->lastFlag;
+        return $this->itemBuilder->getLastFlag();
     }
 
     /**
@@ -51,7 +51,7 @@ class Render {
      */
     public function index()
     {
-        return $this->item->index;
+        return $this->itemBuilder->getIndex();
     }
 
     /**
@@ -61,7 +61,7 @@ class Render {
      */
     public function __toString()
     {
-        return (string) $this->item->renderContents();
+        return (string) $this->itemBuilder->renderContents();
     }
 
 }

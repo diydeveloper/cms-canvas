@@ -1,0 +1,218 @@
+<?php 
+
+namespace CmsCanvas\Content\Entry\Builder;
+
+use Auth, StringView;
+use CmsCanvas\Models\Content\Entry\Status;
+use CmsCanvas\Models\Content\Entry as EntryModel;
+use CmsCanvas\Content\Entry\Render;
+use CmsCanvas\Content\Entry\RenderCollection;
+
+class Entry {
+
+    /**
+     * @var \CmsCanvas\Models\Content\Entry
+     */
+    protected $entry;
+
+    /**
+     * Parameters added to the route
+     *
+     * @var array
+     */
+    protected $parameters;
+
+    /**
+     * Rendered data
+     *
+     * @var array
+     */
+    protected $renderedData;
+
+    /**
+     * Set true if the entry is solo or first in a collection
+     *
+     * @var bool
+     */
+    protected $firstFlag = true;
+
+    /**
+     * Set true if the entry is solo or last in a collection
+     *
+     * @var bool
+     */
+    protected $lastFlag = true;
+
+    /**
+     * The position the entry is in a collection
+     *
+     * @var bool
+     */
+    protected $index = 0;
+
+    /**
+     * Constructor
+     *
+     * @param  \CmsCanvas\Models\Content\Entry  $entry
+     * @param  array $parameters
+     * @return void
+     */
+    public function __construct(EntryModel $entry, $parameters = [])
+    {
+        $this->entry = $entry;
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * Returns the entry model instance
+     *
+     * @return \CmsCanvas\Models\Content\Entry
+     */
+    public function getEntry()
+    {
+        return $this->entry;
+    }
+
+    /**
+     * Returns a render instance
+     *
+     * @return \CmsCanvas\Content\Entry\Render
+     */
+    public function render()
+    {
+        if ($this->entry->entry_status_id == Status::DISABLED) {
+            return abort(404);
+        }
+
+        if ($this->entry->entry_status_id == Status::DRAFT) {
+            $user = Auth::user();
+
+            if ($user == null || ! $user->can('ADMIN_ENTRY_VIEW')) {
+                return abort(404);
+            }
+        }
+
+        return new Render($this);
+    }
+
+    /**
+     * Generates a view with the entry's data
+     *
+     * @return string
+     */
+    public function renderContents()
+    {
+        $data = $this->entry->getRenderedData();
+
+        $content = $this->entry->contentType->render($this->parameters, $data);
+
+        if ($this->entry->template_flag) {
+            $content = StringView::make((string) $content)
+                ->cacheKey($this->entry->getRouteName())
+                ->updatedAt($this->entry->updated_at->timestamp)
+                ->with($data);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns parameters and rendered data
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getData($key)
+    {
+        if (isset($this->parameters[$key])) {
+            return $this->parameters[$key];
+        } else {
+            // This will only render the data if the user make a get request
+            if ($this->renderedData === null) {
+                $this->renderedData = $this->getEntry()->getRenderedData();
+            }
+
+            if (isset($this->renderedData[$key])) {
+                return $this->renderedData[$key];
+            }        
+        }
+
+        return null;
+    }
+
+    /**
+     * Adds a parameter to the paramaters array
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @return void
+     */
+    public function addParameter($key, $value)
+    {
+        $this->parameters[$key] = $value;
+    }
+
+    /**
+     * Sets the entry's position in the collection
+     *
+     * @param int $value
+     * @return void
+     */
+    public function setIndex($value)
+    {
+        $this->index = $value;
+    }
+
+    /**
+     * Sets the firstFlag class variable
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function setFirstFlag($value)
+    {
+        $this->firstFlag = (bool) $value;
+    }
+
+    /**
+     * Sets the lastFlag class variable
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function setLastFlag($value)
+    {
+        $this->lastFlag = (bool) $value;
+    }
+
+    /**
+     * Returns the firstFlag class property
+     *
+     * @return bool
+     */
+    public function getFirstFlag()
+    {
+        return $this->firstFlag;
+    }
+
+    /**
+     * Returns the lastFlag class property
+     *
+     * @return bool
+     */
+    public function getLastFlag()
+    {
+        return $this->lastFlag;
+    }
+
+    /**
+     * Returns the index class property
+     *
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+}

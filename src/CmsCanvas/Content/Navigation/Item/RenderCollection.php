@@ -14,16 +14,16 @@ class RenderCollection extends CmsCanvasCollection {
     /**
      * Contructor to set collection of navigation items
      *
-     * @param  \CmsCanvas\Content\Navigation\Builder\Item|array  $items
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item|array  $itemBuilders
      * @param  \CmsCanvas\Content\Navigation\Builder  $navigationBuilder
      * @return void
      */
-    public function __construct($items, \CmsCanvas\Content\Navigation\Builder $navigationBuilder = null)
+    public function __construct($itemBuilders, \CmsCanvas\Content\Navigation\Builder $navigationBuilder = null)
     {
         $this->navigationBuilder = $navigationBuilder;
 
-        foreach ($items as $item) {
-            $this->items[] = $item->render();
+        foreach ($itemBuilders as $itemBuilder) {
+            $this->items[] = $itemBuilder->render();
         }
     }
 

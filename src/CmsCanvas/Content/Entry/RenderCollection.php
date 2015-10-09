@@ -14,32 +14,17 @@ class RenderCollection extends CmsCanvasCollection {
     /**
      * Defines the order in which to sort.
      *
-     * @param \CmsCanvas\Models\Content\Entry|collection $entries
+     * @param \CmsCanvas\Models\Content\Entry\Builder\Entry|array $entryBuilders
      * @return void
      */
-    public function __construct($entries)
+    public function __construct($entryBuilders)
     {
-        if ($entries instanceof \Illuminate\Pagination\AbstractPaginator) {
+        if ($entryBuilders instanceof \Illuminate\Pagination\AbstractPaginator) {
             $this->paginator = $entries;
         }
 
-        $entryCount = count($entries);
-        $counter = 1;
-
-        foreach ($entries as $entry) {
-            $render = $entry->render();
-            $render->setIndex($counter - 1);
-
-            if ($counter !== 1) {
-                $render->setFirstFlag(false);
-            }
-
-            if ($counter !== $entryCount) {
-                $render->setLastFlag(false);
-            }
-
-            $this->items[] = $render;
-            $counter++;
+        foreach ($entryBuilders as $entryBuilder) {
+            $this->items[] = $entryBuilder->render();
         }
     }
 

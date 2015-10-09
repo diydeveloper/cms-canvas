@@ -228,7 +228,7 @@ class Builder {
                 ->select('navigation_items.*')
                 ->get();
 
-            return Item::newBuilderItemCollection($this->lazyLoadNavigationTree($items));
+            return Item::newItemBuilderCollection($this->lazyLoadNavigationTree($items));
         });
 
         return $cache;

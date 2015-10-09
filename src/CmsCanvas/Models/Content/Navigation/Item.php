@@ -5,7 +5,7 @@ namespace CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Navigation\Item\Render;
 use CmsCanvas\Content\Navigation\Item\RenderCollection;
-use CmsCanvas\Content\Navigation\Builder\Item as BuilderItem;
+use CmsCanvas\Content\Navigation\Builder\Item as ItemBuilder;
 
 class Item extends Model {
 
@@ -105,9 +105,9 @@ class Item extends Model {
      *
      * @return \CmsCanvas\Content\Navigation\Builder\Item
      */
-    public function newBuilderItem()
+    public function newItemBuilder()
     {
-        return new BuilderItem($this);
+        return new ItemBuilder($this);
     }
 
     /**
@@ -116,30 +116,30 @@ class Item extends Model {
      * @param  \CmsCanvas\Models\Content\Navigation\Item|collection
      * @return \CmsCanvas\Content\Navigation\Builder\Item|array
      */
-    public static function newBuilderItemCollection($items)
+    public static function newItemBuilderCollection($items)
     {
-        $builderItems = [];
+        $itemBuilders = [];
         $itemCount = count($items);
         $counter = 1;
 
         foreach ($items as $item) {
-            $builderItem = $item->newBuilderItem();
+            $itemBuilder = $item->newItemBuilder();
 
-            $builderItem->setIndex($counter - 1);
+            $itemBuilder->setIndex($counter - 1);
 
              if ($counter !== 1) {
-                $builderItem->setFirstFlag(false);
+                $itemBuilder->setFirstFlag(false);
             }
 
             if ($counter !== $itemCount) {
-                $builderItem->setLastFlag(false);
+                $itemBuilder->setLastFlag(false);
             }
 
-            $builderItems[] = $builderItem;
+            $itemBuilders[] = $itemBuilder;
             $counter++;
         }
 
-        return $builderItems;
+        return $itemBuilders;
     }
 
     /**
@@ -149,7 +149,7 @@ class Item extends Model {
      */
     public function render()
     {
-        $this->newBuilderItem()->render();
+        $this->newItemBuilder()->render();
     }
 
     /**

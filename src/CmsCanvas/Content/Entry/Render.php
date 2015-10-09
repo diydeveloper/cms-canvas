@@ -2,93 +2,48 @@
 
 namespace CmsCanvas\Content\Entry;
 
+use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
+
 class Render {
 
     /**
      * The entry to render from
      *
-     * @var \CmsCanvas\Content\Entry
+     * @var \CmsCanvas\Content\Entry\Builder\Entry
      */
-    protected $entry;
-
-    /**
-     * Parameters added to the route
-     *
-     * @var array
-     */
-    protected $parameters;
-
-    /**
-     * Rendered data
-     *
-     * @var array
-     */
-    protected $renderedData;
-
-    /**
-     * Set true if the entry is solo or first in a collection
-     *
-     * @var bool
-     */
-    protected $firstFlag = true;
-
-    /**
-     * Set true if the entry is solo or last in a collection
-     *
-     * @var bool
-     */
-    protected $lastFlag = true;
-
-    /**
-     * The position the entry is in a collection
-     *
-     * @var bool
-     */
-    protected $index = 0;
+    protected $entryBuilder;
 
     /**
      * Constructor fo rthe entry render
      *
-     * @param \CmsCanvas\Models\Content\Entry $entry
-     * @param array $parameters
+     * @param \CmsCanvas\Content\Entry\Builder\Entry  $entryBuilder
      * @return void
      */
-    public function __construct(\CmsCanvas\Models\Content\Entry $entry, $parameters = [])
+    public function __construct(EntryBuilder $entryBuilder)
     {
-        $this->entry = $entry;
-        $this->parameters = $parameters;
+        $this->entryBuilder = $entryBuilder;
     }
 
     /**
      * Magic method to retrive rendered data
      *
-     * @param string $key
+     * @param string $name
      * @return mixed
      */
-    public function __get($key)
+    public function __get($name)
     {
-        // This will only render the data if the user make a get request
-        if ($this->renderedData === null) {
-            $this->renderedData = array_merge($this->entry->getRenderedData(), $this->parameters);
-        }
-
-        if (isset($this->renderedData[$key])) {
-            return $this->renderedData[$key];
-        } else {
-            return null;
-        }
+        return $this->entryBuilder->getData($name);
     }
 
     /**
-     * Magic method to catch undefined methods
+     * Magic method to trigger twig to call __get
      *
      * @param string $name
-     * @param array $arguments
-     * @return void
+     * @return bool
      */
-    public function __call($name, $arguments)
+    public function __isset($name)
     {
-        //
+        return true;
     }
 
     /**
@@ -98,9 +53,9 @@ class Render {
      */
     public function __toString()
     {
-        $parameters = array_merge($this->parameters, ['self' => $this]);
+        $this->entryBuilder->addParameter('self', $this);
 
-        return (string) $this->entry->renderContents($parameters);
+        return (string) $this->entryBuilder->renderContents();
     }
 
     /**
@@ -110,7 +65,7 @@ class Render {
      */
     public function isFirst()
     {
-        return $this->firstFlag;
+        return $this->entryBuilder->getFirstFlag();
     }
 
     /**
@@ -120,7 +75,7 @@ class Render {
      */
     public function isLast()
     {
-        return $this->lastFlag;
+        return $this->entryBuilder->getLastFlag();
     }
 
     /**
@@ -130,40 +85,7 @@ class Render {
      */
     public function index()
     {
-        return $this->index;
-    }
-
-    /**
-     * Sets the firstFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setFirstFlag($value)
-    {
-        $this->firstFlag = (bool) $value;
-    }
-
-    /**
-     * Sets the lastFlag class variable
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function setLastFlag($value)
-    {
-        $this->lastFlag = (bool) $value;
-    }
-
-    /**
-     * Sets the entry's position in the collection
-     *
-     * @param int $value
-     * @return void
-     */
-    public function setIndex($value)
-    {
-        $this->index = $value;
+        return $this->entryBuilder->getIndex();
     }
 
     /**
@@ -171,9 +93,9 @@ class Render {
      *
      * @return string
      */
-    public function getRoute()
+    public function route()
     {
-        return $this->entry->getRoute();
+        return $this->entryBuilder->getEntry()->getRoute();
     }
 
     /**
@@ -193,7 +115,7 @@ class Render {
      */
     public function getAuthor()
     {
-        return $this->entry->author;
+        return $this->entryBuilder->getEntry()->author;
     }
 
     /**
@@ -203,7 +125,7 @@ class Render {
      */
     public function getThemeLayout()
     {
-        return $this->entry->contentType->theme_layout;
+        return $this->entryBuilder->getEntry()->contentType->theme_layout;
     }
 
 }

@@ -114,7 +114,9 @@ class Builder {
             $entries = $this->entries->get();
         }
 
-        return new RenderCollection($entries);
+        $entryBuilders = Entry::newEntryBuilderCollection($entries);
+
+        return new RenderCollection($entryBuilders);
     }
 
     /**

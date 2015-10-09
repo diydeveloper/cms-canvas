@@ -74,7 +74,7 @@ class Item {
     protected function buildChildren()
     {
         $items = $this->navigationItem->getLoadedChildren();
-        $this->children = NavigationItem::newBuilderItemCollection($items);
+        $this->children = NavigationItem::newItemBuilderCollection($items);
     }
 
     /**
@@ -127,7 +127,7 @@ class Item {
     {
         $attributes = '';
 
-        if (!empty($this->navigationItem->id_attribute)) {
+        if (! empty($this->navigationItem->id_attribute)) {
             $attributes .= ' id="'.$this->navigationItem->id_attribute.'"';
         }
 
@@ -149,7 +149,7 @@ class Item {
     {
         $attributes = '';
 
-        if (!empty($this->navigationItem->target_attribute)) {
+        if (! empty($this->navigationItem->target_attribute)) {
             $attributes .= ' target="'.$this->navigationItem->target_attribute.'"';
         }
 
@@ -279,6 +279,36 @@ class Item {
     public function setLastFlag($value)
     {
         $this->lastFlag = (bool) $value;
+    }
+
+    /**
+     * Returns the firstFlag class property
+     *
+     * @return bool
+     */
+    public function getFirstFlag()
+    {
+        return $this->firstFlag;
+    }
+
+    /**
+     * Returns the lastFlag class property
+     *
+     * @return bool
+     */
+    public function getLastFlag()
+    {
+        return $this->lastFlag;
+    }
+
+    /**
+     * Returns the index class property
+     *
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
