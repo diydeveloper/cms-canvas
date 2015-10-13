@@ -53,7 +53,9 @@ class FieldTypeCollection extends CmsCanvasCollection {
 				$entryData = new \CmsCanvas\Models\Content\Entry\Data;
 				$entryData->entry_id = $item->entry->id;
 				$entryData->content_type_field_id = $item->field->id;
+				$entryData->content_type_field_short_tag = $item->field->short_tag;
 				$entryData->language_id = $localeIds[$item->locale];
+				$entryData->language_locale = $item->locale;
 				$entryData->data = ($data === '' || $data === null) ? null : $data;
 				$entryData->metadata = ($metadata === '' || $metadata === null) ? null : $metadata;
 				$entryData->save();

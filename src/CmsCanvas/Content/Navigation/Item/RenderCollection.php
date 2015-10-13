@@ -18,7 +18,7 @@ class RenderCollection extends CmsCanvasCollection {
      * @param  \CmsCanvas\Content\Navigation\Builder  $navigationBuilder
      * @return void
      */
-    public function __construct($itemBuilders, \CmsCanvas\Content\Navigation\Builder $navigationBuilder = null)
+    public function __construct(array $itemBuilders, \CmsCanvas\Content\Navigation\Builder $navigationBuilder = null)
     {
         $this->navigationBuilder = $navigationBuilder;
 

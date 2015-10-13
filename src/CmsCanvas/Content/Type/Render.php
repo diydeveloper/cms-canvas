@@ -86,9 +86,12 @@ class Render {
      */
     public function __toString()
     {
-        $parameters = array_merge($this->parameters, ['self' => $this]);
-
-        return (string) $this->contentType->renderContents($parameters, $this->data);
+        try {
+            $parameters = array_merge($this->parameters, ['self' => $this]);
+            return (string) $this->contentType->renderContents($parameters, $this->data);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**

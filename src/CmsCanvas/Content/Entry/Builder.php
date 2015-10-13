@@ -2,12 +2,14 @@
 
 namespace CmsCanvas\Content\Entry;
 
-use Auth;
+use Auth, Lang;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Content\Entry\RenderCollection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use CmsCanvas\Content\Entry\Builder\WhereClause;
+use CmsCanvas\Exceptions\Exception;
 
 class Builder {
 
@@ -29,14 +31,14 @@ class Builder {
     /**
      * ID of a specific entry
      *
-     * @var stdClass
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
      */
     protected $entryIds;
 
     /**
      * Short name of a content type
      *
-     * @var stdClass
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
      */
     protected $contentTypes;
 
@@ -71,21 +73,14 @@ class Builder {
     /**
      * Short name of a content type
      *
-     * @var string
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
      */
-    protected $where;
+    protected $wheres;
 
     /**
-     * Pivots
-     *
      * @var array
      */
-    protected $pivots = [];
-
-    /**
-     * @var boolean
-     */
-    protected $pivotTablesIncluded = false;
+    protected $joinedEntryDataAliases = [];
 
     /**
      * @param array $config
@@ -106,17 +101,21 @@ class Builder {
         $this->compile();
 
         if ($this->paginate !== null) {
-            // $entries = $this->entries->paginate($this->paginate);
-            $entries = $this->paginate($this->paginate);
+            $entries = $this->entries->paginate($this->paginate);
         } elseif ($this->simplePaginate !== null) {
-            $entries = $this->simplePaginate($this->simplePaginate);
+            $entries = $this->entries->simplePaginate($this->paginate);
         } else {
             $entries = $this->entries->get();
         }
 
+        $paginator = null;
+        if ($entries instanceof \Illuminate\Pagination\AbstractPaginator) {
+            $paginator = $entries;
+        }
+
         $entryBuilders = Entry::newEntryBuilderCollection($entries);
 
-        return new RenderCollection($entryBuilders);
+        return new RenderCollection($entryBuilders, $paginator);
     }
 
     /**
@@ -162,7 +161,7 @@ class Builder {
                     break;
 
                 case 'where':
-                    $this->setWhere($value);
+                    $this->setWheres($value);
                     break;
             }
         } 
@@ -171,12 +170,12 @@ class Builder {
     /**
      * Set query where clause for specific content type
      *
-     * @param int $entryId
+     * @param  string $contentTypes
      * @return self
      */
     protected function setContentTypes($contentTypes)
     {
-        $this->contentTypes = $this->parseStringValues($contentTypes);
+        $this->contentTypes = $this->parseStringValues('short_name', $contentTypes);
     }
 
     /**
@@ -208,12 +207,12 @@ class Builder {
     /**
      * Set query where clause for specific entry id
      *
-     * @param int $entryId
+     * @param  string  $entryIds
      * @return self
      */
     protected function setEntryIds($entryIds)
     {
-        $this->entryIds = $this->parseStringValues($entryIds);
+        $this->entryIds = $this->parseStringValues('id', $entryIds);
 
         return $this;
     }
@@ -250,172 +249,72 @@ class Builder {
      * @param string $where
      * @return self
      */
-    protected function setWhere($where)
+    protected function setWheres($wheres)
     {
-        $this->where = $where;
-
-        return $this;
-    }
-
-    /**
-     * Adds a pivot column to the entries query
-     *
-     * @param string $shortTag
-     * @return self
-     */
-    protected function addPivot($shortTag)
-    {
-        if (! isset($this->pivots[$shortTag])) {
-            $this->includePivotTables();
-
-            $pivotExpression = \DB::raw('MAX(IF(`content_type_fields`.`short_tag` = \''.$shortTag.'\', `entry_data`.`data`, NULL)) AS '.$shortTag);
-
-            $this->entries->addSelect($pivotExpression);
-
-            $this->pivots[$shortTag] = $pivotExpression;
+        if (! is_array($wheres)) {
+            throw new Exception('Where clause must be an array.');
         }
 
+        if (! is_array(current($wheres))) {
+            $wheres = [$wheres];
+        }
+
+        $whereClause = new WhereClause();
+        $whereClause->createNestedEntryData($wheres);
+        $this->wheres[] = $whereClause;
+
         return $this;
     }
 
     /**
-     * Joins tables required to pivot data to the entries query
+     * Joins entry_data table in order to filter or sort entries
      *
      * @return self
      */
-    protected function includePivotTables()
+    protected function joinEntryData($alias = 'entry_data', WhereClause $whereClause = null)
     {
-        if ($this->pivotTablesIncluded == false) {
-            $locale = \Lang::getLocale();
-            
-            $this->entries->leftJoin(
-                \DB::raw(
-                    '(`entry_data` inner join `languages` on `entry_data`.`language_id` = `languages`.`id`'
-                    . ' and `languages`.`locale` = \''.$locale.'\' inner join `content_type_fields` ON'
-                    . ' `entry_data`.`content_type_field_id` = `content_type_fields`.`id`)'
-                ), 
-                'entries.id',
-                '=',
-                'entry_data.entry_id'
-            )
-            ->groupBy('entries.id');
-
-            $this->pivotTablesIncluded = true;
+        if (isset($this->joinedEntryDataAliases[$alias])) {
+            return;
         }
 
-        return $this;
+        $this->joinedEntryDataAliases[$alias] = $alias;
+
+        $this->entries->leftJoin("entry_data as {$alias}", function($join) use ($alias, $whereClause) {
+            $join->on('entries.id', '=' , $alias.'.entry_id')
+                ->where($alias.'.language_locale', '=', Lang::getLocale());
+
+            if ($whereClause != null) {
+                $whereClause->build($join);
+            }
+        })
+        ->groupBy('entries.id');        
     }
 
     /**
-     * Paginate the given query into a simple paginator.
+     * Parse string to build an operational where clause
      *
-     * @param  int  $perPage
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    protected function paginate($perPage = 15)
-    {
-        $page = Paginator::resolveCurrentPage();
-
-        $total = $this->getCountForPagination();
-
-        $results = $this->entries->forPage($page, $perPage)->get();
-
-        return new LengthAwarePaginator($results, $total, $perPage, $page, [
-            'path' => Paginator::resolveCurrentPath()
-        ]);
-    }
-
-    /**
-     * Get a paginator only supporting simple next and previous links.
-     *
-     * This is more efficient on larger data-sets, etc.
-     *
-     * @param  int  $perPage
-     * @return \Illuminate\Contracts\Pagination\Paginator
-     */
-    protected function simplePaginate($perPage = 15)
-    {
-        $page = Paginator::resolveCurrentPage();
-
-        $this->skip(($page - 1) * $perPage)->take($perPage + 1);
-
-        return new Paginator($this->get(), $perPage, $page, [
-            'path' => Paginator::resolveCurrentPath()
-        ]);
-    }
-
-    /**
-     * Get the count of the total records for the paginator.
-     *
-     * @return int
-     */
-    public function getCountForPagination()
-    {
-        $this->backupFieldsForCount();
-
-        $columns = array_merge([\DB::raw('count(DISTINCT `entries`.`id`) as __aggregate_count')], $this->pivots);
-
-        $results = $this->entries->get($columns);
-
-        $this->restoreFieldsForCount();
-
-        if (isset($results[0])) {
-            return $results[0]->__aggregate_count;
-        }
-    }
-
-    /**
-     * Backup some fields for the pagination count.
-     *
-     * @return void
-     */
-    protected function backupFieldsForCount()
-    {
-        $query = $this->entries->getQuery();
-
-        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field) {
-            $this->backups[$field] = $query->{$field};
-
-            $query->{$field} = null;
-        }
-    }
-
-    /**
-     * Restore some fields after the pagination count.
-     *
-     * @return void
-     */
-    protected function restoreFieldsForCount()
-    {
-        $query = $this->entries->getQuery();
-
-        foreach (['columns', 'groups', 'orders', 'limit', 'offset'] as $field) {
-            $query->{$field} = $this->backups[$field];
-        }
-
-        $this->backups = [];
-    }
-
-    /**
-     * Parse string to build an operational array of values
-     *
+     * @param  string $column
+     * @param  string $string
      * @return array
      */
-    protected function parseStringValues($string)
+    protected function parseStringValues($column, $string)
     {
-        $delimiter = '|';
         $not = false;
-
         if (stripos($string, 'not ') === 0) {
             $not = true;
             $string = substr($string, 4);
         }
 
-        $whereContainer = new \stdClass;
-        $whereContainer->values = $this->parseDelimitedString($string, $delimiter);
-        $whereContainer->not = $not;
+        $values = $this->parseDelimitedString($string);
 
-        return $whereContainer;
+        if (count($values) > 1) {
+            $operator = ($not == true) ? 'not in' : 'in';
+        } else {
+            $operator = ($not == true) ? '!=' : '=';
+            $values = current($values);
+        }
+
+        return new WhereClause($column, $operator, $values);
     }
 
     /**
@@ -436,10 +335,10 @@ class Builder {
     protected function compileContentTypes()
     {
         if (count($this->contentTypes) > 0) {
-            $entries = $this;
+            $builder = $this;
 
-            $this->entries->whereHas('contentType', function($query) use($entries) {
-                $entries->buildWhere('short_name', $entries->contentTypes, $query);
+            $this->entries->whereHas('contentType', function($query) use ($builder) {
+                $builder->contentTypes->build($query);
             });
         }
     }
@@ -452,7 +351,7 @@ class Builder {
     protected function compileEntryIds()
     {
         if ($this->entryIds != null) {
-            $this->buildWhere('id', $this->entryIds);
+            $this->entryIds->build($this->entries);
         }
     }
 
@@ -466,9 +365,13 @@ class Builder {
         if (count($this->orders) > 0) {
             $counter = 0;
             foreach ($this->orders as $orderBy) {
-                $this->addPivot($orderBy);
-                $sort = (isset($this->sorts[$counter]) && $this->sorts[$counter] == 'desc') ? 'desc' : 'asc';
-                $this->entries->orderBy($orderBy, $sort);
+                $alias = $orderBy.'_orderBy';
+
+                $whereClause = new WhereClause($alias.'.content_type_field_short_tag', '=', $orderBy);
+                $this->joinEntryData($alias, $whereClause);
+
+                $sort = (isset($this->sorts[$counter]) && strtolower($this->sorts[$counter]) == 'desc') ? 'desc' : 'asc';
+                $this->entries->orderBy($alias.'.data', $sort);
                 $counter++;
             }
         }
@@ -479,11 +382,14 @@ class Builder {
      *
      * @return void
      */
-    protected function compileWhere()
+    protected function compileWheres()
     {
-        if ($this->where != null) {
-            // $this->entries->having(\DB::raw($this->where));
-            $this->entries->having('sort_order', '>', 3);
+        if (count($this->wheres) > 0) {
+            $this->joinEntryData();
+
+            foreach ($this->wheres as $whereClause) {
+                $whereClause->build($this->entries);
+            }
         }
     }
 
@@ -527,25 +433,6 @@ class Builder {
     }
 
     /**
-     * Selects the appropriate where clause to use based on the provided container
-     * and adds it to the entries query
-     *
-     * @return void
-     */
-    protected function buildWhere($column, $whereContainer, $query = null)
-    {
-        if ($query == null) {
-            $query = $this->entries;
-        }
-
-        if (count($whereContainer->values) > 0) {
-            $query->whereIn($column, $whereContainer->values, 'and', $whereContainer->not);
-        } else {
-            $query->where($column, current($whereContainer->values));
-        }
-    }
-
-    /**
      * Compile the entries query from the current object
      *
      * @return void
@@ -558,7 +445,7 @@ class Builder {
         $this->compileContentTypes();
         $this->compileEntryIds();
         $this->compileOrders();
-        $this->compileWhere();
+        $this->compileWheres();
         $this->compileStatusFilter();
         $this->compileLimit();
         $this->compileOffset();

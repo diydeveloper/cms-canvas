@@ -3,11 +3,12 @@
 namespace CmsCanvas\Content\Entry;
 
 use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
+use Illuminate\Pagination\AbstractPaginator;
 
 class RenderCollection extends CmsCanvasCollection {
 
     /**
-     * @var \Illuminate\Pagination\Paginator
+     * @var \Illuminate\Pagination\AbstractPaginator
      */
     protected $paginator;
 
@@ -15,13 +16,12 @@ class RenderCollection extends CmsCanvasCollection {
      * Defines the order in which to sort.
      *
      * @param \CmsCanvas\Models\Content\Entry\Builder\Entry|array $entryBuilders
+     * @param \Illuminate\Pagination\AbstractPaginator  $paginator
      * @return void
      */
-    public function __construct($entryBuilders)
+    public function __construct(array $entryBuilders, AbstractPaginator $paginator = null)
     {
-        if ($entryBuilders instanceof \Illuminate\Pagination\AbstractPaginator) {
-            $this->paginator = $entries;
-        }
+        $this->paginator = $paginator;
 
         foreach ($entryBuilders as $entryBuilder) {
             $this->items[] = $entryBuilder->render();
@@ -117,7 +117,7 @@ class RenderCollection extends CmsCanvasCollection {
     }
 
     /**
-     * Get the number of the last item on the paginator.
+     * Get the number of the first item on the paginator.
      *
      * @return int
      */
@@ -129,7 +129,7 @@ class RenderCollection extends CmsCanvasCollection {
     }
 
     /**
-     * Get the number of the first item on the paginator.
+     * Get the number of the last item on the paginator.
      *
      * @return int
      */
