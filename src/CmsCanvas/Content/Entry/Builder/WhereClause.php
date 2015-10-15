@@ -265,6 +265,19 @@ class WhereClause {
     public function createNestedEntryData(array $items)
     {
         reset($items);
+        $entryColumns = [
+            'id',
+            'title', 
+            'url_title', 
+            'route',
+            'meta_title',
+            'meta_keywords',
+            'meta_description',
+            'entry_status_id',
+            'author_id',
+            'created_at',
+            'updated_at',
+        ];
 
         foreach ($items as $item) {
             $whereClause = new WhereClause();
@@ -284,8 +297,12 @@ class WhereClause {
 
                 $operator = (isset($item['operator'])) ? $item['operator'] : '=';
 
-                $whereClause->nested[] = new WhereClause('entry_data.content_type_field_short_tag', '=', $item['field']);
-                $whereClause->nested[] = new WhereClause('entry_data.data', $operator, $item['value']);
+                if (in_array($item['field'], $entryColumns)) {
+                    $whereClause->nested[] = new WhereClause('entries.'.$item['field'], $operator, $item['value']);
+                } else {
+                    $whereClause->nested[] = new WhereClause('entry_data.content_type_field_short_tag', '=', $item['field']);
+                    $whereClause->nested[] = new WhereClause('entry_data.data', $operator, $item['value']);
+                }
             }
 
             $this->nested[] = $whereClause;
