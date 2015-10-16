@@ -256,34 +256,6 @@ class Type extends Model implements PageInterface {
     }
 
     /**
-     * Remove the first and last forward slash from the route prefix
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getRoutePrefixAttribute($value)
-    {
-        return trim($value, '/');
-    }
-
-    /**
-     * Remove the first and last forward slash from the route prefix
-     *
-     * @param string $value
-     * @return void
-     */
-    public function setRoutePrefixAttribute($value)
-    {
-        $value = trim($value, '/');
-
-        if ($value === '') {
-            $value = null;
-        }
-
-        $this->attributes['route_prefix'] = $value;
-    }
-
-    /**
      * Remove the first and last forward slash from the route
      *
      * @param string $value

@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Entry;
 
-use Auth, Lang;
+use Auth, Lang, DB;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Content\Entry\RenderCollection;
@@ -41,6 +41,34 @@ class Builder {
      * @var \CmsCanvas\Content\Entry\Builder\WhereClause
      */
     protected $contentTypes;
+
+    /**
+     * Filter entries by year
+     *
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
+     */
+    protected $year;
+
+    /**
+     * Filter entries by month
+     *
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
+     */
+    protected $month;
+
+    /**
+     * Filter entries by day
+     *
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
+     */
+    protected $day;
+
+    /**
+     * Filter entries by url title
+     *
+     * @var \CmsCanvas\Content\Entry\Builder\WhereClause
+     */
+    protected $urlTitle;
 
     /**
      * Short name of a content type
@@ -163,6 +191,22 @@ class Builder {
                 case 'where':
                     $this->setWheres($value);
                     break;
+
+                case 'year':
+                    $this->setYear($value);
+                    break;
+
+                case 'url_title':
+                    $this->setUrlTitle($value);
+                    break;
+
+                case 'month':
+                    $this->setMonth($value);
+                    break;
+
+                case 'day':
+                    $this->setDay($value);
+                    break;
             }
         } 
     }
@@ -176,6 +220,50 @@ class Builder {
     protected function setContentTypes($contentTypes)
     {
         $this->contentTypes = $this->parseStringValues('short_name', $contentTypes);
+    }
+
+    /**
+     * Set query where clause for specific year
+     *
+     * @param  string $year
+     * @return self
+     */
+    protected function setYear($year)
+    {
+        $this->year = $this->parseStringValues(DB::raw('YEAR(entries.created_at)'), $year);
+    }
+
+    /**
+     * Set query where clause for specific month
+     *
+     * @param  string $month
+     * @return self
+     */
+    protected function setMonth($month)
+    {
+        $this->year = $this->parseStringValues(DB::raw('MONTH(entries.created_at)'), $month);
+    }
+
+    /**
+     * Set query where clause for specific day
+     *
+     * @param  string $day
+     * @return self
+     */
+    protected function setDay($day)
+    {
+        $this->day = $this->parseStringValues(DB::raw('DAY(entries.created_at)'), $day);
+    }
+
+    /**
+     * Set query where clause for specific url title
+     *
+     * @param  string $urlTitle
+     * @return self
+     */
+    protected function setUrlTitle($urlTitle)
+    {
+        $this->urlTitle = $this->parseStringValues('entries.url_title', $urlTitle);
     }
 
     /**
@@ -212,7 +300,7 @@ class Builder {
      */
     protected function setEntryIds($entryIds)
     {
-        $this->entryIds = $this->parseStringValues('id', $entryIds);
+        $this->entryIds = $this->parseStringValues('entries.id', $entryIds);
 
         return $this;
     }
@@ -356,6 +444,55 @@ class Builder {
     }
 
     /**
+     * Adds year filter to the entries query
+     *
+     * @return void
+     */
+    protected function compileYear()
+    {
+        if ($this->year != null) {
+            $this->year->build($this->entries);
+        }
+    }
+
+
+    /**
+     * Adds month filter to the entries query
+     *
+     * @return void
+     */
+    protected function compileMonth()
+    {
+        if ($this->month != null) {
+            $this->month->build($this->entries);
+        }
+    }
+
+    /**
+     * Adds day filter to the entries query
+     *
+     * @return void
+     */
+    protected function compileDay()
+    {
+        if ($this->day != null) {
+            $this->day->build($this->entries);
+        }
+    }
+
+    /**
+     * Adds url title filter to the entries query
+     *
+     * @return void
+     */
+    protected function compileUrlTitle()
+    {
+        if ($this->urlTitle != null) {
+            $this->urlTitle->build($this->entries);
+        }
+    }
+
+    /**
      * Adds order by to the entries query
      *
      * @return void
@@ -444,6 +581,10 @@ class Builder {
 
         $this->compileContentTypes();
         $this->compileEntryIds();
+        $this->compileYear();
+        $this->compileMonth();
+        $this->compileDay();
+        $this->compileUrlTitle();
         $this->compileOrders();
         $this->compileWheres();
         $this->compileStatusFilter();
