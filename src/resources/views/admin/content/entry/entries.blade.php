@@ -74,14 +74,14 @@
                     <th>
                         <a rel="updated_at" class="sortable{!! $orderBy->getElementClass('updated_at') !!}" href="javascript:void(0);">Last Modified</a>
                     </th>
-                    <th class="right">Action</th>
+                    <th class="right"></th>
                 </tr>
             </thead>
             <tbody>
                 @if (count($entries) > 0)
                     @foreach ($entries as $entry)
-                    <tr>
-                        <td class="center"><input type="checkbox" value="<?php echo $entry->id ?>" name="selected[]" /></td>
+                    <tr class="row_link" data-href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">
+                        <td class="center no_row_link"><input type="checkbox" class="no_row_click" value="<?php echo $entry->id ?>" name="selected[]" /></td>
                         <td>
                             {!! strip_tags($entry->title) !!}
                             @if ($entry->isHomePage())
@@ -110,12 +110,29 @@
                         <td>{!! $entry->entry_status_name !!}</td>
                         <td>{!! $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i a') !!}</td>
                         <td class="right">
+                            <ul class="actions_btn">
+                                <li>
+                                    <a class="actions_link no_row_link" href="javascript:void(0);">
+                                        <span class="no_row_link actions_arrow">Actions</span>
+                                    </a>
+                                    <ul class="actions_dropdown" style="text-align: left;">
+                                        <li class="edit_icon"><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a></li>
+                                        <li><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/delete") !!}">Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+<!--                             <a class="button_with_divider button no_row_click" href="#">
+                                <span class="button_divider no_row_click">Actions</span>
+                                <span class="button_down_arrow no_row_click"></span>
+                            </a>
+ -->                            <!--
                             @if ($entry->getRoute() !== null)
                                 [ <a target="_blank" href="{!! url($entry->getRoute()) !!}">View</a> ]
                             @elseif ($entry->getDynamicRoute() !== null)
                                 [ <a target="_blank" href="{!! url($entry->getDynamicRoute()) !!}">View</a> ]
                             @endif
                             [ <a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a> ]
+                            -->
                         </td>
                     </tr>
                     @endforeach
@@ -142,12 +159,9 @@
         });
 
         $('#add_entry').click( function () {
-            if ($('#content_types_dropdown').is(":visible"))
-            {
+            if ($('#content_types_dropdown').is(":visible")) {
                 $('#add_entry_close').trigger("click");
-            }
-            else
-            {
+            } else {
                 $('#content_types_dropdown').show();
                 $('#add_entry').addClass('selected');
             }

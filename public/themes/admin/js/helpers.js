@@ -97,4 +97,34 @@ $(document).ready(function() {
 
         return false;
     });
+
+    $('.row_link').click(function(e) {
+        if ($(e.target).hasClass("no_row_link")) {
+            e.stopPropagation();
+        } else {
+            window.document.location = $(this).data("href");
+        }
+    });
+
+    $('.actions_link').click(function (e) {
+        if ($(this).closest('a').siblings('.actions_dropdown').is(":visible")) {
+            $(this).closest('a').removeClass('selected');
+            $('.actions_dropdown').hide();
+        } else {
+            $('.actions_link').removeClass('selected');
+            $('.actions_dropdown').hide();
+            $(this).closest('a').addClass('selected');
+            $(this).closest('a').siblings('.actions_dropdown').show();
+        }
+    });
+
+    $(document).mouseup(function (e) {
+        if ($('.actions_dropdown').is(":visible") 
+            && $(e.target).closest('.actions_dropdown').length == 0
+            && $(e.target).closest('a').hasClass('actions_link') == false
+        ) {
+            $('.actions_link').removeClass('selected');
+            $('.actions_dropdown').hide();
+        }
+    });
 });
