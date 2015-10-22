@@ -99,7 +99,7 @@ $(document).ready(function() {
     });
 
     $('.row_link').click(function(e) {
-        if ($(e.target).hasClass("no_row_link")) {
+        if ($(e.target).closest(".no_row_link").length > 0) {
             e.stopPropagation();
         } else {
             window.document.location = $(this).data("href");

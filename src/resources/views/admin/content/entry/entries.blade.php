@@ -81,7 +81,7 @@
                 @if (count($entries) > 0)
                     @foreach ($entries as $entry)
                     <tr class="row_link" data-href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">
-                        <td class="center no_row_link"><input type="checkbox" class="no_row_click" value="<?php echo $entry->id ?>" name="selected[]" /></td>
+                        <td class="center no_row_link" style="cursor: default;"><input type="checkbox" value="<?php echo $entry->id ?>" name="selected[]" /></td>
                         <td>
                             {!! strip_tags($entry->title) !!}
                             @if ($entry->isHomePage())
@@ -113,7 +113,7 @@
                             <ul class="actions_btn">
                                 <li>
                                     <a class="actions_link no_row_link" href="javascript:void(0);">
-                                        <span class="no_row_link actions_arrow">Actions</span>
+                                        <span class="actions_arrow">Actions</span>
                                     </a>
                                     <ul class="actions_dropdown" style="text-align: left;">
                                         <li class="edit_icon"><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a></li>

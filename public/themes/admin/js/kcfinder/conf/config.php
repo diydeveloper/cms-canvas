@@ -23,8 +23,7 @@ $_CONFIG = array(
 
     'disabled' => true,
     'uploadURL' => "/packages/diyphpdeveloper/cmscanvas/uploads",
-    'uploadDir' => "/home/mprice/public_html/laravel-canvas/public/packages/diyphpdeveloper/cmscanvas/uploads",
-    // 'uploadDir' => "../../../../uploads",
+    'uploadDir' => realpath("../../../../../../diyphpdeveloper/cmscanvas/uploads"),
     'theme' => "default",
 
     'types' => array(
