@@ -115,24 +115,12 @@
                                     <a class="actions_link no_row_link" href="javascript:void(0);">
                                         <span class="actions_arrow">Actions</span>
                                     </a>
-                                    <ul class="actions_dropdown" style="text-align: left;">
+                                    <ul class="actions_dropdown no_row_link" style="text-align: left;">
                                         <li class="edit_icon"><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a></li>
-                                        <li><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/delete") !!}">Delete</a></li>
+                                        <li><a href="javascript:void(0);" data-id="{!! $entry->id !!}" class="delete_single">Delete</a></li>
                                     </ul>
                                 </li>
                             </ul>
-<!--                             <a class="button_with_divider button no_row_click" href="#">
-                                <span class="button_divider no_row_click">Actions</span>
-                                <span class="button_down_arrow no_row_click"></span>
-                            </a>
- -->                            <!--
-                            @if ($entry->getRoute() !== null)
-                                [ <a target="_blank" href="{!! url($entry->getRoute()) !!}">View</a> ]
-                            @elseif ($entry->getDynamicRoute() !== null)
-                                [ <a target="_blank" href="{!! url($entry->getDynamicRoute()) !!}">View</a> ]
-                            @endif
-                            [ <a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a> ]
-                            -->
                         </td>
                     </tr>
                     @endforeach
@@ -151,11 +139,7 @@
     $(document).ready( function() {
         // Delete
         $('.delete').click( function() {
-            if (confirm('Delete cannot be undone! Are you sure you want to do this?')) {
-                $('#form').attr('action', '{!! Admin::url('content/entry/delete') !!}').submit();
-            } else {
-                return false;
-            }
+            $('#form').attr('action', '{!! Admin::url('content/entry/delete/verify') !!}').submit();
         });
 
         $('#add_entry').click( function () {
@@ -177,6 +161,18 @@
                 $('#add_entry').removeClass('selected');
                 $('#content_types_dropdown').hide();
             }
+        });
+
+        $('.delete_single').click(function() {
+            if (confirm('Delete cannot be undone! Are you sure you want to do this item?')) {
+                $('{!! Form::open(['url' => Admin::url('content/entry/delete')]) !!}'
+                    + '<input type="hidden" name="selected[]" value="' + $(this).data('id') + '" />'
+                    + '{!! Form::close() !!}'
+                ).appendTo('body').submit();
+            } else {
+                return false;
+            }
+
         });
     });
 </script>

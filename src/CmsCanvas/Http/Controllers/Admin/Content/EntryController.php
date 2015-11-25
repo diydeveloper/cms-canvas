@@ -74,6 +74,28 @@ class EntryController extends AdminController {
     }
 
     /**
+     * Prompts for entry delete verfication for entries posted in the selected array
+     *
+     * @return View
+     */
+    public function postDeleteVerify()
+    {
+        $selected = Input::get('selected');
+
+        if (empty($selected) || ! is_array($selected)) {
+            return Redirect::route('admin.content.entry.entries');
+        }
+
+        $entries = Entry::whereIn('id', $selected)->get();
+
+        $content = View::make('cmscanvas::admin.content.entry.deleteVerify');
+        $content->entries = $entries;
+
+        $this->layout->breadcrumbs = [Request::path() => 'Entries'];
+        $this->layout->content = $content;
+    }
+
+    /**
      * Deletes entry(s) that are posted in the selected array
      *
      * @return View

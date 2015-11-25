@@ -103,6 +103,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::get('/', ['as' => 'admin.content.entry.entries', 'uses' => 'Admin\Content\EntryController@getEntries']);
             Route::post('/', ['as' => 'admin.content.entry.entries.post', 'uses' => 'Admin\Content\EntryController@postEntries']);
 
+            Route::post('delete/verify', ['as' => 'admin.content.entry.delete.verify', 'permission' => 'ADMIN_ENTRY_DELETE', 'uses' => 'Admin\Content\EntryController@postDeleteVerify']);
             Route::post('delete', ['as' => 'admin.content.entry.delete.post', 'permission' => 'ADMIN_ENTRY_DELETE', 'uses' => 'Admin\Content\EntryController@postDelete']);
             Route::post('create-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.content.entry.create.thumbnail.post', 'uses' => 'Admin\Content\EntryController@postCreateThumbnail']);
 
