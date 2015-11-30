@@ -127,4 +127,16 @@ $(document).ready(function() {
             $('.actions_dropdown').hide();
         }
     });
+
+    $('.delete_item').click(function() {
+        if (confirm('Delete cannot be undone! Are you sure you want to do this item?')) {
+            $('<form method="post" action="' + $(this).data('href') + '">'
+                + '<input type="hidden" name="selected[]" value="' + $(this).data('id') + '" />'
+                + '<input type="hidden" name="_token" value="' + $('meta[name="csrf-token"]').attr('content') + '" />'
+                + '</form>'
+            ).appendTo('body').submit();
+        } else {
+            return false;
+        }
+    });
 });

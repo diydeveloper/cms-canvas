@@ -36,19 +36,29 @@
                         <th>
                             <a rel="short_name" class="sortable{!! $orderBy->getElementClass('short_name') !!}" href="javascript:void(0);">Short Name</a>
                         </th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($navigations) > 0)
                         @foreach ($navigations as $navigation)
-                            <tr>
-                                <td class="center"><input type="checkbox" value="{!! $navigation->id !!}" name="selected[]" /></td>
+                            <tr class="row_link" data-href="{!! Admin::url("content/navigation/{$navigation->id}/tree") !!}">
+                                <td class="center no_row_link"><input type="checkbox" value="{!! $navigation->id !!}" name="selected[]" /></td>
                                 <td>{!! $navigation->title !!}</td>
                                 <td>{!! $navigation->short_name !!}</td>
                                 <td class="right">
-                                    [ <a href="{!! Admin::url("content/navigation/{$navigation->id}/edit") !!}">Edit</a> ]
-                                    [ <a href="{!! Admin::url("content/navigation/{$navigation->id}/tree") !!}">Items</a> ]
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("content/navigation/{$navigation->id}/tree") !!}">Items</a></li>
+                                                <li class="edit_icon"><a href="{!! Admin::url("content/navigation/{$navigation->id}/edit") !!}">Rename</a></li>
+                                                <li><a href="javascript:void(0);" data-id="{!! $navigation->id !!}" data-href="{!! Admin::url('content/navigation/delete') !!}" class="delete_item">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         @endforeach

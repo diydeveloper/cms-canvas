@@ -81,7 +81,7 @@
                 @if (count($entries) > 0)
                     @foreach ($entries as $entry)
                     <tr class="row_link" data-href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">
-                        <td class="center no_row_link" style="cursor: default;"><input type="checkbox" value="<?php echo $entry->id ?>" name="selected[]" /></td>
+                        <td class="center no_row_link"><input type="checkbox" value="<?php echo $entry->id ?>" name="selected[]" /></td>
                         <td>
                             {!! strip_tags($entry->title) !!}
                             @if ($entry->isHomePage())
@@ -117,7 +117,7 @@
                                     </a>
                                     <ul class="actions_dropdown no_row_link" style="text-align: left;">
                                         <li class="edit_icon"><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a></li>
-                                        <li><a href="javascript:void(0);" data-id="{!! $entry->id !!}" class="delete_single">Delete</a></li>
+                                        <li><a href="javascript:void(0);" data-id="{!! $entry->id !!}" data-href="{!! Admin::url('content/entry/delete') !!}" class="delete_item">Delete</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -161,18 +161,6 @@
                 $('#add_entry').removeClass('selected');
                 $('#content_types_dropdown').hide();
             }
-        });
-
-        $('.delete_single').click(function() {
-            if (confirm('Delete cannot be undone! Are you sure you want to do this item?')) {
-                $('{!! Form::open(['url' => Admin::url('content/entry/delete')]) !!}'
-                    + '<input type="hidden" name="selected[]" value="' + $(this).data('id') + '" />'
-                    + '{!! Form::close() !!}'
-                ).appendTo('body').submit();
-            } else {
-                return false;
-            }
-
         });
     });
 </script>

@@ -1537,7 +1537,7 @@ a.actions_link {
     cursor: pointer;
 }
 
-.no_row_click {
+.no_row_link {
     cursor: default;
 }
 
