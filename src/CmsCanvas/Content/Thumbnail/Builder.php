@@ -1,6 +1,9 @@
 <?php
 
-namespace CmsCanvas\Content\Image;
+namespace CmsCanvas\Content\Thumbnail;
+
+use Config;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Builder {
 
@@ -74,9 +77,12 @@ class Builder {
      */
     public function get()
     {
-        $this->compile();
-
-        return asset($this->getDestinationPath());
+        if ($this->getWidth() == null && $this->getHeight() == null) {
+            return asset($this->getComputedSourcePath());
+        } else {
+            $this->compile();
+            return asset($this->getDestinationPath());
+        }
     }
 
     /**
@@ -93,7 +99,7 @@ class Builder {
                     $this->setWidth($value);
                     break;
 
-                case 'hight':
+                case 'height':
                     $this->setHeight($value);
                     break;
 
@@ -101,7 +107,7 @@ class Builder {
                     $this->setCrop($value);
                     break;
 
-                case 'no_image_source':
+                case 'no_image':
                     $this->setNoImage($value);
                     break;
             }
@@ -224,7 +230,8 @@ class Builder {
         $extension = (isset($info['extension'])) ? $info['extension'] : '';
         $dirname = (isset($info['dirname'])) ? $info['dirname'] : '';
 
-        $thumbnailFilename = md5($dirname.'/'.$filename.'.'.$extension).'-'.$filename.'-'.$width.'x'.$height;
+        $thumbnailFilename = md5($dirname.'/'.$filename.'.'.$extension)
+            .'-'.$filename.'-'.$this->getWidth().'x'.$this->getHeight();
 
         if ($this->crop == true) {
             $thumbnailFilename .= '-cropped';
@@ -299,7 +306,7 @@ class Builder {
         }
 
         if (empty($this->computedSourcePath) || empty($this->sourceModificationTime)) {
-            throw new Exception('Failed to find source image.');
+            throw new Exception('Unable to find source image.');
         }
 
         return $this->computedSourcePath;

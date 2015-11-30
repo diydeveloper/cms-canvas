@@ -232,7 +232,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function portrait($width = null, $height = null, $crop = false)
     {
-        return Content::thumbnail('', $width, $height, $crop, ['no_image' => Theme::asset('images/portrait.jpg')]);
+        return Content::thumbnail(
+            '', 
+            [
+                'width' => $width, 
+                'height' => $height, 
+                'crop' => $crop, 
+                'no_image' => Theme::asset('images/portrait.jpg')
+            ]
+        );
     }
 
     /**
