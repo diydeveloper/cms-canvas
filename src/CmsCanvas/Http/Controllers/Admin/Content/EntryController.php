@@ -302,10 +302,11 @@ class EntryController extends AdminController {
     {
         return Content::thumbnail(
             Input::get('image_path'), 
-            150, 
-            150, 
-            false, 
-            ['no_image' => Theme::asset('images/no_image.jpg')]
+            [
+                'width' => 150, 
+                'height' => 150, 
+                'no_image' => Theme::asset('images/no_image.jpg')
+            ]
         );
     }
 

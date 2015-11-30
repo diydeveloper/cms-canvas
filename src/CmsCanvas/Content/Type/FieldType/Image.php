@@ -48,7 +48,14 @@ class Image extends FieldType {
 
         if ($output == 'image') {
             if ($maxWidth !== null || $maxHeight !== null) {
-                $source = Content::thumbnail($this->data, $maxWidth, $maxHeight, $crop);
+                $source = Content::thumbnail(
+                    $this->data, 
+                    [
+                        'width' => $maxWidth, 
+                        'height' => $maxHeight, 
+                        'crop' => $crop
+                    ]
+                );
             } else {
                 $source = $this->data;
             }
