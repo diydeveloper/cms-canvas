@@ -18,7 +18,15 @@ class Data extends Model {
      *
      * @var array
      */
-    protected $fillable = ['entry_id', 'content_type_field_id', 'language_id', 'data', 'metadata'];
+    protected $fillable = [
+        'entry_id', 
+        'content_type_field_id', 
+        'content_type_field_short_tag', 
+        'language_id', 
+        'language_locale', 
+        'data', 
+        'metadata'
+    ];
 
     /**
      * The columns that can NOT be mass-assigned.

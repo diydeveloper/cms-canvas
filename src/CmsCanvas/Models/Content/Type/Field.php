@@ -3,6 +3,7 @@
 namespace CmsCanvas\Models\Content\Type;
 
 use CmsCanvas\Database\Eloquent\Model;
+use CmsCanvas\Models\Content\Entry\Data as EntryData;
 
 class Field extends Model {
 
@@ -88,6 +89,25 @@ class Field extends Model {
     public function type()
     {
         return $this->belongsTo('\CmsCanvas\Models\Content\Type\Field\Type', 'content_type_field_type_id');
+    }
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        self::updated(function($field) {
+            if ($field->isDirty('short_tag')) {
+                // Because the entry_data table is a wee bit denormalized update all of the cooresponding
+                // content_type_field_id rows with the new short_tag if it has changed.
+                EntryData::where('content_type_field_id', $field->id)
+                    ->update(['content_type_field_short_tag' => $field->short_tag]);
+            }
+        });
     }
 
 }

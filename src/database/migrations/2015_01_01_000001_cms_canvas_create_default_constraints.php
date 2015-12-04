@@ -104,6 +104,11 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
                 ->references('id')
                 ->on('languages')
                 ->onDelete('cascade');
+
+            $table->foreign('language_locale')
+                ->references('locale')
+                ->on('languages')
+                ->onUpdate('cascade');
         });
 
         // content_type_fields table constraints
@@ -207,6 +212,7 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
             $table->dropForeign('entry_data_entry_id_foreign');
             $table->dropForeign('entry_data_content_type_field_id_foreign');
             $table->dropForeign('entry_data_language_id_foreign');
+            $table->dropForeign('entry_data_language_locale_foreign');
         });
 
         // content_type_fields table constraints
