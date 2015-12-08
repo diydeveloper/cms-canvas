@@ -176,17 +176,24 @@ class Entry extends Model implements PageInterface {
 
         $entry = $this;
         $locale = Lang::getLocale();
+        $fallbackLocale = Lang::getFallback();
 
         $query = Field::with('type')
             ->select('content_type_fields.*', 'entry_data.data', 'entry_data.metadata')
             ->join('content_types', 'content_types.id', '=', 'content_type_fields.content_type_id')
-            ->leftJoin(
-                DB::raw('(`entry_data` inner join `languages` on `entry_data`.`language_id` = `languages`.`id` and `languages`.`locale` = \''.$locale.'\')'), 
-                function($join) use($entry) {
+            ->leftJoin('entry_data', function ($join) use ($entry, $locale, $fallbackLocale) {
                     $join->on('entry_data.content_type_field_id', '=', 'content_type_fields.id')
-                        ->where('entry_data.entry_id', '=', $entry->id);
-                }
-            )
+                        ->where('entry_data.entry_id', '=', $entry->id)
+                        ->where('entry_data.language_locale', '=' , Lang::getLocale());
+
+                    if ($locale != $fallbackLocale) {
+                        $join->where('content_type_fields.translate', '=', 1);
+                        $join->orOn('entry_data.content_type_field_id', '=', 'content_type_fields.id')
+                            ->where('entry_data.entry_id', '=', $entry->id)
+                            ->where('entry_data.language_locale', '=', Lang::getFallback())
+                            ->where('content_type_fields.translate', '=', 0);
+                    }
+                })
             ->where('content_types.id', $entry->content_type_id);
 
         return $query->get();
