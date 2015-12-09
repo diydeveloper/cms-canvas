@@ -90,7 +90,7 @@ $(document).ready(function() {
         $('<input>').attr({
             type: 'hidden',
             name: '_token',
-            value: CSRF_TOKEN
+            value: $('meta[name="csrf-token"]').attr('content')
         }).appendTo(form);
 
         form.submit();

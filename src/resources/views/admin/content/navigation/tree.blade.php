@@ -29,7 +29,7 @@
             forcePlaceholderSize: true,
             handle: 'div span.sortableTree_handle',
             helper: 'clone',
-            items: 'li',
+            items: 'li.navigation_item',
             maxLevels: 50,
             opacity: .6,
             placeholder: 'placeholder',
