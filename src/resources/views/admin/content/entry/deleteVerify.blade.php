@@ -28,8 +28,8 @@
             </table>
 
             <div class="buttons">
-                <a class="button" href="{!! Admin::url('content/entry') !!}"><span>Cancel</span></a>
                 <a class="button" href="javascript:void(0)" onClick="$('#form').submit();"><span>Delete</span></a>
+                &nbsp;<a class="no_underline" href="{!! Admin::url('content/entry') !!}"><span>Cancel</span></a>
             </div>
         {!! Form::close() !!}
     </div>

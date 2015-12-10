@@ -18,7 +18,7 @@
                 <div class="form">
                     <div>
                         {!! HTML::decode(Form::label('name', '<span class="required">*</span> Name:')) !!}
-                        <?php if (! empty($permission) && $permission->editable_flag): ?>
+                        <?php if (empty($permission) || $permission->editable_flag): ?>
                             {!! Form::text('name', null, ['id' => 'name']) !!}
                         <?php else: ?>
                             {!! $permission->name !!}
@@ -27,7 +27,7 @@
 
                     <div>
                         {!! HTML::decode(Form::label('name', '<span class="required">*</span> Key Name:')) !!}
-                        <?php if (! empty($permission) && $permission->editable_flag): ?>
+                        <?php if (empty($permission) || $permission->editable_flag): ?>
                             {!! Form::text('key_name', null, ['id' => 'key_name']) !!}
                         <?php else: ?>
                             {!! $permission->key_name !!}

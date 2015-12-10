@@ -36,17 +36,29 @@
                         <th>
                             User Count
                         </th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($roles) > 0)
                         @foreach ($roles as $role)
-                            <tr>
-                                <td class="center"><input type="checkbox" value="{!! $role->id !!}" name="selected[]" /></td>
+                            <tr class="row_link" data-href="{!! Admin::url("user/role/{$role->id}/edit") !!}">
+                                <td class="center no_row_link"><input type="checkbox" value="{!! $role->id !!}" name="selected[]" /></td>
                                 <td>{!! $role->name !!}</td>
                                 <td>{!! $role->users()->count() !!}</td>
-                                <td class="right">[ <a href="{!! Admin::url("user/role/{$role->id}/edit") !!}">Edit</a> ]</td>
+                                <td class="right">
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("user/role/{$role->id}/edit") !!}">Edit</a></li>
+                                                <li><a href="javascript:void(0);" data-id="{!! $role->id !!}" data-href="{!! Admin::url('user/role/delete') !!}" class="delete_item">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                         @endforeach
                     @else

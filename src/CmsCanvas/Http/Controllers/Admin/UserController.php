@@ -179,7 +179,7 @@ class UserController extends AdminController {
         $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => "required|email|unique:users,email,{$user->id}",
+            'email' => "required|email|unique:users,email".(($user == null) ? "" : ",{$user->id}"),
             'phone' => 'regex:/[0-9]{10,11}/'
         ];
 

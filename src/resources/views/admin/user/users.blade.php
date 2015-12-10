@@ -50,14 +50,14 @@
                         <th>
                             <a rel="last_login" class="sortable{!! $orderBy->getElementClass('last_login') !!}" href="javascript:void(0);">Last Login</a>
                         </th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($users) > 0)
                         @foreach ($users as $user)
-                            <tr>
-                                <td class="center"><input type="checkbox" value="{!! $user->id !!}" name="selected[]" /></td>
+                            <tr class="row_link" data-href="{!! Admin::url("user/{$user->id}/edit") !!}">
+                                <td class="center no_row_link"><input type="checkbox" value="{!! $user->id !!}" name="selected[]" /></td>
                                 <td>{!! $user->first_name !!}</td>
                                 <td>{!! $user->last_name !!}</td>
                                 <td>{!! $user->email !!}</td>
@@ -65,7 +65,19 @@
                                     {!! implode(', ', $user->roles->lists('name')->all()) !!}
                                 </td>
                                 <td>{!! (empty($user->last_login)) ? '' : $user->last_login->setTimezone(Auth::user()->getTimezoneIdentifier())->format('M j, Y h:i a') !!}</td>
-                                <td class="right">[ <a href="{!! Admin::url("user/{$user->id}/impersonate") !!}">Login</a> ] [ <a href="{!! Admin::url("user/{$user->id}/edit") !!}">Edit</a> ]</td>
+                                <td class="right">
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("user/{$user->id}/edit") !!}">Edit</a></li>
+                                                <li><a href="javascript:void(0);" data-id="{!! $user->id !!}" data-href="{!! Admin::url('user/delete') !!}" class="delete_item">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                         @endforeach
                     @else

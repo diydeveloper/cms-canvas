@@ -35,14 +35,14 @@
                         </th>
                         <th>Key Name</th>
                         <th>Roles</th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($permissions) > 0)
                         @foreach ($permissions as $permission)
-                            <tr>
-                                <td class="center">
+                            <tr class="row_link" data-href="{!! Admin::url("user/permission/{$permission->id}/edit") !!}">
+                                <td class="center no_row_link">
                                     <?php if ($permission->editable_flag): ?>
                                     <input type="checkbox" value="{!! $permission->id !!}" name="selected[]" />
                                     <?php endif; ?>
@@ -50,7 +50,21 @@
                                 <td>{!! $permission->name !!}</td>
                                 <td>{!! $permission->key_name !!}</td>
                                 <td>{!! implode(', ', $permission->roles->lists('name')->all()) !!}</td>
-                                <td class="right">[ <a href="{!! Admin::url("user/permission/{$permission->id}/edit") !!}">Edit</a> ]</td>
+                                <td class="right">
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("user/permission/{$permission->id}/edit") !!}">Edit</a></li>
+                                                <?php if ($permission->editable_flag): ?>
+                                                    <li><a href="javascript:void(0);" data-id="{!! $permission->id !!}" data-href="{!! Admin::url('user/permission/delete') !!}" class="delete_item">Delete</a></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                         @endforeach
                     @else
