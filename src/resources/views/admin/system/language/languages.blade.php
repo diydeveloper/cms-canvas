@@ -42,14 +42,14 @@
                             <a rel="short_name" class="sortable{!! $orderBy->getElementClass('locale') !!}" href="javascript:void(0);">Locale</a>
                         </th>
                         <th>Status</th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($languages) > 0)
                         @foreach ($languages as $language)
-                            <tr>
-                                <td class="center"><input type="checkbox" value="{!! $language->id !!}" name="selected[]" /></td>
+                            <tr class="row_link" data-href="{!! Admin::url("system/language/{$language->id}/edit") !!}">
+                                <td class="center no_row_link"><input type="checkbox" value="{!! $language->id !!}" name="selected[]" /></td>
                                 <td>
                                     {!! $language->language !!}
                                     @if ($language->default)
@@ -65,10 +65,20 @@
                                     @endif
                                 </td>
                                 <td class="right">
-                                    @if ( ! $language->default)
-                                        [ <a href="{!! Admin::url("system/language/{$language->id}/set-default") !!}">Set As Default</a> ] 
-                                    @endif
-                                    [ <a href="{!! Admin::url("system/language/{$language->id}/edit") !!}">Edit</a> ]
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("system/language/{$language->id}/edit") !!}">Edit</a></li>
+                                                @if ( ! $language->default)
+                                                    <li class="edit_icon"><a href="{!! Admin::url("system/language/{$language->id}/set-default") !!}">Set As Default</a></li>
+                                                @endif
+                                                <li><a href="javascript:void(0);" data-id="{!! $language->id !!}" data-href="{!! Admin::url('system/language/delete') !!}" class="delete_item">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         @endforeach

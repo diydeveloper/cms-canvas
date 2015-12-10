@@ -39,20 +39,30 @@
                         <th>
                             Number of Entries / Limit
                         </th>
-                        <th class="right">Action</th>
+                        <th class="right"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (count($contentTypes) > 0)
                         @foreach ($contentTypes as $contentType)
-                            <tr>
-                                <td class="center"><input type="checkbox" value="{!! $contentType->id !!}" name="selected[]" /></td>
+                            <tr class="row_link" data-href="{!! Admin::url("content/type/{$contentType->id}/edit") !!}">
+                                <td class="center no_row_link"><input type="checkbox" value="{!! $contentType->id !!}" name="selected[]" /></td>
                                 <td>{!! $contentType->title !!}</td>
                                 <td>{!! $contentType->short_name !!}</td>
                                 <td>{!! $contentType->entries->count() !!} / {!! $contentType->entries_allowed or 'Unlimited' !!}</td>
                                 <td class="right">
-                                    [ <a href="{!! Admin::url("content/type/{$contentType->id}/field") !!}">Fields</a> ] 
-                                    [ <a href="{!! Admin::url("content/type/{$contentType->id}/edit") !!}">Edit</a> ]
+                                    <ul class="actions_btn">
+                                        <li>
+                                            <a class="actions_link no_row_link" href="javascript:void(0);">
+                                                <span class="actions_arrow">Actions</span>
+                                            </a>
+                                            <ul class="actions_dropdown no_row_link" style="text-align: left;">
+                                                <li class="edit_icon"><a href="{!! Admin::url("content/type/{$contentType->id}/edit") !!}">Edit</a></li>
+                                                <li class="edit_icon"><a href="{!! Admin::url("content/type/{$contentType->id}/field") !!}">Fields</a></li>
+                                                <li><a href="javascript:void(0);" data-id="{!! $contentType->id !!}" data-href="{!! Admin::url('content/type/delete') !!}" class="delete_item">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         @endforeach
