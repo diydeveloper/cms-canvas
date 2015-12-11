@@ -71,11 +71,10 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__.'/../Http/adminRoutes.php';
             } else {
                 $this->prepareRouteData();
-                $router->group(['prefix' => $this->getLocale()], function ($router) {
-                    $this->mapContentTypes($router);
-                    $this->mapEntries($router);
-                    $this->mapHomePage($router);
-                });
+                $this->setLocale();
+                $this->mapContentTypes($router);
+                $this->mapEntries($router);
+                $this->mapHomePage($router);
             }
         });
     }
@@ -83,21 +82,20 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Return the requested locale.
      *
-     * @return string
+     * @return void
      */
-    protected function getLocale()
+    protected function setLocale()
     {
         $locale = null;
-        $firstSegment = Request::segment(1);
+        $urlArray = explode('.', parse_url(Request::url(), PHP_URL_HOST));
+        $subdomain = $urlArray[0];
 
         Lang::setFallback($this->defaultLocale);
 
-        if (in_array($firstSegment, $this->locales->all())) {
-            $locale = $firstSegment;
+        if (in_array($subdomain, $this->locales->all())) {
+            $locale = $subdomain;
             Lang::setLocale($locale);
         }
-
-        return $locale;
     }
 
     /**

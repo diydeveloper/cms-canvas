@@ -170,14 +170,14 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
         Route::post('language', ['as' => 'admin.system.language.languages.post', 'uses' => 'Admin\System\LanguageController@postLanguages']);
 
         Route::get('language/add', ['as' => 'admin.system.language.add', 'uses' => 'Admin\System\LanguageController@getEdit']);
-        Route::post('language/add', ['as' => 'admin.system.language.add.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
+        Route::post('language/add', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.add.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
 
         Route::get('language/{language}/edit', ['as' => 'admin.system.language.edit', 'uses' => 'Admin\System\LanguageController@getEdit']);
-        Route::post('language/{language}/edit', ['as' => 'admin.system.language.edit.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
+        Route::post('language/{language}/edit', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.edit.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
 
-        Route::post('language/delete', ['as' => 'admin.system.language.delete.post', 'uses' => 'Admin\System\LanguageController@postDelete']);
+        Route::post('language/delete', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.delete.post', 'uses' => 'Admin\System\LanguageController@postDelete']);
 
-        Route::get('language/{language}/set-default', ['as' => 'admin.system.language.setDefault.post', 'uses' => 'Admin\System\LanguageController@setDefault']);
+        Route::get('language/{language}/set-default', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.setDefault.post', 'uses' => 'Admin\System\LanguageController@setDefault']);
     });
 
 });
