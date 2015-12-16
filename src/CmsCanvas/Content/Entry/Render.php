@@ -16,7 +16,7 @@ class Render {
     /**
      * Constructor fo rthe entry render
      *
-     * @param \CmsCanvas\Content\Entry\Builder\Entry  $entryBuilder
+     * @param  \CmsCanvas\Content\Entry\Builder\Entry  $entryBuilder
      * @return void
      */
     public function __construct(EntryBuilder $entryBuilder)
@@ -27,7 +27,7 @@ class Render {
     /**
      * Magic method to retrive rendered data
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed
      */
     public function __get($name)
@@ -38,7 +38,7 @@ class Render {
     /**
      * Magic method to trigger twig to call __get
      *
-     * @param string $name
+     * @param  string $name
      * @return bool
      */
     public function __isset($name)

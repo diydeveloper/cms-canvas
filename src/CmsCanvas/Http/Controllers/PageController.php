@@ -3,10 +3,7 @@
 namespace CmsCanvas\Http\Controllers;
 
 use Twig;
-use CmsCanvas\Container\Twig\StringTemplate;
-use Route, Cache, Config, stdClass, Content, Lang;
-use CmsCanvas\Models\Content\Entry;
-use CmsCanvas\Models\Content\Type;
+use Route, Cache, Config, Lang;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Http\Controllers\PublicController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

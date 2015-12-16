@@ -31,6 +31,7 @@ class EntriesTableSeeder extends Seeder {
                 'entry_status_id' => $entryStatus->id, 
                 'title' => 'Page Not Found', 
                 'route' => null, 
+                'template_flag' => 1, 
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

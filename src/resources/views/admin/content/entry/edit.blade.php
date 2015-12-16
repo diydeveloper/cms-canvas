@@ -163,6 +163,11 @@
                         {!! Form::label('author_id', 'Author:') !!}
                         {!! Form::select('author_id', $authorOptions, ( ! empty($entry->author_id) ? $entry->author_id : Auth::user()->id)) !!}
                     </div>
+                    <div>
+                        {!! HTML::decode(Form::label('template_flag', 'Render as Template:<span class="help">Parse entry content for template tags</span>')) !!}
+                        <input type="hidden" name="template_flag" value="0">
+                        {!! Form::checkbox('template_flag') !!}
+                    </div>
                 </div>
             </div>
         </div>

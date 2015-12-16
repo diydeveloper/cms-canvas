@@ -49,12 +49,12 @@ class Render {
     /**
      * Magic method to retrive rendered data
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function __get($key)
     {
-        // This will only render the data if the user make a get request
+        // This will only render the data if the user makes a get request
         if ($this->renderedData === null) {
             $data = (empty($this->data)) ? $this->contentType->getRenderedData() : $this->data;
             $this->renderedData = array_merge($data, $this->parameters);
@@ -70,13 +70,24 @@ class Render {
     /**
      * Magic method to catch undefined methods
      *
-     * @param string $name
-     * @param array $arguments
+     * @param  string $name
+     * @param  array $arguments
      * @return void
      */
     public function __call($name, $arguments)
     {
         //
+    }
+
+    /**
+     * Magic method to determine if the property isset
+     *
+     * @param  string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return true;
     }
 
     /**
@@ -87,7 +98,12 @@ class Render {
     public function __toString()
     {
         try {
-            $parameters = array_merge($this->parameters, ['self' => $this]);
+            if (empty($this->data)) {
+                $parameters = array_merge($this->parameters, ['self' => $this]);
+            } else {
+                $parameters = $this->parameters;
+            }
+            
             return (string) $this->contentType->renderContents($parameters, $this->data);
         } catch(\Exception $e) {
             return $e->getMessage();

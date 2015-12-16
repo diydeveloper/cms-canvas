@@ -127,7 +127,7 @@ class Entry {
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         } else {
-            // This will only render the data if the user make a get request
+            // This will only render the data if the user makes a get request
             if ($this->renderedData === null) {
                 $this->renderedData = $this->getEntry()->getRenderedData();
             }
