@@ -21,7 +21,7 @@ class ContentTypesTableSeeder extends Seeder {
                 'short_name' => 'page',
                 'max_revisions' => 5,
                 'theme_layout' => 'default',
-                'dynamic_routing_flag' => 'default',
+                'url_title_flag' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

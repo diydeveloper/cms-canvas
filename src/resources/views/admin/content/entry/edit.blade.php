@@ -49,7 +49,7 @@
                             {!! Form::text('title') !!}
                         </div>
                     </div>
-                    @if ($contentType->dynamic_routing_flag)
+                    @if ($contentType->url_title_flag)
                     <div>
                         {!! HTML::decode(Form::label('url_title', '<div class="arrow arrow_expand"></div><span class="required">*</span> URL Title')) !!}
                         <div>

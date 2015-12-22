@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, stdClass, Cache, DB, Auth;
+use Lang, stdClass, Cache, DB, Auth, Twig;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
@@ -36,6 +36,7 @@ class Entry extends Model implements PageInterface {
         'meta_title',
         'meta_keywords',
         'meta_description',
+        'template_flag',
         'entry_status_id',
         'author_id',
         'created_at',
@@ -209,35 +210,36 @@ class Entry extends Model implements PageInterface {
         if ($this->cache == null) {
             $entry = $this;
 
-            $cache = Cache::rememberForever($this->getRouteName(), function() use($entry) {
+            $this->cache = Cache::rememberForever($this->getRouteName(), function() use($entry) {
                 return new Page($entry->id, 'entry');
             });
 
-            return $cache->getRenderedData();
-        } else {
-            $contentTypeFields = $this->getContentTypeFields();
+            return $this->cache->getRenderedData();
+        } 
 
-            $locale = Lang::getLocale();
-            $data = [];
+        $contentTypeFields = $this->getContentTypeFields();
 
-            foreach ($contentTypeFields as $contentTypeField) {
-                $fieldType = FieldType::factory(
-                    $contentTypeField, 
-                    $this, 
-                    $locale, 
-                    $contentTypeField->data, 
-                    $contentTypeField->metadata
-                );
-                $data[$contentTypeField->short_tag] = $fieldType->render();
-            }
+        $locale = Lang::getLocale();
+        $data = [];
 
-            $data['title'] = $this->title;
-            $data['entry_id'] = $this->id;
-            $data['created_at'] = $this->created_at;
-            $data['updated_at'] = $this->updated_at;
-
-            return $data;
+        foreach ($contentTypeFields as $contentTypeField) {
+            $fieldType = FieldType::factory(
+                $contentTypeField, 
+                $this, 
+                $locale, 
+                $contentTypeField->data, 
+                $contentTypeField->metadata
+            );
+            $data[$contentTypeField->short_tag] = $fieldType->render();
         }
+
+        $data['title'] = $this->title;
+        $data['url_title'] = $this->url_title;
+        $data['entry_id'] = $this->id;
+        $data['created_at'] = $this->created_at;
+        $data['updated_at'] = $this->updated_at;
+
+        return $data;
     }
 
     /**
@@ -380,10 +382,17 @@ class Entry extends Model implements PageInterface {
      */
     public function getDynamicRoute()
     {
-        if ($this->url_title !== null && $this->url_title !== '' 
-            && $this->contentType->getRoute() !== null
+        if ($this->contentType->entry_uri_template !== null 
+            && $this->contentType->entry_uri_template !== ''
         ) {
-            return $this->contentType->getRoute().'/'.$this->url_title;
+            $twig = new \Twig_Environment(new \Twig_Loader_String());
+
+            $route = $twig->render(
+                $this->contentType->entry_uri_template,
+                $this->getRenderedData()
+            );
+
+            return $route;
         }
 
         return null;

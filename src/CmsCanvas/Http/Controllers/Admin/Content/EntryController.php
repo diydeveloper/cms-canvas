@@ -224,7 +224,7 @@ class EntryController extends AdminController {
 
         $rules['title'] = 'required';
 
-        if ($contentType->dynamic_routing_flag) {
+        if ($contentType->url_title_flag) {
             $rules['url_title'] = "required|alpha_dash|max:500"
                 ."|unique:entries,url_title,".(($entry == null) ? "NULL" : "{$entry->id}").",id"
                 .",content_type_id,{$contentType->id}";

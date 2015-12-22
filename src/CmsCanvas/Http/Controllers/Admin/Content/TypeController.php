@@ -133,11 +133,6 @@ class TypeController extends AdminController {
 
         $messages = [];
         
-        if (!empty(Input::get('dynamic_routing_flag'))) {
-            $rules['route'] .= '|required';
-            $messages['route.required'] = 'Dynamic routing requires that a :attribute be set.';
-        }
-
         $validator = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {

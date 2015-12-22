@@ -219,7 +219,13 @@ class Builder {
      */
     protected function setContentTypes($contentTypes)
     {
-        $this->contentTypes = $this->parseStringValues('short_name', $contentTypes);
+        if ($contentTypes === null || $contentTypes === '') {
+            $this->contentTypes = null;
+        } else {
+            $this->contentTypes = $this->parseStringValues('short_name', $contentTypes);
+        }
+
+        return $this;
     }
 
     /**
@@ -230,7 +236,13 @@ class Builder {
      */
     protected function setYear($year)
     {
-        $this->year = $this->parseStringValues(DB::raw('YEAR(entries.created_at)'), $year);
+        if ($year === null || $year === '') {
+            $this->year = null;
+        } else {
+            $this->year = $this->parseStringValues(DB::raw('YEAR(entries.created_at)'), $year);
+        }
+
+        return $this;
     }
 
     /**
@@ -241,7 +253,13 @@ class Builder {
      */
     protected function setMonth($month)
     {
-        $this->year = $this->parseStringValues(DB::raw('MONTH(entries.created_at)'), $month);
+        if ($month === null || $month === '') {
+            $this->month = null;
+        } else {
+            $this->month = $this->parseStringValues(DB::raw('MONTH(entries.created_at)'), $month);
+        }
+
+        return $this;
     }
 
     /**
@@ -252,7 +270,13 @@ class Builder {
      */
     protected function setDay($day)
     {
-        $this->day = $this->parseStringValues(DB::raw('DAY(entries.created_at)'), $day);
+        if ($day === null || $day === '') {
+            $this->day = null;
+        } else {
+            $this->day = $this->parseStringValues(DB::raw('DAY(entries.created_at)'), $day);
+        }
+
+        return $this;
     }
 
     /**
@@ -263,7 +287,13 @@ class Builder {
      */
     protected function setUrlTitle($urlTitle)
     {
-        $this->urlTitle = $this->parseStringValues('entries.url_title', $urlTitle);
+        if ($urlTitle === null || $urlTitle === '') {
+            $this->urlTitle = null;
+        } else {
+            $this->urlTitle = $this->parseStringValues('entries.url_title', $urlTitle);
+        }
+
+        return $this;
     }
 
     /**
@@ -274,7 +304,11 @@ class Builder {
      */
     protected function setLimit($limit)
     {
-        $this->limit = $limit;
+        if ($limit === null || $limit === '') {
+            $this->limit = null;
+        } else {
+            $this->limit = $limit;
+        }
 
         return $this;
     }
@@ -287,7 +321,11 @@ class Builder {
      */
     protected function setOffset($offset)
     {
-        $this->offset = $offset;
+        if ($offset === null || $offset === '') {
+            $this->offset = null;
+        } else {
+            $this->offset = $offset;
+        }
 
         return $this;
     }
@@ -300,7 +338,11 @@ class Builder {
      */
     protected function setEntryIds($entryIds)
     {
-        $this->entryIds = $this->parseStringValues('entries.id', $entryIds);
+        if ($entryIds === null || $entryIds !== '') {
+            $this->entryIds = null;
+        } else {
+            $this->entryIds = $this->parseStringValues('entries.id', $entryIds);
+        }
 
         return $this;
     }
@@ -313,7 +355,11 @@ class Builder {
      */
     protected function setOrders($orderBy)
     {
-        $this->orders = $this->parseDelimitedString($orderBy);
+        if ($orderBy === null || $orderBy === '') {
+            $this->orders = null;
+        } else {
+            $this->orders = $this->parseDelimitedString($orderBy);
+        }
 
         return $this;
     }
@@ -326,7 +372,11 @@ class Builder {
      */
     protected function setSorts($sort)
     {
-        $this->sorts = $this->parseDelimitedString($sort);
+        if ($sort === null || $sort === '') {
+            $this->sorts = null;
+        } else {
+            $this->sorts = $this->parseDelimitedString($sort);
+        }
 
         return $this;
     }
@@ -339,6 +389,12 @@ class Builder {
      */
     protected function setWheres($wheres)
     {
+        if ($wheres === null || $wheres === '') {
+            $this->wheres = null;
+
+            return $this;
+        }
+
         if (! is_array($wheres)) {
             throw new Exception('Where clause must be an array.');
         }

@@ -70,15 +70,19 @@
                             {!! Form::select('theme_layout', ['' => '-- None --'] + $themeLayouts) !!}
                         </div>
                         <div>
-                            {!! HTML::decode(Form::label('route', 'Route:<span class="help">Optional route to render the content type directly without an entry.</span>')) !!}
-                            {!! Form::text('route') !!}
+                            {!! HTML::decode(Form::label('url_title_flag', 'Entry URL Title: <span class="help">Adds a URL title field to entries of this content type that can be used for SEO friendly routing.</span>')) !!}
+                            <span>
+                                <label>{!! Form::radio('url_title_flag', '1') !!} Enabled</label>
+                                <label>{!! Form::radio('url_title_flag', '0', true) !!} Disabled</label>
+                            </span>
                         </div>
                         <div>
-                            {!! HTML::decode(Form::label('dynamic_routing_flag', 'Dynamic Routing: <span class="help">Dynamically generate routes for associated entries using the content type route and the entry\'s url title</span>')) !!}
-                            <span>
-                                <label>{!! Form::radio('dynamic_routing_flag', '1') !!} Enabled</label>
-                                <label>{!! Form::radio('dynamic_routing_flag', '0', true) !!} Disabled</label>
-                            </span>
+                            {!! HTML::decode(Form::label('route', 'Route:<span class="help">Optional route to render the content type directly without an entry.</span>')) !!}
+                            {!! Form::text('route', null, ['style' => 'width: 500px;']) !!}
+                        </div>
+                        <div>
+                            {!! HTML::decode(Form::label('entry_uri_template', 'Entry URI Template:<span class="help">Optional template used to dynamically generate URIs for entries of this content type. The URI template should generally match a content type\'s route pattern.</span>')) !!}
+                            {!! Form::text('entry_uri_template', null, ['style' => 'width: 500px;']) !!}
                         </div>
                         <div>
                             {!! HTML::decode(Form::label('entries_allowed', 'Number of Entries Allowed:<span class="help">Number of entries allowed to be created with this content type.</span>')) !!}

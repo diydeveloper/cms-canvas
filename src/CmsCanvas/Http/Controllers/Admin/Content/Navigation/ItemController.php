@@ -22,7 +22,7 @@ class ItemController extends AdminController {
         $entries = Entry::with('contentType')
             ->whereNotNull('route')
             ->orWhereHas('contentType', function($query) {
-                $query->where('dynamic_routing_flag', 1);
+                $query->whereNotNull('entry_uri_template');
             })
             ->get();
 
