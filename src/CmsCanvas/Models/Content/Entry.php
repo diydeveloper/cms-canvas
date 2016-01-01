@@ -167,12 +167,13 @@ class Entry extends Model implements PageInterface {
     /**
      * Queries for content type fields with entry data
      *
+     * @param  bool $skipCacheFlag
      * @return \CmsCanvas\Models\Content\Type\Field|Collection
      */
-    public function getContentTypeFields()
+    public function getContentTypeFields($skipCacheFlag = false)
     {
-        if ($this->cache != null) {
-            return $this->cache->getContentTypeFields();
+        if (!$skipCacheFlag && $this->getCache() != null) {
+            return $this->getCache()->getContentTypeFields();
         }
 
         $entry = $this;
@@ -207,16 +208,6 @@ class Entry extends Model implements PageInterface {
      */
     public function getRenderedData()
     {
-        if ($this->cache == null) {
-            $entry = $this;
-
-            $this->cache = Cache::rememberForever($this->getRouteName(), function() use($entry) {
-                return new Page($entry->id, 'entry');
-            });
-
-            return $this->cache->getRenderedData();
-        } 
-
         $contentTypeFields = $this->getContentTypeFields();
 
         $locale = Lang::getLocale();
@@ -307,6 +298,24 @@ class Entry extends Model implements PageInterface {
         $this->cache = $cache;
 
         return $this;
+    }
+
+    /**
+     * Returns an entry page from cache
+     *
+     * @return \CmsCanvas\Container\Cache\Page $cache
+     */
+    public function getCache()
+    {
+        if ($this->cache == null) {
+            $entry = $this;
+
+            $this->cache = Cache::rememberForever($this->getRouteName(), function() use($entry) {
+                return new Page($entry->id, 'entry');
+            });
+        }
+
+        return $this->cache;
     }
 
     /**

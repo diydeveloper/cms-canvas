@@ -39,7 +39,7 @@ class Page implements PageInterface  {
             $this->object->contentType;
         }
 
-        $this->contentTypeFields = $this->object->getContentTypeFields();
+        $this->contentTypeFields = $this->object->getContentTypeFields(true);
     }
 
     /**
@@ -65,19 +65,6 @@ class Page implements PageInterface  {
         }
 
         return $content;
-    }
-
-
-    /**
-     * Get an array of transalated data for the current object
-     *
-     * @return array
-     */
-    public function getRenderedData()
-    {
-        return $this->object
-            ->setCache($this)
-            ->getRenderedData();
     }
 
     /**

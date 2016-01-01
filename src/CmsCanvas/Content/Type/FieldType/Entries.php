@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Input;
+use View, Input, Content, Route;
 use CmsCanvas\Content\Type\FieldType;
 
 class Entries extends FieldType {
@@ -31,10 +31,38 @@ class Entries extends FieldType {
     /**
      * Queries and returns entries based on settings provided
      *
-     * @return mixed
+     * @return \CmsCanvas\Content\Entry\RenderCollection
      */
     public function render()
     {
-        return Content::entries();
+        return Content::entries($this->getEntrySettings());
+    }
+
+    /**
+     * Queries and returns entries based on settings provided
+     *
+     * @return mixed
+     */
+    public function getEntrySettings()
+    {
+        $entrySettings = [];
+        $currentRoute = Route::current();
+
+        foreach ($this->settings as $key => $value) {
+            $parameterNames = $currentRoute->parameterNames();
+
+            foreach ($parameterNames as $parameterName) {
+                $parameterTags["{{$parameterName}}"] = $currentRoute->parameter($parameterName);
+            }
+
+            if ($key == 'pagination_settings') {
+                $entrySettings[$value] = $this->getSetting('per_page', 25);
+            } else {
+                $value = str_replace(array_keys($parameterTags), $parameterTags, $value);
+                $entrySettings[$key] = $value;
+            }
+        }
+
+        return $entrySettings;
     }
 }

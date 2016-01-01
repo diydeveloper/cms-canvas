@@ -91,7 +91,7 @@
                         </div>
                         <div>
                             {!! HTML::decode(Form::label('max_revisions', 'Max Revisions:<span class="help">Max number of revisions to store for each entry</span>')) !!}
-                            {!! Form::text('entries_allowed', null, array('class' => 'short')) !!}
+                            {!! Form::text('max_revisions', null, array('class' => 'short')) !!}
                             <span class="ex">No revisions will be kept if left empty</span>
                         </div>
                     </div>

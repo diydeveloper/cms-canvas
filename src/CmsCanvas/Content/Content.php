@@ -12,8 +12,8 @@ class Content {
      * Builds and returns collection of entries based on 
      * the provided configuration
      *
-     * @param array $config
-     * @param \CmsCanvas\Content\Entry\RenderCollection
+     * @param  array $config
+     * @return \CmsCanvas\Content\Entry\RenderCollection
      */
     public function entries(array $config = [])
     {
@@ -26,8 +26,8 @@ class Content {
     /**
      * Builds and returns an entry provided its ID
      *
-     * @param int $entryId
-     * @param \CmsCanvas\Content\Entry\Render
+     * @param  int $entryId
+     * @return \CmsCanvas\Content\Entry\Render
      */
     public function entry($entryId)
     {
@@ -40,9 +40,9 @@ class Content {
      * Builds and returns collection of entries based on 
      * the provided configuration
      *
-     * @param string $shortName
-     * @param array $config
-     * @param \CmsCanvas\Content\Navigation\RenderCollection
+     * @param  string $shortName
+     * @param  array $config
+     * @return \CmsCanvas\Content\Navigation\RenderCollection
      */
     public function navigation($shortName, array $config = [])
     {

@@ -29,13 +29,13 @@
 </div>
 
 <div>
-    {!! Form::label($fieldType->getSettingsKey('day'), 'Day:') !!}
-    {!! Form::text($fieldType->getSettingsKey('day'), $fieldType->getSetting('day')) !!}
+    {!! Form::label($fieldType->getSettingsKey('limit'), 'Limit:') !!}
+    {!! Form::text($fieldType->getSettingsKey('limit'), $fieldType->getSetting('limit')) !!}
 </div>
 
 <div>
-    {!! Form::label($fieldType->getSettingsKey('limit'), 'Limit:') !!}
-    {!! Form::text($fieldType->getSettingsKey('limit'), $fieldType->getSetting('limit')) !!}
+    {!! Form::label($fieldType->getSettingsKey('offset'), 'Offset:') !!}
+    {!! Form::text($fieldType->getSettingsKey('offset'), $fieldType->getSetting('offset')) !!}
 </div>
 
 <div>
@@ -45,12 +45,7 @@
 
 <div>
     {!! Form::label($fieldType->getSettingsKey('sort'), 'Sort:') !!}
-    {!! Form::select(
-        $fieldType->getSettingsKey('sort'),
-        ['' => '', 'ASC'  => 'Ascending', 'DESC' => 'Descending'],
-        $fieldType->getSetting('sort'),
-        ['id' => 'sort']
-    ) !!}
+    {!! Form::text($fieldType->getSettingsKey('sort'), $fieldType->getSetting('sort')) !!}
 </div>
 
 <div>
@@ -66,6 +61,16 @@
 <div class="pagination_settings">
     {!! Form::label($fieldType->getSettingsKey('per_page'), 'Entries Per Page:') !!}
     {!! Form::text($fieldType->getSettingsKey('per_page'), $fieldType->getSetting('per_page')) !!}
+</div>
+
+<div>
+    {!! Form::label($fieldType->getSettingsKey('no_results_abort'), 'No Results:') !!}
+    {!! Form::select(
+        $fieldType->getSettingsKey('no_results_abort'),
+        ['' => '', '404'  => 'Show 404 - Page Not Found'],
+        $fieldType->getSetting('no_results_abort'),
+        ['id' => 'no_results_abort']
+    ) !!}
 </div>
 
 <script type="text/javascript">

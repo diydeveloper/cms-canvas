@@ -106,6 +106,13 @@ class Builder {
     protected $wheres;
 
     /**
+     * Abort status code if entries not found
+     *
+     * @var int
+     */
+    protected $noResultsAbort;
+
+    /**
      * @var array
      */
     protected $joinedEntryDataAliases = [];
@@ -134,6 +141,10 @@ class Builder {
             $entries = $this->entries->simplePaginate($this->paginate);
         } else {
             $entries = $this->entries->get();
+        }
+
+        if ($this->noResultsAbort != null && count($entries) <= 0) {
+            abort($this->noResultsAbort);
         }
 
         $paginator = null;
@@ -206,6 +217,10 @@ class Builder {
 
                 case 'day':
                     $this->setDay($value);
+                    break;
+
+                case 'no_results_abort':
+                    $this->setNoResultsAbort($value);
                     break;
             }
         } 
@@ -299,7 +314,7 @@ class Builder {
     /**
      * Set query limit for entries
      *
-     * @param int $limit
+     * @param  int $limit
      * @return self
      */
     protected function setLimit($limit)
@@ -316,7 +331,7 @@ class Builder {
     /**
      * Set query offset for entries
      *
-     * @param int $offset
+     * @param  int $offset
      * @return self
      */
     protected function setOffset($offset)
@@ -325,6 +340,23 @@ class Builder {
             $this->offset = null;
         } else {
             $this->offset = $offset;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set abort status code if no results found
+     *
+     * @param  int $statusCode
+     * @return self
+     */
+    protected function setNoResultsAbort($statusCode)
+    {
+        if ($statusCode === null || $statusCode === '') {
+            $this->noResultsAbort = null;
+        } else {
+            $this->noResultsAbort = $statusCode;
         }
 
         return $this;
@@ -350,7 +382,7 @@ class Builder {
     /**
      * Set query order by for entries
      *
-     * @param string $orderBy
+     * @param  string $orderBy
      * @return self
      */
     protected function setOrders($orderBy)
@@ -367,7 +399,7 @@ class Builder {
     /**
      * Set query order by sort by for entries
      *
-     * @param string $sort
+     * @param  string $sort
      * @return self
      */
     protected function setSorts($sort)
@@ -384,7 +416,7 @@ class Builder {
     /**
      * Set query where clause for entries
      *
-     * @param string $where
+     * @param  string $where
      * @return self
      */
     protected function setWheres($wheres)

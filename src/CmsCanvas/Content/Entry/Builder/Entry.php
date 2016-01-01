@@ -61,6 +61,7 @@ class Entry {
     {
         $this->entry = $entry;
         $this->parameters = $parameters;
+        $this->renderedData = $this->entry->getRenderedData();
     }
 
     /**
@@ -92,7 +93,10 @@ class Entry {
             }
         }
 
-        return new Render($this);
+        $render = new Render($this);
+        $this->setParameter('self', $render);
+
+        return $render;
     }
 
     /**
@@ -102,9 +106,13 @@ class Entry {
      */
     public function renderContents()
     {
-        $data = $this->entry->getRenderedData();
+        $data = array_merge($this->renderedData, $this->parameters);
 
-        $content = $this->entry->contentType->render($this->parameters, $data);
+        $template = ($this->entry->contentType->layout === null) ? '' : $this->entry->contentType->layout;
+        $content = StringView::make($template)
+            ->cacheKey($this->entry->contentType->getRouteName())
+            ->updatedAt($this->entry->contentType->updated_at->timestamp)
+            ->with($data);
 
         if ($this->entry->template_flag) {
             $content = StringView::make((string) $content)
@@ -126,16 +134,11 @@ class Entry {
     {
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
-        } else {
-            // This will only render the data if the user makes a get request
-            if ($this->renderedData === null) {
-                $this->renderedData = $this->getEntry()->getRenderedData();
-            }
-
-            if (isset($this->renderedData[$key])) {
-                return $this->renderedData[$key];
-            }        
         }
+
+        if (isset($this->renderedData[$key])) {
+            return $this->renderedData[$key];
+        }        
 
         return null;
     }
@@ -147,7 +150,7 @@ class Entry {
      * @param  string  $value
      * @return void
      */
-    public function addParameter($key, $value)
+    public function setParameter($key, $value)
     {
         $this->parameters[$key] = $value;
     }

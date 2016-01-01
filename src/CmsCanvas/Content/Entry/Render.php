@@ -53,9 +53,11 @@ class Render {
      */
     public function __toString()
     {
-        $this->entryBuilder->addParameter('self', $this);
-
-        return (string) $this->entryBuilder->renderContents();
+        try {
+            return (string) $this->entryBuilder->renderContents();
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**

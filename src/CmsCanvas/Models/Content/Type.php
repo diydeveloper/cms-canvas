@@ -11,6 +11,7 @@ use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
 use CmsCanvas\Content\Type\Render;
+use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
 
 class Type extends Model implements PageInterface {
 
@@ -286,12 +287,13 @@ class Type extends Model implements PageInterface {
     /**
      * Returns content type fields
      *
+     * @param  bool $skipCacheFlag     
      * @return \CmsCanvas\Models\Content\Type\Field|Collection
      */
-    public function getContentTypeFields()
+    public function getContentTypeFields($skipCacheFlag = false)
     {
-        if ($this->cache != null) {
-            return $this->cache->getContentTypeFields();
+        if (!$skipCacheFlag && $this->getCache() != null) {
+            return $this->getCache()->getContentTypeFields();
         }
 
         return $this->fields()->with('type')->get();
@@ -320,39 +322,25 @@ class Type extends Model implements PageInterface {
     }
 
     /**
-     * Generates a view of the content type's layout
+     * Returns a content type builder instance
      *
-     * @param array $parameters
-     * @param array $data
-     * @return string
+     * @param  array $parameters
+     * @return \CmsCanvas\Content\Type\Builder\Type
      */
-    public function renderContents($parameters = [], $data = [])
+    public function newContentTypeBuilder($parameters = [])
     {
-        if (empty($data)) {
-            $data = $this->getRenderedData();
-        }
-
-        $data = array_merge($data, $parameters);
-
-        $template = ($this->layout === null) ? '' : $this->layout;
-        $content = StringView::make($template)
-            ->cacheKey($this->getRouteName())
-            ->updatedAt($this->updated_at->timestamp)
-            ->with($data);
-
-        return $content;
+        return new ContentTypeBuilder($this, $parameters);
     }
 
     /**
      * Generates a view of the content type's layout
      *
-     * @param array $parameters
-     * @param array $data
+     * @param  array $parameters
      * @return string
      */
-    public function render($parameters = [], $data = [])
+    public function render($parameters = [])
     {
-        return new Render($this, $parameters, $data);
+        return $this->newContentTypeBuilder($parameters)->render();
     }
 
     /**
@@ -366,6 +354,24 @@ class Type extends Model implements PageInterface {
         $this->cache = $cache;
 
         return $this;
+    }
+
+    /**
+     * Returns a content type page from cache
+     *
+     * @return \CmsCanvas\Container\Cache\Page $cache
+     */
+    public function getCache()
+    {
+        if ($this->cache == null) {
+            $contentType = $this;
+
+            $this->cache = Cache::rememberForever($this->getRouteName(), function() use($contentType) {
+                return new Page($contentType->id, 'contentType');
+            });
+        }
+
+        return $this->cache;
     }
 
     /**

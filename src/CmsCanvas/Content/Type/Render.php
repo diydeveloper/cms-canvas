@@ -2,35 +2,16 @@
 
 namespace CmsCanvas\Content\Type;
 
+use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
+
 class Render {
 
     /**
-     * The content type to render from
+     * The content type builder to render from
      *
-     * @var string
+     * @var \CmsCanvas\Content\Type\Builder\Type
      */
-    protected $contentType;
-
-    /**
-     * Parameters added to the route
-     *
-     * @var array
-     */
-    protected $parameters;
-
-    /**
-     * Data that has already been provided
-     *
-     * @var array
-     */
-    protected $data;
-
-    /**
-     * Defines the column name to sort.
-     *
-     * @var string
-     */
-    protected $renderedData;
+    protected $contentTypeBuilder;
 
     /**
      * Defines the order in which to sort.
@@ -39,11 +20,9 @@ class Render {
      * @param array $parameters
      * @return void
      */
-    public function __construct(\CmsCanvas\Models\Content\Type $contentType, $parameters = [], $data = [])
+    public function __construct(ContentTypeBuilder $contentTypeBuilder)
     {
-        $this->contentType = $contentType;
-        $this->parameters = $parameters;
-        $this->data = $data;
+        $this->contentTypeBuilder = $contentTypeBuilder;
     }
 
     /**
@@ -54,17 +33,7 @@ class Render {
      */
     public function __get($key)
     {
-        // This will only render the data if the user makes a get request
-        if ($this->renderedData === null) {
-            $data = (empty($this->data)) ? $this->contentType->getRenderedData() : $this->data;
-            $this->renderedData = array_merge($data, $this->parameters);
-        }
-
-        if (isset($this->renderedData[$key])) {
-            return $this->renderedData[$key];
-        } else {
-            return null;
-        }
+        return $this->entryBuilder->getData($name);
     }
 
     /**
@@ -98,13 +67,7 @@ class Render {
     public function __toString()
     {
         try {
-            if (empty($this->data)) {
-                $parameters = array_merge($this->parameters, ['self' => $this]);
-            } else {
-                $parameters = $this->parameters;
-            }
-            
-            return (string) $this->contentType->renderContents($parameters, $this->data);
+            return (string) $this->contentTypeBuilder->renderContents();
         } catch(\Exception $e) {
             return $e->getMessage();
         }
@@ -117,7 +80,7 @@ class Render {
      */
     public function getRoute()
     {
-        return $this->contentType->getRoute();
+        return $this->contentTypeBuilder->getContentType()->getRoute();
     }
 
     /**
@@ -137,7 +100,7 @@ class Render {
      */
     public function getThemeLayout()
     {
-        return $this->contentType->theme_layout;
+        return $this->contentTypeBuilder->getContentType()->theme_layout;
     }
 
 }

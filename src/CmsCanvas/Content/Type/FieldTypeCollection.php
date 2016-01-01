@@ -132,10 +132,12 @@ class FieldTypeCollection extends CmsCanvasCollection {
 			$relatedFieldTypes = $this->getWhere('field.id', $fieldId);
 			$fieldType = $relatedFieldTypes->first();
 
-            $fieldViews[] = View::make('cmscanvas::admin.content.entry.editField')
-                ->with('languages', $languages)
-                ->with('fieldType', $fieldType)
-                ->with('relatedFieldTypes', $relatedFieldTypes);
+			if ($fieldType->inputField() !== null) {
+	            $fieldViews[] = View::make('cmscanvas::admin.content.entry.editField')
+	                ->with('languages', $languages)
+	                ->with('fieldType', $fieldType)
+	                ->with('relatedFieldTypes', $relatedFieldTypes);
+            }
 		}
 
 		return $fieldViews;
