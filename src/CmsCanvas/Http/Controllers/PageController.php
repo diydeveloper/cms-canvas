@@ -33,7 +33,7 @@ class PageController extends PublicController {
             return new Page($objectId, $objectType);
         });
 
-        return $cache->render($parameters);
+        return $cache->setThemeMetadata()->render($parameters);
     }
 
 }

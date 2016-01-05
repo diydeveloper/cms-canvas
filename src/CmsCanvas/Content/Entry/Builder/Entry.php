@@ -30,6 +30,13 @@ class Entry {
     protected $renderedData;
 
     /**
+     * Rendered content
+     *
+     * @var \TwigBridge\StringView\StringView
+     */
+    protected $renderContents;
+
+    /**
      * Set true if the entry is solo or first in a collection
      *
      * @var bool
@@ -62,6 +69,7 @@ class Entry {
         $this->entry = $entry;
         $this->parameters = $parameters;
         $this->renderedData = $this->entry->getRenderedData();
+        $this->renderContents = $this->renderContents();
     }
 
     /**
@@ -106,19 +114,25 @@ class Entry {
      */
     public function renderContents()
     {
+        if ($this->renderContents != null) {
+            return $this->renderContents;
+        }
+
         $data = array_merge($this->renderedData, $this->parameters);
 
         $template = ($this->entry->contentType->layout === null) ? '' : $this->entry->contentType->layout;
         $content = StringView::make($template)
             ->cacheKey($this->entry->contentType->getRouteName())
             ->updatedAt($this->entry->contentType->updated_at->timestamp)
-            ->with($data);
+            ->with($data)
+            ->prerender();
 
         if ($this->entry->template_flag) {
             $content = StringView::make((string) $content)
                 ->cacheKey($this->entry->getRouteName())
                 ->updatedAt($this->entry->updated_at->timestamp)
-                ->with($data);
+                ->with($data)
+                ->prerender();
         }
 
         return $content;

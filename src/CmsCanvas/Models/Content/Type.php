@@ -285,6 +285,23 @@ class Type extends Model implements PageInterface {
     }
 
     /**
+     * Remove the first and last forward slash from the entry_uri_template
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setEntryUriTemplateAttribute($value)
+    {
+        $value = trim($value, '/');
+
+        if ($value === '') {
+            $value = null;
+        }
+
+        $this->attributes['entry_uri_template'] = $value;
+    }
+
+    /**
      * Returns content type fields
      *
      * @param  bool $skipCacheFlag     

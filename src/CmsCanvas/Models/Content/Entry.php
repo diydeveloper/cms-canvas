@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, stdClass, Cache, DB, Auth, Twig;
+use Lang, stdClass, Cache, DB, Auth, Twig, Config, Theme;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
@@ -40,6 +40,7 @@ class Entry extends Model implements PageInterface {
         'entry_status_id',
         'author_id',
         'created_at',
+        'created_at_local',
     ];
 
     /**
@@ -161,6 +162,10 @@ class Entry extends Model implements PageInterface {
         $time = $this->freshTimestamp();
         $this->setUpdatedAt($time);
 
+        $siteTime = $time->copy();
+        $siteTime->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+        $this->setUpdatedAtLocal($siteTime);
+
         return parent::save($options);
     }
 
@@ -228,7 +233,9 @@ class Entry extends Model implements PageInterface {
         $data['url_title'] = $this->url_title;
         $data['entry_id'] = $this->id;
         $data['created_at'] = $this->created_at;
+        $data['created_at_local'] = $this->created_at_local;
         $data['updated_at'] = $this->updated_at;
+        $data['updated_at_local'] = $this->updated_at_local;
 
         return $data;
     }
@@ -241,7 +248,7 @@ class Entry extends Model implements PageInterface {
      */
     public function newEntryBuilder($parameters = [])
     {
-        return new EntryBuilder($this, $parameters);
+        return new EntryBuilder($this->getCache()->getResource(), $parameters);
     }
 
     /**
@@ -343,23 +350,6 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
-     * Returns the full route for the entry.
-     * If a route has not been set then it will return the dynamic route.
-     *
-     * @return string|null
-     */
-    public function getPreferredRoute()
-    {
-        if ($this->getRoute() !== null) {
-            return $this->getRoute();
-        } elseif ($this->getDynamicRoute() !== null) {
-            return $this->getDynamicRoute();
-        }
-
-        return null;
-    }
-
-    /**
      * Returns the full route for the entry
      *
      * @return string|null
@@ -374,34 +364,39 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
-     * Returns the dynamic route name for the entry
+     * Returns the URI for the current entry
      *
      * @return string
      */
-    public function getDynamicRouteName()
+    public function getUri()
     {
-        return $this->getRouteName().'.dynamic';
-    }
-
-    /**
-     * Generates a dynamic route using the
-     * content type's route and the entry's url title.
-     *
-     * @return string|null
-     */
-    public function getDynamicRoute()
-    {
-        if ($this->contentType->entry_uri_template !== null 
+        if ($this->getRoute() !== null) {
+            return $this->getRoute();
+        } elseif ($this->contentType->entry_uri_template !== null
             && $this->contentType->entry_uri_template !== ''
         ) {
             $twig = new \Twig_Environment(new \Twig_Loader_String());
 
-            $route = $twig->render(
+            $uri = $twig->render(
                 $this->contentType->entry_uri_template,
                 $this->getRenderedData()
             );
 
-            return $route;
+            return '/'.$uri;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the URL for the current entry
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        if ($this->getUri() != null) {
+            return url($this->getUri());
         }
 
         return null;
@@ -433,6 +428,33 @@ class Entry extends Model implements PageInterface {
         }
 
         $this->attributes['route'] = $value;
+    }
+
+    /**
+     * Set the value of the "updated at local" attribute.
+     *
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function setUpdatedAtLocal($value)
+    {
+        $this->updated_at_local = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the entry's meta title, description, and keywords to the theme
+     *
+     * @return self
+     */
+    public function setThemeMetadata()
+    {
+        Theme::setMetaTitle($this->meta_title);
+        Theme::setMetaDescription($this->meta_description);
+        Theme::setMetaKeywords($this->meta_keywords);
+
+        return $this;
     }
 
     /**
@@ -542,7 +564,7 @@ class Entry extends Model implements PageInterface {
      */
     public function getDates()
     {
-        return ['created_at', 'updated_at'];
+        return ['created_at', 'updated_at', 'created_at_local', 'updated_at_local'];
     }
 
 }

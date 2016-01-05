@@ -139,7 +139,9 @@ class FieldController extends AdminController {
             'content_type_field_type_id' => 'required',
             'label' => 'required|max:50',
             'short_tag' => "required|alpha_dash|max:50"
-                ."|unique:content_type_fields,short_tag".(($contentTypeField == null) ? "" : ",{$contentTypeField->id}"),
+                ."|unique:content_type_fields,short_tag,"
+                .(($contentTypeField == null) ? "NULL" : $contentTypeField->id)
+                .",id,content_type_id,{$contentType->id}",
             'required' => 'required',
             'translate' => 'required',
         ];

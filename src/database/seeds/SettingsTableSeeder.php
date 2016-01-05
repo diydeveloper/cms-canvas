@@ -66,6 +66,13 @@ class SettingsTableSeeder extends Seeder {
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'id' => 8,
+                'setting' => 'default_timezone', 
+                'value' => 'US/Eastern',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 

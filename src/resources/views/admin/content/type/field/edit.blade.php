@@ -24,7 +24,7 @@
             <div class="form">
                 <div>
                     {!! HTML::decode(Form::label('content_type_field_type_id', '<span class="required">*</span> Field Type:')) !!}
-                    {!! Form::select('content_type_field_type_id', $fieldTypes->lists('name', 'id')->all()) !!}
+                    {!! Form::select('content_type_field_type_id', $fieldTypes->lists('name', 'id')->all(), (empty($field) ? 1 : null)) !!}
                 </div>
                 <div>
                     {!! HTML::decode(Form::label('label', '<span class="required">*</span> Field Label:')) !!}
@@ -37,9 +37,9 @@
                 <div>
                     {!! HTML::decode(Form::label('required', '<span class="required">*</span> Require Field:')) !!}
                     <span>
-                        {!! Form::radio('required', '1', true) !!}
+                        {!! Form::radio('required', '1') !!}
                         <label for="required_yes">Yes</label>
-                        {!! Form::radio('required', '0') !!}
+                        {!! Form::radio('required', '0', true) !!}
                         <label for="required_no">No</label>
                     </span>
                 </div>
@@ -71,6 +71,8 @@
                 }
             );
         });
+
+        $('#content_type_field_type_id').trigger("change");
 
         @if (empty($field))
             $('#label').keyup( function(e) {

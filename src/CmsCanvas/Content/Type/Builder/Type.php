@@ -28,6 +28,13 @@ class Type {
     protected $renderedData;
 
     /**
+     * Rendered content
+     *
+     * @var \TwigBridge\StringView\StringView
+     */
+    protected $renderContents;
+
+    /**
      * Constructor
      *
      * @param  \CmsCanvas\Models\Content\Type  $contentType
@@ -40,6 +47,7 @@ class Type {
         $this->contentType = $contentType;
         $this->parameters = $parameters;
         $this->renderedData = $this->contentType->getRenderedData();
+        $this->renderContents = $this->renderContents();
     }
 
     /**
@@ -72,13 +80,18 @@ class Type {
      */
     public function renderContents()
     {
+        if ($this->renderContents != null) {
+            return $this->renderContents;
+        }
+
         $data = array_merge($this->renderedData, $this->parameters);
 
         $template = ($this->contentType->layout === null) ? '' : $this->contentType->layout;
         $content = StringView::make($template)
             ->cacheKey($this->contentType->getRouteName())
             ->updatedAt($this->contentType->updated_at->timestamp)
-            ->with($data);
+            ->with($data)
+            ->prerender();
 
         return $content;
     }

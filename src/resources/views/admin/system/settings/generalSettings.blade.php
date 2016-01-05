@@ -28,6 +28,11 @@
                     </div>
 
                     <div>
+                        {!! HTML::decode(Form::label('default_timezone', '<span class="required">*</span> Default Timezone:')) !!}
+                        {!! Form::select('default_timezone', ['' => ''] + $timezones->lists('name', 'identifier')->all()) !!}
+                    </div>
+
+                    <div>
                         {!! HTML::decode(Form::label('site_homepage', '<span class="required">*</span> Site Homepage:')) !!}
                         {!! Form::select('site_homepage', $entries->lists('title', 'id')->all()) !!}
                     </div>

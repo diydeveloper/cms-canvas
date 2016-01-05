@@ -117,7 +117,7 @@
                                         {!! $revisionIteration->author_name !!}
                                     @endif
                                 </td>
-                                <td>{!! $revisionIteration->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a') !!}</td>
+                                <td>{!! Content::convertTimezone($revisionIteration->created_at) !!}</td>
                                 <td class="right">
                                     @if (($revision == null && $i == 0)
                                         || ($revision != null && $revision->id == $revisionIteration->id))
@@ -150,14 +150,19 @@
                     </div>
                     <div>
                         {!! HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) !!}
-                        {!! Form::text(
-                            'created_at', 
-                            ( ! empty($entry->created_at)) ? 
-                                $entry->created_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a') 
-                            : 
-                                \Carbon\Carbon::now()->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i:s a'), 
-                            array('class' => 'datetime')) 
-                        !!}
+                        <div style="display: inline-block; vertical-align: middle;">
+                            {!! Form::text(
+                                'created_at', 
+                                ( ! empty($entry->created_at)) ? 
+                                    Content::convertTimezone($entry->created_at)
+                                :
+                                    Content::convertTimezone(\Carbon\Carbon::now()),
+                                array('class' => 'datetime')) 
+                            !!}<br />
+                            @if (! empty($entry->created_at) && Auth::user()->getTimezoneIdentifier() != Config::get('cmscanvas::config.default_timezone'))
+                                <span class="ex">Site Default Timezone: {{ Content::convertTimezone($entry->created_at, false) }}</span>
+                            @endif
+                        </div>
                     </div>
                     <div>
                         {!! Form::label('author_id', 'Author:') !!}

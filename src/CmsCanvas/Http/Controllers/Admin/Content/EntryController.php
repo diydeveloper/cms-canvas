@@ -246,11 +246,17 @@ class EntryController extends AdminController {
             }
         }
 
-        $createdAt = Carbon::createFromFormat('d/M/Y h:i:s a', Input::get('created_at'), auth::user()->timezone->identifier);
-        $createdAt->setTimezone(config::get('app.timezone'));
+        $createdAt = Carbon::createFromFormat(
+            'd/M/Y h:i:s a', 
+            Input::get('created_at'), 
+            Auth::user()->getTimezoneIdentifier()
+        );
+        $createdAt->setTimezone(Config::get('app.timezone'));
 
         $data = Input::all();
         $data['created_at'] = $createdAt;
+        $data['created_at_local'] = $createdAt->copy()
+            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));;
 
         $entry = ($entry == null) ? new Entry : $entry;
         $entry->fill($data);

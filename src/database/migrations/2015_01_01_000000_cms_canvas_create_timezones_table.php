@@ -17,6 +17,7 @@ class CmsCanvasCreateTimezonesTable extends Migration {
             $table->increments('id');
             $table->string('name', 255);
             $table->string('identifier', 255);
+            $table->string('offset', 8);
         });
     }
 

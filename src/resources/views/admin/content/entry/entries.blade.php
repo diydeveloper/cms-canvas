@@ -60,7 +60,7 @@
                         <a rel="title" class="sortable{!! $orderBy->getElementClass('title') !!}" href="javascript:void(0);">Title</a>
                     </th>
                     <th>
-                        <a rel="route" class="sortable{!! $orderBy->getElementClass('route') !!}" href="javascript:void(0);">Route</a>
+                        <a rel="route" class="sortable{!! $orderBy->getElementClass('route') !!}" href="javascript:void(0);">URI</a>
                     </th>
                     <th class="right">
                         <a rel="id" class="sortable{!! $orderBy->getElementClass('id') !!}" href="javascript:void(0);">#ID</a>
@@ -92,23 +92,11 @@
                                 <span class="hint">Custom 404</span>
                             @endif
                         </td>
-                        <td>
-                            @if ($entry->getRoute() !== null)
-                                {!! $entry->getRoute() !!}
-                            @endif
-
-                            @if ($entry->getRoute() !== null && $entry->getDynamicRoute() !== null)
-                                &nbsp;
-                            @endif
-
-                            @if ($entry->getDynamicRoute() !== null)
-                                <span style="color: darkgrey;">{!! $entry->getDynamicRoute() !!}</span>
-                            @endif
-                        </td>
+                        <td>{!! $entry->getUri() !!}</td>
                         <td class="right">{!! $entry->id !!}</td>
                         <td>{!! $entry->content_type_title !!}</td>
                         <td>{!! $entry->entry_status_name !!}</td>
-                        <td>{!! $entry->updated_at->setTimezone(Auth::user()->getTimezoneIdentifier())->format('d/M/Y h:i a') !!}</td>
+                        <td>{!! Content::convertTimezone($entry->updated_at) !!}</td>
                         <td class="right">
                             <ul class="actions_btn">
                                 <li>
@@ -117,6 +105,9 @@
                                     </a>
                                     <ul class="actions_dropdown no_row_link" style="text-align: left;">
                                         <li class="edit_icon"><a href="{!! Admin::url("content/type/{$entry->content_type_id}/entry/{$entry->id}/edit") !!}">Edit</a></li>
+                                        @if ($entry->getUrl() != null)
+                                            <li><a target="_blank" href="{{ $entry->getUrl() }}">View</a></li>
+                                        @endif
                                         <li><a href="javascript:void(0);" data-id="{!! $entry->id !!}" data-href="{!! Admin::url('content/entry/delete') !!}" class="delete_item">Delete</a></li>
                                     </ul>
                                 </li>

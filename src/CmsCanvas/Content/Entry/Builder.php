@@ -113,6 +113,13 @@ class Builder {
     protected $noResultsAbort;
 
     /**
+     * The date field used for date arguments
+     *
+     * @var int
+     */
+    protected $dateBy = 'entries.created_at_local';
+
+    /**
      * @var array
      */
     protected $joinedEntryDataAliases = [];
@@ -254,7 +261,7 @@ class Builder {
         if ($year === null || $year === '') {
             $this->year = null;
         } else {
-            $this->year = $this->parseStringValues(DB::raw('YEAR(entries.created_at)'), $year);
+            $this->year = $this->parseStringValues(DB::raw("YEAR({$this->dateBy})"), $year);
         }
 
         return $this;
@@ -271,7 +278,7 @@ class Builder {
         if ($month === null || $month === '') {
             $this->month = null;
         } else {
-            $this->month = $this->parseStringValues(DB::raw('MONTH(entries.created_at)'), $month);
+            $this->month = $this->parseStringValues(DB::raw("MONTH({$this->dateBy})"), $month);
         }
 
         return $this;
@@ -288,7 +295,7 @@ class Builder {
         if ($day === null || $day === '') {
             $this->day = null;
         } else {
-            $this->day = $this->parseStringValues(DB::raw('DAY(entries.created_at)'), $day);
+            $this->day = $this->parseStringValues(DB::raw("DAY({$this->dateBy})"), $day);
         }
 
         return $this;

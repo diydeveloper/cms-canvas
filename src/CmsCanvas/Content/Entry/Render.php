@@ -101,6 +101,26 @@ class Render {
     }
 
     /**
+     * Returns the url for the current entry
+     *
+     * @return string
+     */
+    public function url()
+    {
+        return $this->entryBuilder->getEntry()->getUrl();
+    }
+
+    /**
+     * Returns the uri for the current entry
+     *
+     * @return string
+     */
+    public function uri()
+    {
+        return $this->entryBuilder->getEntry()->getUri();
+    }
+
+    /**
      * Used to determine if the current render is an entry
      *
      * @return boolean
@@ -128,6 +148,16 @@ class Render {
     public function getThemeLayout()
     {
         return $this->entryBuilder->getEntry()->contentType->theme_layout;
+    }
+
+    /**
+     * Set the metadata for the current entry to the theme
+     *
+     * @return void
+     */
+    public function setThemeMetadata()
+    {
+        $this->entryBuilder->getEntry()->setThemeMetadata();
     }
 
 }

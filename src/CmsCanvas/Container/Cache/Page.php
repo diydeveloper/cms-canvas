@@ -14,7 +14,7 @@ class Page implements PageInterface  {
      *
      * @var mixed
      */
-    protected $object;
+    protected $resource;
 
     /**
      * Collection of content type fields with entry data
@@ -26,20 +26,20 @@ class Page implements PageInterface  {
     /**
      * Defines the order in which to sort.
      *
-     * @param int $objectId
-     * @param string $objectType
+     * @param  int $resourceId
+     * @param  string $resourceType
      * @return void
      */
-    public function __construct($objectId, $objectType = 'entry')
+    public function __construct($resourceId, $resourceType = 'entry')
     {
-        if ($objectType == 'contentType') {
-            $this->object = Type::find($objectId);
+        if ($resourceType == 'contentType') {
+            $this->resource = Type::find($resourceId);
         } else {
-            $this->object = Entry::find($objectId);
-            $this->object->contentType;
+            $this->resource = Entry::find($resourceId);
+            $this->resource->contentType;
         }
 
-        $this->contentTypeFields = $this->object->getContentTypeFields(true);
+        $this->contentTypeFields = $this->resource->getContentTypeFields(true);
     }
 
     /**
@@ -50,7 +50,7 @@ class Page implements PageInterface  {
      */
     public function render($parameters = [])
     {
-        $content = $this->object
+        $content = $this->resource
             ->setCache($this)
             ->render($parameters);
 
@@ -75,6 +75,30 @@ class Page implements PageInterface  {
     public function getContentTypeFields()
     {
         return $this->contentTypeFields;
+    }
+
+    /**
+     * Get the resource for the cache
+     *
+     * @return mixed
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * Sets the entry's meta title, description, and keywords to the theme
+     *
+     * @return self
+     */
+    public function setThemeMetadata()
+    {
+        if ($this->resource instanceof \CmsCanvas\Models\Content\Entry) {
+            $this->resource->setThemeMetadata();
+        }
+
+        return $this;
     }
 
 }

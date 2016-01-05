@@ -6,6 +6,7 @@ use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
+use CmsCanvas\Models\Timezone;
 
 class SettingsController extends AdminController {
 
@@ -29,6 +30,7 @@ class SettingsController extends AdminController {
         $content->layouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
         // @todo add paginated entry search
         $content->entries = Entry::orderBy('title', 'asc')->get();
+        $content->timezones = Timezone::all();
 
         $this->layout->breadcrumbs = [Request::path() => 'General Settings'];
         $this->layout->content = $content;

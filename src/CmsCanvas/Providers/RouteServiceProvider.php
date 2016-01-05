@@ -135,16 +135,6 @@ class RouteServiceProvider extends ServiceProvider
                     ]
                 );
             }
-
-            if ($entry->getDynamicRoute() !== null) {
-                $router->any(
-                    $entry->getDynamicRoute(), 
-                    [
-                        'as' => $entry->getDynamicRouteName(), 
-                        'uses' => 'PageController@showPage'
-                    ]
-                );
-            }
         }
     }
 

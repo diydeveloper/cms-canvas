@@ -25,6 +25,8 @@ class CmsCanvasCreateEntriesTable extends Migration {
             $table->string('meta_keywords', 300)->nullable();
             $table->string('meta_description', 250)->nullable();
             $table->boolean('template_flag')->default(0);
+            $table->datetime('created_at_local');
+            $table->datetime('updated_at_local');
             $table->timestamps();
         });
     }

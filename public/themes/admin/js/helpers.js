@@ -119,13 +119,8 @@ $(document).ready(function() {
     });
 
     $(document).mouseup(function (e) {
-        if ($('.actions_dropdown').is(":visible") 
-            && $(e.target).closest('.actions_dropdown').length == 0
-            && $(e.target).closest('a').hasClass('actions_link') == false
-        ) {
-            $('.actions_link').removeClass('selected');
-            $('.actions_dropdown').hide();
-        }
+        $('.actions_link').removeClass('selected');
+        $('.actions_dropdown').hide();
     });
 
     $('.delete_item').click(function() {

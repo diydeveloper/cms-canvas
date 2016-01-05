@@ -222,7 +222,7 @@ class Item {
     public function getUrl()
     {
         if ($this->navigationItem->entry != null) {
-            return url($this->navigationItem->entry->getPreferredRoute());
+            return $this->navigationItem->entry->getUrl();
         } 
 
         if ($this->navigationItem->url != null) {
