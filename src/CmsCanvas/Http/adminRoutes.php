@@ -164,6 +164,8 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
         Route::get('general-settings', ['as' => 'admin.system.settings.general-settings', 'uses' => 'Admin\System\SettingsController@getGeneralSettings']);
         Route::post('general-settings', ['as' => 'admin.system.settings.general-settings.post', 'uses' => 'Admin\System\SettingsController@postGeneralSettings']);
 
+        Route::get('server-info', ['as' => 'admin.system.settings.server-info', 'uses' => 'Admin\System\SettingsController@getServerInfo']);
+
         Route::post('theme-layouts', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.system.settings.theme-layouts', 'uses' => 'Admin\System\SettingsController@postThemeLayouts']);
 
         Route::get('language', ['as' => 'admin.system.language.languages', 'uses' => 'Admin\System\LanguageController@getLanguages']);

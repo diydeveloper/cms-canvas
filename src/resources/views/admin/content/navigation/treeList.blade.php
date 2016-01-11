@@ -3,6 +3,9 @@
         <div>
             <span class="sortableTree_handle"></span>
             {!! $item->getTitle() !!}
+            @if ($item->isHidden())
+                <span class="item_hidden">(Hidden)</span>
+            @endif
             <span style="float: right;">
                 <ul class="actions_btn">
                     <li>

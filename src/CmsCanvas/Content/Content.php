@@ -5,6 +5,7 @@ namespace CmsCanvas\Content;
 use Config, Auth;
 use CmsCanvas\Content\Entry\Builder as EntryBuilder;
 use CmsCanvas\Content\Navigation\Builder as NavigationBuilder;
+use CmsCanvas\Content\Breadcrumb\Builder as BreadcrumbBuilder;
 use CmsCanvas\Content\Thumbnail\Builder as ThumbnailBuilder;
 use Carbon\Carbon;
 
@@ -39,7 +40,7 @@ class Content {
     }
 
     /**
-     * Builds and returns collection of entries based on 
+     * Builds and returns collection of navigation items based on 
      * the provided configuration
      *
      * @param  string $shortName
@@ -49,6 +50,22 @@ class Content {
     public function navigation($shortName, array $config = [])
     {
         $builder = new NavigationBuilder($shortName, $config);
+        $collection = $builder->get();
+
+        return $collection;
+    }
+
+    /**
+     * Builds and returns collection of navigation items based on 
+     * the provided configuration
+     *
+     * @param  string $shortName
+     * @param  array $config
+     * @return \CmsCanvas\Content\Navigation\RenderCollection
+     */
+    public function breadcrumb($shortName, array $config = [])
+    {
+        $builder = new BreadcrumbBuilder($shortName, $config);
         $collection = $builder->get();
 
         return $collection;
@@ -72,18 +89,29 @@ class Content {
      * Localize and format a carbon date
      *
      * @param  \Carbon\Carbon $dateTime
-     * @param  bool $userPreferredFlag
-     * @return \Carbon\Carbon
+     * @param  string $format
+     * @param  string $timezone
+     * @return string
      */
-    public function convertTimezone(Carbon $dateTime, $userPreferredFlag = true)
+    public function userDate(Carbon $dateTime, $format = null, $timezone = null)
     {
-        if ($userPreferredFlag && Auth::check()) {
-            $dateTime->setTimezone(Auth::user()->getTimezoneIdentifier());
-        } else {
-            $dateTime->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+        if ($timezone !== false) {
+            if ($timezone == null) {
+                if (Auth::check()) {
+                    $timezone = Auth::user()->getTimezoneIdentifier();
+                } else {
+                    $timezone = Config::get('cmscanvas::config.default_timezone');
+                }
+            }
+
+            $dateTime->setTimezone($timezone);
         }
 
-        return $dateTime->format('d/M/Y h:i:s a');
+        if ($format != null) {
+            return $dateTime->format($format);
+        } else {
+            return $dateTime->format('d/M/Y h:i:s a');
+        }
     }
 
 }

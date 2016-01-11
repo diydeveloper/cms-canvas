@@ -33,7 +33,9 @@ class EntryDataTableSeeder extends Seeder {
                     . '<p>Sed lobortis eleifend dapibus. Sed sodales luctus dui, varius maximus elit dapibus non. Aenean dignissim sed ante sed consequat. Maecenas sed dui sodales, semper dolor a, accumsan ligula. Proin lacus felis, dictum ac dolor quis, tempus rhoncus urna. Nunc semper auctor nibh, lobortis tristique ex vestibulum vulputate. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec ullamcorper dictum semper. Sed vestibulum eu tellus quis accumsan. Etiam et urna blandit, faucibus augue ac, malesuada nisi.0</p>'
                     . '<p>Fusce finibus ligula posuere, sagittis velit ac, rutrum tortor. Praesent augue sem, ultricies sed mauris eu, tempor vehicula elit. Nunc metus mauris, placerat nec viverra lacinia, ullamcorper ac justo. Nunc volutpat nisi lacus, sit amet rutrum tortor scelerisque tincidunt. Integer lobortis faucibus sem dignissim maximus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse sit amet quam consectetur, gravida nunc in, elementum odio. Aenean bibendum eleifend tortor, sit amet varius tellus. Donec at eros ullamcorper lacus finibus dictum non et magna. Donec luctus tincidunt sapien interdum elementum. Sed pharetra, lacus sed consequat luctus, arcu ex malesuada ligula, sed bibendum mi quam quis lorem. Nullam dignissim augue in urna consequat, vitae convallis erat placerat. Praesent vitae erat mattis odio consequat ornare. Vivamus pellentesque, ante eget posuere maximus, orci felis malesuada purus, a aliquam sem dolor non nulla.</p>',
                 'created_at' => Carbon::now(),
+                'created_at_local' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'updated_at_local' => Carbon::now(),
             ],
             [
                 'entry_id' => $pageNotFound->id, 
@@ -45,7 +47,9 @@ class EntryDataTableSeeder extends Seeder {
                     '<h1>404 - Page Not Found</h1>'
                     . '<p>The requested URL {{ url_current() }} was not found.</p>';
                 'created_at' => Carbon::now(),
+                'created_at_local' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'updated_at_local' => Carbon::now(),
             ],
         ]);
     }

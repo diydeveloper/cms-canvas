@@ -61,7 +61,11 @@ class Render {
      */
     public function __toString()
     {
-        return (string) $this->itemBuilder->renderContents();
+        try {
+            return (string) $this->itemBuilder->renderContents();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
 }

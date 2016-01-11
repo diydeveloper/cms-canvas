@@ -117,7 +117,7 @@
                                         {!! $revisionIteration->author_name !!}
                                     @endif
                                 </td>
-                                <td>{!! Content::convertTimezone($revisionIteration->created_at) !!}</td>
+                                <td>{!! Content::userDate($revisionIteration->created_at) !!}</td>
                                 <td class="right">
                                     @if (($revision == null && $i == 0)
                                         || ($revision != null && $revision->id == $revisionIteration->id))
@@ -154,13 +154,13 @@
                             {!! Form::text(
                                 'created_at', 
                                 ( ! empty($entry->created_at)) ? 
-                                    Content::convertTimezone($entry->created_at)
+                                    Content::userDate($entry->created_at)
                                 :
-                                    Content::convertTimezone(\Carbon\Carbon::now()),
+                                    Content::userDate(\Carbon\Carbon::now()),
                                 array('class' => 'datetime')) 
                             !!}<br />
                             @if (! empty($entry->created_at) && Auth::user()->getTimezoneIdentifier() != Config::get('cmscanvas::config.default_timezone'))
-                                <span class="ex">Site Default Timezone: {{ Content::convertTimezone($entry->created_at, false) }}</span>
+                                <span class="ex">Site Default Timezone: {{ Content::userDate($entry->created_at_local, null, false) }}</span>
                             @endif
                         </div>
                     </div>

@@ -64,7 +64,7 @@
                                 <td>
                                     {!! implode(', ', $user->roles->lists('name')->all()) !!}
                                 </td>
-                                <td>{!! (empty($user->last_login)) ? '' : Content::convertTimezone($user->last_login) !!}</td>
+                                <td>{!! (empty($user->last_login)) ? '' : Content::userDate($user->last_login) !!}</td>
                                 <td class="right">
                                     <ul class="actions_btn">
                                         <li>

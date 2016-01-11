@@ -8,6 +8,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use CmsCanvas\Database\Eloquent\Model;
+use CmsCanvas\User\Render;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
     
@@ -341,6 +342,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         $this->setRelation('roles', $roles);
+    }
+
+    /**
+     * Returns a render instance
+     *
+     * @return \CmsCanvas\User\Render
+     */
+    public function render()
+    {
+        return new Render($this);
     }
 
 }

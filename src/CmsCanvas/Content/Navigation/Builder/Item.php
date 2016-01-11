@@ -14,6 +14,11 @@ class Item {
     protected $navigationItem;
 
     /**
+     * @var \CmsCanvas\Content\Navigation\Builder\Item
+     */
+    protected $parent;
+
+    /**
      * @var \CmsCanvas\Content\Navigation\Builder\Item|array
      */
     protected $children = [];
@@ -54,15 +59,24 @@ class Item {
     protected $index = 0;
 
     /**
+     * The seperator for the current item
+     *
+     * @var string
+     */
+    protected $seperator;
+
+    /**
      * Constructor
      *
      * @param  \CmsCanvas\Models\Content\Navigation\Item $navigationItem
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item $parent
      * @return void
      */
-    public function __construct(NavigationItem $navigationItem)
+    public function __construct(NavigationItem $navigationItem, Item $parent = null)
     {
         $this->navigationItem = $navigationItem;
 
+        $this->parent = $parent;
         $this->buildChildren();
     }
 
@@ -74,7 +88,7 @@ class Item {
     protected function buildChildren()
     {
         $items = $this->navigationItem->getLoadedChildren();
-        $this->children = NavigationItem::newItemBuilderCollection($items);
+        $this->children = NavigationItem::newItemBuilderCollection($items, $this);
     }
 
     /**
@@ -108,6 +122,10 @@ class Item {
         $contents .= '<a'.$this->getAnchorAttributes().'>';
         $contents .= $this->getTitle();
         $contents .= '</a>';
+
+        if ($this->seperator != null) {
+            $contents .= '<span>'.$this->seperator.'</span>';
+        }
 
         if (count($this->children) > 0) {
             $contents .= $this->renderChildren();
@@ -249,36 +267,52 @@ class Item {
     }
 
     /**
+     * Returns the builder item parent for the current item
+     *
+     * @return \CmsCanvas\Content\Navigation\Builder\Item
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
      * Sets the items's position in the collection
      *
      * @param int $value
-     * @return void
+     * @return self
      */
     public function setIndex($value)
     {
         $this->index = $value;
+
+        return $this;
     }
 
     /**
      * Sets the firstFlag class variable
      *
-     * @param bool $value
-     * @return void
+     * @param  bool $value
+     * @return self
      */
     public function setFirstFlag($value)
     {
         $this->firstFlag = (bool) $value;
+
+        return $this;
     }
 
     /**
      * Sets the lastFlag class variable
      *
-     * @param bool $value
-     * @return void
+     * @param  bool $value
+     * @return self
      */
     public function setLastFlag($value)
     {
         $this->lastFlag = (bool) $value;
+
+        return $this;
     }
 
     /**
@@ -314,12 +348,14 @@ class Item {
     /**
      * Sets the currentItemFlag class variable
      *
-     * @param bool $value
-     * @return void
+     * @param  bool $value
+     * @return self
      */
     public function setCurrentItemFlag($value)
     {
         $this->currentItemFlag = (bool) $value;
+
+        return $this;
     }
 
     /**
@@ -335,12 +371,14 @@ class Item {
     /**
      * Sets the currentItemAncestorFlag class variable
      *
-     * @param bool $value
-     * @return void
+     * @param  bool $value
+     * @return self
      */
     public function setCurrentItemAncestorFlag($value)
     {
         $this->currentItemAncestorFlag = (bool) $value;
+
+        return $this;
     }
 
     /**
@@ -351,6 +389,81 @@ class Item {
     public function isCurrentItemAncestor()
     {
         return $this->currentItemAncestorFlag;
+    }
+
+    /**
+     * Sets the seperator for the current item
+     *
+     * @param  string $seperator
+     * @return self
+     */
+    public function setSeperator($seperator)
+    {
+        $this->seperator = $seperator;
+
+        return $this;
+    }
+
+    /**
+     * Unsets the children class property
+     *
+     * @return self
+     */
+    public function unsetChildren()
+    {
+        $this->children = [];
+
+        return $this;
+    }
+
+    /**
+     * Recursively loop through children and remove hidden navigation items
+     *
+     * @return self;
+     */
+    public function unsetHiddenChildren()
+    {
+        foreach ($this->children as $key => $child) {
+            if ($child->isHidden()) {
+                unset($this->children[$key]);
+            } else {
+                $child->unsetHiddenChildren();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Unsets the parent class property
+     *
+     * @return self
+     */
+    public function unsetParent()
+    {
+        $this->parent = null;
+
+        return $this;
+    }
+
+    /**
+     * Checks if the current item is a reference to the home page 
+     *
+     * @return bool
+     */
+    public function isHomePage()
+    {
+        return $this->navigationItem->isHomePage();
+    }
+
+    /**
+     * Checks if the current item is hidden
+     *
+     * @return bool
+     */
+    public function isHidden()
+    {
+        return $this->navigationItem->hidden_flag;
     }
 
 }

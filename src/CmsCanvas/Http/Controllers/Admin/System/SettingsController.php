@@ -103,4 +103,27 @@ class SettingsController extends AdminController {
         return json_encode($response);
     }
 
+    /**
+     * Show the server info
+     *
+     * @return View
+     */
+    public function getServerInfo()
+    {
+        Theme::addStylesheet(Theme::asset('css/server_info.css'));
+
+        ob_start();
+        phpinfo();
+        $phpInfo = ob_get_contents();
+        ob_end_clean();
+         
+        $phpInfo = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $phpInfo);
+
+        $content = View::make('cmscanvas::admin.system.settings.serverInfo');
+        $content->phpInfo = $phpInfo;
+
+        $this->layout->breadcrumbs = [Request::path() => 'Server Info'];
+        $this->layout->content = $content;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, stdClass, Cache, DB, Auth, Twig, Config, Theme;
+use Lang, stdClass, Cache, DB, Auth, Twig, Config, Theme, App;
 use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
@@ -14,6 +14,7 @@ use CmsCanvas\Content\Entry\Render;
 use CmsCanvas\Exceptions\PermissionDenied;
 use CmsCanvas\Exceptions\Exception;
 use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
+use Twig_Loader_String;
 
 class Entry extends Model implements PageInterface {
 
@@ -48,7 +49,7 @@ class Entry extends Model implements PageInterface {
      *
      * @var array
      */
-    protected $guarded = ['id', 'updated_at'];
+    protected $guarded = ['id', 'updated_at', 'updated_at_local'];
 
     /**
      * Manually manage the timestamps on this class
@@ -356,7 +357,7 @@ class Entry extends Model implements PageInterface {
      */
     public function getRoute()
     {
-        if ($this->route !== null && $this->route !== '') {
+        if ($this->route !== null && $this->route !== '' || $this->isHomePage()) {
             return '/'.$this->route;
         }
 
@@ -370,22 +371,33 @@ class Entry extends Model implements PageInterface {
      */
     public function getUri()
     {
+        $uri = null;
+
         if ($this->getRoute() !== null) {
-            return $this->getRoute();
+            $uri = $this->getRoute();
         } elseif ($this->contentType->entry_uri_template !== null
             && $this->contentType->entry_uri_template !== ''
         ) {
-            $twig = new \Twig_Environment(new \Twig_Loader_String());
+            $twig = App::make('twig');
+
+            $currentLoader = $twig->getLoader();
+            $currentCache = $twig->getCache();
+
+            $twig->setCache(false);
+            $twig->setLoader(new Twig_Loader_String());
 
             $uri = $twig->render(
                 $this->contentType->entry_uri_template,
                 $this->getRenderedData()
             );
 
-            return '/'.$uri;
+            $twig->setCache($currentCache);
+            $twig->setLoader($currentLoader);
+
+            $uri = '/'.$uri;
         }
 
-        return null;
+        return $uri;
     }
 
     /**
@@ -431,6 +443,34 @@ class Entry extends Model implements PageInterface {
     }
 
     /**
+     * Get the value of the "updated at local" attribute.
+     *
+     * @param  string  $value
+     * @return \Carbon\Carbon
+     */
+    public function getUpdatedAtLocalAttribute($value)
+    {
+        return $this->asDateTime( 
+            $value,
+            Config::get('cmscanvas::config.default_timezone')
+        );
+    }
+
+    /**
+     * Set the value of the "updated at local" attribute.
+     *
+     * @param  string  $value
+     * @return $this
+     */
+    public function setUpdatedAtLocalAttribute($value)
+    {
+        $this->attributes['updated_at_local'] = $this->fromDateTime(
+            $value,
+            Config::get('cmscanvas::config.default_timezone')
+        );
+    }
+
+    /**
      * Set the value of the "updated at local" attribute.
      *
      * @param  mixed  $value
@@ -441,6 +481,34 @@ class Entry extends Model implements PageInterface {
         $this->updated_at_local = $value;
 
         return $this;
+    }
+
+    /**
+     * Get the value of the "created at local" attribute.
+     *
+     * @param  string  $value
+     * @return \Carbon\Carbon
+     */
+    public function getCreatedAtLocalAttribute($value)
+    {
+        return $this->asDateTime( 
+            $value,
+            Config::get('cmscanvas::config.default_timezone')
+        );
+    }
+
+    /**
+     * Set the value of the "created at local" attribute.
+     *
+     * @param  string  $value
+     * @return $this
+     */
+    public function setCreatedAtLocalAttribute($value)
+    {
+        $this->attributes['created_at_local'] = $this->fromDateTime(
+            $value,
+            Config::get('cmscanvas::config.default_timezone')
+        );
     }
 
     /**
@@ -564,7 +632,7 @@ class Entry extends Model implements PageInterface {
      */
     public function getDates()
     {
-        return ['created_at', 'updated_at', 'created_at_local', 'updated_at_local'];
+        return ['created_at', 'updated_at'];
     }
 
 }

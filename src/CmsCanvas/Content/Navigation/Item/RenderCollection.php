@@ -7,20 +7,20 @@ use CmsCanvas\Database\Eloquent\Collection as CmsCanvasCollection;
 class RenderCollection extends CmsCanvasCollection {
 
     /**
-     * @var \CmsCanvas\Content\Navigation\Builder
+     * @var mixed
      */
-    protected $navigationBuilder;
+    protected $builder;
 
     /**
      * Contructor to set collection of navigation items
      *
      * @param  \CmsCanvas\Content\Navigation\Builder\Item|array  $itemBuilders
-     * @param  \CmsCanvas\Content\Navigation\Builder  $navigationBuilder
+     * @param  mixed  $builder
      * @return void
      */
-    public function __construct(array $itemBuilders, \CmsCanvas\Content\Navigation\Builder $navigationBuilder = null)
+    public function __construct(array $itemBuilders, $builder = null)
     {
-        $this->navigationBuilder = $navigationBuilder;
+        $this->builder = $builder;
 
         foreach ($itemBuilders as $itemBuilder) {
             $this->items[] = $itemBuilder->render();
@@ -35,18 +35,21 @@ class RenderCollection extends CmsCanvasCollection {
     public function __toString()
     {
         $attributes = '';
+        $contents = '';
 
-        if ($this->navigationBuilder != null) {
-            $attributes = $this->navigationBuilder->getAttributes();
+        if ($this->builder != null) {
+            $attributes = $this->builder->getAttributes();
         }
 
-        $contents = '<ul'.$attributes.'>';
+        if (count($this->items) > 0) {
+            $contents .= '<ul'.$attributes.'>';
 
-        foreach ($this->items as $item) {
-            $contents .= (string) $item;
+            foreach ($this->items as $item) {
+                $contents .= (string) $item;
+            }
+
+            $contents .= '</ul>';
         }
-
-        $contents .= '</ul>';
 
         return $contents;
     }

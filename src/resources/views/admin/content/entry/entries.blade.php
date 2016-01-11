@@ -96,7 +96,7 @@
                         <td class="right">{!! $entry->id !!}</td>
                         <td>{!! $entry->content_type_title !!}</td>
                         <td>{!! $entry->entry_status_name !!}</td>
-                        <td>{!! Content::convertTimezone($entry->updated_at) !!}</td>
+                        <td>{!! Content::userDate($entry->updated_at) !!}</td>
                         <td class="right">
                             <ul class="actions_btn">
                                 <li>

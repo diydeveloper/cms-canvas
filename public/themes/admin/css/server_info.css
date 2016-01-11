@@ -1,0 +1,74 @@
+#phpinfo {}
+#phpinfo pre {}
+#phpinfo a:link {}
+#phpinfo a:hover {}
+#phpinfo table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    white-space: normal;
+}
+
+#phpinfo table tbody td a {
+    text-decoration: underline;
+}
+
+#phpinfo table tbody td {
+    vertical-align: middle;
+    padding: 7px 5px;
+    background: #FFFFFF;
+    
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+#phpinfo .center {}
+#phpinfo .center table {}
+#phpinfo .center th {
+    background-color: #EFEFEF;
+    padding: 7px 5px;
+    text-align: left;
+    text-decoration: none;
+    color: #222222;
+    font-weight: bold;
+}
+#phpinfo td, th {
+    border: 1px solid #DDDDDD;
+}
+#phpinfo h1 {
+    margin: 0px;
+    padding: 11px 0px;
+    color: #003A88;
+    font-size: 20px;
+    font-weight: bold;
+}
+#phpinfo h2 {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+#phpinfo h2 a {
+    font-weight: bold;
+    font-size: 16px;
+    color: #000000;
+    text-decoration: none;
+}
+#phpinfo .p {}
+#phpinfo .e {}
+#phpinfo .h td { border: 0; }
+#phpinfo .v td { border: 0; }
+#phpinfo .vr {}
+#phpinfo img {}
+#phpinfo hr { height: 1px; background: #CCCCCC; border: 0; }

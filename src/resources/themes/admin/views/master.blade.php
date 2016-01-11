@@ -60,7 +60,7 @@
                                 </div>
                                 <div id="action_bar">
                                     <a class="button fleft" href="<?php //echo site_url(ADMIN_PATH . '/users/edit/' . $Current_user->id); ?>"><span>Account</span></a>
-                                    <a class="button fright" href="<?php //echo site_url('/users/logout'); ?>"><span>Logout</span></a>
+                                    <a class="button fright" href="{{ Admin::url('/user/logout') }}"><span>Logout</span></a>
                                     <div class="clear"></div>
                                 </div>
                             </div>

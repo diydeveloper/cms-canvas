@@ -75,9 +75,8 @@ class Builder {
      */
     public function get()
     {
-        $this->compile();
-
-        return new RenderCollection($this->navigationTree);
+        $navigationTree = $this->removeHidden($this->getNavigationTree());
+        return new RenderCollection($navigationTree, $this);
     }
 
     /**
@@ -117,6 +116,18 @@ class Builder {
                 case 'start_item_id':
                     $this->setStartItemId($value);
                     break;
+
+                case 'recursive':
+                    $this->setRecursiveFlag($value);
+                    break;
+
+                case 'id_attribute':
+                    $this->setIdAttribute($value);
+                    break;
+
+                case 'class_attribute':
+                    $this->setClassAttribute($value);
+                    break;
             }
         } 
     }
@@ -124,67 +135,105 @@ class Builder {
     /**
      * Sets the level that the navigation should start from
      *
-     * @param string $startLevel
-     * @return void
+     * @param  string $startLevel
+     * @return self
      */
     public function setStartLevel($startLevel)
     {
         $this->startLevel = strtolower($startLevel); 
+
+        return $this;
     }
 
     /**
      * Sets the start level offset that the navigation should start from
      *
-     * @param int $offset
-     * @return void
+     * @param  int $offset
+     * @return self
      */
     public function setOffset($offset)
     {
         $this->offset = $offset; 
+
+        return $this;
     }
 
     /**
      * Sets the depth at which the navigation should stop 
      *
-     * @param int $maxDepth
-     * @return void
+     * @param  int $maxDepth
+     * @return self
      */
     public function setMaxDepth($maxDepth)
     {
         $this->maxDepth = $maxDepth; 
+
+        return $this;
     }
 
     /**
-     * Sets the navigation short anme to build from
+     * Sets the navigation short name to build from
      *
-     * @param string $shortName
-     * @return void
+     * @param  string $shortName
+     * @return self
      */
     public function setShortName($shortName)
     {
         $this->shortName = $shortName; 
+
+        return $this;
     }
 
     /**
      * Sets the item id where the navigation should start
      *
-     * @param int $startItemId
-     * @return void
+     * @param  int $startItemId
+     * @return self
      */
     public function setStartItemId($startItemId)
     {
         $this->startItemId = $startItemId; 
+
+        return $this;
     }
 
     /**
      * Sets a flag indicating whether the navigaiton should render children
      *
-     * @param bool $recursive
-     * @return void
+     * @param  bool $recursiveFlag
+     * @return self
      */
     public function setRecursiveFlag($recursiveFlag)
     {
-        $this->recursiveFlag = $recursiveFlag; 
+        $this->recursiveFlag = (bool) $recursiveFlag; 
+
+        return $this;
+    }
+
+    /**
+     * Sets the id attribute string for the <ul> tag
+     *
+     * @param  string $idAttribute
+     * @return self
+     */
+    public function setIdAttribute($idAttribute)
+    {
+        $this->idAttribute = $idAttribute; 
+
+        return $this;
+    }
+
+    /**
+     * Sets the class attribute string for the <ul> tag
+     *
+     * @param  string $classAttribute
+     * @return self
+     */
+    public function setClassAttribute($classAttribute)
+    {
+        $this->classAttribute = $classAttribute; 
+
+        return $this;
     }
 
     /**
@@ -251,6 +300,24 @@ class Builder {
     }
 
     /**
+     * Recursively loop through navigation tree and remove hidden navigation items
+     *
+     * @return \CmsCanvas\Content\Navigation\Builder\Item|array;
+     */
+    protected function removeHidden($items, $depth = 1)
+    {
+        foreach ($items as $key => $item) {
+            if ($item->isHidden()) {
+                unset($items[$key]);
+            } else {
+                $item->unsetHiddenChildren();
+            }
+        }
+
+        return $items;
+    }
+
+    /**
      * Finds and identifies via URL the current navigaiton item
      *
      * @param \CmsCanvas\Content\Navigation\Builder\Item|array
@@ -260,7 +327,13 @@ class Builder {
     protected function compileCurrentItems($items, $depth = 1)
     {
         foreach ($items as $item) {
-            if ( ! $item->getNavigationItem()->disable_current_flag && Request::url() == $item->getUrl()) {
+            $pattern = $item->getNavigationItem()->uri_pattern;
+
+            if ( ! $item->getNavigationItem()->disable_current_flag 
+                && (($pattern != null && (bool) @preg_match('#^'.$pattern.'\z#', Request::path())) 
+                    || ($pattern == null && Request::url() == $item->getUrl())
+                )
+            ) {
                 $item->setCurrentItemFlag(true);
                 $this->currentItemDepth = $depth;
             }

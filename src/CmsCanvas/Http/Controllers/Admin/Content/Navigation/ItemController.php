@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Admin, Redirect, Validator, Input;
+use View, Admin, Redirect, Validator, Input, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
@@ -24,6 +24,7 @@ class ItemController extends AdminController {
             ->orWhereHas('contentType', function($query) {
                 $query->whereNotNull('entry_uri_template');
             })
+            ->orWhere('id', Config::get('cmscanvas::config.site_homepage'))
             ->get();
 
         $content->navigation = $navigation;
@@ -61,14 +62,18 @@ class ItemController extends AdminController {
             }
         }
 
-        $item = ($item == null) ? new Item : $item;
-        $item->fill(Input::all());
-        if ($item->type == 'url') {
-            $item->entry_id = null;
+        $navigationItem = ($item == null) ? new Item : $item;
+        $navigationItem->fill(Input::all());
+        if ($navigationItem->type == 'url') {
+            $navigationItem->entry_id = null;
         }
-        $item->navigation_id = $navigation->id;
-        $item->parent_id = null;
-        $item->save();
+        $navigationItem->navigation_id = $navigation->id;
+
+        if ($item == null) {
+            $navigationItem->sort = Item::max('id');
+        }
+
+        $navigationItem->save();
 
         return Redirect::route('admin.content.navigation.tree', $navigation->id)
             ->with('message', "Item was successfully updated.");

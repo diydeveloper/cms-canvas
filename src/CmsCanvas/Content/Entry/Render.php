@@ -137,7 +137,7 @@ class Render {
      */
     public function getAuthor()
     {
-        return $this->entryBuilder->getEntry()->author;
+        return $this->entryBuilder->getEntry()->author->render();
     }
 
     /**

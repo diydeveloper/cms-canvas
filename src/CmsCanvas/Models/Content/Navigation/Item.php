@@ -25,6 +25,7 @@ class Item extends Model {
         'title',
         'entry_id',
         'url',
+        'current_uri_pattern',
         'type',
         'id_attribute',
         'class_attribute',
@@ -103,27 +104,29 @@ class Item extends Model {
     /**
      * Creates a new builder item instance
      *
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item $parentItem
      * @return \CmsCanvas\Content\Navigation\Builder\Item
      */
-    public function newItemBuilder()
+    public function newItemBuilder(ItemBuilder $parentItem = null)
     {
-        return new ItemBuilder($this);
+        return new ItemBuilder($this, $parentItem);
     }
 
     /**
      * Creates new builder item instances for a collection 
      *
      * @param  \CmsCanvas\Models\Content\Navigation\Item|collection
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item $parentItem
      * @return \CmsCanvas\Content\Navigation\Builder\Item|array
      */
-    public static function newItemBuilderCollection($items)
+    public static function newItemBuilderCollection($items, ItemBuilder $parentItem = null)
     {
         $itemBuilders = [];
         $itemCount = count($items);
         $counter = 1;
 
         foreach ($items as $item) {
-            $itemBuilder = $item->newItemBuilder();
+            $itemBuilder = $item->newItemBuilder($parentItem);
 
             $itemBuilder->setIndex($counter - 1);
 
@@ -174,6 +177,22 @@ class Item extends Model {
     public function isChildrenLoaded() 
     {
         return isset($this->relations['children']);
+    }
+
+    /**
+     * Checks if the current item is a reference to the home page 
+     *
+     * @return bool
+     */
+    public function isHomePage()
+    {
+        if ($this->entry_id == \Config::get('cmscanvas::config.site_homepage')
+            || $this->url == '/'
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
 }

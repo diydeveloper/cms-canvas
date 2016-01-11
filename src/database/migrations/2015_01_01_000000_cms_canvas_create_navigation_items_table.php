@@ -21,6 +21,7 @@ class CmsCanvasCreateNavigationItemsTable extends Migration {
             $table->enum('type', ['page', 'url']);
             $table->string('title', 255)->nullable();
             $table->string('url', 500)->nullable();
+            $table->string('current_uri_pattern', 500)->nullable();
             $table->string('id_attribute', 255)->nullable();
             $table->string('class_attribute', 255)->nullable();
             $table->string('target_attribute', 255)->nullable();
