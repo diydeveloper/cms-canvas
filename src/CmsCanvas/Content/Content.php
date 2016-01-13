@@ -56,7 +56,7 @@ class Content {
     }
 
     /**
-     * Builds and returns collection of navigation items based on 
+     * Builds and returns collection of breadcrumb navigation items based on 
      * the provided configuration
      *
      * @param  string $shortName

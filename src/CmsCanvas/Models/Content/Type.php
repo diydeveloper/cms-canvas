@@ -334,6 +334,14 @@ class Type extends Model implements PageInterface {
         }
 
         $data['title'] = $this->title;
+        $data['url_title'] = null;
+        $data['entry_id'] = null;
+        $data['created_at'] = $this->created_at;
+        $data['created_at_local'] = $this->created_at->copy()
+            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+        $data['updated_at'] = $this->updated_at;
+        $data['updated_at_local'] = $this->updated_at->copy()
+            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
 
         return $data;
     }

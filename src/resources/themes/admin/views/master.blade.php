@@ -41,7 +41,7 @@
                         <div class="div3">
                             <a id="current_user" href="javascript:void(0);">
                                 {{ Auth::user()->getFullName() }}
-                                <img src="{!! Auth::user()->portrait(30, 30, true) !!}" style="margin: 0 2px 0 5px; vertical-align: middle;" />
+                                <img src="{!! Auth::user()->avatar(30, 30, true) !!}" style="margin: 0 2px 0 5px; vertical-align: middle;" />
                                 <span class="down_arrow"></span>
                                 <span id="current_user_box_pointer" class="box_pointer"></span>
                                 <span id="current_user_box_pointer_white" class="box_pointer"></span>
@@ -49,7 +49,7 @@
                             <div id="current_user_dropdown">
                                 <div id="current_user_info">
                                     <div class="fleft" id="current_user_picture">
-                                        <img src="{!! Auth::user()->portrait(96, 96, true) !!}" />
+                                        <img src="{!! Auth::user()->avatar(96, 96, true) !!}" />
                                     </div>
                                     <div class="fleft" id="current_user_detail">
                                         <div id="current_user_name">{!! Auth::user()->getFullName() !!}</div>

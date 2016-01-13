@@ -405,6 +405,16 @@ class Item {
     }
 
     /**
+     * Returns the seperator for the current item
+     *
+     * @return string
+     */
+    public function getSeperator()
+    {
+        return $this->seperator;
+    }
+
+    /**
      * Unsets the children class property
      *
      * @return self

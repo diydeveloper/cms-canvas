@@ -224,14 +224,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * Returns a portrait image URL of the user
+     * Returns a avatar image URL of the user
      *
      * @param  int  $width
      * @param  int  $height
      * @param  bool $crop
      * @return string
      */
-    public function portrait($width = null, $height = null, $crop = false)
+    public function avatar($width = null, $height = null, $crop = false)
     {
         return Content::thumbnail(
             '', 
