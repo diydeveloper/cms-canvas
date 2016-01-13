@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, Auth, StringView;
+use Lang, Auth, StringView, Config;
 use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
