@@ -49,7 +49,7 @@
                             <div id="current_user_dropdown">
                                 <div id="current_user_info">
                                     <div class="fleft" id="current_user_picture">
-                                        <img src="{!! Auth::user()->avatar(96, 96, true) !!}" />
+                                        <img src="{!! Auth::user()->avatar(100, 100, true) !!}" />
                                     </div>
                                     <div class="fleft" id="current_user_detail">
                                         <div id="current_user_name">{!! Auth::user()->getFullName() !!}</div>

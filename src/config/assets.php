@@ -97,6 +97,11 @@ return [
                 Theme::asset('js/image_field.js', 'admin'),
             ]
         ],
+        'avatar_image_field' => [
+            'javascript' => [
+                Theme::asset('js/avatar_image_field.js', 'admin'),
+            ]
+        ],
     ]
 
 ];

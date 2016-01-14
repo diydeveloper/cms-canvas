@@ -21,6 +21,7 @@ class CmsCanvasCreateUsersTable extends Migration {
 			$table->string('last_name', 120);
 			$table->string('email', 255)->unique();
 			$table->string('password', 60);
+			$table->string('avatar', 500)->nullable();
 			$table->string('phone', 25)->nullable();
 			$table->string('address', 255)->nullable();
 			$table->string('address2', 255)->nullable();

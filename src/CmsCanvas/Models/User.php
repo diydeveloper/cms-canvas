@@ -46,6 +46,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'state',
         'country',
         'zip',
+        'avatar',
     ];
 
     /**
@@ -234,7 +235,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function avatar($width = null, $height = null, $crop = false)
     {
         return Content::thumbnail(
-            '', 
+            $this->avatar, 
             [
                 'width' => $width, 
                 'height' => $height, 

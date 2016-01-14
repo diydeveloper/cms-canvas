@@ -44,14 +44,6 @@
     </span>
 </div>
 
-<div class="image_setting">
-    {!! Form::label($fieldType->getSettingsKey('inline_editing'), 'Allow Inline Editing:') !!}
-    <span>
-        <label>{!! Form::radio($fieldType->getSettingsKey('inline_editing'), '1', (bool) $fieldType->getSetting('inline_editing', true)) !!} Yes</label>
-        <label>{!! Form::radio($fieldType->getSettingsKey('inline_editing'), '0', ! (bool) $fieldType->getSetting('inline_editing', true)) !!} No</label>
-    </span>
-</div>
-
 <script type="text/javascript">
     $(document).ready( function() {
         $('#output_type').change( function() {

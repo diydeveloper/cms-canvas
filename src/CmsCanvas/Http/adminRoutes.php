@@ -33,6 +33,8 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::get('{user}/edit', ['', 'as' => 'admin.user.edit', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@getEdit']);
             Route::post('{user}/edit', ['as' => 'admin.user.edit.post', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@postEdit']);
 
+            Route::post('create-avatar-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.user.create.avatar.thumbnail.post', 'uses' => 'Admin\UserController@postCreateAvatarThumbnail']);
+
         });
 
         Route::group(['prefix' => 'permission', 'permission' => 'ADMIN_PERMISSION_VIEW'], function() {

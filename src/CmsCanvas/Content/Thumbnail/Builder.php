@@ -77,6 +77,10 @@ class Builder {
      */
     public function get()
     {
+        if ($this->getComputedSourcePath() == null) {
+            return null;
+        }
+
         if ($this->getWidth() == null && $this->getHeight() == null) {
             return asset($this->getComputedSourcePath());
         } else {
@@ -306,7 +310,7 @@ class Builder {
         }
 
         if (empty($this->computedSourcePath) || empty($this->sourceModificationTime)) {
-            throw new Exception('Unable to find source image.');
+            $this->computedSourcePath = null;
         }
 
         return $this->computedSourcePath;

@@ -8,13 +8,3 @@
         )
     !!} px
 </div>
-
-<div>
-    <label>Allow Inline Editing:</label>
-    <span>
-        {!! Form::radio($fieldType->getSettingsKey('inline_editing'), 1, (bool) $fieldType->getSetting('inline_editing', true)) !!}
-        <label for="inline_editing_yes">Yes</label>
-        {!! Form::radio($fieldType->getSettingsKey('inline_editing'), 0, ! (bool) $fieldType->getSetting('inline_editing', true)) !!}
-        <label for="inline_editing_no">No</label>
-    </span>
-</div>

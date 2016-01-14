@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin;
 
-use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass, Session;
+use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass, Session, Content;
 use CmsCanvas\Models\User;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
@@ -157,6 +157,8 @@ class UserController extends AdminController {
      */
     public function getEdit($user = null)
     {
+        Theme::addPackage('avatar_image_field');
+
         $roles = Role::all();
         $timezones = Timezone::all();
         
@@ -215,6 +217,19 @@ class UserController extends AdminController {
 
         return Redirect::route('admin.user.users')
             ->with('message', "{$user->getFullName()} was successfully updated.");
+    }
+
+    /**
+     * Generate a thumbnail from the specified image path
+     *
+     * @return string
+     */
+    public function postCreateAvatarThumbnail()
+    {
+        return Content::thumbnail(
+            Input::get('image_path'), 
+            ['width' => 100, 'height' => 100, 'crop' => true, 'no_image' => Theme::asset('images/portrait.jpg')]
+        );
     }
 
 }
