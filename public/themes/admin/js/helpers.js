@@ -134,4 +134,10 @@ $(document).ready(function() {
             return false;
         }
     });
+
+    $('.notification.success').delay(4000).fadeTo("slow", 0.00, function() {
+        $(this).slideUp("slow", function() {
+            $(this).remove();
+        });
+    });
 });

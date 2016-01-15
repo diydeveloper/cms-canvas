@@ -232,7 +232,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param  bool $crop
      * @return string
      */
-    public function avatar($width = null, $height = null, $crop = false)
+    public function avatar($width = null, $height = null, $crop = true)
     {
         return Content::thumbnail(
             $this->avatar, 

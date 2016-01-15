@@ -1418,28 +1418,33 @@ div.multi_fields {
 }
 
 #profile.content {
-    background: url('../images/profile-bg.gif') repeat-x;
+    background: url('../images/profile-bg.gif') repeat-x 0 -53px;
 }
 
 #profile_header {
-    margin-bottom: 20px;
-    margin-top: 17px;
-    margin-left: 10px;
+    padding: 0 10px;
+    margin-bottom: 10px;
 }
 
 #profile_header h2 {
-    margin-bottom: 2px;
-}
-
-#profile-fields-tab .field_spacing, #detail-tab .field_spacing {
-    padding: 8px 0;
-}
-
-#profile-fields-tab label, #detail-tab label {
     display: inline-block;
-    width: 120px;
+    vertical-align: top;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+#profile table {
+    width: 100%;
+}
+
+#profile td {
+    border-bottom: 1px solid #EEEEEE;
+    padding: 10px;
+}
+
+#profile .field {
     font-weight: bold;
-    padding-left: 10px;
+    width: 120px;
 }
 
 a.actions_link {
@@ -1551,3 +1556,33 @@ a.actions_link {
 .smoothness .ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
 .smoothness .ui-timepicker-div td { font-size: 90%; }
 .smoothness .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.side_nav {
+    width: 200px;
+    border: 1px solid #EEEEEE;
+}
+
+.side_nav li {
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.side_nav li a {
+    padding: 10px;
+    display: block;
+    color: #333333;
+}
+
+.side_nav li a:hover {
+    color: #FFFFFF;
+    background-color: #4183c4;
+    text-decoration: none;
+}
+
+.side_nav li a.selected {
+    color: #FFFFFF;
+    background-color: #4183c4;
+}
+
+.no_border {
+    border: none !important;
+}

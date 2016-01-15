@@ -112,7 +112,7 @@
                                 <td>{!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
                                 <td>
                                     @if ($revisionIteration->author != null)
-                                        {!! $revisionIteration->author->getFullName() !!}
+                                        <a target="_blank" href="{!! Admin::url('user/'.$revisionIteration->author->id.'/profile') !!}">{!! $revisionIteration->author->getFullName() !!}</a>
                                     @else
                                         {!! $revisionIteration->author_name !!}
                                     @endif

@@ -35,6 +35,16 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
             Route::post('create-avatar-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.user.create.avatar.thumbnail.post', 'uses' => 'Admin\UserController@postCreateAvatarThumbnail']);
 
+            Route::get('{user}/profile', ['as' => 'admin.user.profile', 'uses' => 'Admin\UserController@getProfile']);
+
+            Route::get('account', ['as' => 'admin.user.account.editProfile', 'uses' => 'Admin\UserController@getEditProfile']);
+            Route::post('account', ['as' => 'admin.user.account.editProfile.post', 'uses' => 'Admin\UserController@postEditProfile']);
+
+            Route::get('account/update-avatar', ['as' => 'admin.user.account.updateAvatar', 'uses' => 'Admin\UserController@getUpdateAvatar']);
+            Route::post('account/update-avatar', ['as' => 'admin.user.account.updateAvatar.post', 'uses' => 'Admin\UserController@postUpdateAvatar']);
+
+            Route::get('account/change-password', ['as' => 'admin.user.account.changePassword', 'uses' => 'Admin\UserController@getChangePassword']);
+            Route::post('account/change-password', ['as' => 'admin.user.account.changePassword.post', 'uses' => 'Admin\UserController@postChangePassword']);
         });
 
         Route::group(['prefix' => 'permission', 'permission' => 'ADMIN_PERMISSION_VIEW'], function() {

@@ -114,7 +114,7 @@
                     </div>
 
                     <div>
-                        {!! Form::label('state', 'State:') !!}
+                        {!! Form::label('state', 'State / Province:') !!}
                         {!! Form::text('state') !!}
                     </div>
 
