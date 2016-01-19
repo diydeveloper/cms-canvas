@@ -30,26 +30,32 @@ class Content {
     /**
      * Builds and returns first entry found provided the configuration
      *
-     * @param  mixed $config
+     * @param  array $config
      * @return \CmsCanvas\Content\Entry\Render
      */
-    public function entry($config = [])
+    public function entryFirst(array $config = [])
     {
-        if (is_numeric($config)) {
-            $routeName = 'entry.'.$config.'.'.Lang::getLocale();
-            $routeArray = explode('.', $routeName);
-            list($objectType, $objectId, $locale) = $routeArray;
-            $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId) {
-                return new Page($objectId, $objectType);
-            });
+        $entries = $this->entries($config);
 
-            return $cache->getResource()->render();
-        } else {
-            $entries = $this->entries($config);
+        return $entries->first();
+    }
 
-            return $entries->first();
-        }
+    /**
+     * Builds and returns entry from cache using the entry id
+     *
+     * @param  int $entryId
+     * @return \CmsCanvas\Content\Entry\Render
+     */
+    public function entry($entryId)
+    {
+        $routeName = 'entry.'.$config.'.'.Lang::getLocale();
+        $routeArray = explode('.', $routeName);
+        list($objectType, $objectId, $locale) = $routeArray;
+        $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId) {
+            return new Page($objectId, $objectType);
+        });
 
+        return $cache->getResource()->render();
     }
 
     /**

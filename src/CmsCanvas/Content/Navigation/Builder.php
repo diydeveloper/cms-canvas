@@ -245,7 +245,7 @@ class Builder {
      */
     protected function lazyLoadNavigationTree($items, $depth = 1)
     {
-        $items->load('entry');
+        $items->load('entry.contentType');
 
         if ($this->recursiveFlag && ($this->maxDepth === null || $this->maxDepth > $depth)) {
             $items->load(['children' => function($query) {
