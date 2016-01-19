@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Entry\Builder;
 
-use Auth, StringView;
+use Auth, StringView, Route;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Models\Content\Entry as EntryModel;
 use CmsCanvas\Content\Entry\Render;
@@ -67,7 +67,7 @@ class Entry {
     public function __construct(EntryModel $entry, $parameters = [])
     {
         $this->entry = $entry;
-        $this->parameters = $parameters;
+        $this->setParameters($parameters);
         $this->renderedData = $this->entry->getRenderedData();
         $this->renderContents = $this->renderContents();
     }
@@ -130,7 +130,7 @@ class Entry {
         if ($this->entry->template_flag) {
             $content = StringView::make((string) $content)
                 ->cacheKey($this->entry->getRouteName())
-                ->updatedAt($this->entry->updated_at->timestamp)
+                ->updatedAt(max($this->entry->updated_at->timestamp, $this->entry->contentType->updated_at->timestamp))
                 ->with($data)
                 ->prerender();
         }
@@ -162,11 +162,32 @@ class Entry {
      *
      * @param  string  $key
      * @param  string  $value
-     * @return void
+     * @return self
      */
     public function setParameter($key, $value)
     {
         $this->parameters[$key] = $value;
+
+        return $this;
+    }
+
+
+    /**
+     * Set the paramaters array
+     *
+     * @param  array  $value
+     * @return self
+     */
+    protected function setParameters(array $parameters)
+    {
+        $route = Route::current();
+        if ($route != null) {
+            $this->parameters = array_merge($route->parameters(), $parameters);
+        } else {
+            $this->parameters = $parameters;
+        }
+
+        return $this;
     }
 
     /**

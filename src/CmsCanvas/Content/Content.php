@@ -2,7 +2,8 @@
 
 namespace CmsCanvas\Content;
 
-use Config, Auth;
+use Config, Auth, Lang, Cache;
+use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Builder as EntryBuilder;
 use CmsCanvas\Content\Navigation\Builder as NavigationBuilder;
 use CmsCanvas\Content\Breadcrumb\Builder as BreadcrumbBuilder;
@@ -32,11 +33,23 @@ class Content {
      * @param  mixed $config
      * @return \CmsCanvas\Content\Entry\Render
      */
-    public function entry(array $config = [])
+    public function entry($config = [])
     {
-        $entries = $this->entries($config);
+        if (is_numeric($config)) {
+            $routeName = 'entry.'.$config.'.'.Lang::getLocale();
+            $routeArray = explode('.', $routeName);
+            list($objectType, $objectId, $locale) = $routeArray;
+            $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId) {
+                return new Page($objectId, $objectType);
+            });
 
-        return $entries->first();
+            return $cache->getResource()->render();
+        } else {
+            $entries = $this->entries($config);
+
+            return $entries->first();
+        }
+
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\Builder;
 
-use StringView;
+use StringView, Route;
 use CmsCanvas\Models\Content\Type as ContentTypeModel;
 use CmsCanvas\Content\Type\Render;
 
@@ -45,7 +45,7 @@ class Type {
     public function __construct(ContentTypeModel $contentType, $parameters = [])
     {
         $this->contentType = $contentType;
-        $this->parameters = $parameters;
+        $this->setParameters($parameters);
         $this->renderedData = $this->contentType->getRenderedData();
         $this->renderContents = $this->renderContents();
     }
@@ -120,11 +120,31 @@ class Type {
      *
      * @param  string  $key
      * @param  string  $value
-     * @return void
+     * @return self
      */
     public function setParameter($key, $value)
     {
         $this->parameters[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the paramaters array
+     *
+     * @param  array  $value
+     * @return self
+     */
+    protected function setParameters(array $parameters)
+    {
+        $route = Route::current();
+        if ($route != null) {
+            $this->parameters = array_merge($route->parameters(), $parameters);
+        } else {
+            $this->parameters = $parameters;
+        }
+
+        return $this;
     }
 
 }

@@ -18,9 +18,6 @@ class PageController extends PublicController {
             // Route not found. Show 404 page.
             $entryId = Config::get('cmscanvas::config.custom_404');
             $routeName = 'entry.'.$entryId.'.'.Lang::getLocale();
-            $parameters = [];
-        } else {
-            $parameters = Route::current()->parameters();
         }
 
         $routeArray = explode('.', $routeName);
@@ -33,7 +30,7 @@ class PageController extends PublicController {
             return new Page($objectId, $objectType);
         });
 
-        return $cache->setThemeMetadata()->render($parameters);
+        return $cache->setThemeMetadata()->render();
     }
 
 }
