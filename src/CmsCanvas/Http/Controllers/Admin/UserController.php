@@ -168,6 +168,10 @@ class UserController extends AdminController {
         $content->timezones = $timezones;
         $content->user = $user;
 
+        $this->layout->breadcrumbs = [
+            'user' => 'Users', 
+            Request::path() => (empty($user) ? 'Add' : 'Edit').' User'
+        ];
         $this->layout->content = $content;
     }
 

@@ -118,6 +118,10 @@ class PermissionController extends AdminController {
         $content->permission = $permission;
         $content->roles = $roles;
 
+        $this->layout->breadcrumbs = [
+            'user/permission' => 'Permissions', 
+            Request::path() => (empty($permission) ? 'Add' : 'Edit').' Permission'
+        ];
         $this->layout->content = $content;
     }
 

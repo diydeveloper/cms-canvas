@@ -34,6 +34,7 @@ class Item extends Model {
         'disable_current_flag',
         'disable_current_ancestor_flag',
         'hidden_flag',
+        'use_entry_title_flag',
     ];
 
     /**
@@ -99,6 +100,27 @@ class Item extends Model {
     public function entry()
     {
         return $this->hasOne('CmsCanvas\Models\Content\Entry', 'id', 'entry_id');
+    }
+
+    /**
+     * Returns all data for all lanaguages for the current navigation item
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function allData()
+    {
+        return $this->hasMany('CmsCanvas\Models\Content\Navigation\Item\Data', 'navigation_item_id', 'id'); 
+    }
+
+    /**
+     * Defines a one to one relationship with navigation item data using the language locale
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function data()
+    {
+        return $this->hasOne('CmsCanvas\Models\Content\Navigation\Item\Data', 'navigation_item_id', 'id')
+            ->where('language_locale', \Lang::getLocale());
     }
 
     /**

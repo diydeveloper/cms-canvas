@@ -8,18 +8,23 @@
 
         <div class="buttons">
             <a class="button" href="javascript:void(0);" onClick="$('#form').submit();"><span>Save</span></a>
-            <a class="button" href="{!! Admin::url('content/navigation') !!}"><span>Cancel</span></a>
+            <a class="button" href="{!! Admin::url('content/navigation/'.$navigation->id.'/tree') !!}"><span>Cancel</span></a>
         </div>
     </div>
     <div class="content">
         {!! Form::model($item, array('id' => 'form')) !!}
-        <div id="tabs">
+        <div class="tabs">
             <ul class="htabs">
                 <li><a href="#item-tab">Item</a></li>
                 <li><a href="#advanced-tab">Advanced</a></li>
             </ul>
             <div id="item-tab">
                 <div class="form">
+                    <div>
+                        <label for="title"><span class="required">*</span> Title:</label>
+                        {!! Form::text('title') !!}
+                    </div>
+
                     <div>
                         <label for="type"><span class="required">*</span> Link Type:</label>
                         {!! Form::select('type', ['page' => 'Page', 'url' => 'URL'], null, ['id' => 'type']) !!}
@@ -31,8 +36,35 @@
                     </div>
 
                     <div>
-                        <label for="title"><span class="required url_div">*</span> Link Text:<span class="help page_div">Leave blank to use the page title</span></label>
-                        {!! Form::text('title') !!}
+                        <label for="title">Link Text:<span class="help">Leave blank to use the navigation item title</span></label>
+                        <div style="display:inline-block; vertical-align: middle;">
+                            <div class="tabs">
+                                <ul class="htabs">
+                                    @foreach ($languages as $language)
+                                        <li>
+                                            <a href="#translate-link_text_{!! $language->locale !!}">{!! $language->language !!}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                @foreach ($languages as $language)
+                                    <div id="translate-link_text_{!! $language->locale !!}">
+                                        <?php $itemData = ((!empty($item)) ? $item->allData->getFirstWhere('language_locale', $language->locale) : null); ?>
+                                        {!! Form::text(
+                                            'link_text_'.$language->locale, 
+                                            ((!empty($itemData)) ? $itemData->link_text : ''), 
+                                            ['class' => 'link_text', ((!empty($item->use_entry_title_flag)) ? 'disabled' : '')]) 
+                                        !!}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <input type="hidden" name="use_entry_title_flag" value="0">
+                        <div class="page_div" style="display: inline-block; margin-left: 10px; border-left: 1px dashed #CCCCCC; padding: 10px;">
+                            <span>
+                                {!! Form::checkbox('use_entry_title_flag', 1, null, ['id' => 'use_entry_title_flag']) !!}
+                                <label for="use_entry_title_flag">Use Entry Title</label>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="url_div">
@@ -110,7 +142,16 @@
 
         $('#type').trigger('change');
 
-        $( "#tabs" ).tabs();
+        $(".tabs").tabs();
+
+        $("#use_entry_title_flag").change(function() {
+            if ($("#use_entry_title_flag").prop("checked")) {
+                $(".link_text").val('');
+                $(".link_text").prop('disabled', true);
+            } else {
+                $(".link_text").prop('disabled', false);
+            }
+        })
 
     });
 </script>

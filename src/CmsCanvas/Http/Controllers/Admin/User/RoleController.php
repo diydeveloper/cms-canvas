@@ -114,6 +114,10 @@ class RoleController extends AdminController {
         $content->role = $role;
         $content->permissions = $permissions;
 
+        $this->layout->breadcrumbs = [
+            'user/role' => 'Roles', 
+            Request::path() => (empty($role) ? 'Add' : 'Edit').' Role'
+        ];
         $this->layout->content = $content;
     }
 

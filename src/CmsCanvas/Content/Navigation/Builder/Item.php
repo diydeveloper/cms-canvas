@@ -120,7 +120,7 @@ class Item {
     {
         $contents = '<li'.$this->getListItemAttributes().'>';
         $contents .= '<a'.$this->getAnchorAttributes().'>';
-        $contents .= $this->getTitle();
+        $contents .= $this->getLinkText();
         $contents .= '</a>';
 
         if ($this->seperator != null) {
@@ -219,16 +219,30 @@ class Item {
     }
 
     /**
+     * Returns the preferred link text for the item
+     *
+     * @return string
+     */
+    public function getLinkText()
+    {
+        if ($this->navigationItem->use_entry_title_flag && !empty($this->navigationItem->entry->title)) {
+            return $this->navigationItem->entry->title;
+        } 
+
+        if (!empty($this->navigationItem->data->link_text)) {
+            return $this->navigationItem->data->link_text;
+        }
+
+        return $this->navigationItem->title;
+    }
+
+    /**
      * Returns the title for the item
      *
      * @return string
      */
     public function getTitle()
     {
-        if ($this->navigationItem->title == null) {
-            return $this->navigationItem->entry->title;
-        } 
-
         return $this->navigationItem->title;
     }
 

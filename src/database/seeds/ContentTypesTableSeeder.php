@@ -47,7 +47,7 @@ class ContentTypesTableSeeder extends Seeder {
     {{ entries.links() }}
 {% endif %}
 EOD
-                , 'short_name' => 'blog',
+                , 'short_name' => 'blog_entry',
                 'theme_layout' => 'default',
                 'url_title_flag' => 1,
                 'route' => 'blog/{year?}/{month?}/{day?}/{url_title?}',

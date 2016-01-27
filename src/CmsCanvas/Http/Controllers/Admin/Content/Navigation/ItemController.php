@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Admin, Redirect, Validator, Input, Config;
+use View, Admin, Redirect, Validator, Input, Config, Request;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
 use CmsCanvas\Models\Content\Entry;
+use CmsCanvas\Models\Language;
 
 class ItemController extends AdminController {
 
@@ -27,10 +28,21 @@ class ItemController extends AdminController {
             ->orWhere('id', Config::get('cmscanvas::config.site_homepage'))
             ->get();
 
+        $languages = Language::where('active', 1)
+            ->orderBy('default', 'desc')
+            ->orderBy('language', 'asc')
+            ->get();
+
         $content->navigation = $navigation;
         $content->item = $item;
         $content->entries = $entries;
+        $content->languages = $languages;
 
+        $this->layout->breadcrumbs = [
+            'content/navigation' => 'Navigations', 
+            'content/navigation/'.$navigation->id.'/tree' => 'Navigation Tree', 
+            Request::path() => (empty($item) ? 'Add' : 'Edit').' Navigation Item'
+        ];
         $this->layout->content = $content;
     }
 
@@ -41,10 +53,12 @@ class ItemController extends AdminController {
      */
     public function postEdit($navigation, $item = null)
     {
-        $rules['type'] = 'required';
-        if (Input::get('type') == 'url') {
-            $rules['title'] = 'required';
-        } else {
+        $rules =[
+            'title' => 'required',
+            'type' => 'required',
+        ];
+
+        if (Input::get('type') != 'url') {
             $rules['entry_id'] = 'required';
         }
 
@@ -74,6 +88,20 @@ class ItemController extends AdminController {
         }
 
         $navigationItem->save();
+
+        $navigationItem->allData()->delete();
+
+        $languages = Language::where('active', 1)->get();
+        foreach ($languages as $language) {
+            $linkText = Input::get('link_text_'.$language->locale);
+            if ($linkText !== '' && $linkText !== null) {
+                $itemData = new \CmsCanvas\Models\Content\Navigation\Item\Data;
+                $itemData->navigation_item_id = $navigationItem->id;
+                $itemData->link_text = $linkText;
+                $itemData->language_locale = $language->locale;
+                $itemData->save();
+            }
+        }
 
         return Redirect::route('admin.content.navigation.tree', $navigation->id)
             ->with('message', "Item was successfully updated.");

@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Navigation;
 
-use Request, Cache;
+use Request, Cache, Lang;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
 use CmsCanvas\Content\Navigation\Item\RenderCollection;
@@ -250,6 +250,7 @@ class Builder {
         if ($this->recursiveFlag && ($this->maxDepth === null || $this->maxDepth > $depth)) {
             $items->load(['children' => function($query) {
                 $query->orderBy('sort', 'asc');
+                $query->with('data');
             }]);
         }
 
@@ -270,7 +271,8 @@ class Builder {
     protected function getCachedTree()
     {
         $cache = Cache::rememberForever($this->getCacheKey(), function() {
-            $items = Item::join('navigations', 'navigation_items.navigation_id', '=', 'navigations.id')
+            $items = Item::with('data')
+                ->join('navigations', 'navigation_items.navigation_id', '=', 'navigations.id')
                 ->where('navigations.short_name', $this->shortName)
                 ->where('parent_id', ($this->startItemId ? $this->startItemId : null))
                 ->orderBy('sort', 'asc')
@@ -290,7 +292,10 @@ class Builder {
      */
     protected function getCacheKey()
     {
-        $key = $this->shortName.'.'.$this->startItemId.'.'.$this->recursiveFlag;
+        $key = $this->shortName;
+        $key .= '.'.Lang::getLocale();
+        $key .= '.'.$this->startItemId;
+        $key .= '.'.($this->recursiveFlag ? 'true' : 'false');
 
         if ($this->maxDepth !== null) {
             $key .= '.'.$this->maxDepth;

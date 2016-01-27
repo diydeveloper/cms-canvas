@@ -202,6 +202,10 @@ class EntryController extends AdminController {
         $content->contentType = $contentType;
         $content->revision = $revision;
 
+        $this->layout->breadcrumbs = [
+            'content/entry' => 'Entries', 
+            Request::path() => (empty($entry) ? 'Add' : 'Edit').' Entry'
+        ];
         $this->layout->content = $content;
     }
 
