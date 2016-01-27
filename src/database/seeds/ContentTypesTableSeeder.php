@@ -31,7 +31,7 @@ class ContentTypesTableSeeder extends Seeder {
                 'title' => 'Blog', 
                 'layout' => <<<EOD
 {% if url_title is not empty %}
-    {% set entry = entry(content_type='blog_entry', year=year, month=month, day=day, url_title=url_title, no_results_abort=404) %}
+    {% set entry = entry_first(content_type='blog_entry', year=year, month=month, day=day, url_title=url_title, no_results_abort=404) %}
     {{ entry.setThemeMetadata() }}
     <h1>{{ entry.title }}</h1>
     {{ entry.content }}
