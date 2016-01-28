@@ -160,6 +160,20 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
                 ->references('id')
                 ->on('entries');
         });
+
+        // navigation_item_data table constraints
+        Schema::table('navigation_item_data', function(Blueprint $table)
+        {
+            $table->foreign('navigation_item_id')
+                ->references('id')
+                ->on('navigation_items')
+                ->onDelete('cascade');
+
+            $table->foreign('language_locale')
+                ->references('locale')
+                ->on('languages')
+                ->onDelete('cascade');
+        });
     }
 
     /**
@@ -237,6 +251,13 @@ class CmsCanvasCreateDefaultConstraints extends Migration {
             $table->dropForeign('navigation_items_navigation_id_foreign');
             $table->dropForeign('navigation_items_parent_id_foreign');
             $table->dropForeign('navigation_items_entry_id_foreign');
+        });
+
+        // navigation_item_data table constraints
+        Schema::table('navigation_item_data', function(Blueprint $table)
+        {
+            $table->dropForeign('navigation_item_data_navigation_item_id_foreign');
+            $table->dropForeign('navigation_item_data_language_locale_foreign');
         });
     }
 

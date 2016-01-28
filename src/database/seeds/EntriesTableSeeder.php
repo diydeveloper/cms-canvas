@@ -16,6 +16,7 @@ class EntriesTableSeeder extends Seeder {
 
         $contentType = ContentType::where('short_name', 'page')->first();
         $entryStatus = EntryStatus::where('key_name', 'PUBLISHED')->first();
+	$now = Carbon::now();
 
         DB::table('entries')->insert([
             [
@@ -23,8 +24,11 @@ class EntriesTableSeeder extends Seeder {
                 'entry_status_id' => $entryStatus->id, 
                 'title' => 'Home', 
                 'route' => 'home', 
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'template_flag' => 0, 
+                'created_at' => $now,
+                'created_at_local' => $now,
+                'updated_at' => $now,
+                'updated_at_local' => $now,
             ],
             [
                 'content_type_id' => $contentType->id, 
@@ -32,8 +36,10 @@ class EntriesTableSeeder extends Seeder {
                 'title' => 'Page Not Found', 
                 'route' => null, 
                 'template_flag' => 1, 
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => $now,
+                'created_at_local' => $now,
+                'updated_at' => $now,
+                'updated_at_local' => $now,
             ],
         ]);
     }
