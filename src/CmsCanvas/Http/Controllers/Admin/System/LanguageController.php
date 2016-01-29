@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\System;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass, Config;
+use View, Theme, Admin, Validator, stdClass, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Permission;
-use \CmsCanvas\Exceptions\Exception;
+use CmsCanvas\Exceptions\Exception;
+use Illuminate\Http\Request;
 
 class LanguageController extends AdminController {
 
@@ -15,7 +16,7 @@ class LanguageController extends AdminController {
      *
      * @return View
      */
-    public function getLanguages()
+    public function getLanguages(Request $request)
     {
         $content = View::make('cmscanvas::admin.system.language.languages');
 
@@ -31,7 +32,7 @@ class LanguageController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Languages'];
+        $this->layout->breadcrumbs = [$request->path() => 'Languages'];
         $this->layout->content = $content;
 
     }
@@ -45,7 +46,7 @@ class LanguageController extends AdminController {
     {
         Language::processFilterRequest();
 
-        return Redirect::route('admin.system.language.languages');
+        return redirect()->route('admin.system.language.languages');
     }
 
     /**
@@ -53,12 +54,12 @@ class LanguageController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.system.language.languages')
+            return redirect()->route('admin.system.language.languages')
                 ->with('notice', 'You must select at least one language to delete.');
         }
 
@@ -67,11 +68,11 @@ class LanguageController extends AdminController {
         try {
             Language::destroy($selected);
         } catch(Exception $e) {
-            return Redirect::route('admin.system.language.languages')
+            return redirect()->route('admin.system.language.languages')
                 ->with('error', $e->getMessage());;
         }
 
-        return Redirect::route('admin.system.language.languages')
+        return redirect()->route('admin.system.language.languages')
             ->with('message', 'The selected languages(s) were sucessfully deleted.');;
     }
 
@@ -100,7 +101,7 @@ class LanguageController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($language = null)
+    public function getEdit(Request $request, $language = null)
     {
         $content = View::make('cmscanvas::admin.system.language.edit');
 
@@ -108,7 +109,7 @@ class LanguageController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'system/language' => 'Languages', 
-            Request::path() => (($language == null) ? 'Add' : 'Edit').' Language'
+            $request->path() => (($language == null) ? 'Add' : 'Edit').' Language'
         ];
 
         $this->layout->content = $content;
@@ -119,7 +120,7 @@ class LanguageController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($language = null)
+    public function postEdit(Request $request, $language = null)
     {
         $rules = [
             'language' => 'required|max:65',
@@ -127,32 +128,32 @@ class LanguageController extends AdminController {
                 ."|unique:languages,locale".(($language == null) ? "" : ",{$language->id}"),
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($language == null) {
-                return Redirect::route('admin.system.language.add')
+                return redirect()->route('admin.system.language.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.system.language.edit', $language->id)
+                return redirect()->route('admin.system.language.edit', $language->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $language = ($language == null) ? new Language() : $language;
-        $language->fill(Input::all());
+        $language->fill($request->all());
 
         try {
             $language->save();
         } catch(Exception $e) {
-            return Redirect::route('admin.system.language.edit', $language->id)
+            return redirect()->route('admin.system.language.edit', $language->id)
                 ->withInput()
                 ->with('error', $e->getMessage());
         }
 
-        return Redirect::route('admin.system.language.languages', $language->id)
+        return redirect()->route('admin.system.language.languages', $language->id)
             ->with('message', "{$language->language} was successfully updated.");
     }
 
@@ -161,7 +162,7 @@ class LanguageController extends AdminController {
      *
      * @return View
      */
-    public function setDefault($language)
+    public function setDefault(Request $request, $language)
     {
         $affectedRows = Language::where('default', 1)->update(['default' => 0]);
 
@@ -170,11 +171,11 @@ class LanguageController extends AdminController {
         try {
             $language->save();
         } catch(Exception $e) {
-            return Redirect::route('admin.system.language.languages', $language->id)
+            return redirect()->route('admin.system.language.languages', $language->id)
                 ->with('error', "{$language->language} can not be set to the default language while \"Inactive\".");
         }
 
-        return Redirect::route('admin.system.language.languages', $language->id)
+        return redirect()->route('admin.system.language.languages', $language->id)
             ->with('message', "{$language->language} was successfully set as the default language.");
     }
 

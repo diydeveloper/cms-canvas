@@ -28,7 +28,7 @@
                         {!! Form::label('avatar', 'Avatar:') !!}
                         <div style="display: inline-block; vertical-align: middle;">
                             <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
-                                <img id="avatar_thumbnail" src="{!! Content::thumbnail(Input::old('avatar', ((empty($user)) ? null : $user->avatar)), ['width' => 100, 'height' => 100, 'crop' => true, 'no_image' => Theme::asset('images/portrait.jpg')]) !!}" />
+                                <img id="avatar_thumbnail" src="{!! Content::thumbnail(old('avatar', ((empty($user)) ? null : $user->avatar)), ['width' => 100, 'height' => 100, 'crop' => true, 'no_image' => Theme::asset('images/portrait.jpg')]) !!}" />
                             </a>
 
                             <a class="choose_image" href="javascript:void(0);"><span>Add</span></a> /

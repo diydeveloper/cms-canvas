@@ -485,7 +485,7 @@ class Theme {
             $javascriptOrderArray = 'headerJavascriptOrder';
         }
 
-        $javascriptIncludes = "\n\t<script>var BASE_HREF=\"" . url() . "\"</script>";
+        $javascriptIncludes = "\n\t<script>var BASE_HREF=\"" . url('/') . "\"</script>";
 
         foreach ($this->$javascriptOrderArray as $javascriptOrder) {
             if ($javascriptOrder['array'] == 'javascripts') {

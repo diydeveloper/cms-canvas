@@ -5,9 +5,8 @@ namespace CmsCanvas\Http\Middleware;
 use Cache;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Routing\TerminableMiddleware;
 
-class FlushCache implements TerminableMiddleware {
+class FlushCache {
 
     /**
      * The Guard implementation.

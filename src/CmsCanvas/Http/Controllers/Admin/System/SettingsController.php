@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\System;
 
-use View, Request, stdClass, Theme, Config, Input, Redirect, Validator;
+use View, stdClass, Theme, Config, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Timezone;
+use Illuminate\Http\Request;
 
 class SettingsController extends AdminController {
 
@@ -15,7 +16,7 @@ class SettingsController extends AdminController {
      *
      * @return View
      */
-    public function getGeneralSettings()
+    public function getGeneralSettings(Request $request)
     {
         $content = View::make('cmscanvas::admin.system.settings.generalSettings');
 
@@ -32,7 +33,7 @@ class SettingsController extends AdminController {
         $content->entries = Entry::orderBy('title', 'asc')->get();
         $content->timezones = Timezone::all();
 
-        $this->layout->breadcrumbs = [Request::path() => 'General Settings'];
+        $this->layout->breadcrumbs = [$request->path() => 'General Settings'];
         $this->layout->content = $content;
     }
 
@@ -41,7 +42,7 @@ class SettingsController extends AdminController {
      *
      * @return void
      */
-    public function postGeneralSettings()
+    public function postGeneralSettings(Request $request)
     {
         $rules = [
             'site_name' => 'required',
@@ -52,10 +53,10 @@ class SettingsController extends AdminController {
             'layout' => 'required',
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::route('admin.system.settings.general-settings')
+            return redirect()->route('admin.system.settings.general-settings')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
@@ -63,7 +64,7 @@ class SettingsController extends AdminController {
         $settingItems = Setting::all();
 
         foreach ($settingItems as $settingItem) {
-            $value = Input::get($settingItem->setting);
+            $value = $request->input($settingItem->setting);
 
             if ($value !== null) {
                 $settingItem->value = $value;
@@ -71,7 +72,7 @@ class SettingsController extends AdminController {
             }
         }
 
-        return Redirect::route('admin.system.settings.general-settings')
+        return redirect()->route('admin.system.settings.general-settings')
             ->with('message', "Settings updated successfully.");
     }
 
@@ -80,11 +81,11 @@ class SettingsController extends AdminController {
      *
      * @return string
      */
-    public function postThemeLayouts()
+    public function postThemeLayouts(Request $request)
     {
         $response['status'] = 'OK';
 
-        $theme = Input::get('theme');
+        $theme = $request->input('theme');
 
         if ($theme != null) {
             $layouts = Theme::getThemeLayouts($theme);
@@ -108,7 +109,7 @@ class SettingsController extends AdminController {
      *
      * @return View
      */
-    public function getServerInfo()
+    public function getServerInfo(Request $request)
     {
         Theme::addStylesheet(Theme::asset('css/server_info.css'));
 
@@ -122,7 +123,7 @@ class SettingsController extends AdminController {
         $content = View::make('cmscanvas::admin.system.settings.serverInfo');
         $content->phpInfo = $phpInfo;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Server Info'];
+        $this->layout->breadcrumbs = [$request->path() => 'Server Info'];
         $this->layout->content = $content;
     }
 

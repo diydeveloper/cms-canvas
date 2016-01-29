@@ -2,10 +2,11 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, stdClass, Config;
+use View, Theme, Admin, Validator, stdClass, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Permission;
+use Illuminate\Http\Request;
 
 class TypeController extends AdminController {
 
@@ -14,7 +15,7 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function getTypes()
+    public function getTypes(Request $request)
     {
         $content = View::make('cmscanvas::admin.content.type.types');
 
@@ -30,7 +31,7 @@ class TypeController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Content Types'];
+        $this->layout->breadcrumbs = [$request->path() => 'Content Types'];
         $this->layout->content = $content;
 
     }
@@ -44,7 +45,7 @@ class TypeController extends AdminController {
     {
         Type::processFilterRequest();
 
-        return Redirect::route('admin.content.type.types');
+        return redirect()->route('admin.content.type.types');
     }
 
     /**
@@ -52,12 +53,12 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.type.types')
+            return redirect()->route('admin.content.type.types')
                 ->with('notice', 'You must select at least one content type to delete.');
         }
 
@@ -65,7 +66,7 @@ class TypeController extends AdminController {
 
         Type::destroy($selected);
 
-        return Redirect::route('admin.content.type.types')
+        return redirect()->route('admin.content.type.types')
             ->with('message', 'The selected content type(s) were sucessfully deleted.');;
     }
 
@@ -94,7 +95,7 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($contentType = null)
+    public function getEdit(Request $request, $contentType = null)
     {
         if ($contentType == null) {
             $content = View::make('cmscanvas::admin.content.type.add');
@@ -110,7 +111,7 @@ class TypeController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'content/type' => 'Content Types', 
-            Request::path() => (($contentType == null) ? 'Add' : 'Edit').' Content Type'
+            $request->path() => (($contentType == null) ? 'Add' : 'Edit').' Content Type'
         ];
 
         $this->layout->content = $content;
@@ -121,7 +122,7 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($contentType = null)
+    public function postEdit(Request $request, $contentType = null)
     {
         $rules = [
             'title' => 'required|max:255',
@@ -133,29 +134,29 @@ class TypeController extends AdminController {
 
         $messages = [];
         
-        $validator = Validator::make(Input::all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             if ($contentType == null) {
-                return Redirect::route('admin.content.type.add')
+                return redirect()->route('admin.content.type.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.content.type.edit', $contentType->id)
+                return redirect()->route('admin.content.type.edit', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $contentType = ($contentType == null) ? new Type() : $contentType;
-        $contentType->fill(Input::all());
+        $contentType->fill($request->all());
         $contentType->save();
 
-        if (Input::get('save_exit')) {
-            return Redirect::route('admin.content.type.types')
+        if ($request->input('save_exit')) {
+            return redirect()->route('admin.content.type.types')
                 ->with('message', "{$contentType->title} was successfully updated.");
         } else {
-            return Redirect::route('admin.content.type.edit', $contentType->id)
+            return redirect()->route('admin.content.type.edit', $contentType->id)
                 ->with('message', "{$contentType->title} was successfully updated.");
         }
     }

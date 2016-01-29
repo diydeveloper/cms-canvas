@@ -2,12 +2,13 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Admin, Redirect, Validator, Input, Config, Request;
+use View, Admin, Validator, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Language;
+use Illuminate\Http\Request;
 
 class ItemController extends AdminController {
 
@@ -16,7 +17,7 @@ class ItemController extends AdminController {
      *
      * @return \Illuminate\View\View
      */
-    public function getEdit($navigation, $item = null)
+    public function getEdit(Request $request, $navigation, $item = null)
     {
         $content = View::make('cmscanvas::admin.content.navigation.item.edit');
 
@@ -41,7 +42,7 @@ class ItemController extends AdminController {
         $this->layout->breadcrumbs = [
             'content/navigation' => 'Navigations', 
             'content/navigation/'.$navigation->id.'/tree' => 'Navigation Tree', 
-            Request::path() => (empty($item) ? 'Add' : 'Edit').' Navigation Item'
+            $request->path() => (empty($item) ? 'Add' : 'Edit').' Navigation Item'
         ];
         $this->layout->content = $content;
     }
@@ -51,33 +52,33 @@ class ItemController extends AdminController {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEdit($navigation, $item = null)
+    public function postEdit(Request $request, $navigation, $item = null)
     {
         $rules =[
             'title' => 'required',
             'type' => 'required',
         ];
 
-        if (Input::get('type') != 'url') {
+        if ($request->input('type') != 'url') {
             $rules['entry_id'] = 'required';
         }
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($item == null) {
-                return Redirect::route('admin.content.navigation.item.add', [$navigation->id])
+                return redirect()->route('admin.content.navigation.item.add', [$navigation->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.content.navigation.item.edit', [$navigation->id, $item->id])
+                return redirect()->route('admin.content.navigation.item.edit', [$navigation->id, $item->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $navigationItem = ($item == null) ? new Item : $item;
-        $navigationItem->fill(Input::all());
+        $navigationItem->fill($request->all());
         if ($navigationItem->type == 'url') {
             $navigationItem->entry_id = null;
         }
@@ -93,7 +94,7 @@ class ItemController extends AdminController {
 
         $languages = Language::where('active', 1)->get();
         foreach ($languages as $language) {
-            $linkText = Input::get('link_text_'.$language->locale);
+            $linkText = $request->input('link_text_'.$language->locale);
             if ($linkText !== '' && $linkText !== null) {
                 $itemData = new \CmsCanvas\Models\Content\Navigation\Item\Data;
                 $itemData->navigation_item_id = $navigationItem->id;
@@ -103,7 +104,7 @@ class ItemController extends AdminController {
             }
         }
 
-        return Redirect::route('admin.content.navigation.tree', $navigation->id)
+        return redirect()->route('admin.content.navigation.tree', $navigation->id)
             ->with('message', "Item was successfully updated.");
     }
 
@@ -116,7 +117,7 @@ class ItemController extends AdminController {
     {
         $item->delete();
 
-        return Redirect::route('admin.content.navigation.tree', $navigation->id)
+        return redirect()->route('admin.content.navigation.tree', $navigation->id)
             ->with('message', 'Navigation item deleted successfully.');;
     }
 

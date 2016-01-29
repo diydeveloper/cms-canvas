@@ -13,7 +13,7 @@ Route::model('navigationItem', 'CmsCanvas\Models\Content\Navigation\Item');
 Route::model('language', 'CmsCanvas\Models\Language');
 Route::model('revision', 'CmsCanvas\Models\Content\Revision');
 
-Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function() {
+Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function() {
 
     Route::get('/', ['as' => 'admin.index', 'uses' => 'Admin\DashboardController@getDashboard']);
     Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'Admin\DashboardController@getDashboard']);
@@ -73,7 +73,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::post('add', ['as' => 'admin.user.role.add.post', 'permission' => 'ADMIN_ROLE_CREATE', 'uses' => 'Admin\User\RoleController@postEdit']);
 
             Route::get('{role}/edit', ['as' => 'admin.user.role.edit', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'Admin\User\RoleController@getEdit']);
-            Route::post('{role}/edit', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.user.role.edit.post', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'Admin\User\RoleController@postEdit']);
+            Route::post('{role}/edit', ['middleware' => ['cmscanvas.flushCache'], 'as' => 'admin.user.role.edit.post', 'permission' => 'ADMIN_ROLE_EDIT', 'uses' => 'Admin\User\RoleController@postEdit']);
 
         });
 
@@ -196,7 +196,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
 });
 
-Route::group(['prefix' => Admin::getUrlPrefix()], function() {
+Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web']], function() {
 
     Route::get('user/login', ['as' => 'admin.user.login', 'uses' => 'Admin\UserController@getLogin']);
     Route::post('user/login', ['as' => 'admin.user.login.post', 'uses' => 'Admin\UserController@postLogin']);

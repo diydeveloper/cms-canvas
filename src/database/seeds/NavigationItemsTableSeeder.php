@@ -19,6 +19,7 @@ class NavigationItemsTableSeeder extends Seeder {
 
         DB::table('navigation_items')->insert([
             [
+                'title' => 'Home', 
                 'navigation_id' => $navigation->id, 
                 'entry_id' => $entry->id, 
                 'type' => 'page',

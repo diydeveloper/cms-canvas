@@ -71,7 +71,7 @@
                 <div class="form">
                     <div>
                         {!! Form::label('route', 'Route:') !!}
-                        <span style="line-height: 24px; "> {!! url() !!}/ </span>
+                        <span style="line-height: 24px; "> {!! url('/') !!}/ </span>
                         {!! Form::text('route') !!}
                     </div>
                     <div>

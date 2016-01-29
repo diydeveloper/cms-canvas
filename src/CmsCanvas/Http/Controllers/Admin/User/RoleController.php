@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\User;
 
-use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
+use View, Theme, Admin, Session, Validator, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Permission;
 use CmsCanvas\Container\Database\OrderBy;
+use Illuminate\Http\Request;
 
 class RoleController extends AdminController {
 
@@ -15,7 +16,7 @@ class RoleController extends AdminController {
      *
      * @return View
      */
-    public function getRoles()
+    public function getRoles(Request $request)
     {
         $content = View::make('cmscanvas::admin.user.role.roles');
 
@@ -31,7 +32,7 @@ class RoleController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = ['user' => 'Users', Request::path() => 'Role'];
+        $this->layout->breadcrumbs = ['user' => 'Users', $request->path() => 'Role'];
         $this->layout->content = $content;
     }
 
@@ -44,7 +45,7 @@ class RoleController extends AdminController {
     {
         Role::processFilterRequest();
 
-        return Redirect::route('admin.user.role.roles');
+        return redirect()->route('admin.user.role.roles');
     }
 
     /**
@@ -52,12 +53,12 @@ class RoleController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.user.role.roles')
+            return redirect()->route('admin.user.role.roles')
                 ->with('notice', 'You must select at least one role to delete.');
         }
 
@@ -68,7 +69,7 @@ class RoleController extends AdminController {
 
         foreach ($roles as $role) {
             if ($role->users()->count() > 0) {
-                return Redirect::route('admin.user.role.roles')
+                return redirect()->route('admin.user.role.roles')
                     ->with('error', 'Failed to delete role(s) because one or more of the selected has users still assigned.');
             }
         }
@@ -77,7 +78,7 @@ class RoleController extends AdminController {
             $role->delete();
         }
 
-        return Redirect::route('admin.user.role.roles')
+        return redirect()->route('admin.user.role.roles')
             ->with('message', 'The selected role(s) were sucessfully deleted.');;
     }
 
@@ -106,7 +107,7 @@ class RoleController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($role = null)
+    public function getEdit(Request $request, $role = null)
     {
         $permissions = Permission::orderBy('name', 'asc')->get();
 
@@ -116,7 +117,7 @@ class RoleController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'user/role' => 'Roles', 
-            Request::path() => (empty($role) ? 'Add' : 'Edit').' Role'
+            $request->path() => (empty($role) ? 'Add' : 'Edit').' Role'
         ];
         $this->layout->content = $content;
     }
@@ -126,32 +127,32 @@ class RoleController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($role = null)
+    public function postEdit(Request $request, $role = null)
     {
         $rules = [
             'name' => 'required',
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($role == null) {
-                return Redirect::route('admin.user.role.add')
+                return redirect()->route('admin.user.role.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.user.role.edit', $role->id)
+                return redirect()->route('admin.user.role.edit', $role->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $role = ($role == null) ? new Role : $role;
-        $role->fill(Input::all());
+        $role->fill($request->all());
         $role->save();
-        $role->permissions()->sync(Input::get('role_permissions', []));
+        $role->permissions()->sync($request->input('role_permissions', []));
 
-        return Redirect::route('admin.user.role.roles')
+        return redirect()->route('admin.user.role.roles')
             ->with('message', "{$role->name} was successfully updated.");
     }
 

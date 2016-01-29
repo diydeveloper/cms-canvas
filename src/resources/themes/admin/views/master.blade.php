@@ -73,7 +73,7 @@
                         @include('theme::partials.navigation')
 
                         <ul class="right">
-                            <li id="visit_site"><a class="top" onClick="window.name = 'ee_admin'" target="ee_cms" href="{!! url() !!}"><img src="{!! Theme::asset('images/browser_window.png') !!}" alt="" style="vertical-align:middle; margin-right: 3px;" /> Visit Site</a></li>
+                            <li id="visit_site"><a class="top" onClick="window.name = 'ee_admin'" target="ee_cms" href="{!! url('/') !!}"><img src="{!! Theme::asset('images/browser_window.png') !!}" alt="" style="vertical-align:middle; margin-right: 3px;" /> Visit Site</a></li>
                         </ul>
                         <script type="text/javascript">
                             $(document).ready(function() {

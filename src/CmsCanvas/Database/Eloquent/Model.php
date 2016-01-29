@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Database\Eloquent;
 
-use Eloquent, Session, Input, stdClass, Config, Auth;
+use Eloquent, Session, Request, stdClass, Config, Auth;
 use CmsCanvas\Container\Database\OrderBy;
 use CmsCanvas\Database\Eloquent\Relations\Pivot;
 use CmsCanvas\Database\Eloquent\Collection;
@@ -40,12 +40,12 @@ class Model extends Eloquent {
     {
         $class = get_called_class();
 
-        if (Input::get('clear_filter')) {
+        if (Request::input('clear_filter')) {
             $class::forgetSessionFilter();
-        } elseif (Input::get('filter')) {
-            $class::setSessionFilter(Input::get('filter'));
-        } elseif (is_array(Input::get('orderBy'))) {
-            $class::setSessionOrderBy(Input::get('orderBy'));
+        } elseif (Request::input('filter')) {
+            $class::setSessionFilter(Request::input('filter'));
+        } elseif (is_array(Request::input('orderBy'))) {
+            $class::setSessionOrderBy(Request::input('orderBy'));
         }
     }
 

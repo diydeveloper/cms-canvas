@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Input;
+use View, Request;
 use CmsCanvas\Content\Type\FieldType;
 
 class Checkbox extends FieldType {
@@ -61,8 +61,8 @@ class Checkbox extends FieldType {
     {
         // If the hidden checkbox indicator field is posted but the field is not, 
         // this means that no checkboxes were selected
-        if (Input::get($this->getKey().'_checkbox') !== false 
-            && Input::get($this->getKey()) === false
+        if (Request::input($this->getKey().'_checkbox') !== false 
+            && Request::input($this->getKey()) === false
         ) {
             return null;
         }

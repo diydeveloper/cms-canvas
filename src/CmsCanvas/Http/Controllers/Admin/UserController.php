@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin;
 
-use View, Theme, Admin, Request, Input, Redirect, DB, Validator, Auth, Hash, stdClass, Session, Content, Config, Storage;
+use View, Theme, Admin, DB, Validator, Auth, Hash, stdClass, Session, Content, Config, Storage;
 use CmsCanvas\Models\User;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
+use Illuminate\Http\Request;
 
 class UserController extends AdminController {
 
@@ -18,7 +19,7 @@ class UserController extends AdminController {
     public function getLogin()
     {
         if (Auth::check()) {
-            return Redirect::route('admin.index');
+            return redirect()->route('admin.index');
         }
 
         $this->layout->content = View::make('cmscanvas::admin.user.login');
@@ -30,21 +31,22 @@ class UserController extends AdminController {
      *
      * @return Redirect
      */
-    public function postLogin()
+    public function postLogin(Request $request)
     {
         $credentials = [
-            'email' => Input::get('email'),
-            'password' => Input::get('password'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
             'active' => 1,
         ];
 
-        $rememberMe = (Input::get('remember_me')) ? true : false;
+        $rememberMe = ($request->input('remember_me')) ? true : false;
 
         if (Auth::attempt($credentials, $rememberMe)) {
-            return Redirect::route('admin.index');
+            return redirect()->route('admin.index');
         }
 
-        return Redirect::route('admin.user.login')->withInput(Input::except('password'))
+        return redirect()->route('admin.user.login')
+            ->withInput($request->except('password'))
             ->with('error', 'Login failed!');
     }
 
@@ -58,7 +60,7 @@ class UserController extends AdminController {
         Auth::logout();
         Session::flush();
 
-        return Redirect::route('admin.user.login');
+        return redirect()->route('admin.user.login');
     }
 
     /**
@@ -66,7 +68,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function getUsers()
+    public function getUsers(Request $request)
     {
         $content = View::make('cmscanvas::admin.user.users');
 
@@ -86,7 +88,7 @@ class UserController extends AdminController {
         $content->orderBy = $orderBy;
         $content->roles = $roles;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Users'];
+        $this->layout->breadcrumbs = [$request->path() => 'Users'];
         $this->layout->content = $content;
 
     }
@@ -100,7 +102,7 @@ class UserController extends AdminController {
     {
         User::processFilterRequest();
 
-        return Redirect::route('admin.user.users');
+        return redirect()->route('admin.user.users');
     }
 
     /**
@@ -108,25 +110,25 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.user.users')
+            return redirect()->route('admin.user.users')
                 ->with('notice', 'You must select at least one user to delete.');
         }
 
         $selected = array_values($selected);
 
         if (in_array(Auth::user()->id, $selected)) {
-            return Redirect::route('admin.user.users')
+            return redirect()->route('admin.user.users')
                 ->with('error', 'Failed to delete user(s) because you cannot delete yourself.');
         }
 
         User::destroy($selected);
 
-        return Redirect::route('admin.user.users')
+        return redirect()->route('admin.user.users')
             ->with('message', 'The selected user(s) were sucessfully deleted.');;
     }
 
@@ -155,7 +157,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($user = null)
+    public function getEdit(Request $request, $user = null)
     {
         Theme::addPackage('avatar_image_field');
 
@@ -170,7 +172,7 @@ class UserController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'user' => 'Users', 
-            Request::path() => (empty($user) ? 'Add' : 'Edit').' User'
+            $request->path() => (empty($user) ? 'Add' : 'Edit').' User'
         ];
         $this->layout->content = $content;
     }
@@ -180,7 +182,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($user = null)
+    public function postEdit(Request $request, $user = null)
     {
         $rules = [
             'first_name' => 'required',
@@ -190,36 +192,36 @@ class UserController extends AdminController {
         ];
 
         // Require password to be set for a new user
-        if ($user == null || Input::get('password')) {
+        if ($user == null || $request->input('password')) {
             $rules['password'] = 'required|confirmed|min:6';
             $rules['password_confirmation'] = 'required';
         }
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($user == null) {
-                return Redirect::route('admin.user.add')
+                return redirect()->route('admin.user.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.user.edit', $user->id)
+                return redirect()->route('admin.user.edit', $user->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $user = ($user == null) ? new User : $user;
-        $user->fill(Input::all());
+        $user->fill($request->all());
 
-        if (Input::get('password')) {
-            $user->password = Hash::make(Input::get('password'));
+        if ($request->input('password')) {
+            $user->password = Hash::make($request->input('password'));
         }
 
         $user->save();
-        $user->roles()->sync(Input::get('user_roles', []));
+        $user->roles()->sync($request->input('user_roles', []));
 
-        return Redirect::route('admin.user.users')
+        return redirect()->route('admin.user.users')
             ->with('message', "{$user->getFullName()} was successfully updated.");
     }
 
@@ -228,10 +230,10 @@ class UserController extends AdminController {
      *
      * @return string
      */
-    public function postCreateAvatarThumbnail()
+    public function postCreateAvatarThumbnail(Request $request)
     {
         return Content::thumbnail(
-            Input::get('image_path'), 
+            $request->input('image_path'), 
             ['width' => 100, 'height' => 100, 'crop' => true, 'no_image' => Theme::asset('images/portrait.jpg')]
         );
     }
@@ -241,7 +243,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function getProfile($user)
+    public function getProfile(Request $request, $user)
     {
         $content = View::make('cmscanvas::admin.user.profile');
         $content->user = $user;
@@ -268,7 +270,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postEditProfile()
+    public function postEditProfile(Request $request)
     {
         $user = Auth::user();
 
@@ -279,18 +281,18 @@ class UserController extends AdminController {
             'phone' => 'regex:/[0-9]{10,11}/'
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::route('admin.user.account.editProfile')
+            return redirect()->route('admin.user.account.editProfile')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
 
-        $user->fill(Input::all());
+        $user->fill($request->all());
         $user->save();
 
-        return Redirect::route('admin.user.account.editProfile')
+        return redirect()->route('admin.user.account.editProfile')
             ->with('message', "Profile was successfully updated.");
     }
 
@@ -312,16 +314,16 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postUpdateAvatar()
+    public function postUpdateAvatar(Request $request)
     {
         $rules = [
             'image_upload' => 'required|max:2048|mimes:jpeg,gif,png',
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
-        if (empty(Input::get('remove_image')) && $validator->fails()) {
-            return Redirect::route('admin.user.account.updateAvatar')
+        if (empty($request->input('remove_image')) && $validator->fails()) {
+            return redirect()->route('admin.user.account.updateAvatar')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
@@ -333,11 +335,11 @@ class UserController extends AdminController {
             @unlink(public_path($user->avatar));
         }
 
-        if (empty(Input::get('remove_image'))) {
+        if (empty($request->input('remove_image'))) {
             $path = trim(Config::get('cmscanvas::config.avatars'), '/');
-            $extension = Input::file('image_upload')->getClientOriginalExtension();
+            $extension = $request->file('image_upload')->getClientOriginalExtension();
             $fileName = $user->id.'.'.$extension;
-            Input::file('image_upload')->move(public_path($path), $fileName);
+            $request->file('image_upload')->move(public_path($path), $fileName);
 
             $user->avatar = $path.'/'.$fileName;
         } else {
@@ -346,7 +348,7 @@ class UserController extends AdminController {
 
         $user->save();
 
-        return Redirect::route('admin.user.account.updateAvatar')
+        return redirect()->route('admin.user.account.updateAvatar')
             ->with('message', "Avatar was successfully updated.");
     }
 
@@ -367,26 +369,26 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postChangePassword()
+    public function postChangePassword(Request $request)
     {
         $rules = [
             'password' => 'required|confirmed|min:6',
             'password_confirmation' => 'required',
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::route('admin.user.account.changePassword')
+            return redirect()->route('admin.user.account.changePassword')
                 ->withInput()
                 ->with('error', $validator->messages()->all());
         }
 
         $user = Auth::user();
-        $user->password = Hash::make(Input::get('password'));
+        $user->password = Hash::make($request->input('password'));
         $user->save();
 
-        return Redirect::route('admin.user.account.changePassword')
+        return redirect()->route('admin.user.account.changePassword')
             ->with('message', "Password was successfully updated.");
     }
 

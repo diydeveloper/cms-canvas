@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass;
+use View, Theme, Admin, Validator, DB, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
 use CmsCanvas\Content\Navigation\Builder;
+use Illuminate\Http\Request;
 
 class NavigationController extends AdminController {
 
@@ -15,7 +16,7 @@ class NavigationController extends AdminController {
      *
      * @return View
      */
-    public function getNavigations()
+    public function getNavigations(Request $request)
     {
         $content = View::make('cmscanvas::admin.content.navigation.navigations');
 
@@ -29,7 +30,7 @@ class NavigationController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Navigations'];
+        $this->layout->breadcrumbs = [$request->path() => 'Navigations'];
         $this->layout->content = $content;
     }
 
@@ -42,7 +43,7 @@ class NavigationController extends AdminController {
     {
         Navigation::processFilterRequest();
 
-        return Redirect::route('admin.content.navigation.navigations');
+        return redirect()->route('admin.content.navigation.navigations');
     }
 
     /**
@@ -50,12 +51,12 @@ class NavigationController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.navigation.navigations')
+            return redirect()->route('admin.content.navigation.navigations')
                 ->with('notice', 'You must select at least one group to delete.');
         }
 
@@ -63,7 +64,7 @@ class NavigationController extends AdminController {
 
         Navigation::destroy($selected);
 
-        return Redirect::route('admin.content.navigation.navigations')
+        return redirect()->route('admin.content.navigation.navigations')
             ->with('message', 'The selected navigation(s) were sucessfully deleted.');;
     }
 
@@ -106,7 +107,7 @@ class NavigationController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($navigation = null)
+    public function postEdit(Request $request, $navigation = null)
     {
         $rules = [
             'title' => 'required|max:255',
@@ -114,25 +115,25 @@ class NavigationController extends AdminController {
                 ."|unique:content_types,short_name".(($navigation == null) ? "" : ",{$navigation->id}"),
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($navigation == null) {
-                return Redirect::route('admin.content.navigation.add', $contentType->id)
+                return redirect()->route('admin.content.navigation.add', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.content.navigation.edit', [$navigation->id])
+                return redirect()->route('admin.content.navigation.edit', [$navigation->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
         }
 
         $navigation = ($navigation == null) ? new Navigation : $navigation;
-        $navigation->fill(Input::all());
+        $navigation->fill($request->all());
         $navigation->save();
 
-        return Redirect::route('admin.content.navigation.navigations')
+        return redirect()->route('admin.content.navigation.navigations')
             ->with('message', "{$navigation->title} was successfully updated.");
     }
 
@@ -141,7 +142,7 @@ class NavigationController extends AdminController {
      *
      * @return View
      */
-    public function getTree($navigation)
+    public function getTree(Request $request, $navigation)
     {
         Theme::addPackage('nestedSortable');
         $builder = new Builder($navigation->short_name);
@@ -153,7 +154,7 @@ class NavigationController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'content/navigation' => 'Navigations', 
-            Request::path() => 'Navigation Tree'
+            $request->path() => 'Navigation Tree'
         ];
         $this->layout->content = $content;
     }
@@ -163,9 +164,9 @@ class NavigationController extends AdminController {
      *
      * @return string
      */
-    public function postTree()
+    public function postTree(Request $request)
     {
-        $list = Request::get('list');
+        $list = $request->input('list');
 
         if (! is_array($list)) {
             $list = [];

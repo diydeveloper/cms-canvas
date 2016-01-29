@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content;
 
-use View, Theme, Admin, Redirect, Validator, Request, Input, DB, stdClass, App, Auth, Config;
+use View, Theme, Admin, Validator, DB, stdClass, App, Auth, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
@@ -12,6 +12,7 @@ use CmsCanvas\Models\User;
 use CmsCanvas\Models\Content\Revision;
 use Carbon\Carbon;
 use Content;
+use Illuminate\Http\Request;
 
 class EntryController extends AdminController {
 
@@ -20,7 +21,7 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function getEntries()
+    public function getEntries(Request $request)
     {
         $content = View::make('cmscanvas::admin.content.entry.entries');
 
@@ -56,7 +57,7 @@ class EntryController extends AdminController {
         $content->viewableContentTypes = $viewableContentTypes;
         $content->entryStatuses = $entryStatuses;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Entries'];
+        $this->layout->breadcrumbs = [$request->path() => 'Entries'];
         $this->layout->content = $content;
 
     }
@@ -70,7 +71,7 @@ class EntryController extends AdminController {
     {
         Entry::processFilterRequest();
 
-        return Redirect::route('admin.content.entry.entries');
+        return redirect()->route('admin.content.entry.entries');
     }
 
     /**
@@ -78,12 +79,12 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function postDeleteVerify()
+    public function postDeleteVerify(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.entry.entries');
+            return redirect()->route('admin.content.entry.entries');
         }
 
         $entries = Entry::whereIn('id', $selected)->get();
@@ -91,7 +92,7 @@ class EntryController extends AdminController {
         $content = View::make('cmscanvas::admin.content.entry.deleteVerify');
         $content->entries = $entries;
 
-        $this->layout->breadcrumbs = [Request::path() => 'Entries'];
+        $this->layout->breadcrumbs = [$request->path() => 'Entries'];
         $this->layout->content = $content;
     }
 
@@ -100,14 +101,14 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
         $deleteSuccessfulFlag = false;
         $errors = [];
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.content.entry.entries')
+            return redirect()->route('admin.content.entry.entries')
                 ->with('notice', 'You must select at least one group to delete.');
         }
 
@@ -126,7 +127,7 @@ class EntryController extends AdminController {
             }
         }
 
-        $redirect = Redirect::route('admin.content.entry.entries');
+        $redirect = redirect()->route('admin.content.entry.entries');
 
         if (count($errors) > 0) {
             $redirect->with('error', $errors);
@@ -170,7 +171,7 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($contentType, $entry = null, $revision = null)
+    public function getEdit(Request $request, $contentType, $entry = null, $revision = null)
     {
         if ($entry == null) {
             $contentType->checkEntriesAllowed();
@@ -204,7 +205,7 @@ class EntryController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'content/entry' => 'Entries', 
-            Request::path() => (empty($entry) ? 'Add' : 'Edit').' Entry'
+            $request->path() => (empty($entry) ? 'Add' : 'Edit').' Entry'
         ];
         $this->layout->content = $content;
     }
@@ -214,7 +215,7 @@ class EntryController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($contentType, $entry = null, $revision = null)
+    public function postEdit(Request $request, $contentType, $entry = null, $revision = null)
     {
         if ($entry == null) {
             $contentType->checkEntriesAllowed();
@@ -236,15 +237,15 @@ class EntryController extends AdminController {
 
         $attributeNames = $contentFields->getAttributeNames();
 
-        $validator = Validator::make(Input::all(), $rules, [], $attributeNames);
+        $validator = Validator::make($request->all(), $rules, [], $attributeNames);
 
         if ($validator->fails()) {
             if ($entry == null) {
-                return Redirect::route('admin.content.entry.add', $contentType->id)
+                return redirect()->route('admin.content.entry.add', $contentType->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.content.entry.edit', [$contentType->id, $entry->id])
+                return redirect()->route('admin.content.entry.edit', [$contentType->id, $entry->id])
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
@@ -252,12 +253,12 @@ class EntryController extends AdminController {
 
         $createdAt = Carbon::createFromFormat(
             'd/M/Y h:i:s a', 
-            Input::get('created_at'), 
+            $request->input('created_at'), 
             Auth::user()->getTimezoneIdentifier()
         );
         $createdAt->setTimezone(Config::get('app.timezone'));
 
-        $data = Input::all();
+        $data = $request->all();
         $data['created_at'] = $createdAt;
         $data['created_at_local'] = $createdAt->copy()
             ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
@@ -294,11 +295,11 @@ class EntryController extends AdminController {
             $revision->save();
         }
 
-        if (Input::get('save_exit')) {
-            return Redirect::route('admin.content.entry.entries')
+        if ($request->input('save_exit')) {
+            return redirect()->route('admin.content.entry.entries')
                 ->with('message', "{$entry->title} was successfully updated.");
         } else {
-            return Redirect::route('admin.content.entry.edit', [$contentType->id, $entry->id])
+            return redirect()->route('admin.content.entry.edit', [$contentType->id, $entry->id])
                 ->with('message', "{$entry->title} was successfully updated.");
         }
     }
@@ -308,10 +309,10 @@ class EntryController extends AdminController {
      *
      * @return string
      */
-    public function postCreateThumbnail()
+    public function postCreateThumbnail(Request $request)
     {
         return Content::thumbnail(
-            Input::get('image_path'), 
+            $request->input('image_path'), 
             [
                 'width' => 150, 
                 'height' => 150, 

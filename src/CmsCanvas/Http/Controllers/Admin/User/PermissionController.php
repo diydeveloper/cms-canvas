@@ -2,11 +2,12 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\User;
 
-use View, Theme, Admin, Session, Redirect, Validator, Request, Input, stdClass;
+use View, Theme, Admin, Session, Validator, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Permission;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Container\Database\OrderBy;
+use Illuminate\Http\Request;
 
 class PermissionController extends AdminController {
 
@@ -15,7 +16,7 @@ class PermissionController extends AdminController {
      *
      * @return View
      */
-    public function getPermissions()
+    public function getPermissions(Request $request)
     {
         $content = View::make('cmscanvas::admin.user.permission.permissions');
 
@@ -31,7 +32,7 @@ class PermissionController extends AdminController {
         $content->filter->filter = $filter;
         $content->orderBy = $orderBy;
 
-        $this->layout->breadcrumbs = ['user' => 'Users', Request::path() => 'Permissions'];
+        $this->layout->breadcrumbs = ['user' => 'Users', $request->path() => 'Permissions'];
         $this->layout->content = $content;
     }
 
@@ -44,7 +45,7 @@ class PermissionController extends AdminController {
     {
         Permission::processFilterRequest();
 
-        return Redirect::route('admin.user.permission.permissions');
+        return redirect()->route('admin.user.permission.permissions');
     }
 
     /**
@@ -52,12 +53,12 @@ class PermissionController extends AdminController {
      *
      * @return View
      */
-    public function postDelete()
+    public function postDelete(Request $request)
     {
-        $selected = Input::get('selected');
+        $selected = $request->input('selected');
 
         if (empty($selected) || ! is_array($selected)) {
-            return Redirect::route('admin.user.permission.permissions')
+            return redirect()->route('admin.user.permission.permissions')
                 ->with('notice', 'You must select at least one permission to delete.');
         }
 
@@ -74,7 +75,7 @@ class PermissionController extends AdminController {
             }
         }
 
-        $redirect = Redirect::route('admin.user.permission.permissions');
+        $redirect = redirect()->route('admin.user.permission.permissions');
 
         if (count($errors) > 0) {
             $redirect->with('error', $errors);
@@ -110,7 +111,7 @@ class PermissionController extends AdminController {
      *
      * @return View
      */
-    public function getEdit($permission = null)
+    public function getEdit(Request $request, $permission = null)
     {
         $roles = Role::orderBy('name', 'asc')->get();
 
@@ -120,7 +121,7 @@ class PermissionController extends AdminController {
 
         $this->layout->breadcrumbs = [
             'user/permission' => 'Permissions', 
-            Request::path() => (empty($permission) ? 'Add' : 'Edit').' Permission'
+            $request->path() => (empty($permission) ? 'Add' : 'Edit').' Permission'
         ];
         $this->layout->content = $content;
     }
@@ -130,7 +131,7 @@ class PermissionController extends AdminController {
      *
      * @return View
      */
-    public function postEdit($permission = null)
+    public function postEdit(Request $request, $permission = null)
     {
         $rules = [];
         
@@ -142,15 +143,15 @@ class PermissionController extends AdminController {
             ];
         }
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             if ($permission == null) {
-                return Redirect::route('admin.user.permission.add')
+                return redirect()->route('admin.user.permission.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {
-                return Redirect::route('admin.user.permission.edit', $permission->id)
+                return redirect()->route('admin.user.permission.edit', $permission->id)
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             }
@@ -164,13 +165,13 @@ class PermissionController extends AdminController {
         }
 
         if ($editableFlag) {
-            $permission->fill(Input::all());
+            $permission->fill($request->all());
             $permission->key_name = strtoupper($permission->key_name);
             $permission->save();
         }
-        $permission->roles()->sync(Input::get('role_permissions', []));
+        $permission->roles()->sync($request->input('role_permissions', []));
 
-        return Redirect::route('admin.user.permission.permissions')
+        return redirect()->route('admin.user.permission.permissions')
             ->with('message', "{$permission->name} was successfully updated.");
     }
 
