@@ -4,6 +4,7 @@ namespace CmsCanvas\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 
 class Permission {
 
@@ -32,7 +33,7 @@ class Permission {
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if (! $this->auth->guest()) {
             $actions = $request->route()->getAction();

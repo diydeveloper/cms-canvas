@@ -173,25 +173,25 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscan
     });
 
     Route::group(['prefix' => 'system'], function() {
-        Route::get('general-settings', ['as' => 'admin.system.settings.general-settings', 'uses' => 'Admin\System\SettingsController@getGeneralSettings']);
-        Route::post('general-settings', ['as' => 'admin.system.settings.general-settings.post', 'uses' => 'Admin\System\SettingsController@postGeneralSettings']);
+        Route::get('general-settings', ['as' => 'admin.system.settings.general-settings', 'permission' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 'uses' => 'Admin\System\SettingsController@getGeneralSettings']);
+        Route::post('general-settings', ['as' => 'admin.system.settings.general-settings.post', 'permission' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 'uses' => 'Admin\System\SettingsController@postGeneralSettings']);
 
-        Route::get('server-info', ['as' => 'admin.system.settings.server-info', 'uses' => 'Admin\System\SettingsController@getServerInfo']);
+        Route::get('server-info', ['as' => 'admin.system.settings.server-info', 'permission' => 'ADMIN_SYSTEM_SETTINGS_SERVER_INFO_VIEW', 'uses' => 'Admin\System\SettingsController@getServerInfo']);
 
         Route::post('theme-layouts', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.system.settings.theme-layouts', 'uses' => 'Admin\System\SettingsController@postThemeLayouts']);
 
-        Route::get('language', ['as' => 'admin.system.language.languages', 'uses' => 'Admin\System\LanguageController@getLanguages']);
-        Route::post('language', ['as' => 'admin.system.language.languages.post', 'uses' => 'Admin\System\LanguageController@postLanguages']);
+        Route::get('language', ['as' => 'admin.system.language.languages', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_VIEW', 'uses' => 'Admin\System\LanguageController@getLanguages']);
+        Route::post('language', ['as' => 'admin.system.language.languages.post', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_VIEW', 'uses' => 'Admin\System\LanguageController@postLanguages']);
 
-        Route::get('language/add', ['as' => 'admin.system.language.add', 'uses' => 'Admin\System\LanguageController@getEdit']);
-        Route::post('language/add', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.add.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
+        Route::get('language/add', ['as' => 'admin.system.language.add', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_CREATE', 'uses' => 'Admin\System\LanguageController@getEdit']);
+        Route::post('language/add', ['middleware' => 'cmscanvas.flushCache', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_CREATE', 'as' => 'admin.system.language.add.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
 
-        Route::get('language/{language}/edit', ['as' => 'admin.system.language.edit', 'uses' => 'Admin\System\LanguageController@getEdit']);
-        Route::post('language/{language}/edit', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.edit.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
+        Route::get('language/{language}/edit', ['as' => 'admin.system.language.edit', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_EDIT', 'uses' => 'Admin\System\LanguageController@getEdit']);
+        Route::post('language/{language}/edit', ['middleware' => 'cmscanvas.flushCache', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_EDIT', 'as' => 'admin.system.language.edit.post', 'uses' => 'Admin\System\LanguageController@postEdit']);
 
-        Route::post('language/delete', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.delete.post', 'uses' => 'Admin\System\LanguageController@postDelete']);
+        Route::post('language/delete', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.delete.post', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_DELETE', 'uses' => 'Admin\System\LanguageController@postDelete']);
 
-        Route::get('language/{language}/set-default', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.setDefault.post', 'uses' => 'Admin\System\LanguageController@setDefault']);
+        Route::get('language/{language}/set-default', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.language.setDefault.post', 'permission' => 'ADMIN_SYSTEM_LANGUAGE_EDIT', 'uses' => 'Admin\System\LanguageController@setDefault']);
     });
 
 });

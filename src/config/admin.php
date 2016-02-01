@@ -6,7 +6,7 @@ return [
     'navigation' => [
         [
             'title' => 'Dashboard',
-            'route' => '/',
+            'route_name' => 'admin.index',
             'id' => 'dashboard',
             'children' => [],
             'associated_route_names' => [
@@ -16,15 +16,15 @@ return [
         ],
         [
             'title' => 'Content',
-            'route' => 'content/entry',
+            'route_name' => 'admin.content.entry.entries',
             'children' => [
                 [
                     'title' => 'Entries',
-                    'route'   => 'content/entry',
+                    'route_name' => 'admin.content.entry.entries',
                 ],
                 [
                     'title' => 'Navigations',
-                    'route' => 'content/navigation',
+                    'route_name' => 'admin.content.navigation.navigations',
                 ],
             ],
             'associated_route_names' => [
@@ -34,19 +34,19 @@ return [
         ],
         [
             'title' => 'Users',
-            'route' => 'user',
+            'route_name' => 'admin.user.users',
             'children' => [
                 [
                     'title' => 'Users',
-                    'route'   => 'user',
+                    'route_name' => 'admin.user.users',
                 ],
                 [
                     'title' => 'Roles',
-                    'route'   => 'user/role',
+                    'route_name' => 'admin.user.role.roles',
                 ],
                 [
                     'title' => 'Permissions',
-                    'route'   => 'user/permission',
+                    'route_name' => 'admin.user.permission.permissions',
                 ],
             ],
             'associated_route_names' => [
@@ -55,11 +55,11 @@ return [
         ],
         [
             'title' => 'Tools',
-            'route' => 'content/type',
+            'route_name' => 'admin.content.type.types',
             'children' => [
                 [
                     'title' => 'Content Types',
-                    'route' => 'content/type',
+                    'route_name' => 'admin.content.type.types',
                 ],
             ],
             'associated_route_names' => [
@@ -68,19 +68,19 @@ return [
         ],
         [
             'title' => 'System',
-            'route' => 'system/general-settings',
+            'route_name' => 'admin.system.settings.general-settings',
             'children' => [
                 [
                     'title' => 'General Settings',
-                    'route' => 'system/general-settings',
+                    'route_name' => 'admin.system.settings.general-settings',
                 ],
                 [
                     'title' => 'Languages',
-                    'route' => 'system/language',
+                    'route_name' => 'admin.system.language.languages',
                 ],
                 [
                     'title' => 'Server Info',
-                    'route' => 'system/server-info',
+                    'route_name' => 'admin.system.settings.server-info',
                 ],
             ],
             'associated_route_names' => [

@@ -42,7 +42,7 @@ class UserController extends AdminController {
         $rememberMe = ($request->input('remember_me')) ? true : false;
 
         if (Auth::attempt($credentials, $rememberMe)) {
-            return redirect()->route('admin.index');
+            return redirect()->intended(route('admin.index'));
         }
 
         return redirect()->route('admin.user.login')

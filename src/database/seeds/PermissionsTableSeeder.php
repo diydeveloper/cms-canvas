@@ -222,6 +222,48 @@ class PermissionsTableSeeder extends Seeder {
                 'updated_at' => Carbon::now(),
                 'editable_flag' => 0,
             ],
+            [
+                'name' => 'Admin - System General Settings Edit', 
+                'key_name' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
+            [
+                'name' => 'Admin - System Server Info View', 
+                'key_name' => 'ADMIN_SYSTEM_SETTINGS_SERVER_INFO_VIEW', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
+            [
+                'name' => 'Admin - System Language View', 
+                'key_name' => 'ADMIN_SYSTEM_LANGUAGE_VIEW', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
+            [
+                'name' => 'Admin - System Language Create', 
+                'key_name' => 'ADMIN_SYSTEM_LANGUAGE_CREATE', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
+            [
+                'name' => 'Admin - System Language Edit', 
+                'key_name' => 'ADMIN_SYSTEM_LANGUAGE_EDIT', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
+            [
+                'name' => 'Admin - System Language Delete', 
+                'key_name' => 'ADMIN_SYSTEM_LANGUAGE_DELETE', 
+                'created_at' => Carbon::now(), 
+                'updated_at' => Carbon::now(),
+                'editable_flag' => 0,
+            ],
         ]);
     }
 

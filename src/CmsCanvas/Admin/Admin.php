@@ -28,14 +28,28 @@ class Admin {
     }
 
     /**
-     * Checks if current uri segments exist in array of uri strings
+     * Checks if the current session user has access to the item
      *
-     * @param string
+     * @param array $item
      * @return bool
      */
-    protected function isPermitted($uri)
+    protected function isPermitted($item)
     {
-        // @TODO
+        $route = Route::getRoutes()->getByName($item['route_name']);
+        if ($route == null) {
+            return true;
+        }
+
+        $actions = $route->getAction();
+        $permissions = (isset($actions['permission'])) ? (array) $actions['permission'] : [];
+        $user = auth()->user();
+
+        foreach ($permissions as $permission) {
+            if (! $user->can($permission)) {
+                return false;
+            }
+        }
+
         return true;
     }   
 
@@ -52,12 +66,10 @@ class Admin {
         $listItem = '<ul>';
 
         foreach($items as $item) {
-            $item['route'] = trim($item['route'], '/');
-
             if ($this->canShowListItem($item)) {
                 $listItem .= '<li'.(($depth == 1 && $this->isListItemSelected($item)) ? ' class="selected"' : '')
                     . ((isset($item['id'])) ? ' id="' . $item['id'].'"' : '').'>';
-                $listItem .= '<a href="'.($this->isPermitted($this->getUrlPrefix().'/'.$item['route']) ? url($this->getUrlPrefix().'/'.$item['route']) : 'javascript:void(0)')
+                $listItem .= '<a href="'.($this->isPermitted($item) ? route($item['route_name']) : 'javascript:void(0)')
                     . '"'.(($depth == 1) ? ' class="top"' : '').'>';
                 $listItem .= $item['title'].(($depth == 1 && ! empty($item['children'])) ?'<span class="down_arrow_small"></span>' : '');
                 $listItem .= '</a>';
@@ -84,7 +96,7 @@ class Admin {
      */
     protected function canShowListItem($item, $depth = 1)
     {
-        if ($this->isPermitted($this->getUrlPrefix().'/'.trim($item['route'], '/'))) {
+        if ($this->isPermitted($item)) {
             return true;
         }
 
