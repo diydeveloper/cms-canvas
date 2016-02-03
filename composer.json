@@ -11,9 +11,10 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "intervention/image": "2.*",
 	"laravel/framework": "5.2.*",
-	"diyphpdeveloper/twigbridge": "dev-master"
+	"laravelcollective/html:5.2.*",
+        "intervention/image": "2.*",
+	"diyphpdeveloper/twigbridge": "1.0.*"
     },
     "autoload": {
         "classmap": [
