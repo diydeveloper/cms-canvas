@@ -16,7 +16,7 @@ class CmsCanvasCreatePermissionsTable extends Migration {
             // Columns
             $table->increments('id');
             $table->string('name', 255);
-            $table->string('key_name', 50)->unique();
+            $table->string('key_name', 100)->unique();
             $table->boolean('editable_flag')->default(1);
             $table->timestamps();
         });

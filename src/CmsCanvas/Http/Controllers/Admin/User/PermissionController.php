@@ -138,7 +138,7 @@ class PermissionController extends AdminController {
         if ($permission == null || $permission->editable_flag) {
             $rules = [
                 'name' => 'required|max:255',
-                'key_name' => 'required|max:50'
+                'key_name' => 'required|max:100'
                     ."|unique:permissions,key_name".(($permission == null) ? "" : ",{$permission->id}"),
             ];
         }

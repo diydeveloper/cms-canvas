@@ -113,6 +113,8 @@ class UserController extends AdminController {
     public function postDelete(Request $request)
     {
         $selected = $request->input('selected');
+        $deleteSuccessfulFlag = false;
+        $errors = [];
 
         if (empty($selected) || ! is_array($selected)) {
             return redirect()->route('admin.user.users')
@@ -126,10 +128,39 @@ class UserController extends AdminController {
                 ->with('error', 'Failed to delete user(s) because you cannot delete yourself.');
         }
 
-        User::destroy($selected);
+        foreach ($selected as $userId) {
+            $user = User::find($userId);
 
-        return redirect()->route('admin.user.users')
-            ->with('message', 'The selected user(s) were sucessfully deleted.');;
+            if ($user != null) {
+                try {
+                    // Delete the avatar
+                    if (strpos($user->avatar, 'uploads/avatars/'.$user->id) !== false) {
+                        @unlink(public_path($user->avatar));
+                    }
+
+                    $user->delete();
+                    $deleteSuccessfulFlag = true;
+                } catch (\CmsCanvas\Exceptions\Exception $e) {
+                    $errors[] = $e->getMessage();
+                }
+            }
+        }
+
+        $redirect = redirect()->route('admin.user.users');
+
+        if (count($errors) > 0) {
+            $redirect->with('error', $errors);
+        }
+
+        if ($deleteSuccessfulFlag) {
+            $message = (count($errors) > 0) 
+                ? 'Some of the selected user(s) were sucessfully deleted.'
+                : 'The selected user(s) were sucessfully deleted.';
+
+            $redirect->with('message', $message);
+        }
+
+        return $redirect;
     }
 
     /**
