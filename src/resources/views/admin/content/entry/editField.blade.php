@@ -1,7 +1,7 @@
 <div>
-    {!! HTML::decode(Form::label('field_id_'.$fieldType->field->id, '<div class="arrow arrow_expand"></div>'.(($fieldType->field->required) ? '<span class="required">*</span> ' : ''). $fieldType->field->label)) !!}
+    {!! HTML::decode(Form::label('field_id_'.$fieldType->getField()->id, '<div class="arrow arrow_expand"></div>'.(($fieldType->getField()->required) ? '<span class="required">*</span> ' : ''). $fieldType->getField()->label)) !!}
     <div>
-        @if ($fieldType->field->translate)
+        @if ($fieldType->getField()->translate)
             <div class="tabs">
                 <ul class="htabs">
                     @foreach ($relatedFieldTypes as $relatedFieldType)
