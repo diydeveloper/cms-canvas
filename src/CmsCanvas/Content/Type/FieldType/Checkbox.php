@@ -39,13 +39,14 @@ class Checkbox extends FieldType {
     /**
      * Sets the data class variable
      *
-     * @param string $data
+     * @param  string $data
+     * @param  bool $rawRequestData
      * @return void
      */
-    public function setData($data, $fromFormData = false)
+    public function setData($data, $rawRequestData = false)
     {
         // The data is already an array when being set from a form post
-        if ($fromFormData) {
+        if ($rawRequestData) {
             $this->data = $data;
         } else {
             $this->data = (array) @json_decode($data, true);
@@ -80,7 +81,7 @@ class Checkbox extends FieldType {
      *
      * @return mixed
      */
-    public function render()
+    public function renderContents()
     {
         $itemArray = [];
 

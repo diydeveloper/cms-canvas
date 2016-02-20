@@ -2,11 +2,11 @@
     {!!
         Form::textarea(
             $fieldType->getKey(),
-            $fieldType->data,
-            array(
+            $fieldType->getData(),
+            [
                 'class' => 'textarea_content ckeditor_textarea', 
                 'style' => 'height: ' . $fieldType->getSetting('height', '300') . 'px;', 
-            )
+            ]
         )
     !!}
 </div>

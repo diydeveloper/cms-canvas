@@ -1,0 +1,155 @@
+body {
+    padding-top: 35px !important;
+}
+
+#admin-toolbar {
+    background: url("./images/menu.png") repeat-x scroll 0 0 transparent;
+    clear: both;
+    height: 45px;
+    min-width: 900px;
+    position: fixed;
+    padding: 0 30px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    line-height: normal;
+}
+
+#admin-toolbar #admin-toolbar-shadow {
+    clear: both;
+    background: url("./images/admin-toolbar-shadow.png") repeat-x scroll 0 0px;
+    height: 11px;
+    margin: 0 -30px;
+}
+
+#admin-toolbar > ul.admin-toolbar-left {
+    float: left;
+}
+
+#admin-toolbar > ul.admin-toolbar-right {
+    float: right;
+}
+
+#admin-toolbar > ul {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+#admin-toolbar > ul ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: url('./images/transparent.png');
+}
+
+#admin-toolbar > ul a {
+    display: block;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 5px;
+}
+
+#admin-toolbar > ul > li + li {
+    background: url('./images/split.png') center left no-repeat;
+}
+
+#admin-toolbar > ul .admin-toolbar-top, #admin-toolbar > ul li li.sfhover {
+    padding: 10px 15px 9px 17px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+#admin-toolbar > ul .admin-toolbar-top img {
+    vertical-align: middle;
+}
+
+#admin-toolbar > ul ul li {
+    padding: 2px;
+}
+
+#admin-toolbar > ul .selected .admin-toolbar-top {
+    background: url('./images/selected.png') repeat-x;
+    color: #FFFFFF;
+}
+
+#admin-toolbar > ul .selected:hover a.admin-toolbar-top, #admin-toolbar > ul .sfhover a.admin-toolbar-top {
+}
+
+#admin-toolbar > ul .parent {
+    background: url('./images/arrow-right.png') 95% center no-repeat;
+}
+
+#admin-toolbar > ul li {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#admin-toolbar > ul li ul {
+    position: absolute;
+}
+
+#admin-toolbar > ul.admin-toolbar-right li ul {
+    right: 0;
+    text-align: right;
+}
+
+#admin-toolbar > ul li li {
+    clear: both;
+}
+
+#admin-toolbar > ul li ul a {
+    color: #FFFFFF;
+    height: 15px;
+    width: 145px;
+    font-size: 12px;
+}
+
+#admin-toolbar > ul li ul ul {
+    margin: -27px 0 0 157px;
+}
+
+#admin-toolbar > ul li li:hover, #admin-toolbar > ul li li.sfhover {
+    background: #333;
+    color: #000000;
+}
+
+#admin-toolbar #admin-settings-icon {
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: url('./images/settings.png') no-repeat center center;
+}
+
+#admin-save-status {
+   font-style: italic; 
+   color: #CCCCCC !important; 
+   display: block;
+}
+
+.cc_admin_editable {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.cc_image_editable {
+    cursor: pointer;
+}
+
+.cc_admin_editable:hover, .cc_image_editable:hover {
+    outline: 1px dashed #D8B166;
+}
+
+.cc_admin_editable.cke_focus, .cc_admin_editable:focus, 
+.cc_image_editable:focus {
+    outline: 1px solid #D8B166;
+}

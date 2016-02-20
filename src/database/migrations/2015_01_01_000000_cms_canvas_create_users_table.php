@@ -31,6 +31,8 @@ class CmsCanvasCreateUsersTable extends Migration {
 			$table->string('zip', 25)->nullable();
 			$table->boolean('active')->default(1);
 			$table->datetime('last_login')->nullable();
+			$table->boolean('enable_admin_toolbar')->default(1);
+			$table->boolean('enable_inline_editing')->default(0);
 			$table->rememberToken();
 			$table->timestamps();
 		});

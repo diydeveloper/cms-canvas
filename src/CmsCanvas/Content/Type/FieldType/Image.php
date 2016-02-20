@@ -36,7 +36,7 @@ class Image extends FieldType {
      *
      * @return mixed
      */
-    public function render()
+    public function renderContents()
     {
         $output = $this->getSetting('output_type');
         $tagId = $this->getSetting('id');
@@ -44,7 +44,7 @@ class Image extends FieldType {
         $maxWidth = $this->getSetting('max_width');
         $maxHeight = $this->getSetting('max_height');
         $crop = $this->getSetting('crop', false);
-        $inlineEditing = $this->getSetting('inline_editing', false);
+        $alt = $this->getMetadata('alt');
 
         if ($output == 'image') {
             if ($maxWidth !== null || $maxHeight !== null) {
@@ -70,12 +70,46 @@ class Image extends FieldType {
                 $image .= 'class="'.$class.'" ';
             }
 
+            if ($alt != null) {
+                $image .= 'alt="'.$alt.'" ';
+            }
+
             $image .= '/>';
         } else {
             $image = $this->data;
         }
 
         return $image;
+    }
+
+    /**
+     * Returns editable content
+     *
+     * @return string
+     */
+    public function renderEditableContents()
+    {
+        if ($this->getSetting('output_type') != 'image') {
+            return $this->renderContents();
+        }
+        
+        $this->setSettingValue(
+            'class', 
+            trim($this->getSetting('class').' cc_image_editable')
+        );
+
+        // Set up the session for KCFinder
+        if (session_id() == '') {
+            @session_start();
+        }
+
+        $_SESSION['KCFINDER'] = [];
+        $_SESSION['KCFINDER']['disabled'] = false;
+        $_SESSION['isLoggedIn'] = true;
+
+        Theme::addJavascript(Theme::asset('js/content_fields/image_inline_editable.js', 'admin'));
+        return $this->renderContents()
+            .'<input id="'.$this->getInlineEditableKey().'" class="cc_hidden_editable" type="hidden" value="'.$this->data.'" />';
     }
 
 }

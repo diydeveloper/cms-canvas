@@ -11,18 +11,23 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	/**
 	 * Sets data to the fields types from an array
 	 *
-	 * @param array $array
+	 * @param  array $array
+	 * @param  bool $rawRequestData
 	 * @return void
 	 */
-	public function fill(array $array)
+	public function fill(array $array, $rawRequestData = true)
 	{
 		foreach ($this->items as $item) {
 			if (isset($array[$item->getKey()])) {
-				$item->setData($array[$item->getKey()], true);
+				$item->setData($array[$item->getKey()], $rawRequestData);
 			}
 
 			if (isset($array[$item->getMetadataKey()])) {
-				$item->setMetadata($array[$item->getMetadataKey()], true);
+				$item->setMetadata($array[$item->getMetadataKey()], $rawRequestData);
+			}
+
+			if (isset($array[$item->getInlineEditableKey()])) {
+				$item->setData($array[$item->getInlineEditableKey()], $rawRequestData);
 			}
 		}
 	}
@@ -35,31 +40,10 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	 */
 	public function save()
 	{
-		$languages = Language::all();
-		$localeIds = $languages->lists('id', 'locale')->all();
 		$entries = [];
 
 		foreach ($this->items as $item) {
-			if (! isset($entries[$item->entry->id])) {
-				$item->entry->allData()->delete();
-				$entries[$item->entry->id] = $item->entry;
-			}
-
-			$data = $item->getSaveData();
-			$metadata = $item->getSaveMetadata();
-
-			// Only insert data if it is not an empty string and not null
-			if (($data !== '' && $data !== null) || ($metadata !== '' && $metadata !== null)) {
-				$entryData = new \CmsCanvas\Models\Content\Entry\Data;
-				$entryData->entry_id = $item->entry->id;
-				$entryData->content_type_field_id = $item->field->id;
-				$entryData->content_type_field_short_tag = $item->field->short_tag;
-				$entryData->language_id = $localeIds[$item->locale];
-				$entryData->language_locale = $item->locale;
-				$entryData->data = ($data === '' || $data === null) ? null : $data;
-				$entryData->metadata = ($metadata === '' || $metadata === null) ? null : $metadata;
-				$entryData->save();
-			}
+			$item->save();
 		}
 	}
 
@@ -93,7 +77,7 @@ class FieldTypeCollection extends CmsCanvasCollection {
 		$attributeNames = [];
 
 		foreach ($this->items as $item) {
-			$attributeNames[$item->getKey()] = $item->field->label;
+			$attributeNames[$item->getKey()] = $item->getField()->label;
 		}
 
 		return $attributeNames;
@@ -125,7 +109,7 @@ class FieldTypeCollection extends CmsCanvasCollection {
 
 		// Make a list of unique field ids
 		foreach ($this->items as $item) {
-			$fieldIds[$item->field->id] = $item->field->id;
+			$fieldIds[$item->getField()->id] = $item->getField()->id;
 		}
 
 		foreach ($fieldIds as $fieldId) {

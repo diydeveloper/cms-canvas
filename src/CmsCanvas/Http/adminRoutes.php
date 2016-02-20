@@ -13,7 +13,7 @@ Route::model('navigationItem', 'CmsCanvas\Models\Content\Navigation\Item');
 Route::model('language', 'CmsCanvas\Models\Language');
 Route::model('revision', 'CmsCanvas\Models\Content\Revision');
 
-Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function() {
+Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.auth', 'cmscanvas.permission'], 'permission' => 'ADMIN'], function() {
 
     Route::get('/', ['as' => 'admin.index', 'uses' => 'Admin\DashboardController@getDashboard']);
     Route::get('dashboard', ['as' => 'admin.dashboard', 'uses' => 'Admin\DashboardController@getDashboard']);
@@ -118,6 +118,8 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscan
             Route::post('delete/verify', ['as' => 'admin.content.entry.delete.verify', 'permission' => 'ADMIN_ENTRY_DELETE', 'uses' => 'Admin\Content\EntryController@postDeleteVerify']);
             Route::post('delete', ['as' => 'admin.content.entry.delete.post', 'permission' => 'ADMIN_ENTRY_DELETE', 'uses' => 'Admin\Content\EntryController@postDelete']);
             Route::post('create-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.content.entry.create.thumbnail.post', 'uses' => 'Admin\Content\EntryController@postCreateThumbnail']);
+            Route::post('save-inline-content', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.content.entry.saveInlineContent.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@postSaveInlineContent']);
+            Route::post('pre-process-inline-content', ['middleware' => ['cmscanvas.ajax', 'cmscanvas.flushCache'], 'as' => 'admin.content.entry.preProcessInlineContent.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@postPreProcessInlineContent']);
 
         });
 
@@ -131,7 +133,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscan
                 Route::post('{contentType}/entry/{entry}/edit', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@postEdit']);
 
                 Route::get('{contentType}/entry/{entry}/edit/revision/{revision}', ['as' => 'admin.content.entry.edit.revision', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@getEdit']);
-                Route::post('{contentType}/entry/{entry}/edit/revision/{revision}', ['middleware' =>'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.revision.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@postEdit']);
+                Route::post('{contentType}/entry/{entry}/edit/revision/{revision}', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.content.entry.edit.revision.post', 'permission' => 'ADMIN_ENTRY_EDIT', 'uses' => 'Admin\Content\EntryController@postEdit']);
 
             });
 
@@ -161,7 +163,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['web', 'cmscan
                 Route::post('add', ['as' => 'admin.content.type.field.add.post', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_CREATE', 'uses' => 'Admin\Content\Type\FieldController@postEdit']);
 
                 Route::get('{contentTypeField}/edit', ['as' => 'admin.content.type.field.edit', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_EDIT', 'uses' => 'Admin\Content\Type\FieldController@getEdit']);
-                Route::post('{contentTypeField}/edit', ['as' => 'admin.content.type.field.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_EDIT', 'uses' => 'Admin\Content\Type\FieldController@postEdit']);
+                Route::post('{contentTypeField}/edit', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.content.type.field.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_EDIT', 'uses' => 'Admin\Content\Type\FieldController@postEdit']);
 
                 Route::post('order', ['as' => 'admin.content.type.field.order.post', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_EDIT', 'uses' => 'Admin\Content\Type\FieldController@postOrder']);
                 Route::post('settings', ['as' => 'admin.content.type.field.settings.post', 'permission' => 'ADMIN_CONTENT_TYPE_FIELD_EDIT', 'uses' => 'Admin\Content\Type\FieldController@postSettings']);

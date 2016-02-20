@@ -2,10 +2,18 @@
     {!! Form::label($fieldType->getSettingsKey('output_type'), 'Output Type:') !!}
     {!! Form::select(
         $fieldType->getSettingsKey('output_type'),
-        array('image'  => 'Image', 'image_path' => 'Image Path'),
+        ['image'  => 'Image', 'image_path' => 'Image Path'],
         $fieldType->getSetting('output_type'),
-        array('id' => 'output_type')
+        ['id' => 'output_type']
     ) !!}
+</div>
+
+<div class="image_setting">
+    {!! Form::label($fieldType->getSettingsKey('inline_editable'), 'Inline Editable:') !!}
+    <span>
+        <label>{!! Form::radio($fieldType->getSettingsKey('inline_editable'), '1', (bool) $fieldType->getSetting('inline_editable', true)) !!} Yes</label>
+        <label>{!! Form::radio($fieldType->getSettingsKey('inline_editable'), '0', (bool) ! $fieldType->getSetting('inline_editable', true)) !!} No</label>
+    </span>
 </div>
 
 <div class="image_setting">
@@ -23,7 +31,7 @@
     {!! Form::text(
         $fieldType->getSettingsKey('max_width'), 
         $fieldType->getSetting('max_width'),
-        array('style' => 'width: 50px;')
+        ['style' => 'width: 50px;']
     ) !!} px
 </div>
 
@@ -32,7 +40,7 @@
     {!! Form::text(
         $fieldType->getSettingsKey('max_height'), 
         $fieldType->getSetting('max_height'),
-        array('style' => 'width: 50px;')
+        ['style' => 'width: 50px;']
     ) !!} px
 </div>
 

@@ -22,7 +22,7 @@ $_CONFIG = array(
 // GENERAL SETTINGS
 
     'disabled' => true,
-    'uploadURL' => "/packages/diyphpdeveloper/cmscanvas/uploads",
+    'uploadURL' => "/diyphpdeveloper/cmscanvas/uploads",
     'uploadDir' => realpath("../../../../../../diyphpdeveloper/cmscanvas/uploads"),
     'theme' => "default",
 
@@ -89,15 +89,15 @@ $_CONFIG = array(
 
 // MISC SETTINGS
 
-    'filenameChangeChars' => array(/*
+    'filenameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
-    'dirnameChangeChars' => array(/*
+    'dirnameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
     'mime_magic' => "",
 

@@ -2,7 +2,11 @@
 
 namespace CmsCanvas\Content\Type;
 
-use ArrayAccess;
+use ArrayAccess, Admin;
+use CmsCanvas\Models\Content\Entry\Data as EntryData;
+use CmsCanvas\Content\Type\FieldTypeCollection;
+use CmsCanvas\Models\Content\Entry;
+use CmsCanvas\Models\Content\Type\Field;
 
 abstract class FieldType implements ArrayAccess {
 
@@ -11,42 +15,49 @@ abstract class FieldType implements ArrayAccess {
      *
      * @var \CmsCanvas\Models\Content\Type\Field
      */
-    public $field;
+    protected $field;
 
     /**
      * The entry associated with the field and the current data
      *
      * @var \CmsCanvas\Models\Content\Entry
      */
-    public $entry;
+    protected $entry;
+
+    /**
+     * The entry data associated with the field and entry
+     *
+     * @var \CmsCanvas\Models\Content\Entry\Data
+     */
+    protected $entryData;
 
     /**
      * The language locale that the current field is using
      *
      * @var string
      */
-    public $locale;
+    protected $locale;
 
     /**
      * The data associated with the field and entry
      *
      * @var string
      */
-    public $data;
+    protected $data;
 
     /**
      * A object containing metadata for the field type
      *
-     * @var object
+     * @var array
      */
-    public $metadata;
+    protected $metadata = [];
 
     /**
      * A object containing additional settings for the field type
      *
-     * @var object
+     * @var array
      */
-    public $settings;
+    protected $settings = [];
 
     /**
      * Constructor
@@ -116,13 +127,66 @@ abstract class FieldType implements ArrayAccess {
     abstract public function inputField();
 
     /**
+     * Returns the rendered data or editable data for the field
+     *
+     * @return mixed
+     */
+    final public function render()
+    {
+        if ($this->isInlineEditable()) {
+            return $this->renderEditableContents();
+        } else {
+            return $this->renderContents();
+        }
+    }
+
+    /**
      * Returns the rendered data for the field
      *
      * @return mixed
      */
-    public function render()
+    public function renderContents()
     {
         return $this->data;
+    }
+
+    /**
+     * Returns the editable data for the field
+     *
+     * @return mixed
+     */
+    public function renderEditableContents()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Returns true if the current field is inline editable and inline editing 
+     * is enabled
+     *
+     * @return bool
+     */
+    public function isInlineEditable()
+    {
+        if ($this->field == null || $this->entry == null) {
+            return false;
+        }
+
+        if ($this->getSetting('inline_editable', false) == false) {
+            return false;
+        }
+
+        if (! Admin::isInlineEditingEnabled()) {
+            return false;
+        }
+
+        try {
+            $this->entry->contentType->checkAdminEntryEditPermissions();
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -170,6 +234,16 @@ abstract class FieldType implements ArrayAccess {
     }
 
     /**
+     * Returns a unique identifier for inline editing the field type
+     *
+     * @return string
+     */
+    public function getInlineEditableKey()
+    {
+        return 'cc_field_'.$this->entry->id.'_'.$this->field->id.'_'.$this->locale;
+    }
+
+    /**
      * Returns the metadata value for the provided property
      *
      * @param string $property
@@ -177,10 +251,10 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getMetadata($property, $defaultValue = null)
     {
-        if (isset($this->metadata->$property) && $this->metadata->$property !== '' 
-            && $this->metadata->$property !== null
+        if (isset($this->metadata[$property]) && $this->metadata[$property] !== '' 
+            && $this->metadata[$property] !== null
         ) {
-            return $this->metadata->$property;
+            return $this->metadata[$property];
         } else {
             return $defaultValue;
         }
@@ -226,39 +300,58 @@ abstract class FieldType implements ArrayAccess {
     /**
      * Sets the data class variable
      *
-     * @param string $data
-     * @param bool $fromFormData
+     * @param  string $data
+     * @param  bool $rawRequestData
      * @return void
      */
-    public function setData($data, $fromFormData = false)
+    public function setData($data, $rawRequestData = false)
     {
         $this->data = $data;
     }
 
     /**
-     * Sets the settings object for the field type
+     * Sets the settings array for the field type
      *
-     * @param string $settings
+     * @param  mixed $settings
+     * @param  bool $rawRequestData
      * @return void
      */
-    public function setSettings($settings, $fromFormData = false)
+    public function setSettings($settings, $rawRequestData = false)
     {
-        if ($fromFormData) {
+        if ($rawRequestData) {
             if (! is_array($settings)) {
                 return null;
             }
 
-            $filteredSettings = [];
+            $settingsArray = [];
             foreach ($settings as $key => $value) {
                 if ($value !== '' && $value !== null) {
-                    $filteredSettings[$key] = $value;
+                    $settingsArray[$key] = $value;
                 }
             }
-            $this->settings = (count($filteredSettings) > 0) ? (object) $filteredSettings : null;
         } else {
-            $settings = @json_decode($settings);
-            $this->settings = (is_object($settings)) ? $settings : null;
+            $settingsArray = @json_decode($settings, true);
         }
+
+        if (is_array($settingsArray) && count($settingsArray) > 0) {
+            $this->settings = $settingsArray;
+        } else {
+            $this->settings = [];
+        }
+    }
+
+    /**
+     * Set a setting value to the settings array
+     *
+     * @param  string $key
+     * @param  string $value
+     * @return self
+     */
+    public function setSettingValue($key, $value)
+    {
+        $this->settings[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -269,10 +362,10 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getSetting($property, $defaultValue = null)
     {
-        if (isset($this->settings->$property) && $this->settings->$property !== '' 
-            && $this->settings->$property !== null
+        if (isset($this->settings[$property]) && $this->settings[$property] !== '' 
+            && $this->settings[$property] !== null
         ) {
-            return $this->settings->$property;
+            return $this->settings[$property];
         } else {
             return $defaultValue;
         }
@@ -281,29 +374,47 @@ abstract class FieldType implements ArrayAccess {
     /**
      * Sets the settings object for the field type
      *
-     * @param string $settings
-     * @param bool $fromFormData
+     * @param  mixed $settings
+     * @param  bool $rawRequestData
      * @return void
      */
-    public function setMetadata($metadata, $fromFormData = false)
+    public function setMetadata($metadata, $rawRequestData = false)
     {
         // The data is an array when being set from a form post
-        if ($fromFormData) {
+        if ($rawRequestData) {
             if (! is_array($metadata)) {
                 return null;
             }
 
-            $filteredMetadata = [];
+            $metadataArray = [];
             foreach ($metadata as $key => $value) {
                 if ($value !== '' && $value !== null) {
-                    $filteredMetadata[$key] = $value;
+                    $metadataArray[$key] = $value;
                 }
             }
-            $this->metadata = (count($filteredMetadata) > 0) ? (object) $filteredMetadata : null;
         } else {
-            $metadata = @json_decode($metadata);
-            $this->metadata = (is_object($metadata)) ? $metadata : null;
+            $metadataArray = @json_decode($metadata, true);
         }
+
+        if (is_array($metadataArray) && count($metadataArray) > 0) {
+            $this->metadata = $metadataArray;
+        } else {
+            $this->metadata = [];
+        }
+    }
+
+    /**
+     * Set a metadata value to the metadata array
+     *
+     * @param  string $key
+     * @param  string $value
+     * @return self
+     */
+    public function setMetadataValue($key, $value)
+    {
+        $this->metadata[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -343,13 +454,43 @@ abstract class FieldType implements ArrayAccess {
     }
 
     /**
+     * Returns the data for the current field type
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Returns the entry for the current field type
+     *
+     * @return \CmsCanvas\Models\Content\Entry
+     */
+    public function getEntry()
+    {
+        return $this->entry;
+    }
+
+    /**
+     * Returns the field for the current field type
+     *
+     * @return \CmsCanvas\Models\Content\Type\Field
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
      * Returns a serialized metadata object to be saved to the database
      *
      * @return string
      */
     public function getSaveMetadata()
     {
-        if ($this->metadata !== null && $this->metadata !== '') {
+        if (count($this->metadata) > 0) {
             return @json_encode($this->metadata);
         }
 
@@ -363,7 +504,7 @@ abstract class FieldType implements ArrayAccess {
      */
     public function getSaveSettings()
     {
-        if ($this->settings !== null && $this->settings !== '') {
+        if (count($this->settings) > 0) {
             return @json_encode($this->settings);
         }
 
@@ -423,6 +564,142 @@ abstract class FieldType implements ArrayAccess {
     public function offsetUnset($offset)
     {
         unset($this->$offset);
+    }
+
+    /**
+     * Populates the current field type with data from the provided entry data
+     *
+     * @param  \CmsCanvas\Models\Content\Entry\Data $entryData
+     * @return self
+     */
+    public function setEntryData(EntryData $entryData = null)
+    {
+        $this->entryData = $entryData;
+
+        return $this;
+    }
+
+    /**
+     * Populates the current field type with data from the provided entry data
+     *
+     * @param  \CmsCanvas\Models\Content\Entry\Data $entryData
+     * @return self
+     */
+    public function populateFromEntryData(EntryData $entryData)
+    {
+        $this->setEntryData($entryData);
+        $this->setData($entryData->data, false);
+        $this->setMetadata($entryData->metadata);
+        $this->setLocale($entryData->language_locale);
+
+        return $this;
+    }
+
+    /**
+     * Saves the current entry field data to the database
+     *
+     * @return void
+     */
+    public function save()
+    {
+        if ($this->field == null) {
+            throw new \CmsCanvas\Exceptions\Exception('A field must be specified to save the entry data.');
+        }
+        
+        if ($this->entry == null) {
+            throw new \CmsCanvas\Exceptions\Exception('A entry must be specified to save the entry data.');
+        }
+
+        $data = $this->getSaveData();
+        $metadata = $this->getSaveMetadata();
+
+        // Only insert data if it is not an empty string and not null
+        if (($data !== '' && $data !== null) || ($metadata !== '' && $metadata !== null)) {
+            $entryData = ($this->entryData != null) ? $this->entryData : new EntryData;
+            $entryData->entry_id = $this->entry->id;
+            $entryData->content_type_field_id = $this->field->id;
+            $entryData->content_type_field_short_tag = $this->field->short_tag;
+            $entryData->language_locale = $this->locale;
+            $entryData->data = ($data === '' || $data === null) ? null : $data;
+            $entryData->metadata = ($metadata === '' || $metadata === null) ? null : $metadata;
+            $entryData->save();
+
+            $this->setEntryData($entryData);
+        } else {
+            // Delete the entry data record if there is no data
+            if ($this->entryData != null) {
+                $this->entryData->delete();
+                $this->setEntryData(null);
+            }
+        }
+    }
+
+    /**
+     * Returns collection of field types using an array of inline editqble keys
+     *
+     * @param  array $keys
+     * @return \CmsCanvas\Content\Type\FieldTypeCollection
+     */
+    public static function findByInlineEditableKeys(array $keys)
+    {
+        $entries = [];
+        $fields = [];
+        $fieldTypeCollection = new FieldTypeCollection;
+
+        foreach ($keys as $key) {
+            if (preg_match("/cc_field_(\d+)_(\d+)_(\w+)/", $key, $matches)) {
+                $entryId = $matches[1];
+                $fieldId = $matches[2];
+                $locale = $matches[3];
+
+                if (isset($entries[$entryId])) {
+                    $entry = $entries[$entryId];
+                } else {
+                    $entry = Entry::find($entryId);
+                    if ($entry == null) {
+                        throw new \CmsCanvas\Exceptions\Exception("Unable to find entry id# {$entryId}.");
+                    }
+                    $entries[$entryId] = $entry;
+                }
+
+                if (isset($fields[$fieldId])) {
+                    $field = $fields[$fieldId];
+                } else {
+                    $field = Field::with('type')->find($fieldId);
+                    if ($field == null) {
+                        throw new \CmsCanvas\Exceptions\Exception("Unable to find content field id# {$fieldId}.");
+                    }
+                    $fields[$fieldId] = $field;
+                }
+
+                $fieldType = FieldType::factory($field, $entry, $locale);
+
+                $entryData = EntryData::where('entry_id', $entryId)
+                    ->where('content_type_field_id', $fieldId)
+                    ->where('language_locale', $locale)
+                    ->first();
+
+                if ($entryData != null) {
+                    $fieldType->populateFromEntryData($entryData);
+                }
+
+                $fieldTypeCollection[] = $fieldType;
+            }
+        }
+
+        return $fieldTypeCollection;
+    }
+
+    /**
+     * Returns collection of field types using an array of inline editqble keys
+     *
+     * @param  string $key
+     * @return \CmsCanvas\Content\Type\FieldType
+     */
+    public static function findByInlineEditableKey($key)
+    {
+        $contentFields = self::findByInlineEditableKeys([$key]);
+        return $contentFields->first();
     }
 
 }

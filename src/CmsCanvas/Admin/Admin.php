@@ -140,4 +140,30 @@ class Admin {
         return false;
     }   
 
+    /**
+     * Returns true if the admin toolbar is enabled
+     *
+     * @return bool
+     */
+    public function isAdminToolbarEnabled()
+    {
+        if (! auth()->check() || ! auth()->user()->isAdmin()) {
+            return false;
+        }
+
+        return (bool) auth()->user()->enable_admin_toolbar;
+    }
+
+    /**
+     * Returns true if the inline editing is enabled
+     *
+     * @return bool
+     */
+    public function isInlineEditingEnabled()
+    {
+        return ($this->isAdminToolbarEnabled()
+            && (bool) auth()->user()->enable_inline_editing
+        );
+    }
+
 }

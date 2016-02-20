@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler {
 
         if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             return Response::make(
-                App::make('\CmsCanvas\Http\Controllers\PageController')->callAction('showPage', [$e]),
+                App::make('\CmsCanvas\Http\Controllers\PageController')->callAction('showPage', [$request, $e]),
                 $e->getStatusCode()
             );
         }

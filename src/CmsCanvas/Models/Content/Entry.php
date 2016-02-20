@@ -120,9 +120,7 @@ class Entry extends Model implements PageInterface {
      */
     public function allData()
     {
-        return $this->hasMany('CmsCanvas\Models\Content\Entry\Data', 'entry_id', 'id')
-            ->join('languages', 'entry_data.language_id', '=', 'languages.id')
-            ->select('entry_data.*', 'languages.locale');
+        return $this->hasMany('CmsCanvas\Models\Content\Entry\Data', 'entry_id', 'id');
     }
 
     /**
@@ -188,21 +186,20 @@ class Entry extends Model implements PageInterface {
 
         $query = Field::with('type')
             ->select('content_type_fields.*', 'entry_data.data', 'entry_data.metadata')
-            ->join('content_types', 'content_types.id', '=', 'content_type_fields.content_type_id')
             ->leftJoin('entry_data', function ($join) use ($entry, $locale, $fallbackLocale) {
-                    $join->on('entry_data.content_type_field_id', '=', 'content_type_fields.id')
-                        ->where('entry_data.entry_id', '=', $entry->id)
-                        ->where('entry_data.language_locale', '=' , Lang::getLocale());
+                $join->on('entry_data.content_type_field_id', '=', 'content_type_fields.id')
+                    ->where('entry_data.entry_id', '=', $entry->id)
+                    ->where('entry_data.language_locale', '=' , Lang::getLocale());
 
-                    if ($locale != $fallbackLocale) {
-                        $join->where('content_type_fields.translate', '=', 1);
-                        $join->orOn('entry_data.content_type_field_id', '=', 'content_type_fields.id')
-                            ->where('entry_data.entry_id', '=', $entry->id)
-                            ->where('entry_data.language_locale', '=', Lang::getFallback())
-                            ->where('content_type_fields.translate', '=', 0);
-                    }
-                })
-            ->where('content_types.id', $entry->content_type_id);
+                if ($locale != $fallbackLocale) {
+                    $join->where('content_type_fields.translate', '=', 1);
+                    $join->orOn('entry_data.content_type_field_id', '=', 'content_type_fields.id')
+                        ->where('entry_data.entry_id', '=', $entry->id)
+                        ->where('entry_data.language_locale', '=', Lang::getFallback())
+                        ->where('content_type_fields.translate', '=', 0);
+                }
+            })
+            ->where('content_type_fields.content_type_id', $entry->content_type_id);
 
         return $query->get();
     }
@@ -623,6 +620,40 @@ class Entry extends Model implements PageInterface {
     public function isCustom404Page()
     {
         return ($this->id == \Config::get('cmscanvas::config.custom_404'));
+    }
+
+    /**
+     * Creates an entry revision with the data provided
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function createRevision(array $data)
+    {
+        // Create a revision only if max revisions is set
+        if (empty($this->contentType->max_revisions)) {
+            return;
+        }
+
+        $oldRevisions = $this->revisions()
+            ->skip($this->contentType->max_revisions - 1)
+            ->take(25)
+            ->get();
+
+        foreach ($oldRevisions as $oldRevision) {
+            $oldRevision->delete();
+        }
+
+        $currentUser = Auth::user();
+
+        $revision = new Revision;
+        $revision->resource_type_id = Revision::ENTRY_RESOURCE_TYPE_ID;
+        $revision->resource_id = $this->id;
+        $revision->content_type_id = $this->contentType->id;
+        $revision->author_id = $currentUser->id;
+        $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
+        $revision->data = $data;
+        $revision->save();
     }
 
     /**

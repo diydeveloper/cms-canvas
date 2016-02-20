@@ -9,7 +9,8 @@ use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Language;
 use CmsCanvas\Models\Content\Entry\Status;
 use CmsCanvas\Models\User;
-use CmsCanvas\Models\Content\Revision;
+use CmsCanvas\Models\Content\Entry\Data as EntryData;
+use CmsCanvas\Content\Type\FieldType;
 use Carbon\Carbon;
 use Content;
 use Illuminate\Http\Request;
@@ -272,28 +273,7 @@ class EntryController extends AdminController {
         $contentFields->fill($data);
         $contentFields->save();
 
-        // Create a revision if max revisions is set
-        if ($contentType->max_revisions > 0) {
-            $oldRevisions = $entry->revisions()
-                ->skip($contentType->max_revisions - 1)
-                ->take(25)
-                ->get();
-
-            foreach ($oldRevisions as $oldRevision) {
-                $oldRevision->delete();
-            }
-
-            $currentUser = Auth::user();
-
-            $revision = new Revision;
-            $revision->resource_type_id = Revision::ENTRY_RESOURCE_TYPE_ID;
-            $revision->resource_id = $entry->id;
-            $revision->content_type_id = $contentType->id;
-            $revision->author_id = $currentUser->id;
-            $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
-            $revision->data = $data;
-            $revision->save();
-        }
+        $entry->createRevision($data);
 
         if ($request->input('save_exit')) {
             return redirect()->route('admin.content.entry.entries')
@@ -319,6 +299,59 @@ class EntryController extends AdminController {
                 'no_image' => Theme::asset('images/no_image.jpg')
             ]
         );
+    }
+
+    /**
+     * Save inline content
+     *
+     * Called by AJAX to save inline content elements
+     * 
+     * @return void
+     */
+    public function postSaveInlineContent(Request $request)
+    {
+        try {
+            $contentFields = FieldType::findByInlineEditableKeys(array_keys($request->all()));
+
+            $rules = $contentFields->getValidationRules();
+            $attributeNames = $contentFields->getAttributeNames();
+            $validator = Validator::make($request->all(), $rules, [], $attributeNames);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => implode(', ', $validator->messages()->all())]);
+            }
+
+            $contentFields->fill($request->all());
+            $contentFields->save();
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'content' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Pre process inline content
+     *
+     * Called by AJAX to process inline content before saving
+     * 
+     * @return void
+     */
+    public function postPreProcessInlineContent(Request $request)
+    {
+        try {
+            $contentField = FieldType::findByInlineEditableKey($request->input('editable_id'));
+            if ($contentField == null) {
+                throw new \Exception('Unable to find a field type matching key '.$request->input('editable_id'));
+            }
+            $contentField->setData($request->input('content'), true);
+            return response()->json([
+                'status' => 'success',
+                'content' => $contentField->render()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'content' => $e->getMessage()]);
+        }
     }
 
 }

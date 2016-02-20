@@ -442,18 +442,24 @@ class Type extends Model implements PageInterface {
 
             if ($contentTypeField->translate) {
                 foreach ($languages as $language) {
-                    $dataItem = $fieldDataItems->getFirstWhere('locale', $language->locale);
-                    $data = ($dataItem != null) ? $dataItem->data : '';
-                    $metadata = ($dataItem != null) ? $dataItem->metadata : '';
+                    $fieldType = FieldType::factory($contentTypeField, $entry, $language->locale);
 
-                    $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $language->locale, $data, $metadata);
+                    $dataItem = $fieldDataItems->getFirstWhere('language_locale', $language->locale);
+                    if ($dataItem != null) {
+                        $fieldType->populateFromEntryData($dataItem);
+                    }
+
+                    $fieldInstances[] = $fieldType;
                 }
             } else {
-                $dataItem = $fieldDataItems->getFirstWhere('locale', $defaultLocale);
-                $data = ($dataItem != null) ? $dataItem->data : '';
-                $metadata = ($dataItem != null) ? $dataItem->metadata : '';
+                $fieldType = FieldType::factory($contentTypeField, $entry, $defaultLocale);
 
-                $fieldInstances[] = FieldType::factory($contentTypeField, $entry, $defaultLocale, $data, $metadata);
+                $dataItem = $fieldDataItems->getFirstWhere('language_locale', $defaultLocale);
+                if ($dataItem != null) {
+                    $fieldType->populateFromEntryData($dataItem);
+                }
+
+                $fieldInstances[] = $fieldType;
             }
         }
 

@@ -18,11 +18,12 @@ class CmsCanvasCreateEntryDataTable extends Migration {
             $table->integer('entry_id')->unsigned()->index();
             $table->integer('content_type_field_id')->unsigned()->index();
             $table->string('content_type_field_short_tag', 50)->index();
-            $table->integer('language_id')->unsigned()->index();
             $table->string('language_locale', 5)->index();
             $table->longText('data')->nullable();
             $table->text('metadata')->nullable();
             $table->timestamps();
+
+            $table->unique(['entry_id', 'content_type_field_id', 'language_locale']);
         });
     }
 

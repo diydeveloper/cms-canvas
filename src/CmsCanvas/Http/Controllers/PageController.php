@@ -3,14 +3,15 @@
 namespace CmsCanvas\Http\Controllers;
 
 use Twig;
-use Route, Cache, Config, Lang;
+use Route, Cache, Config, Lang, Theme;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Http\Controllers\PublicController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Http\Request;
 
 class PageController extends PublicController {
 
-    public function showPage($exception = null)
+    public function showPage(Request $request, $exception = null)
     {
         $routeName = Route::currentRouteName();
 
@@ -29,6 +30,15 @@ class PageController extends PublicController {
         $cache = Cache::rememberForever($cacheKey, function() use($objectType, $objectId) {
             return new Page($objectId, $objectType);
         });
+
+        if (Theme::includeAdminToolbar($cache->getResource())) {
+            if ($request->input('admin_toggle_inline_editing')) {
+                $user = auth()->user();
+                $user->enable_inline_editing = !$user->enable_inline_editing;
+                $user->save();
+                return redirect()->back();
+            }
+        }
 
         return $cache->setThemeMetadata()->render();
     }

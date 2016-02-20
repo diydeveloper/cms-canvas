@@ -25,7 +25,6 @@ class EntryDataTableSeeder extends Seeder {
                 'entry_id' => $homePage->id, 
                 'content_type_field_id' => $field->id, 
                 'content_type_field_short_tag' => $field->short_tag, 
-                'language_id' => $language->id,
                 'language_locale' => $language->locale,
                 'data' => 
                     '<h1>Welcome</h1>'
@@ -39,7 +38,6 @@ class EntryDataTableSeeder extends Seeder {
                 'entry_id' => $pageNotFound->id, 
                 'content_type_field_id' => $field->id, 
                 'content_type_field_short_tag' => $field->short_tag, 
-                'language_id' => $language->id,
                 'language_locale' => $language->locale,
                 'data' => 
                     '<h1>404 - Page Not Found</h1>'

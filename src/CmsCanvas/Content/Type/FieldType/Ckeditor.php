@@ -82,13 +82,25 @@ class Ckeditor extends FieldType {
     }
 
     /**
-     * Returns the rendered data for the field
+     * Returns editable content
      *
      * @return string
      */
-    public function render()
+    public function renderEditableContents()
     {
-        return $this->data;
+        // Set up the session for KCFinder
+        if (session_id() == '') {
+            @session_start();
+        }
+
+        $_SESSION['KCFINDER'] = [];
+        $_SESSION['KCFINDER']['disabled'] = false;
+        $_SESSION['isLoggedIn'] = true;
+
+        Theme::addJavascript(Theme::asset('js/content_fields/ckeditor_inline_editable.js', 'admin'));
+        return '<div id="'.$this->getInlineEditableKey().'" class="cc_admin_editable cc_ck_editable" contenteditable="true">'
+            .$this->renderContents()
+            .'</div>';
     }
 
 }

@@ -16,9 +16,9 @@
     <div class="content">
 
         @if ( ! empty($field))
-            {!! Form::model($field, array('id' => 'form')) !!}
+            {!! Form::model($field, ['id' => 'form']) !!}
         @else
-            {!! Form::open(array('id' => 'form')) !!}
+            {!! Form::open(['id' => 'form']) !!}
         @endif
         <div>
             <div class="form">
@@ -37,19 +37,15 @@
                 <div>
                     {!! HTML::decode(Form::label('required', '<span class="required">*</span> Require Field:')) !!}
                     <span>
-                        {!! Form::radio('required', '1') !!}
-                        <label for="required_yes">Yes</label>
-                        {!! Form::radio('required', '0', true) !!}
-                        <label for="required_no">No</label>
+                        <label>{!! Form::radio('required', '1') !!} Yes</label>
+                        <label>{!! Form::radio('required', '0', true) !!} No</label>
                     </span>
                 </div>
                 <div>
                     {!! HTML::decode(Form::label('translate', '<span class="required">*</span> Translate Field:')) !!}
                     <span>
-                        {!! Form::radio('translate', '1') !!}
-                        <label for="translate_yes">Yes</label>
-                        {!! Form::radio('translate', '0', true) !!}
-                        <label for="translate_no">No</label>
+                        <label>{!! Form::radio('translate', '1') !!} Yes</label>
+                        <label>{!! Form::radio('translate', '0', true) !!} No</label>
                     </span>
                 </div>
 

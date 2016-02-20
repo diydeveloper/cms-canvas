@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
             return;
         }
 
-        $router->group(['namespace' => $this->namespace], function ($router) {
+        $router->group(['namespace' => $this->namespace, 'middleware' => ['web']], function ($router) {
             if ($this->app['admin']->getUrlPrefix() == Request::segment(1)) {
                 require __DIR__.'/../Http/adminRoutes.php';
             } else {

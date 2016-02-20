@@ -18,4 +18,16 @@ class Text extends FieldType {
             ->with('fieldType', $this);
     }
 
+    /**
+     * Returns editable content
+     *
+     * @return string
+     */
+    public function renderEditableContents()
+    {
+        return '<div id="'.$this->getInlineEditableKey().'" class="cc_admin_editable cc_text_editable" contenteditable="true">'
+            .$this->renderContents()
+            .'</div>';
+    }
+
 }

@@ -94,7 +94,7 @@ return [
         ],
         'image_field' => [
             'javascript' => [
-                Theme::asset('js/image_field.js', 'admin'),
+                Theme::asset('js/content_fields/image_field.js', 'admin'),
             ]
         ],
         'avatar_image_field' => [
@@ -102,6 +102,18 @@ return [
                 Theme::asset('js/avatar_image_field.js', 'admin'),
             ]
         ],
+        'admin_toolbar' => [
+            'javascript' => [
+                Theme::asset('js/jquery-2.1.1.min.js', 'admin'),
+                Theme::asset('js/jquery-migrate-1.2.1.min.js', 'admin'),
+                Theme::asset('js/superfish.js', 'admin'),
+                Theme::asset('js/ckeditor/ckeditor.js', 'admin'),
+                Theme::asset('js/admin_toolbar/toolbar.js', 'admin'),
+            ],
+            'stylesheet' => [
+                Theme::asset('js/admin_toolbar/style.css', 'admin'),
+            ],
+        ]
     ]
 
 ];

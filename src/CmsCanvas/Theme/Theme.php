@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Theme;
 
-use View, Config, File, App;
+use View, Config, File, App, Admin;
 
 class Theme {
 
@@ -75,6 +75,13 @@ class Theme {
      * @var array
      */
     protected $inlineCss = [];
+
+    /**
+     * Raw content requested to be included in the theme's footer
+     * 
+     * @var array
+     */
+    protected $footerContent = [];
 
     /**
      * Used to determine if HTML <head> data has already been rendered
@@ -485,7 +492,7 @@ class Theme {
             $javascriptOrderArray = 'headerJavascriptOrder';
         }
 
-        $javascriptIncludes = "\n\t<script>var BASE_HREF=\"" . url('/') . "\"</script>";
+        $javascriptIncludes = "\n\t<script type=\"text/javascript\">var BASE_HREF=\"" . url('/') . "\"</script>";
 
         foreach ($this->$javascriptOrderArray as $javascriptOrder) {
             if ($javascriptOrder['array'] == 'javascripts') {
@@ -603,9 +610,25 @@ class Theme {
     public function footer()
     {
         $return = '';
+        foreach ($this->footerContent as $content) {
+            $return .= $content;
+        }
         $return .= $this->javascripts(true);
 
         return $return;
+    }
+
+    /**
+     * Used to add raw content to the footer
+     *
+     * @param  string $content
+     * @return self
+     */
+    public function addFooterContent($content)
+    {
+        $this->footerContent[] = $content;
+
+        return $this;
     }
 
     /**
@@ -666,6 +689,30 @@ class Theme {
         }
 
         return $layouts;
+    }
+
+    /**
+     * Prepends the admin toolbar to the body of the theme if enabled
+     *
+     * @param  mixed $resource
+     * @return bool
+     */
+    public function includeAdminToolbar($resource)
+    {
+        if (!Admin::isAdminToolbarEnabled()) {
+            return false;
+        }
+
+        $toolbar = view('cmscanvas::admin.adminToolbar')
+            ->with(['resource' => $resource]);
+
+        $this->addInlineScript("var ADMIN_URL = '".Admin::url('/')."';");
+        $this->addInlineScript("var ADMIN_ASSETS = '".$this->asset('/', 'admin')."';");
+        $this->addInlineScript("var CSRF_TOKEN = '".csrf_token()."';");
+        $this->addPackage('admin_toolbar');
+        $this->addFooterContent($toolbar);
+
+        return true;
     }
 
     /**

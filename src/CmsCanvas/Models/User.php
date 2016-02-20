@@ -346,6 +346,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * Returns true if current user is an administrator
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->can('ADMIN');
+    }
+
+    /**
      * Returns a render instance
      *
      * @return \CmsCanvas\User\Render
