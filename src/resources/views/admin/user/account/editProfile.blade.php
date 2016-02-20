@@ -1,7 +1,7 @@
 @extends('cmscanvas::admin.user.account.master')
 
 @section('accountView')
-    <h2>Edit Profile</h2>
+    <h2>Edit Profile &amp; Settings</h2>
     {!! Form::model($user, ['id' => 'form']) !!}
     <div class="form">
         <div>
@@ -54,9 +54,17 @@
             {!! Form::text('country') !!}
         </div>
 
-        <div class="no_border">
+        <div>
             {!! Form::label('zip', 'Zip:') !!}
             {!! Form::text('zip') !!}
+        </div>
+
+        <div class="no_border">
+            {!! Form::label('enable_admin_toolbar', 'Admin Toolbar:') !!}
+            <span>
+                <label>{!! Form::radio('enable_admin_toolbar', '1', true) !!} Enabled</label>
+                <label>{!! Form::radio('enable_admin_toolbar', '0') !!} Disabled</label>
+            </span>
         </div>
 
     </div>

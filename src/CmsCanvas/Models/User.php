@@ -47,6 +47,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'country',
         'zip',
         'avatar',
+        'enable_admin_toolbar',
+        'enable_inline_editing',
     ];
 
     /**
