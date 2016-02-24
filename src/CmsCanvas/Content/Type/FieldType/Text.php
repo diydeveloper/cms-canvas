@@ -2,7 +2,6 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View;
 use CmsCanvas\Content\Type\FieldType;
 
 class Text extends FieldType {
@@ -14,7 +13,7 @@ class Text extends FieldType {
      */
     public function inputField()
     {
-        return View::make('cmscanvas::fieldType.text.input')
+        return view('cmscanvas::fieldType.text.input')
             ->with('fieldType', $this);
     }
 

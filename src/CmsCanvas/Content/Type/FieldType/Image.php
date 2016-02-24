@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Input, Theme, Content;
+use Theme, Content;
 use CmsCanvas\Content\Type\FieldType;
 
 class Image extends FieldType {
@@ -14,7 +14,7 @@ class Image extends FieldType {
      */
     public function settings()
     {
-        return View::make('cmscanvas::fieldType.image.settings')
+        return view('cmscanvas::fieldType.image.settings')
             ->with('fieldType', $this);
     }
 
@@ -27,7 +27,7 @@ class Image extends FieldType {
     {
         Theme::addPackage('image_field');
 
-        return View::make('cmscanvas::fieldType.image.input')
+        return view('cmscanvas::fieldType.image.input')
             ->with(['fieldType' => $this]);
     }
 

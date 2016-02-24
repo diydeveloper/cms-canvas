@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Theme, Admin, StringView;
+use Theme, Admin, StringView;
 use CmsCanvas\Content\Type\FieldType;
 
 class Ckeditor extends FieldType {
@@ -14,7 +14,7 @@ class Ckeditor extends FieldType {
      */
     public function settings()
     {
-        return View::make('cmscanvas::fieldType.ckeditor.settings')
+        return view('cmscanvas::fieldType.ckeditor.settings')
             ->with('fieldType', $this);
     }
 
@@ -77,7 +77,7 @@ class Ckeditor extends FieldType {
 
         Theme::addInlineScript($config, true);
 
-        return View::make('cmscanvas::fieldType.ckeditor.input')
+        return view('cmscanvas::fieldType.ckeditor.input')
             ->with('fieldType', $this);
     }
 

@@ -14,6 +14,11 @@ class ContentTypeFieldTypesTableSeeder extends Seeder {
             ['name' => 'Text', 'key_name' => 'TEXT'],
             ['name' => 'Checkbox', 'key_name' => 'CHECKBOX'],
             ['name' => 'Image', 'key_name' => 'IMAGE'],
+            ['name' => 'Date', 'key_name' => 'DATE'],
+            ['name' => 'Date Time', 'key_name' => 'DATETIME'],
+            ['name' => 'Dropdown', 'key_name' => 'DROPDOWN'],
+            ['name' => 'Textarea', 'key_name' => 'TEXTAREA'],
+            ['name' => 'Radio Buttons', 'key_name' => 'RADIO'],
         ]);
     }
 

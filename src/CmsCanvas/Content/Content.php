@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content;
 
-use Config, Auth, Lang, Cache;
+use Lang, Cache;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Content\Entry\Builder as EntryBuilder;
 use CmsCanvas\Content\Navigation\Builder as NavigationBuilder;
@@ -116,11 +116,9 @@ class Content {
     {
         if ($timezone !== false) {
             if ($timezone == null) {
-                if (Auth::check()) {
-                    $timezone = Auth::user()->getTimezoneIdentifier();
-                } else {
-                    $timezone = Config::get('cmscanvas::config.default_timezone');
-                }
+                $timezone = (auth()->check())
+                    ? auth()->user()->getTimezoneIdentifier()
+                    : config('cmscanvas::config.default_timezone');
             }
 
             $dateTime->setTimezone($timezone);

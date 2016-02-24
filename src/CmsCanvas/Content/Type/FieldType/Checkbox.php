@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Content\Type\FieldType;
 
-use View, Request;
+use Request;
 use CmsCanvas\Content\Type\FieldType;
 
 class Checkbox extends FieldType {
@@ -14,7 +14,7 @@ class Checkbox extends FieldType {
      */
     public function settings()
     {
-        return View::make('cmscanvas::fieldType.checkbox.settings')
+        return view('cmscanvas::fieldType.checkbox.settings')
             ->with('fieldType', $this);
     }
 
@@ -32,7 +32,7 @@ class Checkbox extends FieldType {
             $optionArray[trim($option[0])] = (count($option) == 2) ? trim($option[1]) : trim($option[0]);
         }
 
-        return View::make('cmscanvas::fieldType.checkbox.input')
+        return view('cmscanvas::fieldType.checkbox.input')
             ->with(['fieldType' => $this, 'optionArray' => $optionArray]);
     }
 
