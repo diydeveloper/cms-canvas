@@ -18,7 +18,7 @@ class Type extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'key_name'];
+    protected $fillable = ['name', 'class_name'];
 
     /**
      * The columns that can NOT be mass-assigned.

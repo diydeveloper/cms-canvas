@@ -273,7 +273,7 @@ class EntryController extends AdminController {
         $contentFields->fill($data);
         $contentFields->save();
 
-        $entry->createRevision($data);
+        $contentFields->createRevisions($data);
 
         if ($request->input('save_exit')) {
             return redirect()->route('admin.content.entry.entries')
@@ -311,18 +311,21 @@ class EntryController extends AdminController {
     public function postSaveInlineContent(Request $request)
     {
         try {
-            $contentFields = FieldType::findByInlineEditableKeys(array_keys($request->all()));
+            $data = $request->all();
+            $contentFields = FieldType::findByInlineEditableKeys(array_keys($data));
 
             $rules = $contentFields->getValidationRules();
             $attributeNames = $contentFields->getAttributeNames();
-            $validator = Validator::make($request->all(), $rules, [], $attributeNames);
+            $validator = Validator::make($data, $rules, [], $attributeNames);
 
             if ($validator->fails()) {
                 return response()->json(['status' => 'error', 'message' => implode(', ', $validator->messages()->all())]);
             }
 
-            $contentFields->fill($request->all());
+            $contentFields->fill($data);
             $contentFields->save();
+
+            $contentFields->createRevisions($data);
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {

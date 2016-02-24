@@ -6,7 +6,7 @@ use Theme, Content;
 use CmsCanvas\Content\Type\FieldType;
 use Carbon\Carbon;
 
-class Datetime extends FieldType {
+class DateTime extends FieldType {
 
     /**
      * Returns a view of additional settings for the datetime field

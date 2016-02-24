@@ -100,7 +100,7 @@ abstract class FieldType implements ArrayAccess {
         $metadata = null 
     )
     {
-        $className = '\CmsCanvas\Content\Type\FieldType\\'.ucfirst(strtolower($field->type->key_name));
+        $className = $field->type->class_name;
 
         return new $className($field, $entry, $locale, $data, $metadata);
     }
@@ -108,13 +108,13 @@ abstract class FieldType implements ArrayAccess {
     /**
      * Factors the current class using the provided type key name
      *
-     * @param string $type
+     * @param \CmsCanvas\Models\Content\Type\Field\Type $type
      * @param \CmsCanvas\Models\Content\Type\Field $field
      * @return \CmsCanvas\Content\Type\FieldType
      */
-    public static function baseFactory($type, $field = null)
+    public static function baseFactory(\CmsCanvas\Models\Content\Type\Field\Type $type, $field = null)
     {
-        $className = '\CmsCanvas\Content\Type\FieldType\\'.ucfirst(strtolower($type));
+        $className = $type->class_name;
 
         return new $className($field);
     }

@@ -57,7 +57,7 @@ class Ckeditor extends FieldType {
                 ],
                 entities : true,
                 extraPlugins : 'stylesheetparser',
-                contentsCss : ['" .Theme::asset('js/ckeditor/contents.css')."'".(( ! empty($this->entry->id)) ? ", '".Admin::url('content/entry/'.$this->entry->id.'/css')."?' + new Date().getTime()" : '')."],
+                contentsCss : ['" .Theme::asset('js/ckeditor/contents.css')."'],
                 stylesSet : [],
                 height : '300px',
                 filebrowserBrowseUrl : '".Theme::asset('js/kcfinder/browse.php?type=files') . "',

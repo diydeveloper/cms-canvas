@@ -116,7 +116,7 @@ class FieldController extends AdminController {
             $selectedType = $types->getFirstWhere('id', $contentTypeField->content_type_field_type_id);
         }
 
-        $fieldType = FieldType::baseFactory($selectedType->key_name, $contentTypeField);
+        $fieldType = FieldType::baseFactory($selectedType, $contentTypeField);
 
         $content->fieldTypeSettings = $fieldType->settings();
         $content->fieldTypes = $types;
@@ -150,7 +150,7 @@ class FieldController extends AdminController {
         $typeId = $request->input('content_type_field_type_id');
         if ( ! empty($typeId)) {
             $type = Type::find($typeId);
-            $fieldType = FieldType::baseFactory($type->key_name, $contentTypeField);
+            $fieldType = FieldType::baseFactory($type, $contentTypeField);
             $settingsValidationRules = $fieldType->getSettingsValidationRules();
             $rules = array_merge($rules, $settingsValidationRules);
         }
@@ -214,7 +214,7 @@ class FieldController extends AdminController {
         $type = Type::find($typeId);
         $contentTypeField = Field::find($fieldId);
 
-        return FieldType::baseFactory($type->key_name, $contentTypeField)
+        return FieldType::baseFactory($type, $contentTypeField)
             ->settings();
     }
 

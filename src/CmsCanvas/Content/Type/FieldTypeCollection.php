@@ -127,4 +127,46 @@ class FieldTypeCollection extends CmsCanvasCollection {
 		return $fieldViews;
 	}
 
+	/**
+	 * Loops through items and creates revisions for each unique entry
+	 *
+	 * @param  array $array
+	 * @return void
+	 */
+	public function createRevisions(array $array)
+	{
+		$entries = [];
+		$data = [];
+
+		// Group the request data by entry
+		foreach ($this->items as $item) {
+			$entry = $item->getEntry();
+
+			if ($entry != null) {
+				if (! isset($entries[$entry->id])) {
+					$entries[$entry->id] = $entry;
+				}
+
+				if (isset($array[$item->getKey()])) {
+					$data[$entry->id][$item->getKey()] = $array[$item->getKey()];
+				}
+
+				if (isset($array[$item->getMetadataKey()])) {
+					$data[$entry->id][$item->getMetadataKey()] = $array[$item->getMetadataKey()];
+				}
+
+				if (isset($array[$item->getInlineEditableKey()])) {
+					$data[$entry->id][$item->getInlineEditableKey()] = $array[$item->getInlineEditableKey()];
+				}
+			}
+		}
+
+		// Create a revision for each entry that has request data
+		foreach ($entries as $entry) {
+			if (isset($data[$entry->id])) {
+				$entry->createRevision($data[$entry->id]);
+			}
+		}
+	}
+
 }

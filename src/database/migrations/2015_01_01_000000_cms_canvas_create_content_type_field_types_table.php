@@ -16,7 +16,7 @@ class CmsCanvasCreateContentTypeFieldTypesTable extends Migration {
             // Columns
             $table->increments('id');
             $table->string('name', 50);
-            $table->string('key_name', 50)->unique();
+            $table->string('class_name', 500);
         });
     }
 

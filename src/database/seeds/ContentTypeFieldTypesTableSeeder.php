@@ -10,15 +10,15 @@ class ContentTypeFieldTypesTableSeeder extends Seeder {
         DB::table('content_type_field_types')->delete();
 
         DB::table('content_type_field_types')->insert([
-            ['name' => 'CKEditor', 'key_name' => 'CKEDITOR'],
-            ['name' => 'Text', 'key_name' => 'TEXT'],
-            ['name' => 'Checkbox', 'key_name' => 'CHECKBOX'],
-            ['name' => 'Image', 'key_name' => 'IMAGE'],
-            ['name' => 'Date', 'key_name' => 'DATE'],
-            ['name' => 'Date Time', 'key_name' => 'DATETIME'],
-            ['name' => 'Dropdown', 'key_name' => 'DROPDOWN'],
-            ['name' => 'Textarea', 'key_name' => 'TEXTAREA'],
-            ['name' => 'Radio Buttons', 'key_name' => 'RADIO'],
+            ['name' => 'CKEditor', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Ckeditor'],
+            ['name' => 'Text', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Text'],
+            ['name' => 'Checkbox', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Checkbox'],
+            ['name' => 'Image', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Image'],
+            ['name' => 'Date', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Date'],
+            ['name' => 'Date Time', 'class_name' => '\CmsCanvas\Content\Type\FieldType\DateTime'],
+            ['name' => 'Dropdown', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Dropdown'],
+            ['name' => 'Textarea', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Textarea'],
+            ['name' => 'Radio Buttons', 'class_name' => '\CmsCanvas\Content\Type\FieldType\Radio'],
         ]);
     }
 
