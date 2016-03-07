@@ -434,6 +434,22 @@ abstract class FieldType implements ArrayAccess {
     }
 
     /**
+     * Returns an array of inline editable validation rules 
+     *
+     * @return array
+     */
+    public function getInlineEditableValidationRules()
+    {
+        $validationRules = [];
+
+        if ($this->field->required) {
+            $validationRules[$this->getInlineEditableKey()] = 'required';
+        }
+
+        return $validationRules;
+    }
+
+    /**
      * Returns an array of validation rules for settings
      *
      * @return array

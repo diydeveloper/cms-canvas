@@ -68,6 +68,36 @@ class FieldTypeCollection extends CmsCanvasCollection {
 	}
 
 	/**
+	 * Returns an array of each field type's validation rules
+	 *
+	 * @param  array $data
+	 * @return array
+	 */
+	public function getInlineEditableValidationRules(array $data = null)
+	{
+		$rules = [];
+
+		foreach ($this->items as $item) {
+			$itemRules = $item->getInlineEditableValidationRules();
+
+			// Only validate the fields that exist in the request data
+			$itemRulesFiltered = [];
+			foreach ($itemRules as $key => $itemRule) {
+				if ($data !== null && !isset($data[$key])) {
+					continue;
+				}
+				$itemRulesFiltered[$key] = $itemRule;
+			}
+
+			if (! empty($itemRulesFiltered)) {
+				$rules = array_merge($rules, $itemRulesFiltered);
+			}
+		}
+
+		return $rules;
+	}
+
+	/**
 	 * Returns an array of each field type's key and attribute name
 	 *
 	 * @return array
@@ -165,6 +195,26 @@ class FieldTypeCollection extends CmsCanvasCollection {
 		foreach ($entries as $entry) {
 			if (isset($data[$entry->id])) {
 				$entry->createRevision($data[$entry->id]);
+			}
+		}
+	}
+
+	/**
+	 * To ensure the template cache is updated for entry templates the entry's timestamps
+	 * need to be updated
+	 *
+	 * @return void
+	 */
+	public function touchTemplateEntries()
+	{
+		foreach ($this->items as $item) {
+			$entry = $item->getEntry();
+			$entries = [];
+
+			if ($entry != null && $entry->template_flag && !isset($entries[$entry->id])) {
+				$entries[$entry->id] = $entry;
+				$entry->touch();
+				$entry->save();
 			}
 		}
 	}

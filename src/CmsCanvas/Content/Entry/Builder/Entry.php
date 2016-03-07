@@ -69,7 +69,6 @@ class Entry {
         $this->entry = $entry;
         $this->setParameters($parameters);
         $this->renderedData = $this->entry->getRenderedData();
-        $this->renderContents = $this->renderContents();
     }
 
     /**
@@ -114,25 +113,19 @@ class Entry {
      */
     public function renderContents()
     {
-        if ($this->renderContents != null) {
-            return $this->renderContents;
-        }
-
         $data = array_merge($this->renderedData, $this->parameters);
 
         $template = ($this->entry->contentType->layout === null) ? '' : $this->entry->contentType->layout;
         $content = StringView::make($template)
             ->cacheKey($this->entry->contentType->getRouteName())
             ->updatedAt($this->entry->contentType->updated_at->timestamp)
-            ->with($data)
-            ->prerender();
+            ->with($data);
 
         if ($this->entry->template_flag) {
             $content = StringView::make((string) $content)
                 ->cacheKey($this->entry->getRouteName())
                 ->updatedAt(max($this->entry->updated_at->timestamp, $this->entry->contentType->updated_at->timestamp))
-                ->with($data)
-                ->prerender();
+                ->with($data);
         }
 
         return $content;

@@ -14,19 +14,44 @@ class ContentTypeFieldsTableSeeder extends Seeder {
     {
         DB::table('content_type_fields')->delete();
 
-        $contentType = ContentType::where('short_name', 'page')->first();
-        $fieldType = FieldType::where('key_name', 'CKEDITOR')->first();
+        $page = ContentType::where('short_name', 'page')->first();
+        $blogPost = ContentType::where('short_name', 'blog_post')->first();
+        $ckEditor = FieldType::where('class_name', '\CmsCanvas\Content\Type\FieldType\Ckeditor')->first();
 
         DB::table('content_type_fields')->insert([
             [
-                'content_type_id' => $contentType->id, 
-                'content_type_field_type_id' => $fieldType->id, 
+                'content_type_id' => $page->id, 
+                'content_type_field_type_id' => $ckEditor->id, 
                 'label' => 'Content',
                 'short_tag' => 'content',
                 'translate' => '0',
                 'required' => '0',
-                'settings' => '{"height":"","inline_editing":"1"}',
+                'settings' => '{"inline_editable":"1"}',
                 'sort' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'content_type_id' => $blogPost->id, 
+                'content_type_field_type_id' => $ckEditor->id, 
+                'label' => 'Content',
+                'short_tag' => 'content',
+                'translate' => '0',
+                'required' => '1',
+                'settings' => '{"inline_editable":"1"}',
+                'sort' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'content_type_id' => $blogPost->id, 
+                'content_type_field_type_id' => $ckEditor->id, 
+                'label' => 'Content Extended',
+                'short_tag' => 'content_extended',
+                'translate' => '0',
+                'required' => '0',
+                'settings' => '{"inline_editable":"1"}',
+                'sort' => '2',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

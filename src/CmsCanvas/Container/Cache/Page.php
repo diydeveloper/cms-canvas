@@ -43,7 +43,7 @@ class Page implements PageInterface  {
     }
 
     /**
-     * Renders the cached page
+     * Renders the cached resource
      *
      * @param array $parameters
      * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\Content\Type\Render
@@ -88,17 +88,21 @@ class Page implements PageInterface  {
     }
 
     /**
-     * Sets the entry's meta title, description, and keywords to the theme
+     * Renders the cache as a page
      *
-     * @return self
+     * @param array $parameters
+     * @return \CmsCanvas\Content\Entry\Render|\CmsCanvas\Content\Type\Render
      */
-    public function setThemeMetadata()
+    public function renderPage($parameters = [])
     {
-        if ($this->resource instanceof \CmsCanvas\Models\Content\Entry) {
-            $this->resource->setThemeMetadata();
-        }
+        $content = $this->render($parameters);
 
-        return $this;
+        if ($this->resource instanceof Entry) {
+            $this->resource->includeThemeMetadata();
+        }
+        $this->resource->includeThemePageHead();
+
+        return $content;
     }
 
 }

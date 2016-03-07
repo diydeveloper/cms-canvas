@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, Auth, StringView, Config;
+use Lang, Auth, StringView, Config, Theme, Cache;
 use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
@@ -12,6 +12,7 @@ use CmsCanvas\Database\Eloquent\Collection;
 use CmsCanvas\Content\Type\FieldTypeCollection;
 use CmsCanvas\Content\Type\Render;
 use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
+use CmsCanvas\Container\Cache\Page;
 
 class Type extends Model implements PageInterface {
 
@@ -299,6 +300,40 @@ class Type extends Model implements PageInterface {
         }
 
         $this->attributes['entry_uri_template'] = $value;
+    }
+
+    /**
+     * Renders and returns the page head content
+     *
+     * @return string
+     */
+    public function renderPageHead($data = null)
+    {
+        $content = null;
+
+        if (! empty($this->page_head)) {
+            $data = ($data === null) ? $this->getRenderedData() : $data;
+
+            $content = StringView::make($this->page_head)
+                ->cacheKey($this->getRouteName().'_pageHead')
+                ->updatedAt($this->updated_at->timestamp)
+                ->with($data)
+                ->prerender();
+        }
+
+        return $content;
+    }
+
+    /**
+     * Sets the content type's page head content to the theme
+     *
+     * @return self
+     */
+    public function includeThemePageHead($data = null)
+    {
+        Theme::addPageHead($this->renderPageHead($data));
+
+        return $this;
     }
 
     /**

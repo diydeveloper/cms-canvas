@@ -89,7 +89,7 @@ jq_admin_toolbar(document).ready( function() {
         });
 
         jq_admin_toolbar.ajax({
-            url: ADMIN_URL + "/content/entries/save-inline-content", 
+            url: ADMIN_URL + "/content/entry/save-inline-content", 
             data: data,
             type: 'post',
             dataType: 'json',

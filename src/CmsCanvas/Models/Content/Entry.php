@@ -513,11 +513,24 @@ class Entry extends Model implements PageInterface {
      *
      * @return self
      */
-    public function setThemeMetadata()
+    public function includeThemeMetadata()
     {
         Theme::setMetaTitle($this->meta_title);
         Theme::setMetaDescription($this->meta_description);
         Theme::setMetaKeywords($this->meta_keywords);
+
+        return $this;
+    }
+
+    /**
+     * Sets the content type's page head content to the theme
+     *
+     * @return self
+     */
+    public function includeThemePageHead()
+    {
+        $data = $this->getRenderedData();
+        $this->contentType->includeThemePageHead($data);
 
         return $this;
     }

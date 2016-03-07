@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder {
         $this->call(\CmsCanvas\Database\Seeds\PermissionsTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\RolesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\RolePermissionsTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\UsersTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\UserRolesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\RevisionResourceTypesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\ContentTypesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder::class);
@@ -27,8 +29,6 @@ class DatabaseSeeder extends Seeder {
         $this->call(\CmsCanvas\Database\Seeds\EntriesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\EntryDataTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\SettingsTableSeeder::class);
-        $this->call(\CmsCanvas\Database\Seeds\UsersTableSeeder::class);
-        $this->call(\CmsCanvas\Database\Seeds\UserRolesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\NavigationsTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\NavigationItemsTableSeeder::class);
     }

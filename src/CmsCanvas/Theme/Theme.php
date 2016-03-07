@@ -266,7 +266,7 @@ class Theme {
      */
     function addPageHead($code)
     {
-        if (is_string($code)) {
+        if (! empty($code)) {
             $this->pageHead = $code;
         }
 

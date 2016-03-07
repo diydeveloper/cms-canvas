@@ -40,7 +40,7 @@ class PageController extends PublicController {
             }
         }
 
-        return $cache->setThemeMetadata()->render();
+        return $cache->renderPage();
     }
 
 }

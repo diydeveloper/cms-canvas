@@ -332,7 +332,7 @@ class Builder {
     protected function compileCurrentItems($items, $depth = 1)
     {
         foreach ($items as $item) {
-            $pattern = $item->getNavigationItem()->uri_pattern;
+            $pattern = $item->getNavigationItem()->current_uri_pattern;
 
             if ( ! $item->getNavigationItem()->disable_current_flag 
                 && (($pattern != null && (bool) @preg_match('#^'.$pattern.'\z#', Request::path())) 

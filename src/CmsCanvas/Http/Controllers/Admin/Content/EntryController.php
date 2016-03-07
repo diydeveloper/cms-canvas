@@ -314,7 +314,7 @@ class EntryController extends AdminController {
             $data = $request->all();
             $contentFields = FieldType::findByInlineEditableKeys(array_keys($data));
 
-            $rules = $contentFields->getValidationRules();
+            $rules = $contentFields->getInlineEditableValidationRules($data);
             $attributeNames = $contentFields->getAttributeNames();
             $validator = Validator::make($data, $rules, [], $attributeNames);
 
@@ -324,7 +324,8 @@ class EntryController extends AdminController {
 
             $contentFields->fill($data);
             $contentFields->save();
-
+            
+            $contentFields->touchTemplateEntries();
             $contentFields->createRevisions($data);
 
             return response()->json(['status' => 'success']);
