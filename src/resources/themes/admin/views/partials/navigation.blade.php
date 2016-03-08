@@ -1,0 +1,1 @@
+{!! Admin::navigation(Config::get('cmscanvas::admin.navigation')) !!}

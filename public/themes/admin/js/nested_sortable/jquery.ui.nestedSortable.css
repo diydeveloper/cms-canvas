@@ -1,0 +1,76 @@
+.placeholder {
+    background-color: #cfcfcf !important;
+    height: 28px;
+    margin-left: 10px !important;
+}
+
+.ui-nestedSortable-error {
+    background:#fbe3e4;
+    color:#8a1f11;
+}
+
+ol {
+    margin: 0;
+    padding: 0;
+    padding-left: 30px;
+}
+
+ol.sortableTree, ol.sortableTree ol {
+    margin: 0 0 0 15px;
+    padding: 0;
+    list-style-type: none;
+}
+
+ol.sortableTree {
+    margin: 5px 0 0 0;
+}
+
+.sortableTree li.navigation_item {
+    margin: 3px 0 0 0;
+    padding: 0;
+    background: url(../../images/tree-cross-bar.gif) 2px 15px no-repeat;
+    padding-left: 10px;
+    border-left: 1px dashed #CCCCCC;
+}
+
+.sortableTree li.navigation_item:last-child {
+    border: 0;
+    background: url(../../images/tree-end-bar.gif) left top no-repeat;
+}
+
+.sortableTree li.navigation_item div  {
+    border: 1px solid #CCCCCC;
+    padding: 8px 5px 7px 2px;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.sortableTree_handle {
+    display: inline-block;
+    width: 10px;
+    background: url(../../images/drag-handle.gif) center center no-repeat;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 5px;
+    cursor: move;
+}
+
+
+.sortableTree li.navigation_item div:hover {
+    background-color: #FFEEDD;
+}
+
+.nav_tree_icons {
+    float: right;
+}
+
+.nav_tree_icons a {
+    margin-left: 5px;
+}
+
+#status {
+    padding: 5px;
+    background-color: #EFEFEF;
+    height: 15px;
+}
+
