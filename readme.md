@@ -88,7 +88,7 @@ Now that config/app.php and config/auth.php is configured, use Artisan to add CM
 php artisan vendor:publish
 ```
 
-Next use Artisan to create CMS Canvas's database:
+Next use Artisan to create CMS Canvas's database tables:
 
 ```php
 php artisan migrate
@@ -117,7 +117,7 @@ Finally, remove any root (home page) routes from app/Http/routes.php
 - });
 ```
 
-To access the admin panel got to your web browser and visit:
+To access the admin panel go to your web browser and visit:
 
 ```
 http://yourdomain.com/sitemin
