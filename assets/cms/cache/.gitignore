@@ -1,7 +1,0 @@
-# Ignore Everything
-*
-
-# But not these files...
-!.gitignore
-!.htaccess
-!index.html
