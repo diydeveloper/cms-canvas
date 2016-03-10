@@ -176,7 +176,7 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
     Route::group(['prefix' => 'system'], function() {
         Route::get('general-settings', ['as' => 'admin.system.settings.general-settings', 'permission' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 'uses' => 'Admin\System\SettingsController@getGeneralSettings']);
-        Route::post('general-settings', ['as' => 'admin.system.settings.general-settings.post', 'permission' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 'uses' => 'Admin\System\SettingsController@postGeneralSettings']);
+        Route::post('general-settings', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.system.settings.general-settings.post', 'permission' => 'ADMIN_SYSTEM_SETTINGS_GENERAL_SETTINGS_EDIT', 'uses' => 'Admin\System\SettingsController@postGeneralSettings']);
 
         Route::get('server-info', ['as' => 'admin.system.settings.server-info', 'permission' => 'ADMIN_SYSTEM_SETTINGS_SERVER_INFO_VIEW', 'uses' => 'Admin\System\SettingsController@getServerInfo']);
 
