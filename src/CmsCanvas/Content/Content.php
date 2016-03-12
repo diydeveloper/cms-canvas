@@ -48,7 +48,7 @@ class Content {
      */
     public function entry($entryId)
     {
-        $routeName = 'entry.'.$config.'.'.Lang::getLocale();
+        $routeName = 'entry.'.$entryId.'.'.Lang::getLocale();
         $routeArray = explode('.', $routeName);
         list($objectType, $objectId, $locale) = $routeArray;
         $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId) {
