@@ -95,6 +95,9 @@ class Page implements PageInterface  {
      */
     public function renderPage($parameters = [])
     {
+        // Add the resource instance to the service continer for global access
+        app()->instance('CmsCanvasPageResource', $this->resource);
+
         $content = $this->render($parameters);
 
         if ($this->resource instanceof Entry) {

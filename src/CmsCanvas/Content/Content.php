@@ -131,4 +131,20 @@ class Content {
         }
     }
 
+    /**
+     * Returns true if the current request is the home page
+     *
+     * @return bool
+     */
+    public function isHomePage()
+    {
+        $resource = app('CmsCanvasPageResource');
+
+        if ($resource instanceof \CmsCanvas\Models\Content\Entry) {
+            return $resource->isHomePage();
+        } else {
+            return (request()->route()->getUri() === '/');
+        }
+    }
+
 }
