@@ -50,16 +50,21 @@ class Page implements PageInterface  {
      */
     public function render($parameters = [])
     {
-        $content = $this->resource
-            ->setCache($this)
-            ->render($parameters);
+        $this->resource->setCache($this);
 
-        $layoutName = $content->getThemeLayout();
+        if ($this->resource instanceof Entry) {
+            $builder = $this->resource->newEntryBuilder($parameters);
+        } else {
+            $builder = $this->resource->newContentTypeBuilder($parameters);
+        }
+
+        $content = $builder->render();
+        $layoutName = $builder->getThemeLayout();
 
         if ($layoutName != null) {
             Theme::setLayout($layoutName);
-            $layout = Theme::getLayout();
-            $layout->content = $content;
+            $layout = Theme::getLayout()->with($builder->getRenderedData());
+            $layout->content = $content; // Note: this overrides any field data with the name content
 
             return $layout;
         }
@@ -103,6 +108,8 @@ class Page implements PageInterface  {
         if ($this->resource instanceof Entry) {
             $this->resource->includeThemeMetadata();
         }
+        // TODO (diyphpdeveloper): consider using the rendered data cached in the resource builder
+        // so that the page head does not have to render the fields again.
         $this->resource->includeThemePageHead();
 
         return $content;
