@@ -38,7 +38,7 @@ class ContentTypesTableSeeder extends Seeder {
     {{ entry.content }}
     {{ entry.content_extended }}
 {% else %}
-    {% set entries = entries(content_type='blog_post', year=year, month=month, day=day, paginate=15) %}
+    {% set entries = entries(content_type='blog_post', year=year, month=month, day=day, paginate=15, order_by="created_at", sort="desc") %}
     {% if entries is empty %}
         No results found.
     {% else %}
