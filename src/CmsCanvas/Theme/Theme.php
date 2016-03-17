@@ -484,13 +484,14 @@ class Theme {
      */
     public function javascripts($footer = false)
     {
+        $javascriptIncludes = "";
+
         if ($footer) {
             $javascriptOrderArray = 'footerJavascriptOrder';
         } else {
             $javascriptOrderArray = 'headerJavascriptOrder';
+            $javascriptIncludes = "\n\t<script type=\"text/javascript\">var BASE_HREF=\"" . url('/') . "\"</script>";
         }
-
-        $javascriptIncludes = "\n\t<script type=\"text/javascript\">var BASE_HREF=\"" . url('/') . "\"</script>";
 
         foreach ($this->$javascriptOrderArray as $javascriptOrder) {
             if ($javascriptOrder['array'] == 'javascripts') {
