@@ -41,6 +41,7 @@
                 <ul class="htabs">
                     <li><a href="#html-tab">HTML</a></li>
                     <li><a href="#page-head-tab">Page &lt;head&gt;</a></li>
+                    <li><a href="#revisions-tab">Revisions</a></li>
                     <li><a href="#settings-tab">Settings</a></li>
                     <li><a href="#permissions-tab">Permissions</a></li>
                 </ul>
@@ -53,6 +54,52 @@
                     <p class="info">Include custom JavaScript, CSS, and/or meta information in the <strong>&lt;head&gt;</strong> block of this content type's pages.</p>
 
                     {!! Form::textarea('page_head', null, array('id' => 'page_head')) !!}
+                </div>
+
+                <div id="revisions-tab">
+                    <table class="list">
+                        <thead>
+                            <tr>
+                                <th>Revision</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                                <th class="right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i = 0; ?>
+                            @if (! empty($contentType) && count($contentType->revisions) > 0)
+                                @foreach ($contentType->revisions as $revisionIteration)
+                                <tr>
+                                    <td>{!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
+                                    <td>
+                                        @if ($revisionIteration->author != null)
+                                            <a target="_blank" href="{!! Admin::url('user/'.$revisionIteration->author->id.'/profile') !!}">{!! $revisionIteration->author->getFullName() !!}</a>
+                                        @else
+                                            {!! $revisionIteration->author_name !!}
+                                        @endif
+                                    </td>
+                                    <td>{!! Content::userDate($revisionIteration->created_at) !!}</td>
+                                    <td class="right">
+                                        @if (($revision == null && $i == 0)
+                                            || ($revision != null && $revision->id == $revisionIteration->id))
+                                            <strong>Currently Loaded</strong>
+                                        @elseif ($i == 0)
+                                            [ <a href="{!! Admin::url("content/type/{$revisionIteration->content_type_id}/edit") !!}">Load Revision</a> ]
+                                        @else
+                                            [ <a href="{!! Admin::url("content/type/{$revisionIteration->content_type_id}/edit/revision/{$revisionIteration->id}") !!}">Load Revision</a> ]
+                                        @endif
+                                    </td>
+                                </tr>
+                                <?php $i++; ?>
+                                @endforeach
+                            @else
+                                <tr class="center">
+                                    <td colspan="4">No revisions found.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
 
                 <div id="settings-tab">

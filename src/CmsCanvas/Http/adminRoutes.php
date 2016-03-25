@@ -149,6 +149,9 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
 
                 Route::get('{contentType}/edit', ['as' => 'admin.content.type.edit', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'Admin\Content\TypeController@getEdit']);
                 Route::post('{contentType}/edit', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.content.type.edit.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'Admin\Content\TypeController@postEdit']);
+
+                Route::get('{contentType}/edit/revision/{revision}', ['as' => 'admin.content.type.edit.revision', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'Admin\Content\TypeController@getEdit']);
+                Route::post('{contentType}/edit/revision/{revision}', ['middleware' => 'cmscanvas.flushCache', 'as' => 'admin.content.type.edit.revision.post', 'permission' => 'ADMIN_CONTENT_TYPE_EDIT', 'uses' => 'Admin\Content\TypeController@postEdit']);
                 
             });
 

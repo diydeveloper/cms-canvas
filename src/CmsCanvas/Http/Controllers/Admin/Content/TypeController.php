@@ -95,19 +95,24 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function getEdit(Request $request, $contentType = null)
+    public function getEdit(Request $request, $contentType = null, $revision = null)
     {
         if ($contentType == null) {
             $content = View::make('cmscanvas::admin.content.type.add');
         } else {
             Theme::addPackage('codemirror');
             $content = View::make('cmscanvas::admin.content.type.edit');
+
+            if ($revision != null) {
+                $contentType->fill($revision->data);
+            }
         }
 
         $content->contentType = $contentType;
         $content->themeLayouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
         $content->defaultThemeLayout = Theme::getThemeLayouts(Config::get('cmscanvas::config.layout'));
         $content->permissions = Permission::orderBy('name', 'asc')->get();
+        $content->revision = $revision;
 
         $this->layout->breadcrumbs = [
             'content/type' => 'Content Types', 
@@ -122,7 +127,7 @@ class TypeController extends AdminController {
      *
      * @return View
      */
-    public function postEdit(Request $request, $contentType = null)
+    public function postEdit(Request $request, $contentType = null, $revision = null)
     {
         $rules = [
             'title' => 'required|max:255',
@@ -148,9 +153,12 @@ class TypeController extends AdminController {
             }
         }
 
+        $data = $request->all();
         $contentType = ($contentType == null) ? new Type() : $contentType;
-        $contentType->fill($request->all());
+        $contentType->fill($data);
         $contentType->save();
+
+        $contentType->createRevision($data);
 
         if ($request->input('save_exit')) {
             return redirect()->route('admin.content.type.types')

@@ -13,6 +13,7 @@ use CmsCanvas\Content\Type\FieldTypeCollection;
 use CmsCanvas\Content\Type\Render;
 use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
 use CmsCanvas\Container\Cache\Page;
+use CmsCanvas\Models\Content\Revision;
 
 class Type extends Model implements PageInterface {
 
@@ -499,6 +500,35 @@ class Type extends Model implements PageInterface {
         }
 
         return $fieldInstances;
+    }
+
+    /**
+     * Creates a content type revision with the data provided
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function createRevision(array $data)
+    {
+        $oldRevisions = $this->revisions()
+            ->skip(4)
+            ->take(25)
+            ->get();
+
+        foreach ($oldRevisions as $oldRevision) {
+            $oldRevision->delete();
+        }
+
+        $currentUser = Auth::user();
+
+        $revision = new Revision;
+        $revision->resource_type_id = Revision::CONTENT_TYPE_RESOURCE_TYPE_ID;
+        $revision->resource_id = $this->id;
+        $revision->content_type_id = $this->id;
+        $revision->author_id = $currentUser->id;
+        $revision->author_name = $currentUser->getFullName(); // Saved in case the user record is ever deleted
+        $revision->data = $data;
+        $revision->save();
     }
 
     /**
