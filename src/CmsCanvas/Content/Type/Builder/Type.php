@@ -147,4 +147,24 @@ class Type {
         return $this;
     }
 
+    /**
+     * Returns the renderedData class property
+     *
+     * @return array
+     */
+    public function getRenderedData()
+    {
+        return $this->renderedData;
+    }
+
+    /**
+     * Returns the theme layout to use
+     *
+     * @return string
+     */
+    public function getThemeLayout()
+    {
+        return $this->contentType->theme_layout;
+    }
+
 }

@@ -125,6 +125,19 @@ class Builder {
     protected $joinedEntryDataAliases = [];
 
     /**
+     * @var array
+     */
+    protected $sortableColumns = [
+        'id',
+        'title', 
+        'url_title', 
+        'created_at', 
+        'updated_at', 
+        'created_at_local', 
+        'updated_at_local', 
+    ];
+
+    /**
      * @param array $config
      * @return void
      */
@@ -597,13 +610,17 @@ class Builder {
         if (count($this->orders) > 0) {
             $counter = 0;
             foreach ($this->orders as $orderBy) {
-                $alias = $orderBy.'_orderBy';
-
-                $whereClause = new WhereClause($alias.'.content_type_field_short_tag', '=', $orderBy);
-                $this->joinEntryData($alias, $whereClause);
+                if (in_array($orderBy, $this->sortableColumns)) {
+                    $field = $orderBy;
+                } else {
+                    $alias = $orderBy.'_orderBy';
+                    $whereClause = new WhereClause($alias.'.content_type_field_short_tag', '=', $orderBy);
+                    $this->joinEntryData($alias, $whereClause);
+                    $field = $alias.'.data';
+                }
 
                 $sort = (isset($this->sorts[$counter]) && strtolower($this->sorts[$counter]) == 'desc') ? 'desc' : 'asc';
-                $this->entries->orderBy($alias.'.data', $sort);
+                $this->entries->orderBy($field, $sort);
                 $counter++;
             }
         }

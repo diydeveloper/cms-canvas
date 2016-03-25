@@ -119,7 +119,7 @@ class NavigationController extends AdminController {
 
         if ($validator->fails()) {
             if ($navigation == null) {
-                return redirect()->route('admin.content.navigation.add', $contentType->id)
+                return redirect()->route('admin.content.navigation.add')
                     ->withInput()
                     ->with('error', $validator->messages()->all());
             } else {

@@ -197,12 +197,15 @@ class EntryController extends AdminController {
             $contentFields->fill($revision->data);
         }
 
+        $availableContentTypes = Type::getAvailableForNewEntry();
+
         $content->entry = $entry;
         $content->fieldViews = $contentFields->getAdminViews();
         $content->entryStatuses = $entryStatuses;
         $content->authorOptions = $authorOptions;
         $content->contentType = $contentType;
         $content->revision = $revision;
+        $content->availableContentTypes = $availableContentTypes;
 
         $this->layout->breadcrumbs = [
             'content/entry' => 'Entries', 

@@ -246,4 +246,24 @@ class Entry {
         return $this->index;
     }
 
+    /**
+     * Returns the renderedData class property
+     *
+     * @return array
+     */
+    public function getRenderedData()
+    {
+        return $this->renderedData;
+    }
+
+    /**
+     * Returns the theme layout to use
+     *
+     * @return string
+     */
+    public function getThemeLayout()
+    {
+        return $this->entry->contentType->theme_layout;
+    }
+
 }

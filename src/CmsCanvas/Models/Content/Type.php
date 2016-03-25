@@ -474,7 +474,11 @@ class Type extends Model implements PageInterface {
         $fieldInstances = new FieldTypeCollection();
 
         foreach ($contentTypeFields as $contentTypeField) {
-            $fieldDataItems = $dataItems->getWhere('content_type_field_id', $contentTypeField->id);
+            // It is preferred to lookup data using the field id but for content type
+            // conversions short_tag lookups will have to do.
+            $fieldDataItems = ($entry != null && $this->id != $entry->content_type_id)
+                ? $dataItems->getWhere('content_type_field_short_tag', $contentTypeField->short_tag)
+                : $dataItems->getWhere('content_type_field_id', $contentTypeField->id);
 
             if ($contentTypeField->translate) {
                 foreach ($languages as $language) {

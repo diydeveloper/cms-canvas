@@ -173,6 +173,20 @@
                         <input type="hidden" name="template_flag" value="0">
                         {!! Form::checkbox('template_flag') !!}
                     </div>
+                    <div>
+                        {!! Form::label('change_content_type_id', 'Content Type:') !!}
+                        <span id="content_type_text">
+                            {!! $contentType->title !!}
+                            &nbsp;&nbsp;<a id="change_content_type" style="font-size: 10px;" href="javascript:void(0);">Change</a>
+                        </span>
+
+                        <span id="content_type_select" style="display: none;">
+                            {!! Form::select('change_content_type_id', $availableContentTypes->lists('title', 'id')->all(), $contentType->id) !!}
+                            &nbsp;<a id="load_content_type" style="font-size: 10px;" href="#">Load</a> 
+                            / 
+                            <a id="cancel_change_content_type" style="font-size: 10px;" href="javascript:void(0);">Cancel</a
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -269,6 +283,28 @@
 
         $('#expand_all').click( function() {
             $('.arrow_collapse').trigger('click');
+        });
+
+        $("#change_content_type").click(function() {
+            $('#content_type_text').hide();
+            $('#content_type_select').show();
+        });
+
+        $("#cancel_change_content_type").click(function() {
+            $('#content_type_select').hide();
+            $('#content_type_text').show();
+        });
+
+        $("#load_content_type").click(function() {
+            if ($('#change_content_type_id').val() == '') {
+                alert('No content type was selected.');
+            } else {
+                response = confirm('Changing the content type will only carry over content from fields with matching short tags in both content types.\nAny current unsaved data will be lost.\n\n Are you sure you want to continue?');
+
+                if (response) {
+                    window.location = ADMIN_URL + "/content/type/" + $('#change_content_type_id').val() + "/entry/{!! (! empty($entry)) ? $entry->id.'/edit' : 'add' !!}";
+                }
+            }
         });
     });
 </script>

@@ -112,6 +112,13 @@ class Theme {
     protected $stylesheetOrder = [];
 
     /**
+     * Array of cached theme paths
+     * 
+     * @var array
+     */
+    protected $themePaths = [];
+
+    /**
      * Hint path delimiter value.
      *
      * @var string
@@ -172,16 +179,7 @@ class Theme {
      */
     public function setTheme($theme)
     {
-        // Check if the application folder contains the specified theme folder. 
-        // If it does, we'll give that folder precedence on
-        // the loader list for the theme so the package theme can be overridden.
-        $appThemePath = $this->getAppThemePath($theme);
-
-        if (App::make('files')->isDirectory($appThemePath)) {
-            View::addNamespace('theme', $appThemePath.'/views/');
-        }
-
-        View::addNamespace('theme', $this->getThemePath($theme).'/views/');
+        view()->addNamespace('theme', $this->getThemePath($theme).'/views/');
 
         $this->theme = $theme;
 
@@ -486,13 +484,14 @@ class Theme {
      */
     public function javascripts($footer = false)
     {
+        $javascriptIncludes = "";
+
         if ($footer) {
             $javascriptOrderArray = 'footerJavascriptOrder';
         } else {
             $javascriptOrderArray = 'headerJavascriptOrder';
+            $javascriptIncludes = "\n\t<script type=\"text/javascript\">var BASE_HREF=\"" . url('/') . "\"</script>";
         }
-
-        $javascriptIncludes = "\n\t<script type=\"text/javascript\">var BASE_HREF=\"" . url('/') . "\"</script>";
 
         foreach ($this->$javascriptOrderArray as $javascriptOrder) {
             if ($javascriptOrder['array'] == 'javascripts') {
@@ -716,16 +715,25 @@ class Theme {
     }
 
     /**
-     * Returns the theme name minus the namespace
+     * Returns the preferred theme path
      *
      * @param string $theme
      * @return string
      */
     public function getThemePath($theme)
     {
-        $themePath = Config::get('cmscanvas::config.themes_directory'); 
+        // Check if the theme path has already been cached
+        if (isset($this->themePaths[$theme])) {
+            return $this->themePaths[$theme];
+        }
 
-        return rtrim($themePath, '/').'/'.$theme;
+        $this->themePaths[$theme] = $this->getAppThemePath($theme);
+
+        if (! App::make('files')->isDirectory($this->themePaths[$theme])) {
+            $this->themePaths[$theme] = $this->getPackageThemePath($theme);
+        }
+
+        return $this->themePaths[$theme];
     }
 
     /**
@@ -737,6 +745,19 @@ class Theme {
     public function getAppThemePath($theme)
     {
         $themePath = Config::get('cmscanvas::config.app_themes_directory'); 
+
+        return rtrim($themePath, '/').'/'.$theme;
+    }
+
+    /**
+     * Returns the theme path in the package folder
+     *
+     * @param string $theme
+     * @return string
+     */
+    public function getPackageThemePath($theme)
+    {
+        $themePath = Config::get('cmscanvas::config.themes_directory'); 
 
         return rtrim($themePath, '/').'/'.$theme;
     }

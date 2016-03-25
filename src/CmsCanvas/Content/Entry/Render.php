@@ -147,16 +147,6 @@ class Render {
     }
 
     /**
-     * Returns the theme layout to use
-     *
-     * @return string
-     */
-    public function getThemeLayout()
-    {
-        return $this->entryBuilder->getEntry()->contentType->theme_layout;
-    }
-
-    /**
      * Set the metadata for the current entry to the theme
      *
      * @return void

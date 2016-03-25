@@ -48,7 +48,7 @@ class Content {
      */
     public function entry($entryId)
     {
-        $routeName = 'entry.'.$config.'.'.Lang::getLocale();
+        $routeName = 'entry.'.$entryId.'.'.Lang::getLocale();
         $routeArray = explode('.', $routeName);
         list($objectType, $objectId, $locale) = $routeArray;
         $cache = Cache::rememberForever($routeName, function() use($objectType, $objectId) {
@@ -128,6 +128,22 @@ class Content {
             return $dateTime->format($format);
         } else {
             return $dateTime->format('d/M/Y h:i:s a');
+        }
+    }
+
+    /**
+     * Returns true if the current request is the home page
+     *
+     * @return bool
+     */
+    public function isHomePage()
+    {
+        $resource = app('CmsCanvasPageResource');
+
+        if ($resource instanceof \CmsCanvas\Models\Content\Entry) {
+            return $resource->isHomePage();
+        } else {
+            return (request()->route()->getUri() === '/');
         }
     }
 
