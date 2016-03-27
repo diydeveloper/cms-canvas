@@ -112,7 +112,7 @@ class NavigationController extends AdminController {
         $rules = [
             'title' => 'required|max:255',
             'short_name' => "required|alpha_dash|max:50"
-                ."|unique:content_types,short_name".(($navigation == null) ? "" : ",{$navigation->id}"),
+                ."|unique:navigations,short_name".(($navigation == null) ? "" : ",{$navigation->id}"),
         ];
 
         $validator = Validator::make($request->all(), $rules);
