@@ -3,8 +3,9 @@
 namespace CmsCanvas\Content\Type;
 
 use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
+use CmsCanvas\Support\Contracts\View\Render as ViewRender;
 
-class Render {
+class Render implements ViewRender {
 
     /**
      * The content type builder to render from
@@ -84,13 +85,13 @@ class Render {
     }
 
     /**
-     * Used to determine if the current render is an entry
+     * Returns the resource type for this render
      *
-     * @return boolean
+     * @return string
      */
-    public function isEntry()
+    public function getResourceType()
     {
-        return false;
+        return 'CONTENT_TYPE';
     }
 
 }

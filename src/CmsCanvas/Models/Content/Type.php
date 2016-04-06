@@ -3,7 +3,6 @@
 namespace CmsCanvas\Models\Content;
 
 use Lang, Auth, StringView, Config, Theme, Cache;
-use CmsCanvas\Content\Page\PageInterface;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Models\Language;
@@ -14,8 +13,10 @@ use CmsCanvas\Content\Type\Render;
 use CmsCanvas\Content\Type\Builder\Type as ContentTypeBuilder;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Models\Content\Revision;
+use CmsCanvas\Support\Contracts\Page as PageInterface;
+use CmsCanvas\Support\Contracts\View\Renderable;
 
-class Type extends Model implements PageInterface {
+class Type extends Model implements Renderable, PageInterface {
 
     /**
      * The database table used by the model.

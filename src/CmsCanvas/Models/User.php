@@ -9,8 +9,12 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\User\Render;
+use CmsCanvas\Support\Contracts\View\Renderable;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+class User extends Model implements 
+    AuthenticatableContract, 
+    CanResetPasswordContract, 
+    Renderable {
     
     use Authenticatable, CanResetPassword;
 

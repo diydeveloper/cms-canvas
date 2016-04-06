@@ -3,8 +3,9 @@
 namespace CmsCanvas\User;
 
 use CmsCanvas\Models\User as UserModel;
+use CmsCanvas\Support\Contracts\View\Render as ViewRender;
 
-class Render {
+class Render implements ViewRender {
 
     /**
      * The entry to render from
@@ -68,6 +69,16 @@ class Render {
     public function fullName()
     {
         return $this->user->getFullName();
+    }
+
+    /**
+     * Returns the resource type for this render
+     *
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return 'USER';
     }
 
 }

@@ -3,16 +3,16 @@
 namespace CmsCanvas\Container\Cache;
 
 use Theme;
-use CmsCanvas\Content\Page\PageInterface;
+use CmsCanvas\Support\Contracts\Page as PageInterface;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
 
-class Page implements PageInterface  {
+class Page implements PageInterface {
 
     /**
      * An Entry or Content Type
      *
-     * @var mixed
+     * @var \CmsCanvas\Support\Contracts\Page
      */
     protected $resource;
 
@@ -85,7 +85,7 @@ class Page implements PageInterface  {
     /**
      * Get the resource for the cache
      *
-     * @return mixed
+     * @return \CmsCanvas\Support\Contracts\Page
      */
     public function getResource()
     {

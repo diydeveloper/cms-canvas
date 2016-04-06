@@ -1,8 +1,8 @@
 <?php 
 
-namespace CmsCanvas\Content\Page;
+namespace CmsCanvas\Support\Contracts;
 
-interface PageInterface {
+interface Page {
 
     /**
      * Get the evaluated contents of the object.

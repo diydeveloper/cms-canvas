@@ -3,7 +3,6 @@
 namespace CmsCanvas\Models\Content;
 
 use Lang, stdClass, Cache, DB, Auth, Twig, Config, Theme, App;
-use CmsCanvas\Content\Page\PageInterface;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
@@ -14,9 +13,11 @@ use CmsCanvas\Content\Entry\Render;
 use CmsCanvas\Exceptions\PermissionDenied;
 use CmsCanvas\Exceptions\Exception;
 use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
+use CmsCanvas\Support\Contracts\View\Renderable;
+use CmsCanvas\Support\Contracts\Page as PageInterface;
 use Twig_Loader_String;
 
-class Entry extends Model implements PageInterface {
+class Entry extends Model implements Renderable, PageInterface {
 
     /**
      * The database table used by the model.

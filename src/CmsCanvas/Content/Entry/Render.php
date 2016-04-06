@@ -3,8 +3,9 @@
 namespace CmsCanvas\Content\Entry;
 
 use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
+use CmsCanvas\Support\Contracts\View\Render as ViewRender;
 
-class Render {
+class Render implements ViewRender {
 
     /**
      * The entry to render from
@@ -121,13 +122,13 @@ class Render {
     }
 
     /**
-     * Used to determine if the current render is an entry
+     * Returns the resource type for this render
      *
-     * @return boolean
+     * @return string
      */
-    public function isEntry()
+    public function getResourceType()
     {
-        return true;
+        return 'ENTRY';
     }
 
     /**

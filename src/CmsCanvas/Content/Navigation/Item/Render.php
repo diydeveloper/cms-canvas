@@ -3,8 +3,9 @@
 namespace CmsCanvas\Content\Navigation\Item;
 
 use CmsCanvas\Content\Navigation\Builder\Item as ItemBuilder;
+use CmsCanvas\Support\Contracts\View\Render as ViewRender;
 
-class Render {
+class Render implements ViewRender {
 
     /**
      * The navigation item builder to render from
@@ -142,6 +143,16 @@ class Render {
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    /**
+     * Returns the resource type for this render
+     *
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return 'NAVIGATION_ITEM';
     }
 
 }
