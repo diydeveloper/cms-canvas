@@ -132,6 +132,16 @@ class Render implements ViewRender {
     }
 
     /**
+     * Returns the children for the current navigation item
+     *
+     * @return string
+     */
+    public function children()
+    {
+        return $this->itemBuilder->getChildren();
+    }
+
+    /**
      * Returns the seperator for the current navigation item
      *
      * @return string
