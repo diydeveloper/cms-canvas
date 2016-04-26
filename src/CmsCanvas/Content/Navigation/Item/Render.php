@@ -138,7 +138,7 @@ class Render implements ViewRender {
      */
     public function children()
     {
-        return $this->itemBuilder->getChildren();
+        return $this->itemBuilder->renderChildren();
     }
 
     /**
