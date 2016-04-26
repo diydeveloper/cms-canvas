@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="content">
-        {!! Form::model($item, array('id' => 'form')) !!}
+        {!! Form::model($item, ['id' => 'form']) !!}
         <div class="tabs">
             <ul class="htabs">
                 <li><a href="#item-tab">Item</a></li>
@@ -74,7 +74,14 @@
 
                     <div>
                         <label for="subnav_visibility"><span class="required">*</span> Subnavigation:<span class="help">Show/Hide children of this item.</span></label>
-                        {!! Form::select('children_visibility_id', ['1' => 'Always Show', '2' => 'Only Show If A Current Item Ancestor', '3' => 'Never Show']) !!}
+                        {!! Form::select(
+                            'children_visibility_id', 
+                            [
+                                $childrenVisibilityShow => 'Always Show', 
+                                $childrenVisibilityCurrentBranch => 'Only Show If In Current Branch', 
+                                $childrenVisibilityHide => 'Never Show'
+                            ]
+                        ) !!}
                     </div>
 
                     <div>

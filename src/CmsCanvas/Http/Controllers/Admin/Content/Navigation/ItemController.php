@@ -38,6 +38,9 @@ class ItemController extends AdminController {
         $content->item = $item;
         $content->entries = $entries;
         $content->languages = $languages;
+        $content->childrenVisibilityShow = Item::CHILDREN_VISIBILITY_SHOW;
+        $content->childrenVisibilityCurrentBranch = Item::CHILDREN_VISIBILITY_CURRENT_BRANCH;
+        $content->childrenVisibilityHide = Item::CHILDREN_VISIBILITY_HIDE;
 
         $this->layout->breadcrumbs = [
             'content/navigation' => 'Navigations', 
@@ -59,8 +62,10 @@ class ItemController extends AdminController {
             'type' => 'required',
         ];
 
-        if ($request->input('type') != 'url') {
+        if ($request->input('type') == 'page') {
             $rules['entry_id'] = 'required';
+        } else {
+            $rules['url'] = 'required';
         }
 
         $validator = Validator::make($request->all(), $rules);

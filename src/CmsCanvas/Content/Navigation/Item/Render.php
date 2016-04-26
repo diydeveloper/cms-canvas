@@ -82,6 +82,16 @@ class Render implements ViewRender {
     }
 
     /**
+     * Reutrns the depth class property
+     *
+     * @return int
+     */
+    public function depth()
+    {
+        return $this->itemBuilder->getDepth();
+    }
+
+    /**
      * HTML attributes string for the <li> tag
      *
      * @return string

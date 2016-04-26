@@ -436,7 +436,7 @@ class Builder {
     /**
      * Set query where clause for entries
      *
-     * @param  string $where
+     * @param  array $where
      * @return self
      */
     protected function setWheres($wheres)

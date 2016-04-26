@@ -102,7 +102,7 @@ class Admin {
 
         if (! empty($item['children'])) {
             foreach ($item['children'] as $item) {
-                if ($this->canShowListItem($item, ++$depth)) {
+                if ($this->canShowListItem($item, $depth + 1)) {
                     return true;
                 }
             }
@@ -131,7 +131,7 @@ class Admin {
 
         if (! empty($item['children'])) {
             foreach ($item['children'] as $child) {
-                if ($this->isListItemSelected($child, ++$depth)) {
+                if ($this->isListItemSelected($child, $depth + 1)) {
                     return true;
                 }
             }

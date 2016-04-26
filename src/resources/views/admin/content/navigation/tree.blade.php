@@ -30,7 +30,7 @@
             handle: 'div span.sortableTree_handle',
             helper: 'clone',
             items: 'li.navigation_item',
-            maxLevels: 50,
+            maxLevels: 200,
             opacity: .6,
             placeholder: 'placeholder',
             revert: 250,
@@ -39,11 +39,11 @@
             toleranceElement: '> div',
             update: function(event, ui) { 
                 show_status('Saving...', false, true);
-                dataString = $('ol.sortableTree').nestedSortable('serialize');
+                dataString = JSON.stringify($('ol.sortableTree').nestedSortable('toArray'));
                 $.ajax({  
                     type: "POST",  
                     url: "{!! Admin::url('content/navigation/'.$navigation->id.'/tree') !!}",  
-                    data: dataString,  
+                    data: {list: dataString},
                     success: function(html) {  
                         show_status('Saved', true, false);
                     },

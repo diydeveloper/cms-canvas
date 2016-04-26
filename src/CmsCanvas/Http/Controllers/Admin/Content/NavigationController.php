@@ -166,24 +166,25 @@ class NavigationController extends AdminController {
      */
     public function postTree(Request $request)
     {
-        $list = $request->input('list');
+        $items = @json_decode($request->input('list'));
 
-        if (! is_array($list)) {
-            $list = [];
+        if (! is_array($items)) {
+            $items = [];
         }
 
         $order = 0;
 
-        foreach($list as $id => $parentId) {
-            $parentId = ($parentId == 'root') ? null : $parentId;
+        foreach($items as $item) {
+            if ($item->item_id == 'root') {
+                continue;
+            }
 
-            Item::where('id', $id)
-                ->update(
-                    [
-                        'sort' => $order, 
-                        'parent_id' => $parentId
-                    ]
-                );
+            Item::where('id', $item->item_id)
+                ->update([
+                    'sort' => $order, 
+                    'depth' => $item->depth - 1, 
+                    'parent_id' => ($item->parent_id == 'root') ? null : $item->parent_id
+                ]);
 
             $order++;
         }

@@ -38,6 +38,21 @@ class Item extends Model {
     ];
 
     /**
+     * @var int
+     */
+    const CHILDREN_VISIBILITY_SHOW = 1;
+
+    /**
+     * @var int
+     */
+    const CHILDREN_VISIBILITY_CURRENT_BRANCH = 2;
+
+    /**
+     * @var int
+     */
+    const CHILDREN_VISIBILITY_HIDE = 3;
+
+    /**
      * The columns that can NOT be mass-assigned.
      *
      * @var array

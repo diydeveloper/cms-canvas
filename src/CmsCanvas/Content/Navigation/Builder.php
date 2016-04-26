@@ -5,6 +5,7 @@ namespace CmsCanvas\Content\Navigation;
 use Request, Cache, Lang;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
+use CmsCanvas\Content\Navigation\Builder\Item as ItemBuilder;
 use CmsCanvas\Content\Navigation\Item\RenderCollection;
 
 class Builder {
@@ -20,19 +21,19 @@ class Builder {
     protected $maxDepth;
 
     /**
-     * @var string
+     * @var int
      */
-    protected $startLevel;
+    protected $minDepth = 0;
 
     /**
      * @var int
      */
-    protected $offset = 1;
+    protected $maxQueryDepth;
 
     /**
      * @var int
      */
-    protected $startingParentDepth = 1;
+    protected $minQueryDepth = 0;
 
     /**
      * @var int
@@ -40,19 +41,39 @@ class Builder {
     protected $currentItemDepth = 0;
 
     /**
-     * @var int
-     */
-    protected $startItemId = 0;
-
-    /**
      * @var bool
      */
     protected $recursiveFlag = true;
 
     /**
+     * @var bool
+     */
+    protected $onlyCurrentBranchFlag = false;
+
+    /**
+     * @var bool
+     */
+    protected $startFromCurrentDepthFlag = false;
+
+    /**
      * @var \CmsCanvas\Models\Content\Navigation\Item|collection
      */
     protected $navigationTree;
+
+    /**
+     * @var string
+     */
+    protected $ulId;
+
+    /**
+     * @var string
+     */
+    protected $ulClass;
+
+    /**
+     * @var int
+     */
+    protected $childrenVisibility;
 
     /**
      * Constructor
@@ -75,7 +96,8 @@ class Builder {
      */
     public function get()
     {
-        $navigationTree = $this->removeHidden($this->getNavigationTree());
+        $navigationTree = $this->getSubset($this->getNavigationTree());
+
         return new RenderCollection($navigationTree, $this);
     }
 
@@ -105,57 +127,35 @@ class Builder {
                     $this->setMaxDepth($value);
                     break;
 
-                case 'start_level':
-                    $this->setStartLevel($value);
+                case 'min_depth':
+                    $this->setMinDepth($value);
                     break;
 
-                case 'offset':
-                    $this->setOffset($value);
+                case 'start_from_current_depth':
+                    $this->setStartFromCurrentDepth($value);
                     break;
 
-                case 'start_item_id':
-                    $this->setStartItemId($value);
+                case 'only_current_branch':
+                    $this->setOnlyCurrentBranch($value);
+                    break;
+
+                case 'children_visibility':
+                    $this->setChildrenVisibility($value);
                     break;
 
                 case 'recursive':
-                    $this->setRecursiveFlag($value);
+                    $this->setRecursive($value);
                     break;
 
-                case 'id_attribute':
-                    $this->setIdAttribute($value);
+                case 'ul_id':
+                    $this->setUlId($value);
                     break;
 
-                case 'class_attribute':
-                    $this->setClassAttribute($value);
+                case 'ul_class':
+                    $this->setUlClass($value);
                     break;
             }
         } 
-    }
-
-    /**
-     * Sets the level that the navigation should start from
-     *
-     * @param  string $startLevel
-     * @return self
-     */
-    public function setStartLevel($startLevel)
-    {
-        $this->startLevel = strtolower($startLevel); 
-
-        return $this;
-    }
-
-    /**
-     * Sets the start level offset that the navigation should start from
-     *
-     * @param  int $offset
-     * @return self
-     */
-    public function setOffset($offset)
-    {
-        $this->offset = $offset; 
-
-        return $this;
     }
 
     /**
@@ -167,6 +167,45 @@ class Builder {
     public function setMaxDepth($maxDepth)
     {
         $this->maxDepth = $maxDepth; 
+
+        return $this;
+    }
+
+    /**
+     * Sets the depth at which the navigation should start 
+     *
+     * @param  int $minDepth
+     * @return self
+     */
+    public function setMinDepth($minDepth)
+    {
+        $this->minDepth = $minDepth; 
+
+        return $this;
+    }
+
+    /**
+     * Sets a flag indicating to only return the current branch
+     *
+     * @param  bool $onlyCurrentBranchFlag
+     * @return self
+     */
+    public function setOnlyCurrentBranch($onlyCurrentBranchFlag)
+    {
+        $this->onlyCurrentBranchFlag = (bool) $onlyCurrentBranchFlag; 
+
+        return $this;
+    }
+
+    /**
+     * Sets a flag indicating if the minDepth should start at the current depth
+     *
+     * @param  bool $startFromCurrentDepthFlag
+     * @return self
+     */
+    public function setStartFromCurrentDepth($startFromCurrentDepthFlag)
+    {
+        $this->startFromCurrentDepthFlag = $startFromCurrentDepthFlag;
 
         return $this;
     }
@@ -185,14 +224,26 @@ class Builder {
     }
 
     /**
-     * Sets the item id where the navigation should start
+     * Sets the visibility for navigation chilren
      *
-     * @param  int $startItemId
+     * @param  string $visibility
      * @return self
      */
-    public function setStartItemId($startItemId)
+    public function setChildrenVisibility($visibility)
     {
-        $this->startItemId = $startItemId; 
+        switch ($visibility) {
+            case 'show':
+                $this->childrenVisibility = Item::CHILDREN_VISIBILITY_SHOW;
+                break;
+
+            case 'current_branch':
+                $this->childrenVisibility = Item::CHILDREN_VISIBILITY_CURRENT_BRANCH;
+                break;
+
+            case 'hide':
+                $this->childrenVisibility = Item::CHILDREN_VISIBILITY_HIDE;
+                break;
+        }
 
         return $this;
     }
@@ -203,7 +254,7 @@ class Builder {
      * @param  bool $recursiveFlag
      * @return self
      */
-    public function setRecursiveFlag($recursiveFlag)
+    public function setRecursive($recursiveFlag)
     {
         $this->recursiveFlag = (bool) $recursiveFlag; 
 
@@ -213,12 +264,12 @@ class Builder {
     /**
      * Sets the id attribute string for the <ul> tag
      *
-     * @param  string $idAttribute
+     * @param  string $ulId
      * @return self
      */
-    public function setIdAttribute($idAttribute)
+    public function setUlId($ulId)
     {
-        $this->idAttribute = $idAttribute; 
+        $this->ulId = $ulId; 
 
         return $this;
     }
@@ -226,12 +277,12 @@ class Builder {
     /**
      * Sets the class attribute string for the <ul> tag
      *
-     * @param  string $classAttribute
+     * @param  string $ulClass
      * @return self
      */
-    public function setClassAttribute($classAttribute)
+    public function setUlClass($ulClass)
     {
-        $this->classAttribute = $classAttribute; 
+        $this->ulClass = $ulClass; 
 
         return $this;
     }
@@ -243,11 +294,11 @@ class Builder {
      * @param  int $depth
      * @return \CmsCanvas\Models\Content\Navigation\Item|collection
      */
-    protected function lazyLoadNavigationTree($items, $depth = 1)
+    protected function lazyLoadNavigationTree($items, $depth = 0)
     {
         $items->load('entry.contentType');
 
-        if ($this->recursiveFlag && ($this->maxDepth === null || $this->maxDepth > $depth)) {
+        if ($this->recursiveFlag && ($this->maxQueryDepth === null || $this->maxQueryDepth > $depth)) {
             $items->load(['children' => function($query) {
                 $query->orderBy('sort', 'asc');
                 $query->with('data');
@@ -256,7 +307,7 @@ class Builder {
 
         foreach ($items as $item) {
             if ($this->recursiveFlag && count($item->getLoadedChildren()) > 0) {
-                $this->lazyLoadNavigationTree($item->getLoadedChildren(), ++$depth);
+                $this->lazyLoadNavigationTree($item->getLoadedChildren(), $depth + 1);
             }
         }
 
@@ -274,7 +325,7 @@ class Builder {
             $items = Item::with('data')
                 ->join('navigations', 'navigation_items.navigation_id', '=', 'navigations.id')
                 ->where('navigations.short_name', $this->shortName)
-                ->where('parent_id', ($this->startItemId ? $this->startItemId : null))
+                ->where('depth', $this->minQueryDepth)
                 ->orderBy('sort', 'asc')
                 ->select('navigation_items.*')
                 ->get();
@@ -294,32 +345,14 @@ class Builder {
     {
         $key = $this->shortName;
         $key .= '.'.Lang::getLocale();
-        $key .= '.'.$this->startItemId;
+        $key .= '.'.$this->minQueryDepth;
         $key .= '.'.($this->recursiveFlag ? 'true' : 'false');
 
-        if ($this->maxDepth !== null) {
-            $key .= '.'.$this->maxDepth;
+        if ($this->maxQueryDepth !== null) {
+            $key .= '.'.$this->maxQueryDepth;
         }
 
         return $key;
-    }
-
-    /**
-     * Recursively loop through navigation tree and remove hidden navigation items
-     *
-     * @return \CmsCanvas\Content\Navigation\Builder\Item|array;
-     */
-    protected function removeHidden($items, $depth = 1)
-    {
-        foreach ($items as $key => $item) {
-            if ($item->isHidden()) {
-                unset($items[$key]);
-            } else {
-                $item->unsetHiddenChildren();
-            }
-        }
-
-        return $items;
     }
 
     /**
@@ -329,7 +362,7 @@ class Builder {
      * @param int
      * @return void
      */
-    protected function compileCurrentItems($items, $depth = 1)
+    protected function compileCurrentItems($items, $depth = 0)
     {
         foreach ($items as $item) {
             $pattern = $item->getNavigationItem()->current_uri_pattern;
@@ -340,11 +373,21 @@ class Builder {
                 )
             ) {
                 $item->setCurrentItemFlag(true);
-                $this->currentItemDepth = $depth;
+
+                // In cases where there are multiple current items in the navigation
+                // we only want to capture the depth of the first one encountered.
+                if ($this->currentItemDepth === 0) {
+                    $this->currentItemDepth = $depth;
+                }
+            }
+
+            $parent = $item->getParent();
+            if ($parent != null && ($parent->isCurrentItem() || $parent->isCurrentItemDescendant())) {
+                $item->setCurrentItemDescendantFlag(true);
             }
 
             if (count($item->getChildren()) > 0) {
-                $this->compileCurrentItems($item->getChildren(), ++$depth);
+                $this->compileCurrentItems($item->getChildren(), $depth + 1);
             }
         }
     }
@@ -356,15 +399,17 @@ class Builder {
      * @param int
      * @return void
      */
-    protected function compileCurrentItemAncestors($items, $depth = 1)
+    protected function compileCurrentItemAncestors($items, $depth = 0)
     {
         foreach ($items as $item) {
-            if ( ! $item->getNavigationItem()->disable_current_ancestor_flag && $this->hasCurrentDescendant($item->getChildren())) {
+            if ( ! $item->getNavigationItem()->disable_current_ancestor_flag 
+                && $this->hasCurrentDescendant($item->getChildren())
+            ) {
                 $item->setCurrentItemAncestorFlag(true);
             }
 
             if (count($item->getChildren()) > 0) {
-                $this->compileCurrentItemAncestors($item->getChildren(), ++$depth);
+                $this->compileCurrentItemAncestors($item->getChildren(), $depth + 1);
             }
         }
     }
@@ -372,11 +417,11 @@ class Builder {
     /**
      * Detects if items is a ancestor of the current navigation item
      *
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
-     * @param int
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item|array
+     * @param  int $depth
      * @return bool
      */
-    protected function hasCurrentDescendant($items, $depth = 1)
+    protected function hasCurrentDescendant($items, $depth = 0)
     {
         $hasDescendant = false;
 
@@ -386,7 +431,7 @@ class Builder {
             }
 
             if (count($item->getChildren()) > 0) {
-                $hasDescendant = $this->hasCurrentDescendant($item->getChildren(), ++$depth);
+                $hasDescendant = $this->hasCurrentDescendant($item->getChildren(), $depth + 1);
 
                 if ($hasDescendant) {
                     return $hasDescendant;
@@ -398,151 +443,88 @@ class Builder {
     }
 
     /**
-     * Returns a navigation subset starting with the parent of the current navigation
-     * item at the nth parent depth
+     * Return a subset of the navigation tree processing additional filters
      *
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
-     * @param int
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item|array $items
+     * @param  int $depth
+     * @return \CmsCanvas\Content\Navigation\Builder\Item|array
      */
-    protected function getCurrentParentSubset($items, $depth = 1)
+    public function getSubset($items, $depth = 0)
     {
         $subset = [];
 
-        foreach($items as $item) {
-            if ($item->isCurrentItem() || $item->isCurrentItemAncestor()) {
-                if ($depth == $this->startingParentDepth) {
-                    $subset = $items;
-                } elseif ($item->isCurrentItem()) {
-                    // If we reach this point, the starting parent depth is greater
-                    // than the current page's depth. Go ahead and return the children of the
-                    // current item. If there are no children then return its siblings.
-                    if (count($item->getChildren()) > 0) {
-                        $subset = $item->getChildren();
-                    } else {
-                        $subset = $items;
-                    }
-                } else {
-                    $subset = $this->getCurrentParentSubset($item->getChildren(), ++$depth);
-                }
-
-                break;
+        foreach ($items as $item) {
+            if ($depth < $this->minDepth) {
+                $subset = array_merge($subset, $this->getSubset($item->getChildren(), $depth + 1));
+                continue;
             }
+
+            if ($item->isHidden()) {
+                continue;
+            }
+
+            if ($this->onlyCurrentBranchFlag  && $depth == $this->minDepth
+                && ($item->getParent() != null && ! $item->getParent()->isInCurrentBranch())
+            ) {
+                continue;
+            }
+
+            $newItem = $item->cloneWithNoChildren();
+            $newItem->setDepth($depth);
+
+            // Determine if children should be returned in the subset
+            if (count($item->getChildren()) > 0 
+                && ($this->maxDepth === null || $depth < $this->maxDepth)
+                && $this->isItemChildrenVisible($item)
+            ) {
+                $children = $this->getSubset($item->getChildren(), $depth + 1);
+                $newItem->setChildren($children);
+            }
+
+            $subset[] = $newItem;
         }
 
         return $subset;
     }
 
     /**
-     * Returns a navigation subset starting with the siblings of the current navigation item
+     * Determines if the provided item's children is visible
      *
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
-     * @param int
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
+     * @param  \CmsCanvas\Content\Navigation\Builder\Item $item
+     * @return bool
      */
-    protected function getCurrentSiblingSubset($items, $depth = 1)
+    protected function isItemChildrenVisible(ItemBuilder $item)
     {
-        $subset = [];
-
-        foreach($items as $item) {
-            if ($item->isCurrentItem()) {
-                $subset = $items;
-
-                break;
-            } else {
-                if (count($item->getChildren()) > 0) {
-                    $subset = $this->getCurrentSiblingSubset($item->getChildren(), ++$depth);
-
-                    if (count($subset) > 0) {
-                        return $subset;
-                    }
-                }
+        if ($this->childrenVisibility !== null) {
+            if ($this->childrenVisibility == Item::CHILDREN_VISIBILITY_SHOW 
+                || ($this->childrenVisibility == Item::CHILDREN_VISIBILITY_CURRENT_BRANCH 
+                    && $item->isInCurrentBranch()
+                )
+            ) {
+                return true;
             }
+        } elseif ($item->getNavigationItem()->children_visibility_id == Item::CHILDREN_VISIBILITY_SHOW
+            || ($item->getNavigationItem()->children_visibility_id == Item::CHILDREN_VISIBILITY_CURRENT_BRANCH 
+                && $item->isInCurrentBranch()
+            )
+        ) {
+            return true;
         }
 
-        return $subset;
+        return false;
     }
 
     /**
-     * Returns a navigation subset starting with the children of the current navigation item
-     *
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
-     * @param int
-     * @param \CmsCanvas\Content\Navigation\Builder\Item|array
-     */
-    protected function getCurrentChildrenSubset($items, $depth = 1)
-    {
-        $subset = [];
-
-        foreach($items as $item) {
-            if ($item->isCurrentItem()) {
-                $subset = $item->getChildren();
-
-                return $subset;
-            }
-
-            if (count($item->getChildren()) > 0) {
-                $subset = $this->getCurrentChildrenSubset($item->getChildren(), ++$depth);
-
-                if (count($subset) > 0) {
-                    return $subset;
-                }
-            }
-        }
-
-        return $subset;
-    }
-
-    /**
-     * Calculate the starting parent depth from the configuration
+     * Set the calculated depth factoring the current depth and min depth
      *
      * @return void
      */
-    protected function compileStartingParentDepth()
+    protected function compileCurrentDepth()
     {
-        $calculatedDepth = null;
-
-        switch ($this->startLevel) {
-            case 'parent_depth':
-                $calculatedDepth = $this->offset;
-                break;
-
-            case 'above_current':
-                $calculatedDepth = $this->currentItemDepth - $this->offset;
-                break;
+        if ($this->startFromCurrentDepthFlag) {
+            $calculatedDepth = $this->minDepth + $this->currentItemDepth;
+            $this->minDepth = ($calculatedDepth > 0) ? $calculatedDepth : 0;
         }
-
-        if ($calculatedDepth != null && $calculatedDepth > 0) {
-            $this->startingParentDepth = $calculatedDepth;
-        }
-    }
-
-    /**
-     * Get and set a subset of the navigation tree if needed
-     *
-     * @return void
-     */
-    protected function compileSubset()
-    {
-        $navigationTree = $this->navigationTree;
-
-        switch ($this->startLevel) {
-            case 'parent_depth':
-            case 'above_current':
-                $this->compileStartingParentDepth();
-                $navigationTree = $this->getCurrentParentSubset($navigationTree);
-                break;
-
-            case 'current':
-                $navigationTree = $this->getCurrentSiblingSubset($navigationTree);
-                break;
-
-            case 'current_children':
-                $navigationTree = $this->getCurrentChildrenSubset($navigationTree);
-                break;
-        }
-
-        $this->navigationTree = $navigationTree;
     }
 
     /**
@@ -556,7 +538,7 @@ class Builder {
 
         $this->compileCurrentItems($this->navigationTree);
         $this->compileCurrentItemAncestors($this->navigationTree);
-        $this->compileSubset();
+        $this->compileCurrentDepth();
     }
 
     /**
@@ -568,12 +550,12 @@ class Builder {
     {
         $attributes = '';
 
-        if (! empty($this->idAttribute)) {
-            $attributes .= ' id="'.$this->idAttribute.'"';
+        if (! empty($this->ulId)) {
+            $attributes .= ' id="'.$this->ulId.'"';
         }
 
-        if (! empty($this->classAttribute)) {
-            $attributes .= ' class="'.$this->classAttribute.'"';
+        if (! empty($this->ulClass)) {
+            $attributes .= ' class="'.$this->ulClass.'"';
         }
 
         return $attributes;

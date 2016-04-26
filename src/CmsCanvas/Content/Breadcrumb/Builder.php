@@ -271,7 +271,7 @@ class Builder {
             }
 
             if (count($item->getChildren()) > 0) {
-                $currentItem = $this->getFirstCurrentItem($item->getChildren(), ++$depth);
+                $currentItem = $this->getFirstCurrentItem($item->getChildren(), $depth + 1);
 
                 if ($currentItem != null) {
                     return $currentItem;
@@ -297,7 +297,7 @@ class Builder {
             }
 
             if (count($item->getChildren()) > 0) {
-                $homePageItem = $this->getHomePageItem($item->getChildren(), ++$depth);
+                $homePageItem = $this->getHomePageItem($item->getChildren(), $depth + 1);
 
                 if ($homePageItem != null) {
                     return $homePageItem;

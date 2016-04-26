@@ -31,6 +31,7 @@ class CmsCanvasCreateNavigationItemsTable extends Migration {
             $table->boolean('disable_current_flag')->default(0);
             $table->boolean('disable_current_ancestor_flag')->default(0);
             $table->integer('sort')->unsigned();
+            $table->integer('depth')->unsigned();
             $table->timestamps();
         });
     }

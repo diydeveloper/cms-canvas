@@ -38,6 +38,13 @@ class Item {
     protected $currentItemAncestorFlag = false;
 
     /**
+     * Set true if the item is a descendant of the current item 
+     *
+     * @var bool
+     */
+    protected $currentItemDescendantFlag = false;
+
+    /**
      * Set true if the item is solo or first in a collection
      *
      * @var bool
@@ -54,9 +61,16 @@ class Item {
     /**
      * The position the item is in a collection
      *
-     * @var bool
+     * @var int
      */
     protected $index = 0;
+
+    /**
+     * The depth the item is in a collection
+     *
+     * @var int
+     */
+    protected $depth = 0;
 
     /**
      * The seperator for the current item
@@ -89,6 +103,19 @@ class Item {
     {
         $items = $this->navigationItem->getLoadedChildren();
         $this->children = NavigationItem::newItemBuilderCollection($items, $this);
+    }
+
+    /**
+     * Clones the current object and unsets its children
+     *
+     * @return \CmsCanvas\Content\Navigation\Builder\Item
+     */
+    public function cloneWithNoChildren()
+    {
+        $item = clone $this;
+        $item->unsetChildren();
+
+        return $item;
     }
 
     /**
@@ -281,6 +308,19 @@ class Item {
     }
 
     /**
+     * Returns the builder item children for the current item
+     *
+     * @param  array $children
+     * @return self
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    /**
      * Returns the builder item parent for the current item
      *
      * @return \CmsCanvas\Content\Navigation\Builder\Item
@@ -299,6 +339,19 @@ class Item {
     public function setIndex($value)
     {
         $this->index = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the items's depth in the collection collection
+     *
+     * @param  int $value
+     * @return self
+     */
+    public function setDepth($value)
+    {
+        $this->depth = $value;
 
         return $this;
     }
@@ -360,6 +413,16 @@ class Item {
     }
 
     /**
+     * Returns the depth class property
+     *
+     * @return int
+     */
+    public function getDepth()
+    {
+        return $this->depth;
+    }
+
+    /**
      * Sets the currentItemFlag class variable
      *
      * @param  bool $value
@@ -406,6 +469,42 @@ class Item {
     }
 
     /**
+     * Sets the currentItemDescendantFlag class variable
+     *
+     * @param  bool $value
+     * @return self
+     */
+    public function setCurrentItemDescendantFlag($value)
+    {
+        $this->currentItemDescendantFlag = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns currentItemDescendantFlag class variable
+     *
+     * @return bool
+     */
+    public function isCurrentItemDescendant()
+    {
+        return $this->currentItemDescendantFlag;
+    }
+
+    /**
+     * Returns true if the item is in the current branch
+     *
+     * @return bool
+     */
+    public function isInCurrentBranch()
+    {
+        return ($this->isCurrentItemAncestor() 
+            || $this->isCurrentItemDescendant() 
+            || $this->isCurrentItem()
+        );
+    }
+
+    /**
      * Sets the seperator for the current item
      *
      * @param  string $seperator
@@ -436,24 +535,6 @@ class Item {
     public function unsetChildren()
     {
         $this->children = [];
-
-        return $this;
-    }
-
-    /**
-     * Recursively loop through children and remove hidden navigation items
-     *
-     * @return self;
-     */
-    public function unsetHiddenChildren()
-    {
-        foreach ($this->children as $key => $child) {
-            if ($child->isHidden()) {
-                unset($this->children[$key]);
-            } else {
-                $child->unsetHiddenChildren();
-            }
-        }
 
         return $this;
     }
