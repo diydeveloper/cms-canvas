@@ -96,9 +96,7 @@ class Builder {
      */
     public function get()
     {
-        $navigationTree = $this->getSubset($this->getNavigationTree());
-
-        return new RenderCollection($navigationTree, $this);
+        return new RenderCollection($this->getNavigationTree(), $this);
     }
 
     /**
@@ -110,7 +108,7 @@ class Builder {
     {
         $this->compile();
 
-        return $this->navigationTree;
+        return $this->getSubset($this->navigationTree);
     }
 
     /**

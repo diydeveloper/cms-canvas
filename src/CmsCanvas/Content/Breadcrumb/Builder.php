@@ -35,6 +35,16 @@ class Builder {
     protected $includeHomeFlag = false;
 
     /**
+     * @var string
+     */
+    protected $ulId;
+
+    /**
+     * @var string
+     */
+    protected $ulClass;
+
+    /**
      * Constructor
      *
      * @param string $shortName
@@ -63,19 +73,19 @@ class Builder {
                     break;
 
                 case 'hide_single':
-                    $this->setHideSingleFlag($value);
+                    $this->setHideSingle($value);
                     break;
 
                 case 'include_home':
-                    $this->setIncludeHomeFlag($value);
+                    $this->setIncludeHome($value);
                     break;
 
-                case 'id_attribute':
-                    $this->setIdAttribute($value);
+                case 'ul_id':
+                    $this->setUlId($value);
                     break;
 
-                case 'class_attribute':
-                    $this->setClassAttribute($value);
+                case 'ul_class':
+                    $this->setUlClass($value);
                     break;
             }
         } 
@@ -113,7 +123,7 @@ class Builder {
      * @param  bool $hideSingleFlag
      * @return self
      */
-    public function setHideSingleFlag($hideSingleFlag)
+    public function setHideSingle($hideSingleFlag)
     {
         $this->hideSingleFlag = (bool) $hideSingleFlag; 
 
@@ -126,7 +136,7 @@ class Builder {
      * @param  bool $includeHomeFlag
      * @return self
      */
-    public function setIncludeHomeFlag($includeHomeFlag)
+    public function setIncludeHome($includeHomeFlag)
     {
         $this->includeHomeFlag = (bool) $includeHomeFlag; 
 
@@ -136,12 +146,12 @@ class Builder {
     /**
      * Sets the id attribute string for the <ul> tag
      *
-     * @param  string $idAttribute
+     * @param  string $id
      * @return self
      */
-    public function setIdAttribute($idAttribute)
+    public function setUlId($id)
     {
-        $this->idAttribute = $idAttribute; 
+        $this->ulId = $id; 
 
         return $this;
     }
@@ -149,12 +159,12 @@ class Builder {
     /**
      * Sets the class attribute string for the <ul> tag
      *
-     * @param  string $classAttribute
+     * @param  string $class
      * @return self
      */
-    public function setClassAttribute($classAttribute)
+    public function setUlClass($class)
     {
-        $this->classAttribute = $classAttribute; 
+        $this->ulClass = $class; 
 
         return $this;
     }

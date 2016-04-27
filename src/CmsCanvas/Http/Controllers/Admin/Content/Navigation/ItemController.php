@@ -27,6 +27,7 @@ class ItemController extends AdminController {
                 $query->whereNotNull('entry_uri_template');
             })
             ->orWhere('id', Config::get('cmscanvas::config.site_homepage'))
+            ->orderBy('title', 'asc')
             ->get();
 
         $languages = Language::where('active', 1)
