@@ -38,6 +38,7 @@ class Type extends Model implements Renderable, PageInterface {
         'entries_allowed', 
         'max_revisions', 
         'route',
+        'entry_route_prefix',
         'entry_uri_template',
         'theme_layout',
         'url_title_flag',
@@ -285,6 +286,35 @@ class Type extends Model implements Renderable, PageInterface {
         }
 
         $this->attributes['route'] = $value;
+    }
+
+
+    /**
+     * Remove the first and last forward slash from the entry route prefix
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getEntryRoutePrefixAttribute($value)
+    {
+        return trim($value, '/');
+    }
+
+    /**
+     * Remove the first and last forward slash from the entry route prefix
+     *
+     * @param  string $value
+     * @return void
+     */
+    public function setEntryRoutePrefixAttribute($value)
+    {
+        $value = trim($value, '/');
+
+        if ($value === '') {
+            $value = null;
+        }
+
+        $this->attributes['entry_route_prefix'] = $value;
     }
 
     /**

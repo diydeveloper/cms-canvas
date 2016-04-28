@@ -117,6 +117,10 @@
                             {!! Form::select('theme_layout', ['' => '-- None --'] + $themeLayouts) !!}
                         </div>
                         <div>
+                            {!! HTML::decode(Form::label('entry_route_prefix', 'Entry Route Prefix:<span class="help">Optional prefix to prepend to entry routes.</span>')) !!}
+                            {!! Form::text('entry_route_prefix', null, ['style' => 'width: 250px;']) !!}
+                        </div>
+                        <div>
                             {!! HTML::decode(Form::label('url_title_flag', 'Entry URL Title: <span class="help">Adds a URL title field to entries of this content type that can be used for SEO friendly routing.</span>')) !!}
                             <span>
                                 <label>{!! Form::radio('url_title_flag', '1') !!} Enabled</label>

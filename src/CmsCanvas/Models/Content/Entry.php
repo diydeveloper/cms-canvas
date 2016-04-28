@@ -355,8 +355,19 @@ class Entry extends Model implements Renderable, PageInterface {
      */
     public function getRoute()
     {
-        if ($this->route !== null && $this->route !== '' || $this->isHomePage()) {
-            return '/'.$this->route;
+        if ($this->isHomePage()) {
+            return '/';
+        }
+
+        if ($this->route !== null && $this->route !== '') {
+            $route = '';
+            if ($this->contentType->entry_route_prefix !== null 
+                && $this->contentType->entry_route_prefix !== ''
+            ) {
+                $route .= '/'.$this->contentType->entry_route_prefix;
+            }
+
+            return $route.'/'.$this->route;
         }
 
         return null;

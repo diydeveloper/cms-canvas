@@ -18,8 +18,8 @@
     </div>
     <div class="content">
 
-        @if ( ! empty($entry) && $entry->route != '')
-            <a style="float: right; z-index: 1; position: relative;" target="_blank" href="{!! url($entry->route) !!}"><img src="{!! Theme::asset('images/preview-icon-medium.png') !!}" /></a>
+        @if ( ! empty($entry) && $entry->getUri() != '')
+            <a style="float: right; z-index: 1; position: relative;" target="_blank" href="{!! url($entry->getUri()) !!}"><img src="{!! Theme::asset('images/preview-icon-medium.png') !!}" /></a>
         @endif
 
         <div class="fright" style="margin-top: 4px; margin-right: 10px;">
@@ -71,7 +71,11 @@
                 <div class="form">
                     <div>
                         {!! Form::label('route', 'Route:') !!}
-                        <span style="line-height: 24px; "> {!! url('/') !!}/ </span>
+                        @if ($contentType->entry_route_prefix !== null && $contentType->entry_route_prefix !== '')
+                            <span style="line-height: 24px; ">{!! url('/').'/'.$contentType->entry_route_prefix !!}/</span>
+                        @else
+                            <span style="line-height: 24px; ">{!! url('/') !!}/</span>
+                        @endif
                         {!! Form::text('route') !!}
                     </div>
                     <div>
