@@ -327,12 +327,12 @@ class Builder {
     {
         $attributes = '';
 
-        if (! empty($this->idAttribute)) {
-            $attributes .= ' id="'.$this->idAttribute.'"';
+        if (! empty($this->ulId)) {
+            $attributes .= ' id="'.$this->ulId.'"';
         }
 
-        if (! empty($this->classAttribute)) {
-            $attributes .= ' class="'.$this->classAttribute.'"';
+        if (! empty($this->ulClass)) {
+            $attributes .= ' class="'.$this->ulClass.'"';
         }
 
         return $attributes;
