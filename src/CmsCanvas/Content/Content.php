@@ -138,7 +138,11 @@ class Content {
      */
     public function isHomePage()
     {
-        $resource = app('CmsCanvasPageResource');
+        try {
+            $resource = app('CmsCanvasPageResource');
+        } catch (\Exception $e) {
+            $resource = null;
+        }
 
         if ($resource instanceof \CmsCanvas\Models\Content\Entry) {
             return $resource->isHomePage();
