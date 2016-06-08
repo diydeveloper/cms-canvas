@@ -472,7 +472,7 @@ class Builder {
 
             // Determine if children should be returned in the subset
             if (count($item->getChildren()) > 0 
-                && ($this->maxDepth === null || $depth < $this->maxDepth)
+                && ($this->maxDepth === null || $depth < $this->maxDepth + $this->minDepth)
                 && $this->isItemChildrenVisible($item)
             ) {
                 $children = $this->getSubset($item->getChildren(), $depth + 1);
