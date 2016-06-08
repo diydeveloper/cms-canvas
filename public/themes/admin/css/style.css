@@ -1247,6 +1247,7 @@ a.copy_text {
     overflow-y: auto;
     overflow-x: hidden;
     width: 250px;
+    z-index: 10;
 }
 
 #add_entry_btn li ul li a {
