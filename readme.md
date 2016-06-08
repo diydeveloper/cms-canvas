@@ -1,7 +1,5 @@
 A content management system for [Laravel 5](http://laravel.com/).
 
-**This project is currently in BETA**
-
 [![Latest Stable Version](https://poser.pugx.org/diyphpdeveloper/cmscanvas/v/stable)](https://packagist.org/packages/diyphpdeveloper/cmscanvas)
 [![Total Downloads](https://poser.pugx.org/diyphpdeveloper/cmscanvas/downloads)](https://packagist.org/packages/diyphpdeveloper/cmscanvas)
 [![Latest Unstable Version](https://poser.pugx.org/diyphpdeveloper/cmscanvas/v/unstable)](https://packagist.org/packages/diyphpdeveloper/cmscanvas)
@@ -16,7 +14,7 @@ CMS Canvas requires Laravel 5.2 and a MySQL server.
 Require this package with Composer
 
 ```bash
-composer require diyphpdeveloper/cmscanvas:dev-master
+composer require diyphpdeveloper/cmscanvas:2.0.*
 ```
 
 Create the database
