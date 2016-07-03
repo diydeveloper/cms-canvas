@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace CmsCanvas\Providers;
 
@@ -106,7 +106,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerTheme();
-        $this->registerAuthLoginEventListener();
         $this->registerDisplayError();
         $this->registerAdmin();
         $this->registerContent();
@@ -160,19 +159,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
             'Illuminate\Contracts\Debug\ExceptionHandler',
             'CmsCanvas\Exceptions\Handler'
         );
-    }
-
-    /**
-     * Register auth login event listener
-     *
-     * @return void
-     */
-    protected function registerAuthLoginEventListener()
-    {
-        Event::listen('auth.login', function($user) {
-            $user->last_login = new DateTime;
-            $user->save();
-        });
     }
 
     /**
