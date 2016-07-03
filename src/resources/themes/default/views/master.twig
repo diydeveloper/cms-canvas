@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ trans_locale() }}">
     <head>
-        <meta charset="UTF-8" /> 
+        <meta charset="UTF-8" />
 
         {{ theme_head() }}
 
@@ -27,14 +27,14 @@
                     animation    : {height: 'show'},
                     speed        : 'normal',
                     autoArrows   : false,
-                    dropShadows  : false, 
+                    dropShadows  : false,
                     disableHI    : false, /* set to true to disable hoverIntent detection */
                     onInit       : function(){},
                     onBeforeShow : function(){},
                     onShow       : function(){},
                     onHide       : function(){}
                 });
-                
+
                 $('nav > ul').css('display', 'block');
             });
         </script>
@@ -46,7 +46,7 @@
 
             <!-- Header -->
             <header>
-                <a id="logo" href="{{ url('/') }}">{{ config('cmscanvas::config.site_name') }}</a> 
+                <a id="logo" href="{{ url('/') }}">{{ config('cmscanvas::config.site_name') }}</a>
 
                 <img alt="Header Image" src="{{ theme_asset('images/header.jpg') }}" />
 
@@ -67,9 +67,6 @@
         </div><!-- container -->
 
         {{ theme_footer() }}
-        <pre>
-            {{ dump(DB.getQueryLog()) }}
-        </pre>
     </body>
 
 </html>
