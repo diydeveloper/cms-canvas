@@ -72,15 +72,16 @@ return [
         ],
         'codemirror' => [
             'javascript' => [
-                Theme::asset('js/codemirror-4.1/lib/codemirror.js', 'admin'),
-                Theme::asset('js/codemirror-4.1/mode/xml/xml.js', 'admin'),
-                Theme::asset('js/codemirror-4.1/mode/javascript/javascript.js', 'admin'),
-                Theme::asset('js/codemirror-4.1/mode/css/css.js', 'admin'),
-                Theme::asset('js/codemirror-4.1/mode/clike/clike.js', 'admin'),
-                Theme::asset('js/codemirror-4.1/mode/php/php.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/lib/codemirror.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/mode/xml/xml.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/mode/javascript/javascript.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/mode/css/css.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/mode/clike/clike.js', 'admin'),
+                Theme::asset('js/codemirror-5.16/mode/twig/twig.js', 'admin'),
             ],
             'stylesheet' => [
-                Theme::asset('js/codemirror-4.1/lib/codemirror.css', 'admin'),
+                Theme::asset('js/codemirror-5.16/lib/codemirror.css', 'admin'),
+                Theme::asset('js/codemirror-5.16/theme/pastel-on-dark.css', 'admin'),
             ],
         ],
         'admin_jqueryui' => [

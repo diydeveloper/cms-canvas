@@ -39,7 +39,7 @@
 
             <div id="tabs">
                 <ul class="htabs">
-                    <li><a href="#html-tab">HTML</a></li>
+                    <li><a href="#html-tab">Markup</a></li>
                     <li><a href="#page-head-tab">Page &lt;head&gt;</a></li>
                     <li><a href="#revisions-tab">Revisions</a></li>
                     <li><a href="#settings-tab">Settings</a></li>
@@ -182,21 +182,23 @@
         var editor = CodeMirror.fromTextArea(document.getElementById("layout"), {
             lineNumbers: true,
             matchBrackets: true,
-            mode: "application/x-httpd-php",
+            mode: {name: "twig", htmlMode: true},
             indentUnit: 4,
             indentWithTabs: true,
             enterMode: "keep",
-            tabMode: "shift"
+            tabMode: "shift",
+            theme: "pastel-on-dark"
         });
 
         var editor = CodeMirror.fromTextArea(document.getElementById("page_head"), {
             lineNumbers: true,
             matchBrackets: true,
-            mode: "application/x-httpd-php",
+            mode: {name: "twig", htmlMode: true},
             indentUnit: 4,
             indentWithTabs: true,
             enterMode: "keep",
-            tabMode: "shift"
+            tabMode: "shift",
+            theme: "pastel-on-dark"
         });
 
         $( "#tabs" ).tabs();
