@@ -500,6 +500,16 @@ abstract class FieldType implements ArrayAccess {
     }
 
     /**
+     * Returns the locale for the current field type
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
      * Returns a serialized metadata object to be saved to the database
      *
      * @return string

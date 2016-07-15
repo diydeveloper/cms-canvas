@@ -5,7 +5,7 @@
             <div class="tabs">
                 <ul class="htabs">
                     @foreach ($relatedFieldTypes as $relatedFieldType)
-                        <?php $language = $languages->getFirstWhere('locale', $relatedFieldType->locale); ?>
+                        <?php $language = $languages->getFirstWhere('locale', $relatedFieldType->getLocale()); ?>
                         <li>
                             <a href="#translate-{!! $relatedFieldType->getkey() !!}">{!! $language->language !!}</a>
                         </li>
