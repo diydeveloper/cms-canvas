@@ -103,4 +103,16 @@ class Ckeditor extends FieldType {
             .'</div>';
     }
 
+    /**
+     * Returns the data for the current field type
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        // Convert appllicable HTML characters to entities so that we can have
+        // code snippets in the editor without it being converted.
+        return htmlentities($this->data);
+    }
+
 }
