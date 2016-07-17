@@ -281,16 +281,23 @@ class WhereClause {
 
         foreach ($items as $item) {
             $whereClause = new WhereClause();
+            if (isset($item['relation']) && ! in_array($item['relation'], ['and', 'or'])) {
+                throw new Exception('Invalid value detected for \'relation\' in where clause.');
+            }
+            $relation = (isset($item['relation'])) ? $item['relation'] : 'and';
+            $whereClause->setRelation($relation);
 
-            if (is_array(current($item)) || (key($item) == 'relation' && next($item) == is_array(current($item)))) {
-                $relation = (isset($item['relation'])) ? $item['relation'] : 'and';
-                $whereClause->setRelation($relation);
-                unset($item['relation']);
-                $whereClause->createNestedEntryData($item);
+            if (is_array(current($item)) || isset($item['nested'])) {
+                if (isset($item['nested'])) {
+                    $nestedItems = $item['nested'];
+                    if (! is_array(current($nestedItems))) {
+                        $nestedItems = [$nestedItems];
+                    } 
+                } else {
+                    $nestedItems = $item;
+                }
+                $whereClause->createNestedEntryData($nestedItems);
             } else {
-                $relation = (isset($item['relation'])) ? $item['relation'] : 'and';
-                $whereClause->setRelation($relation);
-
                 if (! isset($item['field']) || ! isset($item['value'])) {
                     throw new Exception('The where clause array must contain both field and value properties.');
                 }
