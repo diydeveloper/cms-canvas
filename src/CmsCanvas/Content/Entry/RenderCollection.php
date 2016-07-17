@@ -140,4 +140,52 @@ class RenderCollection extends CmsCanvasCollection {
         }
     }
 
+    /**
+     * Get the URL for the next page.
+     *
+     * @return int
+     */
+    public function nextPageUrl()
+    {
+        if ($this->paginator != null) {
+            return $this->paginator->nextPageUrl();
+        }
+    }
+
+    /**
+     * Get the URL for the previous page.
+     *
+     * @return int
+     */
+    public function previousPageUrl()
+    {
+        if ($this->paginator != null) {
+            return $this->paginator->previousPageUrl();
+        }
+    }
+
+    /**
+     * Determines if there are more pages after the current page.
+     *
+     * @return int
+     */
+    public function hasMorePages()
+    {
+        if ($this->paginator != null) {
+            return $this->paginator->hasMorePages();
+        }
+    }
+
+    /**
+     * Get the URL for the provided page.
+     *
+     * @return int
+     */
+    public function url($page)
+    {
+        if ($this->paginator != null) {
+            return $this->paginator->url($page);
+        }
+    }
+
 }

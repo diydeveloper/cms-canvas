@@ -152,9 +152,9 @@ class Render implements ViewRender {
      *
      * @return void
      */
-    public function setThemeMetadata()
+    public function includeThemeMetadata()
     {
-        $this->entryBuilder->getEntry()->setThemeMetadata();
+        $this->entryBuilder->getEntry()->includeThemeMetadata();
     }
 
 }

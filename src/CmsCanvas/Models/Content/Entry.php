@@ -527,7 +527,13 @@ class Entry extends Model implements Renderable, PageInterface {
      */
     public function includeThemeMetadata()
     {
-        Theme::setMetaTitle($this->meta_title);
+        $metaTitle = $this->meta_title;
+        // If a meta title is not provided then auto-generate one
+        if ($metaTitle == null) {
+            $metaTitle =  $this->title.' | '.config('cmscanvas::config.site_name');
+        }
+
+        Theme::setMetaTitle($metaTitle);
         Theme::setMetaDescription($this->meta_description);
         Theme::setMetaKeywords($this->meta_keywords);
 
