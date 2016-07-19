@@ -357,6 +357,20 @@ class Type extends Model implements Renderable, PageInterface {
     }
 
     /**
+     * Sets the meta title for the content type to the theme
+     *
+     * @return self
+     */
+    public function includeThemeMetadata()
+    {
+        // Auto-generate a meta title for the content type that can be overrwitten
+        // later by the user if desired.
+        Theme::setMetaTitle($this->title.' | '.config('cmscanvas::config.site_name'));
+
+        return $this;
+    }
+
+    /**
      * Sets the content type's page head content to the theme
      *
      * @return self

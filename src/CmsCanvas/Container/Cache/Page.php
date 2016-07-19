@@ -103,11 +103,10 @@ class Page implements PageInterface {
         // Add the resource instance to the service continer for global access
         app()->instance('CmsCanvasPageResource', $this->resource);
 
+        $this->resource->includeThemeMetadata();
+        
         $content = $this->render($parameters);
 
-        if ($this->resource instanceof Entry) {
-            $this->resource->includeThemeMetadata();
-        }
         // TODO (diyphpdeveloper): consider using the rendered data cached in the resource builder
         // so that the page head does not have to render the fields again.
         $this->resource->includeThemePageHead();
