@@ -138,17 +138,17 @@ class WhereClause {
 
             case 'is null':
                 if ($this->relation == 'or') {
-                    $query->orWhereNull($this->column, $this->value);
+                    $query->orWhereNull($this->column);
                 } else {
-                    $query->whereNull($this->column, $this->value);
+                    $query->whereNull($this->column);
                 }
                 break;
 
             case 'is not null':
                 if ($this->relation == 'or') {
-                    $query->orWhereNotNull($this->column, $this->value);
+                    $query->orWhereNotNull($this->column);
                 } else {
-                    $query->whereNotNull($this->column, $this->value);
+                    $query->whereNotNull($this->column);
                 }
                 break;
 
@@ -298,17 +298,23 @@ class WhereClause {
                 }
                 $whereClause->createNestedEntryData($nestedItems);
             } else {
-                if (! isset($item['field']) || ! isset($item['value'])) {
-                    throw new Exception('The where clause array must contain both field and value properties.');
-                }
-
+                $field = (isset($item['field'])) ? $item['field'] : null;
+                $value = (isset($item['value'])) ? $item['value'] : null;
                 $operator = (isset($item['operator'])) ? $item['operator'] : '=';
 
-                if (in_array($item['field'], $entryColumns)) {
-                    $whereClause->nested[] = new WhereClause('entries.'.$item['field'], $operator, $item['value']);
+                if ($field == null) {
+                    throw new Exception('The where clause must a \'field\' property.');
+                }
+
+                if ($value == null && ! in_array($operator, ['is null', 'is not null'])) {
+                    throw new Exception('The where clause must contain a \'value\' property.');
+                }
+
+                if (in_array($field, $entryColumns)) {
+                    $whereClause->nested[] = new WhereClause('entries.'.$field, $operator, $value);
                 } else {
-                    $whereClause->nested[] = new WhereClause('entry_data.content_type_field_short_tag', '=', $item['field']);
-                    $whereClause->nested[] = new WhereClause('entry_data.data', $operator, $item['value']);
+                    $whereClause->nested[] = new WhereClause('entry_data.content_type_field_short_tag', '=', $field);
+                    $whereClause->nested[] = new WhereClause('entry_data.data', $operator, $value);
                 }
             }
 
