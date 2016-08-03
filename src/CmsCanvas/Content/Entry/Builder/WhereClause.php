@@ -306,7 +306,7 @@ class WhereClause {
                     throw new Exception('The where clause must a \'field\' property.');
                 }
 
-                if ($value == null && ! in_array($operator, ['is null', 'is not null'])) {
+                if (($value === null || $value === '') && ! in_array($operator, ['is null', 'is not null'])) {
                     throw new Exception('The where clause must contain a \'value\' property.');
                 }
 
