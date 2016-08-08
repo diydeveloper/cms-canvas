@@ -33,10 +33,9 @@ class Page implements PageInterface {
     public function __construct($resourceId, $resourceType = 'entry')
     {
         if ($resourceType == 'contentType') {
-            $this->resource = Type::find($resourceId);
+            $this->resource = Type::with('mediaType')->find($resourceId);
         } else {
-            $this->resource = Entry::find($resourceId);
-            $this->resource->contentType;
+            $this->resource = Entry::with('contentType.mediaType')->find($resourceId);
         }
 
         $this->contentTypeFields = $this->resource->getContentTypeFields(true);
@@ -111,7 +110,28 @@ class Page implements PageInterface {
         // so that the page head does not have to render the fields again.
         $this->resource->includeThemePageHead();
 
-        return $content;
+        $response = response($content);
+
+        $contentType = $this->getContentType();
+        if ($contentType->mediaType != null) {
+            $response->header('Content-Type', $contentType->mediaType->mime_type);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Return's the resources content type
+     *
+     * @return \CmsCanvas\Models\Content\Type
+     */
+    private function getContentType()
+    {
+        if ($this->resource instanceof Entry) {
+            return $this->resource->contentType;
+        } else {
+            return $this->resource;
+        }
     }
 
 }

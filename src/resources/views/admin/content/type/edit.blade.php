@@ -145,6 +145,13 @@
                             {!! Form::text('max_revisions', null, array('class' => 'short')) !!}
                             <span class="ex">No revisions will be kept if left empty</span>
                         </div>
+                        <div>
+                            {!! HTML::decode(Form::label('media_type_id', 'Media Type:<span class="help">Specifies output media type by setting the Content-Type header when rendered as a page.</span>')) !!}
+                            {!! Form::select(
+                                'media_type_id', 
+                                ['' => 'Default'] + $mediaTypes->lists('name', 'id')->all()
+                            ) !!}
+                        </div>
                     </div>
                 </div>
 

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder {
         $this->call(\CmsCanvas\Database\Seeds\UserRolesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\RevisionResourceTypesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\ContentTypesTableSeeder::class);
+        $this->call(\CmsCanvas\Database\Seeds\ContentTypeMediaTypesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\ContentTypeFieldTypesTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\ContentTypeFieldsTableSeeder::class);
         $this->call(\CmsCanvas\Database\Seeds\EntryStatusesTableSeeder::class);
