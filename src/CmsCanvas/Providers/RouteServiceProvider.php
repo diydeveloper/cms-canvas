@@ -171,7 +171,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->locale;
 
             $locales = $languages->getWhere('default', 0)
-                ->lists('locale', 'id');
+                ->pluck('locale', 'id');
 
             $contentTypes = Type::whereNotNull('route')
                 ->get();

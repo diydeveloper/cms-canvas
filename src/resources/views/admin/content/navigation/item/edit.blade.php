@@ -32,7 +32,7 @@
 
                     <div class="page_div">
                         <label for="entry_id"><span class="required">*</span> Entry Page:</label>
-                        {!! Form::select('entry_id', ['' => ''] + $entries->lists('title', 'id')->all()) !!}
+                        {!! Form::select('entry_id', ['' => ''] + $entries->pluck('title', 'id')->all()) !!}
                     </div>
 
                     <div>

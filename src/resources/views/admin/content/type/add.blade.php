@@ -55,7 +55,7 @@
                 {!! HTML::decode(Form::label('media_type_id', 'Media Type:<span class="help">Specifies output media type by setting the Content-Type header when rendered as a page.</span>')) !!}
                 {!! Form::select(
                     'media_type_id', 
-                    ['' => 'Default'] + $mediaTypes->lists('name', 'id')->all()
+                    ['' => 'Default'] + $mediaTypes->pluck('name', 'id')->all()
                 ) !!}
             </div>
             {!! Form::close() !!}

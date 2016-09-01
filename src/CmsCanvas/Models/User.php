@@ -345,7 +345,7 @@ class User extends Model implements
                 Cache::forever('role_'.$role->id, $role);
             }
 
-            Session::put('role_ids', $roles->lists('id')->all());
+            Session::put('role_ids', $roles->pluck('id')->all());
         }
 
         $this->setRelation('roles', $roles);

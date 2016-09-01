@@ -212,7 +212,7 @@ class Type extends Model implements Renderable, PageInterface {
                 if (count($roles) > 0) {
                     $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
                         $query->whereHas('roles', function($query) use($roles) {
-                            $query->whereIn('roles.id', $roles->lists('id')->all());
+                            $query->whereIn('roles.id', $roles->pluck('id')->all());
                         });
                     });
                 }
@@ -236,7 +236,7 @@ class Type extends Model implements Renderable, PageInterface {
                 if (count($roles) > 0) {
                     $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
                         $query->whereHas('roles', function($query) use($roles) {
-                            $query->whereIn('roles.id', $roles->lists('id')->all());
+                            $query->whereIn('roles.id', $roles->pluck('id')->all());
                         });
                     });
                 }

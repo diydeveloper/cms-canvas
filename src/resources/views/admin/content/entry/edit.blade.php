@@ -150,7 +150,7 @@
                 <div class="form">
                     <div>
                         {!! HTML::decode(Form::label('entry_status_id', '<span class="required">*</span> Status:')) !!}
-                        {!! Form::select('entry_status_id', $entryStatuses->lists('name', 'id')->all()) !!}
+                        {!! Form::select('entry_status_id', $entryStatuses->pluck('name', 'id')->all()) !!}
                     </div>
                     <div>
                         {!! HTML::decode(Form::label('created_at', '<span class="required">*</span> Date Created:')) !!}
@@ -185,7 +185,7 @@
                         </span>
 
                         <span id="content_type_select" style="display: none;">
-                            {!! Form::select('change_content_type_id', $availableContentTypes->lists('title', 'id')->all(), $contentType->id) !!}
+                            {!! Form::select('change_content_type_id', $availableContentTypes->pluck('title', 'id')->all(), $contentType->id) !!}
                             &nbsp;<a id="load_content_type" style="font-size: 10px;" href="#">Load</a> 
                             / 
                             <a id="cancel_change_content_type" style="font-size: 10px;" href="javascript:void(0);">Cancel</a
