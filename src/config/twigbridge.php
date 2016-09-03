@@ -118,6 +118,7 @@ return [
 
             'CmsCanvas\TwigBridge\Extension\Theme',
             'CmsCanvas\TwigBridge\Extension\Content',
+            'CmsCanvas\TwigBridge\Extension\Translator',
         ],
 
         /*
