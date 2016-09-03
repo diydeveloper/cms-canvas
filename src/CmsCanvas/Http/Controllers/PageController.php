@@ -2,7 +2,6 @@
 
 namespace CmsCanvas\Http\Controllers;
 
-use Twig;
 use Route, Cache, Config, Lang, Theme;
 use CmsCanvas\Container\Cache\Page;
 use CmsCanvas\Http\Controllers\PublicController;

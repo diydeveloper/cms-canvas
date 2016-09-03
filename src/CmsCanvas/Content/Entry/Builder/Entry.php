@@ -32,7 +32,7 @@ class Entry {
     /**
      * Rendered content
      *
-     * @var \TwigBridge\StringView\StringView
+     * @var \CmsCanvas\TwigBridge\StringView\StringView
      */
     protected $renderContents;
 

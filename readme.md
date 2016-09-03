@@ -46,9 +46,9 @@ Once Composer has installed or updated you will need to register CMS Canvas with
         CmsCanvas\Providers\CmsCanvasServiceProvider::class,
         CmsCanvas\Providers\RouteServiceProvider::class,
         CmsCanvas\Providers\EventServiceProvider::class,
+        CmsCanvas\Providers\TwigBridgeServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        TwigBridge\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -65,10 +65,10 @@ Now find the alliases key, again towards the end of the file, and add the follow
         'Admin'     => CmsCanvas\Support\Facades\Admin::class,
         'Content'   => CmsCanvas\Support\Facades\Content::class,
         'Theme'     => CmsCanvas\Support\Facades\Theme::class,
+        'StringView' => CmsCanvas\Support\Facades\StringView::class,
         'Form'      => Collective\Html\FormFacade::class,
         'HTML'      => Collective\Html\HtmlFacade::class,
         'Twig'      => TwigBridge\Facade\Twig::class,
-        'StringView' => TwigBridge\Facade\StringView::class,
 ],
 ```
 
