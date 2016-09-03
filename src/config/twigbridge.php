@@ -116,8 +116,8 @@ return [
             'TwigBridge\Extension\Laravel\Html',
             // 'TwigBridge\Extension\Laravel\Legacy\Facades',
 
-            'CmsCanvas\TwigBridge\Extension\CmsCanvas\Theme',
-            'CmsCanvas\TwigBridge\Extension\CmsCanvas\Content',
+            'CmsCanvas\TwigBridge\Extension\Theme',
+            'CmsCanvas\TwigBridge\Extension\Content',
         ],
 
         /*
