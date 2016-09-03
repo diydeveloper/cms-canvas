@@ -24,7 +24,7 @@
             <div class="form">
                 <div>
                     {!! HTML::decode(Form::label('content_type_field_type_id', '<span class="required">*</span> Field Type:')) !!}
-                    {!! Form::select('content_type_field_type_id', $fieldTypes->lists('name', 'id')->all(), (empty($field) ? 1 : null)) !!}
+                    {!! Form::select('content_type_field_type_id', $fieldTypes->pluck('name', 'id')->all(), (empty($field) ? 1 : null)) !!}
                 </div>
                 <div>
                     {!! HTML::decode(Form::label('label', '<span class="required">*</span> Field Label:')) !!}

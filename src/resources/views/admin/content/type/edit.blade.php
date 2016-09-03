@@ -145,6 +145,13 @@
                             {!! Form::text('max_revisions', null, array('class' => 'short')) !!}
                             <span class="ex">No revisions will be kept if left empty</span>
                         </div>
+                        <div>
+                            {!! HTML::decode(Form::label('media_type_id', 'Media Type:<span class="help">Specifies output media type by setting the Content-Type header when rendered as a page.</span>')) !!}
+                            {!! Form::select(
+                                'media_type_id', 
+                                ['' => 'Default'] + $mediaTypes->pluck('name', 'id')->all()
+                            ) !!}
+                        </div>
                     </div>
                 </div>
 
@@ -154,19 +161,19 @@
                             <legend>Admin Entry Permissions</legend>
                             <div>
                                 <label for="title">View:</label>
-                                {!! Form::select('admin_entry_view_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
+                                {!! Form::select('admin_entry_view_permission_id', ['' => '-- None --'] + $permissions->pluck('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Edit:</label>
-                                {!! Form::select('admin_entry_edit_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
+                                {!! Form::select('admin_entry_edit_permission_id', ['' => '-- None --'] + $permissions->pluck('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Create:</label>
-                                {!! Form::select('admin_entry_create_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
+                                {!! Form::select('admin_entry_create_permission_id', ['' => '-- None --'] + $permissions->pluck('name', 'id')->all()) !!}
                             </div>
                             <div>
                                 <label for="title">Delete:</label>
-                                {!! Form::select('admin_entry_delete_permission_id', ['' => '-- None --'] + $permissions->lists('name', 'id')->all()) !!}
+                                {!! Form::select('admin_entry_delete_permission_id', ['' => '-- None --'] + $permissions->pluck('name', 'id')->all()) !!}
                             </div>
                         </fieldset>
                     </div>

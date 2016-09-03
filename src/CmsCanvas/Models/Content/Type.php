@@ -46,6 +46,7 @@ class Type extends Model implements Renderable, PageInterface {
         'admin_entry_edit_permission_id',
         'admin_entry_create_permission_id',
         'admin_entry_delete_permission_id',
+        'media_type_id',
     ];
 
     /**
@@ -107,6 +108,16 @@ class Type extends Model implements Renderable, PageInterface {
         return $this->hasMany('CmsCanvas\Models\Content\Revision', 'resource_id', 'id')
             ->where('resource_type_id', Revision::CONTENT_TYPE_RESOURCE_TYPE_ID)
             ->orderBy('id', 'desc');
+    }
+
+   /**
+     * Relation to content type's media type
+     *
+     * @return \Illuminate\Database\Eloquent\BelongsTo
+     */
+    public function mediaType()
+    {
+        return $this->belongsTo('\CmsCanvas\Models\Content\Type\MediaType', 'media_type_id', 'id');
     }
 
    /**
@@ -201,7 +212,7 @@ class Type extends Model implements Renderable, PageInterface {
                 if (count($roles) > 0) {
                     $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
                         $query->whereHas('roles', function($query) use($roles) {
-                            $query->whereIn('roles.id', $roles->lists('id')->all());
+                            $query->whereIn('roles.id', $roles->pluck('id')->all());
                         });
                     });
                 }
@@ -225,7 +236,7 @@ class Type extends Model implements Renderable, PageInterface {
                 if (count($roles) > 0) {
                     $query->orWhereHas('adminEntryViewPermission', function($query) use($roles) {
                         $query->whereHas('roles', function($query) use($roles) {
-                            $query->whereIn('roles.id', $roles->lists('id')->all());
+                            $query->whereIn('roles.id', $roles->pluck('id')->all());
                         });
                     });
                 }

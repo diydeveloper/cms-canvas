@@ -29,17 +29,17 @@
 
                     <div>
                         {!! HTML::decode(Form::label('default_timezone', '<span class="required">*</span> Default Timezone:')) !!}
-                        {!! Form::select('default_timezone', ['' => ''] + $timezones->lists('name', 'identifier')->all()) !!}
+                        {!! Form::select('default_timezone', ['' => ''] + $timezones->pluck('name', 'identifier')->all()) !!}
                     </div>
 
                     <div>
                         {!! HTML::decode(Form::label('site_homepage', '<span class="required">*</span> Site Homepage:')) !!}
-                        {!! Form::select('site_homepage', $entries->lists('title', 'id')->all()) !!}
+                        {!! Form::select('site_homepage', $entries->pluck('title', 'id')->all()) !!}
                     </div>
 
                     <div>
                         {!! HTML::decode(Form::label('custom_404', '<span class="required">*</span> Custom 404:')) !!}
-                        {!! Form::select('custom_404', $entries->lists('title', 'id')->all()) !!}
+                        {!! Form::select('custom_404', $entries->pluck('title', 'id')->all()) !!}
                     </div>
 
                     <div>

@@ -42,19 +42,6 @@ class RouteServiceProvider extends ServiceProvider
     protected $contentTypes;
 
     /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    public function boot(Router $router)
-    {
-        //
-
-        parent::boot($router);
-    }
-
-    /**
      * Define the routes for the application.
      *
      * @param  \Illuminate\Routing\Router  $router
@@ -171,7 +158,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->locale;
 
             $locales = $languages->getWhere('default', 0)
-                ->lists('locale', 'id');
+                ->pluck('locale', 'id');
 
             $contentTypes = Type::whereNotNull('route')
                 ->get();

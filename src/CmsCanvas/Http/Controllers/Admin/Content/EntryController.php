@@ -40,7 +40,7 @@ class EntryController extends AdminController {
                 $query->whereNull('content_types.admin_entry_view_permission_id');
                 $roles = Auth::user()->roles;
                 if (count($roles) > 0) {
-                    $query->orWhereIn('role_permissions.role_id', $roles->lists('id')->all());
+                    $query->orWhereIn('role_permissions.role_id', $roles->pluck('id')->all());
                 }
             })
             ->applyFilter($filter)

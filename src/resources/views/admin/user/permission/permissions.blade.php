@@ -49,7 +49,7 @@
                                 </td>
                                 <td>{!! $permission->name !!}</td>
                                 <td>{!! $permission->key_name !!}</td>
-                                <td>{!! implode(', ', $permission->roles->lists('name')->all()) !!}</td>
+                                <td>{!! implode(', ', $permission->roles->pluck('name')->all()) !!}</td>
                                 <td class="right">
                                     <ul class="actions_btn">
                                         <li>

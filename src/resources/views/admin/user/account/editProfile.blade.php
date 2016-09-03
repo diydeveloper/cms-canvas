@@ -21,7 +21,7 @@
 
         <div>
             {!! HTML::decode(Form::label('timezone_id', '<span class="required">*</span> Timezone:')) !!}
-            {!! Form::select('timezone_id', ['' => ''] + $timezones->lists('name', 'id')->all()) !!}
+            {!! Form::select('timezone_id', ['' => ''] + $timezones->pluck('name', 'id')->all()) !!}
         </div>
 
         <div>

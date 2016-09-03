@@ -33,12 +33,12 @@
 
             <div class="left">
                 <div><label>Content Type:</label></div> 
-                {!! Form::select('filter[content_type_id]', ['' => ''] + $viewableContentTypes->lists('title', 'id')->all()) !!}
+                {!! Form::select('filter[content_type_id]', ['' => ''] + $viewableContentTypes->pluck('title', 'id')->all()) !!}
             </div>
 
             <div class="left">
                 <div><label>Status:</label></div> 
-                {!! Form::select('filter[entry_status_id]', ['' => ''] + $entryStatuses->lists('name', 'id')->all()) !!}
+                {!! Form::select('filter[entry_status_id]', ['' => ''] + $entryStatuses->pluck('name', 'id')->all()) !!}
             </div>
             
             <div class="left filter_buttons">

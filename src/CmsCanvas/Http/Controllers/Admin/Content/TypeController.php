@@ -6,6 +6,7 @@ use View, Theme, Admin, Validator, stdClass, Config;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Permission;
+use CmsCanvas\Models\Content\Type\MediaType;
 use Illuminate\Http\Request;
 
 class TypeController extends AdminController {
@@ -112,6 +113,7 @@ class TypeController extends AdminController {
         $content->themeLayouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
         $content->defaultThemeLayout = Theme::getThemeLayouts(Config::get('cmscanvas::config.layout'));
         $content->permissions = Permission::orderBy('name', 'asc')->get();
+        $content->mediaTypes = MediaType::orderBy('name', 'asc')->get();
         $content->revision = $revision;
 
         $this->layout->breadcrumbs = [

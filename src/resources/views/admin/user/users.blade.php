@@ -17,7 +17,7 @@
 
                 <div class="left">
                     <div><label>Role:</label></div> 
-                    {!! Form::select('filter[role_id]', ['' => ''] + $roles->lists('name', 'id')->all()) !!}
+                    {!! Form::select('filter[role_id]', ['' => ''] + $roles->pluck('name', 'id')->all()) !!}
                 </div>
 
                 <div class="left filter_buttons">
@@ -62,7 +62,7 @@
                                 <td>{!! $user->last_name !!}</td>
                                 <td>{!! $user->email !!}</td>
                                 <td>
-                                    {!! implode(', ', $user->roles->lists('name')->all()) !!}
+                                    {!! implode(', ', $user->roles->pluck('name')->all()) !!}
                                 </td>
                                 <td>{!! (empty($user->last_login)) ? '' : Content::userDate($user->last_login) !!}</td>
                                 <td class="right">
