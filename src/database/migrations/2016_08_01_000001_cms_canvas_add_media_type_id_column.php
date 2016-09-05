@@ -29,7 +29,7 @@ class CmsCanvasAddMediaTypeIdColumn extends Migration {
     public function down()
     {
         Schema::table('content_types', function (Blueprint $table) {
-            $table->dropForeign('content_types_media_type_id');
+            $table->dropForeign('content_types_media_type_id_foreign');
             $table->dropColumn('media_type_id');
         });
     }
