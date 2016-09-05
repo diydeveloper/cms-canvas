@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Exceptions;
 
-use Exception, App, Response;
+use Exception, App;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -44,17 +44,18 @@ class Handler extends ExceptionHandler {
             $view = $e->getView();
 
             if ($e instanceof HttpExceptionInterface) {
-                return Response::make($view, $e->getStatusCode());
+                return response($view, $e->getStatusCode());
             } else {
                 return $view;
             }
         }
 
         if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-            return Response::make(
-                App::make('\CmsCanvas\Http\Controllers\PageController')->callAction('showPage', [$request, $e]),
-                $e->getStatusCode()
-            );
+            $content = App::make('\CmsCanvas\Http\Controllers\PageController')
+                ->callAction('showPage', [$request, $e])
+                ->getContent();
+                
+            return response($content, $e->getStatusCode());
         }
 
         return parent::render($request, $e);
