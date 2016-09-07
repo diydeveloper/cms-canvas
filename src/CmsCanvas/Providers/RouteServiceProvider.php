@@ -55,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $router->group(['namespace' => $this->namespace, 'middleware' => ['web']], function ($router) {
             if ($this->app['admin']->getUrlPrefix() == Request::segment(1)) {
-                require __DIR__.'/../Http/adminRoutes.php';
+                require __DIR__.'/../../routes/admin.php';
             } else {
                 $this->prepareRouteData();
                 $this->setLocale();
