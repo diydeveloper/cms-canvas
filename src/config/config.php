@@ -1,8 +1,6 @@
 <?php
  
-use CmsCanvas\Models\Setting;
-
-$paths = [
+return [
     'public_root' => 'diyphpdeveloper/cmscanvas/',
     'theme_assets' => 'diyphpdeveloper/cmscanvas/themes/',
     'app_themes_directory' => base_path().'/resources/themes/',
@@ -11,18 +9,3 @@ $paths = [
     'avatars' => 'diyphpdeveloper/cmscanvas/uploads/avatars/',
     'thumbnails' => 'diyphpdeveloper/cmscanvas/thumbnails/',
 ];
-
-if ($this->app->runningInConsole()) {
-    return $paths;
-}
-
-$settings = Cache::rememberForever('settings', function() {
- 
-    foreach(Setting::all() as $setting) {
-        $settings[$setting->setting] = $setting->value;
-    }
- 
-    return $settings;
-});
-
-return array_merge($settings, $paths);

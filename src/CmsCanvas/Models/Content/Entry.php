@@ -177,7 +177,7 @@ class Entry extends Model implements Renderable, PageInterface {
      */
     public function getContentTypeFields($skipCacheFlag = false)
     {
-        if (!$skipCacheFlag && $this->getCache() != null) {
+        if ( ! $skipCacheFlag && $this->getCache() != null) {
             return $this->getCache()->getContentTypeFields();
         }
 

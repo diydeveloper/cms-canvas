@@ -2,13 +2,14 @@
 
 namespace CmsCanvas\Providers;
 
-use App, Event, DateTime, View, Request;
+use App, Event, DateTime, View, Request, Cache;
 use Illuminate\Support\ServiceProvider;
 use CmsCanvas\Theme\ThemePublisher;
 use CmsCanvas\Commands\ThemePublishCommand;
 use CmsCanvas\Theme\Theme;
 use CmsCanvas\Admin\Admin;
 use CmsCanvas\Content\Content;
+use CmsCanvas\Models\Setting;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
@@ -49,6 +50,19 @@ class CmsCanvasServiceProvider extends ServiceProvider {
 
         $source = realpath(__DIR__.'/../../config/assets.php');
         $this->mergeConfigFrom($source, 'cmscanvas::assets');
+
+        if ( ! $this->app->runningInConsole()) {
+            // Set config settings stored in the database
+            $settings = Cache::rememberForever('settings', function() {
+                foreach(Setting::all() as $setting) {
+                    $settings[$setting->setting] = $setting->value;
+                }
+                return $settings;
+            });
+
+            $config = $this->app['config']->get('cmscanvas::config', []);
+            $this->app['config']->set('cmscanvas::config', array_merge($settings, $config));
+        }
     }
 
     /**
