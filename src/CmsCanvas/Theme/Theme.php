@@ -6,6 +6,8 @@ use View, Config, File, App, Admin;
 
 class Theme {
 
+    const PACKAGE_THEMES_DIRECTORY = __DIR__.'/../../resources/themes/';
+
     /**
      * The theme to be rendered
      * 
@@ -148,7 +150,7 @@ class Theme {
             $theme = $this->theme;
         }
 
-        return asset($this->getThemeAssetsPath($theme).ltrim($path, '/'));
+        return $this->getThemeAssetsUrl($theme).ltrim($path, '/');
     }
 
     /**
@@ -641,7 +643,7 @@ class Theme {
     {
         $themes = [];
 
-        $cmsCanvasThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
+        $cmsCanvasThemes = File::glob(rtrim(self::PACKAGE_THEMES_DIRECTORY, '/').'/*', GLOB_ONLYDIR);
 
         if (is_array($cmsCanvasThemes)) {
             foreach($cmsCanvasThemes as $cmsCanvasTheme) {
@@ -650,7 +652,7 @@ class Theme {
             }
         }
 
-        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.app_themes_directory'), '/').'/*', GLOB_ONLYDIR);
+        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
         if (is_array($userThemes)) {
             foreach($userThemes as $userTheme) {
@@ -744,7 +746,7 @@ class Theme {
      */
     public function getAppThemePath($theme)
     {
-        $themePath = Config::get('cmscanvas::config.app_themes_directory'); 
+        $themePath = Config::get('cmscanvas::config.themes_directory'); 
 
         return rtrim($themePath, '/').'/'.$theme;
     }
@@ -757,9 +759,7 @@ class Theme {
      */
     public function getPackageThemePath($theme)
     {
-        $themePath = Config::get('cmscanvas::config.themes_directory'); 
-
-        return rtrim($themePath, '/').'/'.$theme;
+        return rtrim(self::PACKAGE_THEMES_DIRECTORY, '/').'/'.$theme;
     }
 
     /**
@@ -768,9 +768,9 @@ class Theme {
      * @param string $theme
      * @return string
      */
-    public function getThemeAssetsPath($theme)
+    public function getThemeAssetsUrl($theme)
     {
-        $themeAssets = Config::get('cmscanvas::config.theme_assets'); 
+        $themeAssets = Config::get('cmscanvas::config.theme_assets_url'); 
 
         return rtrim($themeAssets, '/').'/'.$theme.'/';
     }

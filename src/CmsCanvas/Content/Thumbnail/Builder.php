@@ -40,6 +40,11 @@ class Builder {
     /**
      * @var string
      */
+    protected $destinationUrl;
+
+    /**
+     * @var string
+     */
     protected $noImagePath;
 
     /**
@@ -85,7 +90,7 @@ class Builder {
             return asset($this->getComputedSourcePath());
         } else {
             $this->compile();
-            return asset($this->getDestinationPath());
+            return $this->getDestinationUrl();
         }
     }
 
@@ -205,7 +210,7 @@ class Builder {
             });
         }
 
-        $image->save(public_path($this->getDestinationPath()));
+        $image->save($this->getDestinationPath());
     }
 
     /**
@@ -323,11 +328,9 @@ class Builder {
      */
     protected function getSourceModificationTime()
     {
-        if ($this->sourceModificationTime !== null) {
-            return $this->sourceModificationTime;
+        if ($this->sourceModificationTime === null) {
+            $this->sourceModificationTime = @filemtime($this->getComputedSourcePath());
         }
-
-        $this->sourceModificationTime = @filemtime(public_path($this->getComputedSourcePath()));
 
         return $this->sourceModificationTime;
     }
@@ -339,13 +342,25 @@ class Builder {
      */
     public function getDestinationPath()
     {
-        if ($this->destinationPath !== null) {
-            return $this->destinationPath;
+        if ($this->destinationPath === null) {
+            $this->destinationPath = rtrim(Config::get('cmscanvas::config.thumbnails'), '/').'/'.$this->getNewFileName();
         }
 
-        $this->destinationPath = trim(Config::get('cmscanvas::config.thumbnails'), '/').'/'.$this->getNewFileName();
-
         return $this->destinationPath;
+    }
+
+    /**
+     * Returns the destination URL
+     *
+     * @return string
+     */
+    public function getDestinationUrl()
+    {
+        if ($this->destinationUrl === null) {
+            $this->destinationUrl = rtrim(Config::get('cmscanvas::config.thumbnails_url'), '/').'/'.$this->getNewFileName();
+        }
+
+        return $this->destinationUrl;
     }
 
     /**
@@ -359,7 +374,7 @@ class Builder {
             return $this->destinationModificationTime;
         }
 
-        $this->destinationModificationTime = @filemtime(public_path($this->getDestinationPath()));
+        $this->destinationModificationTime = @filemtime($this->getDestinationPath());
 
         return $this->destinationModificationTime;
     }

@@ -1,11 +1,9 @@
 <?php
  
 return [
-    'public_root' => 'diyphpdeveloper/cmscanvas/',
-    'theme_assets' => 'diyphpdeveloper/cmscanvas/themes/',
-    'app_themes_directory' => base_path().'/resources/themes/',
-    'themes_directory' => __DIR__.'/../resources/themes/',
-    'uploads' => 'diyphpdeveloper/cmscanvas/uploads/',
-    'avatars' => 'diyphpdeveloper/cmscanvas/uploads/avatars/',
-    'thumbnails' => 'diyphpdeveloper/cmscanvas/thumbnails/',
+    'theme_assets_url' => asset('diyphpdeveloper/cmscanvas/themes/'),
+    'themes_directory' => base_path('/resources/themes/'),
+    'avatars' => public_path('diyphpdeveloper/cmscanvas/uploads/avatars/'),
+    'thumbnails' => public_path('diyphpdeveloper/cmscanvas/thumbnails/'),
+    'thumbnails_url' => asset('diyphpdeveloper/cmscanvas/thumbnails/'),
 ];
