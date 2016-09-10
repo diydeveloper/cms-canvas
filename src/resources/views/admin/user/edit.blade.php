@@ -1,3 +1,7 @@
+<?php if (!empty($user)): ?>
+    @include('cmscanvas::admin.user.subnav')
+<?php endif; ?>
+
 <div class="box">
     <div class="heading">
         <h1><img alt="" src="{!! Theme::asset('images/user.png') !!}"> {!! ( ! empty($user)) ? 'Edit' : 'Add' !!} User</h1>
@@ -24,19 +28,6 @@
 
             <div id="edit-user-tab">
                 <div class="form">
-                    <div>
-                        {!! Form::label('avatar', 'Avatar:') !!}
-                        <div style="display: inline-block; vertical-align: middle;">
-                            <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
-                                <img id="avatar_thumbnail" src="{!! Content::thumbnail(old('avatar', ((empty($user)) ? null : $user->avatar)), ['width' => 100, 'height' => 100, 'crop' => true, 'no_image' => Theme::asset('images/portrait.jpg')]) !!}" />
-                            </a>
-
-                            <a class="choose_image" href="javascript:void(0);"><span>Add</span></a> /
-                            <a class="remove_image" href="javascript:void(0);"><span>Remove</span></a>
-                            {!! Form::hidden('avatar', null, ['id' => 'hidden_avatar']) !!}
-                        </div>
-                    </div>
-
                     <div>
                         {!! HTML::decode(Form::label('email', '<span class="required">*</span> Email:')) !!}
                         {!! Form::text('email') !!}

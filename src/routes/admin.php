@@ -33,6 +33,9 @@ Route::group(['prefix' => Admin::getUrlPrefix(), 'middleware' => ['cmscanvas.aut
             Route::get('{user}/edit', ['', 'as' => 'admin.user.edit', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@getEdit']);
             Route::post('{user}/edit', ['as' => 'admin.user.edit.post', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@postEdit']);
 
+            Route::get('{user}/avatar', ['as' => 'admin.user.avatar', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@getUpdateAvatar']);
+            Route::post('{user}/avatar', ['as' => 'admin.user.avatar', 'permission' => 'ADMIN_USER_EDIT', 'uses' => 'Admin\UserController@postUpdateAvatar']);
+
             Route::post('create-avatar-thumbnail', ['middleware' => 'cmscanvas.ajax', 'as' => 'admin.user.create.avatar.thumbnail.post', 'uses' => 'Admin\UserController@postCreateAvatarThumbnail']);
 
             Route::get('{user}/profile', ['as' => 'admin.user.profile', 'uses' => 'Admin\UserController@getProfile']);

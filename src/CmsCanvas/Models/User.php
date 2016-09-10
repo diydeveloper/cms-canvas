@@ -50,7 +50,7 @@ class User extends Model implements
         'state',
         'country',
         'zip',
-        'avatar',
+        'avatar_extension',
         'enable_admin_toolbar',
         'enable_inline_editing',
     ];
@@ -241,7 +241,7 @@ class User extends Model implements
     public function avatar($width = null, $height = null, $crop = true)
     {
         return Content::thumbnail(
-            $this->avatar, 
+            $this->getAvatarUrl(), 
             [
                 'width' => $width, 
                 'height' => $height, 
@@ -249,6 +249,16 @@ class User extends Model implements
                 'no_image' => Theme::asset('images/portrait.jpg')
             ]
         );
+    }
+
+    /**
+     * Returns URL to user's avatar
+     *
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return rtrim(config('cmscanvas::config.avatars_url'), '/').'/'.$this->id.'.'.$this->avatar_extension;
     }
 
     /**

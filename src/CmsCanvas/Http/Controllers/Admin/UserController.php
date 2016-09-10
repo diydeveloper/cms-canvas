@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin;
 
-use View, Theme, Admin, DB, Validator, Auth, Hash, stdClass, Session, Content, Config, Storage;
+use View, Theme, Admin, DB, Validator, Auth, Hash, stdClass, Session, Content, Storage;
 use CmsCanvas\Models\User;
 use CmsCanvas\Models\Role;
 use CmsCanvas\Models\Timezone;
@@ -133,10 +133,8 @@ class UserController extends AdminController {
 
             if ($user != null) {
                 try {
-                    // Delete the avatar
-                    if (strpos($user->avatar, 'uploads/avatars/'.$user->id) !== false) {
-                        @unlink(public_path($user->avatar));
-                    }
+                    // Delete user's avatar
+                    @unlink(rtrim(config('cmscanvas::config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
 
                     $user->delete();
                     $deleteSuccessfulFlag = true;
@@ -190,8 +188,6 @@ class UserController extends AdminController {
      */
     public function getEdit(Request $request, $user = null)
     {
-        Theme::addPackage('avatar_image_field');
-
         $roles = Role::all();
         $timezones = Timezone::all();
         
@@ -332,10 +328,20 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function getUpdateAvatar()
+    public function getUpdateAvatar(Request $request, $user = null)
     {
-        $content = View::make('cmscanvas::admin.user.account.updateAvatar');
-        $content->user = Auth::user();
+        if ($user == null) {
+            $content = view('cmscanvas::admin.user.account.updateAvatar');
+            $content->user = Auth::user();
+        } else {
+            $content = view('cmscanvas::admin.user.avatar');
+            $content->user = $user;
+
+            $this->layout->breadcrumbs = [
+                'user' => 'Users', 
+                $request->path() => 'Update Avatar'
+            ];
+        }
 
         $this->layout->content = $content; 
     }
@@ -345,7 +351,7 @@ class UserController extends AdminController {
      *
      * @return View
      */
-    public function postUpdateAvatar(Request $request)
+    public function postUpdateAvatar(Request $request, $user = null)
     {
         $rules = [
             'image_upload' => 'required|max:2048|mimes:jpeg,gif,png',
@@ -359,28 +365,35 @@ class UserController extends AdminController {
                 ->with('error', $validator->messages()->all());
         }
 
-        $user = Auth::user();
-
-        // Delete the old avatar
-        if (strpos($user->avatar, 'uploads/avatars/'.$user->id) !== false) {
-            @unlink(public_path($user->avatar));
+        $profileUpdate = false;
+        if ($user == null) {
+            $user = Auth::user();
+            $profileUpdate = true;
         }
 
+        // Delete the old avatar
+        @unlink(rtrim(config('cmscanvas::config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
+
         if (empty($request->input('remove_image'))) {
-            $path = trim(Config::get('cmscanvas::config.avatars'), '/');
+            $path = rtrim(config('cmscanvas::config.avatars'), '/');
             $extension = $request->file('image_upload')->getClientOriginalExtension();
             $fileName = $user->id.'.'.$extension;
-            $request->file('image_upload')->move(public_path($path), $fileName);
+            $request->file('image_upload')->move($path, $fileName);
 
-            $user->avatar = $path.'/'.$fileName;
+            $user->avatar_extension = $extension;
         } else {
-            $user->avatar = null;
+            $user->avatar_extension = null;
         }
 
         $user->save();
 
-        return redirect()->route('admin.user.account.updateAvatar')
-            ->with('message', "Avatar was successfully updated.");
+        if ($profileUpdate) {
+            return redirect()->route('admin.user.account.updateAvatar')
+                ->with('message', "Avatar was successfully updated.");
+        } else {
+            return redirect()->route('admin.user.avatar', $user->id)
+                ->with('message', "Avatar was successfully updated.");
+        }
     }
 
     /**

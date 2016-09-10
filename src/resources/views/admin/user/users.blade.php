@@ -73,6 +73,7 @@
                                             </a>
                                             <ul class="actions_dropdown no_row_link" style="text-align: left;">
                                                 <li class="edit_icon"><a href="{!! Admin::url("user/{$user->id}/edit") !!}">Edit</a></li>
+                                                <li class="edit_icon"><a href="{!! Admin::url("user/{$user->id}/avatar") !!}">Update Avatar</a></li>
                                                 <li><a href="javascript:void(0);" data-id="{!! $user->id !!}" data-href="{!! Admin::url('user/delete') !!}" class="delete_item">Delete</a></li>
                                             </ul>
                                         </li>
