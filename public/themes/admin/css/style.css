@@ -1587,3 +1587,9 @@ a.actions_link {
 .no_border {
     border: none !important;
 }
+
+.avatar_20 {
+    width: 20px;
+    width: 20px;
+    vertical-align: middle;
+}
