@@ -76,4 +76,14 @@ class Revision extends Model {
         $this->attributes['data'] = base64_encode(gzcompress(serialize($value)));
     }
 
+    /**
+     * The revision's hash
+     *
+     * @return string
+     */
+    public function hash()
+    {
+        return substr(sha1($this->id), 0, 7);
+    }
+
 }

@@ -11,6 +11,11 @@
         </div>
     </div>
     <div class="content">
+        @if ( ! empty($revision))
+            <div class="filter">
+                Content Revision: {!! $revision->hash() !!}
+            </div>
+        @endif
 
         {!! Form::model($contentType, array('id' => 'layout_edit')) !!}
         <div>
@@ -71,7 +76,7 @@
                             @if (! empty($contentType) && count($contentType->revisions) > 0)
                                 @foreach ($contentType->revisions as $revisionIteration)
                                 <tr>
-                                    <td>{!! substr(sha1($revisionIteration->id), 0, 7) !!}</td>
+                                    <td>{!! $revisionIteration->hash() !!}</td>
                                     <td>
                                         @if ($revisionIteration->author != null)
                                             <img src="{{ $revisionIteration->author->avatar(30, 30) }}" class="avatar_20" />
