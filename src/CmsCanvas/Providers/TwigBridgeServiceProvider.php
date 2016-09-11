@@ -3,7 +3,12 @@
 namespace CmsCanvas\Providers;
 
 use TwigBridge\ServiceProvider;
+use TwigBridge\Engine\Twig;
+use TwigBridge\Engine\Compiler;
+use TwigBridge\Bridge;
 use CmsCanvas\TwigBridge\StringView\Factory as StringViewFactory;
+use InvalidArgumentException;
+
 
 class TwigBridgeServiceProvider extends ServiceProvider
 {
@@ -13,9 +18,7 @@ class TwigBridgeServiceProvider extends ServiceProvider
     public function register()
     {
         parent::register();
-
         $this->registerStringView();
-        $this->registerTimezone();
     }
 
     /**
@@ -31,16 +34,73 @@ class TwigBridgeServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register default timezone
+     * Register Twig engine bindings.
      *
      * @return void
      */
-    public function registerTimezone()
+    protected function registerEngine()
     {
-        $defaultTimezone = $this->app['config']->get('cmscanvas::config.default_timezone');
-        if ($defaultTimezone != null) {
-            $this->app['twig']->getExtension('core')->setTimezone($defaultTimezone);
-        }
+        $this->app->bindIf(
+            'twig',
+            function () {
+                $extensions = $this->app['twig.extensions'];
+                $lexer      = $this->app['twig.lexer'];
+                $twig       = new Bridge(
+                    $this->app['twig.loader'],
+                    $this->app['twig.options'],
+                    $this->app
+                );
+
+                // Instantiate and add extensions
+                foreach ($extensions as $extension) {
+                    // Get an instance of the extension
+                    // Support for string, closure and an object
+                    if (is_string($extension)) {
+                        try {
+                            $extension = $this->app->make($extension);
+                        } catch (\Exception $e) {
+                            throw new InvalidArgumentException(
+                                "Cannot instantiate Twig extension '$extension': " . $e->getMessage()
+                            );
+                        }
+                    } elseif (is_callable($extension)) {
+                        $extension = $extension($this->app, $twig);
+                    } elseif (!is_a($extension, 'Twig_Extension')) {
+                        throw new InvalidArgumentException('Incorrect extension type');
+                    }
+
+                    $twig->addExtension($extension);
+                }
+
+                // Set lexer
+                if (is_a($lexer, 'Twig_LexerInterface')) {
+                    $twig->setLexer($lexer);
+                }
+
+                $defaultTimezone = config('cmscanvas::config.default_timezone');
+                if ($defaultTimezone != null) {
+                    $twig->getExtension('core')->setTimezone($defaultTimezone);
+                }
+
+                return $twig;
+            },
+            true
+        );
+
+        $this->app->alias('twig', 'Twig_Environment');
+        $this->app->alias('twig', 'TwigBridge\Bridge');
+
+        $this->app->bindIf('twig.compiler', function () {
+            return new Compiler($this->app['twig']);
+        });
+
+        $this->app->bindIf('twig.engine', function () {
+            return new Twig(
+                $this->app['twig.compiler'],
+                $this->app['twig.loader.viewfinder'],
+                $this->app['config']->get('twigbridge.twig.globals', [])
+            );
+        });
     }
 
     /**
