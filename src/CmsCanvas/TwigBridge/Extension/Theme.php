@@ -47,9 +47,9 @@ class Theme extends Twig_Extension
             new Twig_SimpleFunction('theme_javascripts', [$this->theme, 'javascripts']),
             new Twig_SimpleFunction('theme_stylesheets', [$this->theme, 'stylesheets']),
             new Twig_SimpleFunction('theme_analytics', [$this->theme, 'analytics']),
-            new Twig_SimpleFunction('theme_set_meta_title', [$this->theme, 'setMetaTitle']),
-            new Twig_SimpleFunction('theme_set_meta_description', [$this->theme, 'setMetaDescription']),
-            new Twig_SimpleFunction('theme_set_meta_keywords', [$this->theme, 'setMetaKeywords']),
+            new Twig_SimpleFunction('theme_meta_title', [$this->theme, 'metaTitle']),
+            new Twig_SimpleFunction('theme_meta_description', [$this->theme, 'metaDescription']),
+            new Twig_SimpleFunction('theme_meta_keywords', [$this->theme, 'metaKeywords']),
         ];
     }
 }

@@ -264,13 +264,58 @@ class Theme {
      * @param string
      * @return \CmsCanvas\Theme\Theme
      */
-    function addPageHead($code)
+    public function addPageHead($code)
     {
         if (! empty($code)) {
             $this->pageHead = $code;
         }
 
         return $this;
+    }
+
+    /**
+     * Returns and/or sets the meta title
+     *
+     * @param  string $title
+     * @return string
+     */
+    public function metaTitle($title = null)
+    {
+        if ($title !== null) {
+            $this->metaTitle = $title;
+        }
+
+        return $this->metaTitle;
+    }
+
+    /**
+     * Returns and/or sets the meta description
+     *
+     * @param  string $description
+     * @return string
+     */
+    public function metaDescription($description = null)
+    {
+        if ($description !== null) {
+            $this->metaDescription = $description;
+        }
+
+        return $this->metaDescription;
+    }
+
+    /**
+     * Returns and/or sets the meta description
+     *
+     * @param  string $keywords
+     * @return string
+     */
+    public function metaKeywords($keywords = null)
+    {
+        if ($keywords !== null) {
+            $this->metaKeywords = $keywords;
+        }
+
+        return $this->metaKeywords;
     }
 
     /**
