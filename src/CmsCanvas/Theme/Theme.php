@@ -219,9 +219,7 @@ class Theme {
      */
     public function setMetaTitle($title)
     {
-        if (! empty($title)) {
-            $this->metaTitle = $title;
-        }
+        $this->metaTitle($title);
 
         return $this;
     }
@@ -234,9 +232,7 @@ class Theme {
      */
     public function setMetaDescription($description)
     {
-        if (! empty($description)) {
-            $this->metaDescription = $description;
-        }
+        $this->metaDescription($description);
 
         return $this;
     }
@@ -251,9 +247,7 @@ class Theme {
      */
     public function setMetaKeywords($keywords)
     {
-        if (! empty($keywords)) {
-            $this->metaKeywords = $keywords;
-        }
+        $this->metaKeywords($keywords);
 
         return $this;
     }
@@ -505,16 +499,16 @@ class Theme {
     {
         $metadata = '';
 
-        if (! empty($this->metaTitle)) {
-            $metadata .= '<title>' . $this->metaTitle . '</title>' . "\r\n";
+        if (! empty($this->metaTitle())) {
+            $metadata .= '<title>' . $this->metaTitle() . '</title>' . "\r\n";
         }
 
-        if (! empty($this->metaDescription)) {
-            $metadata .= '<meta name="description" content="' . $this->metaDescription . '" />' . "\r\n";
+        if (! empty($this->metaDescription())) {
+            $metadata .= '<meta name="description" content="' . $this->metaDescription() . '" />' . "\r\n";
         }
 
-        if (! empty($this->metaKeywords)) {
-            $metadata .= '<meta name="keywords" content="' . $this->metaKeywords . '" />' . "\r\n";
+        if (! empty($this->metaKeywords())) {
+            $metadata .= '<meta name="keywords" content="' . $this->metaKeywords() . '" />' . "\r\n";
         }
 
         $this->headersSent = true;
