@@ -13,6 +13,8 @@ use CmsCanvas\Models\Setting;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
+    const VERSION = '5.1.0';
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -51,6 +53,20 @@ class CmsCanvasServiceProvider extends ServiceProvider {
         $source = realpath(__DIR__.'/../../config/assets.php');
         $this->mergeConfigFrom($source, 'cmscanvas::assets');
 
+        $this->mergeConfigFromDatabase();
+
+        // Add version to CMS Canvas config
+        $config = $this->app['config']->get('cmscanvas::config', []);
+        $this->app['config']->set('cmscanvas::config', array_merge($config, ['version' => self::VERSION]));
+    }
+
+    /**
+     * Merges settings defined in the database to the configs
+     *
+     * @return void
+     */
+    public function mergeConfigFromDatabase()
+    {
         if ( ! $this->app->runningInConsole()) {
             // Set config settings stored in the database
             $settings = Cache::rememberForever('settings', function() {

@@ -36,7 +36,7 @@
             <!-- Header -->
             <div id="header">
                 <div class="div1">
-                    <div class="div2"><span id="site_name">{{ Config::get('cmscanvas::config.site_name', 'CMS Canvas') }}</span> <span style="vertical-align: middle; display: inline-block; font-size:13px;">| ADMINISTRATION</span></div>
+                    <div class="div2"><span id="site_name">{{ config('cmscanvas::config.site_name', 'CMS Canvas') }}</span> <span style="vertical-align: middle; display: inline-block; font-size:13px;">| ADMINISTRATION</span></div>
                     @if (Auth::check())
                         <div class="div3">
                             <a id="current_user" href="javascript:void(0);">
@@ -106,7 +106,7 @@
 
         <!-- Footer -->
         <div id="footer">
-            Copyright &copy; {{ date('Y') }}&nbsp; v<?php //echo CC_VERSION ?>
+            Copyright &copy; {{ date('Y') }}&nbsp; v{{ config('cmscanvas::config.version') }}
         </div>
 
 
