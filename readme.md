@@ -16,7 +16,7 @@ CMS Canvas requires Laravel 5.2 and a MySQL server.
 Require this package with Composer
 
 ```bash
-composer require diyphpdeveloper/cmscanvas:2.0.*
+composer require diyphpdeveloper/cmscanvas:2.1.*
 ```
 
 Create the database
