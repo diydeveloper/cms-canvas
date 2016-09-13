@@ -2,7 +2,6 @@
 
 namespace CmsCanvas\Content\Thumbnail;
 
-use Config;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class Builder {
@@ -343,7 +342,7 @@ class Builder {
     public function getDestinationPath()
     {
         if ($this->destinationPath === null) {
-            $this->destinationPath = rtrim(Config::get('cmscanvas::config.thumbnails'), '/').'/'.$this->getNewFileName();
+            $this->destinationPath = rtrim(config('cmscanvas.config.thumbnails'), '/').'/'.$this->getNewFileName();
         }
 
         return $this->destinationPath;
@@ -357,7 +356,7 @@ class Builder {
     public function getDestinationUrl()
     {
         if ($this->destinationUrl === null) {
-            $this->destinationUrl = rtrim(Config::get('cmscanvas::config.thumbnails_url'), '/').'/'.$this->getNewFileName();
+            $this->destinationUrl = rtrim(config('cmscanvas.config.thumbnails_url'), '/').'/'.$this->getNewFileName();
         }
 
         return $this->destinationUrl;

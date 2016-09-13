@@ -118,7 +118,7 @@ class Content {
             if ($timezone == null) {
                 $timezone = (auth()->check())
                     ? auth()->user()->getTimezoneIdentifier()
-                    : config('cmscanvas::config.default_timezone');
+                    : config('cmscanvas.config.default_timezone');
             }
 
             $dateTime->setTimezone($timezone);

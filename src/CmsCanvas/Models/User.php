@@ -258,7 +258,7 @@ class User extends Model implements
      */
     public function getAvatarUrl()
     {
-        return rtrim(config('cmscanvas::config.avatars_url'), '/').'/'.$this->id.'.'.$this->avatar_extension;
+        return rtrim(config('cmscanvas.config.avatars_url'), '/').'/'.$this->id.'.'.$this->avatar_extension;
     }
 
     /**

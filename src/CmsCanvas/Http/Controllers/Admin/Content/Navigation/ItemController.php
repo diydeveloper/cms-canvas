@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content\Navigation;
 
-use View, Admin, Validator, Config;
+use View, Admin, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Navigation;
 use CmsCanvas\Models\Content\Navigation\Item;
@@ -26,7 +26,7 @@ class ItemController extends AdminController {
             ->orWhereHas('contentType', function($query) {
                 $query->whereNotNull('entry_uri_template');
             })
-            ->orWhere('id', Config::get('cmscanvas::config.site_homepage'))
+            ->orWhere('id', config('cmscanvas.config.site_homepage'))
             ->orderBy('title', 'asc')
             ->get();
 

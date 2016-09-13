@@ -45,19 +45,21 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     public function setupConfig()
     {
         $source = realpath(__DIR__.'/../../config/config.php');
-        $this->mergeConfigFrom($source, 'cmscanvas::config');
+        $this->publishes([$source => config_path('cmscanvas/config.php')], 'config');
+        $this->mergeConfigFrom($source, 'cmscanvas.config');
 
         $source = realpath(__DIR__.'/../../config/admin.php');
-        $this->mergeConfigFrom($source, 'cmscanvas::admin');
+        $this->publishes([$source => config_path('cmscanvas/admin.php')], 'config');
+        $this->mergeConfigFrom($source, 'cmscanvas.admin');
 
         $source = realpath(__DIR__.'/../../config/assets.php');
-        $this->mergeConfigFrom($source, 'cmscanvas::assets');
+        $this->mergeConfigFrom($source, 'cmscanvas.assets');
 
         $this->mergeConfigFromDatabase();
 
         // Add version to CMS Canvas config
-        $config = $this->app['config']->get('cmscanvas::config', []);
-        $this->app['config']->set('cmscanvas::config', array_merge($config, ['version' => self::VERSION]));
+        $config = $this->app['config']->get('cmscanvas.config', []);
+        $this->app['config']->set('cmscanvas.config', array_merge($config, ['version' => self::VERSION]));
     }
 
     /**
@@ -76,8 +78,8 @@ class CmsCanvasServiceProvider extends ServiceProvider {
                 return $settings;
             });
 
-            $config = $this->app['config']->get('cmscanvas::config', []);
-            $this->app['config']->set('cmscanvas::config', array_merge($settings, $config));
+            $config = $this->app['config']->get('cmscanvas.config', []);
+            $this->app['config']->set('cmscanvas.config', array_merge($settings, $config));
         }
     }
 

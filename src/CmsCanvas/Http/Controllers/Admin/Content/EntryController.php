@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content;
 
-use View, Theme, Admin, Validator, DB, stdClass, App, Auth, Config;
+use View, Theme, Admin, Validator, DB, stdClass, App, Auth;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Entry;
 use CmsCanvas\Models\Content\Type;
@@ -260,12 +260,12 @@ class EntryController extends AdminController {
             $request->input('created_at'), 
             Auth::user()->getTimezoneIdentifier()
         );
-        $createdAt->setTimezone(Config::get('app.timezone'));
+        $createdAt->setTimezone(config('app.timezone'));
 
         $data = $request->all();
         $data['created_at'] = $createdAt;
         $data['created_at_local'] = $createdAt->copy()
-            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+            ->setTimezone(config('cmscanvas.config.default_timezone'));
 
         $entry = ($entry == null) ? new Entry : $entry;
         $entry->fill($data);

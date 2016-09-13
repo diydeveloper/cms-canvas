@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\Content;
 
-use View, Theme, Admin, Validator, stdClass, Config;
+use View, Theme, Admin, Validator, stdClass;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Content\Type;
 use CmsCanvas\Models\Permission;
@@ -110,8 +110,8 @@ class TypeController extends AdminController {
         }
 
         $content->contentType = $contentType;
-        $content->themeLayouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
-        $content->defaultThemeLayout = Theme::getThemeLayouts(Config::get('cmscanvas::config.layout'));
+        $content->themeLayouts = Theme::getThemeLayouts(config('cmscanvas.config.theme'));
+        $content->defaultThemeLayout = Theme::getThemeLayouts(config('cmscanvas.config.layout'));
         $content->permissions = Permission::orderBy('name', 'asc')->get();
         $content->mediaTypes = MediaType::orderBy('name', 'asc')->get();
         $content->revision = $revision;

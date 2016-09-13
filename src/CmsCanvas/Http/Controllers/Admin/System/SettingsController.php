@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Http\Controllers\Admin\System;
 
-use View, stdClass, Theme, Config, Validator;
+use View, stdClass, Theme, Validator;
 use CmsCanvas\Http\Controllers\Admin\AdminController;
 use CmsCanvas\Models\Setting;
 use CmsCanvas\Models\Content\Entry;
@@ -28,7 +28,7 @@ class SettingsController extends AdminController {
 
         $content->settings = $settings;
         $content->themes = Theme::getThemes();
-        $content->layouts = Theme::getThemeLayouts(Config::get('cmscanvas::config.theme'));
+        $content->layouts = Theme::getThemeLayouts(config('cmscanvas.config.theme'));
         // @todo add paginated entry search
         $content->entries = Entry::orderBy('title', 'asc')->get();
         $content->timezones = Timezone::all();

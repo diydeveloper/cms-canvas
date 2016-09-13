@@ -78,12 +78,12 @@ class DateTime extends FieldType {
                 case 'users_timezone':
                     $timezone = (auth()->check())
                         ? auth()->user()->getTimezoneIdentifier()
-                        : config('cmscanvas::config.default_timezone');
+                        : config('cmscanvas.config.default_timezone');
                     $data->setTimezone($timezone);
                     break;
 
                 case 'site_timezone':
-                    $timezone = config('cmscanvas::config.default_timezone');
+                    $timezone = config('cmscanvas.config.default_timezone');
                     $data->setTimezone($timezone);
                     break;
             }

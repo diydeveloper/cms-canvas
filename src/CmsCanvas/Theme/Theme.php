@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Theme;
 
-use View, Config, File, App, Admin;
+use View, File, App, Admin;
 
 class Theme {
 
@@ -137,7 +137,8 @@ class Theme {
     /**
      * Generates a URL for a theme asset
      *
-     * @param string
+     * @param  string $path
+     * @param  string $theme
      * @return string
      */
     public function asset($path = null, $theme = null)
@@ -160,7 +161,7 @@ class Theme {
      */
     public function getDefaultTheme()
     {
-        return Config::get('cmscanvas::config.theme');
+        return config('cmscanvas.config.theme');
     }
 
     /**
@@ -170,7 +171,7 @@ class Theme {
      */
     public function getDefaultLayout()
     {
-        return Config::get('cmscanvas::config.layout');
+        return config('cmscanvas.config.layout');
     }
 
     /**
@@ -466,7 +467,7 @@ class Theme {
      */
     public function addPackage($packages)
     {
-        $packageList = Config::get('cmscanvas::assets.packages');
+        $packageList = config('cmscanvas.assets.packages');
 
         if (! is_array($packages)) {
             $packages = (array) $packages;
@@ -595,7 +596,7 @@ class Theme {
      */
     public function analytics()
     {
-        if (Config::get('cmscanvas::config.ga_tracking_id')) {
+        if (config('cmscanvas.config.ga_tracking_id')) {
 
             return "<script>
                       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -603,7 +604,7 @@ class Theme {
                       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                      ga('create', '".Config::get('cmscanvas::config.ga_tracking_id')."', 'auto');
+                      ga('create', '".config('cmscanvas.config.ga_tracking_id')."', 'auto');
                       ga('send', 'pageview');
 
                     </script>";
@@ -691,7 +692,7 @@ class Theme {
             }
         }
 
-        $userThemes = File::glob(rtrim(Config::get('cmscanvas::config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
+        $userThemes = File::glob(rtrim(config('cmscanvas.config.themes_directory'), '/').'/*', GLOB_ONLYDIR);
 
         if (is_array($userThemes)) {
             foreach($userThemes as $userTheme) {
@@ -785,7 +786,7 @@ class Theme {
      */
     public function getAppThemePath($theme)
     {
-        $themePath = Config::get('cmscanvas::config.themes_directory'); 
+        $themePath = config('cmscanvas.config.themes_directory'); 
 
         return rtrim($themePath, '/').'/'.$theme;
     }
@@ -809,7 +810,7 @@ class Theme {
      */
     public function getThemeAssetsUrl($theme)
     {
-        $themeAssets = Config::get('cmscanvas::config.theme_assets_url'); 
+        $themeAssets = config('cmscanvas.config.theme_assets_url'); 
 
         return rtrim($themeAssets, '/').'/'.$theme.'/';
     }

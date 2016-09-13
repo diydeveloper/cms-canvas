@@ -134,7 +134,7 @@ class UserController extends AdminController {
             if ($user != null) {
                 try {
                     // Delete user's avatar
-                    @unlink(rtrim(config('cmscanvas::config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
+                    @unlink(rtrim(config('cmscanvas.config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
 
                     $user->delete();
                     $deleteSuccessfulFlag = true;
@@ -372,10 +372,10 @@ class UserController extends AdminController {
         }
 
         // Delete the old avatar
-        @unlink(rtrim(config('cmscanvas::config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
+        @unlink(rtrim(config('cmscanvas.config.avatars'), '/').'/'.$user->id.'.'.$user->avatar_extension);
 
         if (empty($request->input('remove_image'))) {
-            $path = rtrim(config('cmscanvas::config.avatars'), '/');
+            $path = rtrim(config('cmscanvas.config.avatars'), '/');
             $extension = $request->file('image_upload')->getClientOriginalExtension();
             $fileName = $user->id.'.'.$extension;
             $request->file('image_upload')->move($path, $fileName);

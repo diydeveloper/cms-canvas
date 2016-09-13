@@ -223,7 +223,7 @@ class Item extends Model {
      */
     public function isHomePage()
     {
-        if ($this->entry_id == \Config::get('cmscanvas::config.site_homepage')
+        if ($this->entry_id == config('cmscanvas.config.site_homepage')
             || $this->url == '/'
         ) {
             return true;

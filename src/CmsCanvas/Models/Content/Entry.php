@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, stdClass, Cache, DB, Auth, Twig, Config, Theme, App;
+use Lang, stdClass, Cache, DB, Auth, Twig, Theme, App;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Content\Type\FieldType;
 use CmsCanvas\Models\Content\Type\Field;
@@ -163,7 +163,7 @@ class Entry extends Model implements Renderable, PageInterface {
         $this->setUpdatedAt($time);
 
         $siteTime = $time->copy();
-        $siteTime->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+        $siteTime->setTimezone(config('cmscanvas.config.default_timezone'));
         $this->setUpdatedAtLocal($siteTime);
 
         return parent::save($options);
@@ -461,7 +461,7 @@ class Entry extends Model implements Renderable, PageInterface {
     {
         return $this->asDateTime( 
             $value,
-            Config::get('cmscanvas::config.default_timezone')
+            config('cmscanvas.config.default_timezone')
         );
     }
 
@@ -475,7 +475,7 @@ class Entry extends Model implements Renderable, PageInterface {
     {
         $this->attributes['updated_at_local'] = $this->fromDateTime(
             $value,
-            Config::get('cmscanvas::config.default_timezone')
+            config('cmscanvas.config.default_timezone')
         );
     }
 
@@ -502,7 +502,7 @@ class Entry extends Model implements Renderable, PageInterface {
     {
         return $this->asDateTime( 
             $value,
-            Config::get('cmscanvas::config.default_timezone')
+            config('cmscanvas.config.default_timezone')
         );
     }
 
@@ -516,7 +516,7 @@ class Entry extends Model implements Renderable, PageInterface {
     {
         $this->attributes['created_at_local'] = $this->fromDateTime(
             $value,
-            Config::get('cmscanvas::config.default_timezone')
+            config('cmscanvas.config.default_timezone')
         );
     }
 
@@ -530,7 +530,7 @@ class Entry extends Model implements Renderable, PageInterface {
         $metaTitle = $this->meta_title;
         // If a meta title is not provided then auto-generate one
         if ($metaTitle == null) {
-            $metaTitle =  $this->title.' | '.config('cmscanvas::config.site_name');
+            $metaTitle =  $this->title.' | '.config('cmscanvas.config.site_name');
         }
 
         Theme::setMetaTitle($metaTitle);
@@ -639,7 +639,7 @@ class Entry extends Model implements Renderable, PageInterface {
      */
     public function isHomePage()
     {
-        return ($this->id == \Config::get('cmscanvas::config.site_homepage'));
+        return ($this->id == config('cmscanvas.config.site_homepage'));
     }
 
     /**
@@ -650,7 +650,7 @@ class Entry extends Model implements Renderable, PageInterface {
      */
     public function isCustom404Page()
     {
-        return ($this->id == \Config::get('cmscanvas::config.custom_404'));
+        return ($this->id == config('cmscanvas.config.custom_404'));
     }
 
     /**

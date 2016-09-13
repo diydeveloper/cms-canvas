@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Models\Content;
 
-use Lang, Auth, StringView, Config, Theme, Cache;
+use Lang, Auth, StringView, Theme, Cache;
 use Illuminate\Database\Query\Expression;
 use CmsCanvas\Database\Eloquent\Model;
 use CmsCanvas\Models\Language;
@@ -376,7 +376,7 @@ class Type extends Model implements Renderable, PageInterface {
     {
         // Auto-generate a meta title for the content type that can be overrwitten
         // later by the user if desired.
-        Theme::setMetaTitle($this->title.' | '.config('cmscanvas::config.site_name'));
+        Theme::setMetaTitle($this->title.' | '.config('cmscanvas.config.site_name'));
 
         return $this;
     }
@@ -430,10 +430,10 @@ class Type extends Model implements Renderable, PageInterface {
         $data['entry_id'] = null;
         $data['created_at'] = $this->created_at;
         $data['created_at_local'] = $this->created_at->copy()
-            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+            ->setTimezone(config('cmscanvas.config.default_timezone'));
         $data['updated_at'] = $this->updated_at;
         $data['updated_at_local'] = $this->updated_at->copy()
-            ->setTimezone(Config::get('cmscanvas::config.default_timezone'));
+            ->setTimezone(config('cmscanvas.config.default_timezone'));
 
         return $data;
     }

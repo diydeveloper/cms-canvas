@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Providers;
 
-use Config, Lang, Request, Cache;
+use Lang, Request, Cache;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use CmsCanvas\Models\Content\Entry;
@@ -133,7 +133,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapHomePage(Router $router)
     {
-        $homeEntryId = Config::get('cmscanvas::config.site_homepage');
+        $homeEntryId = config('cmscanvas.config.site_homepage');
         $router->any(
             '/', 
             [

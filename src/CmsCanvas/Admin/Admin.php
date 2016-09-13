@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Admin;
 
-use Route, Request, Config;
+use Route, Request;
 
 class Admin {
 
@@ -24,7 +24,7 @@ class Admin {
      */
     public function getUrlPrefix()
     {
-        return Config::get('cmscanvas::admin.url_prefix');
+        return config('cmscanvas.admin.url_prefix');
     }
 
     /**

@@ -4,7 +4,7 @@
     </div>
     <div class="content">
         {{-- // IE 7 display: table fix --}}
-        @if (Config::get('cmscanvas::config.ga_profile_id') == '')
+        @if (config('cmscanvas.config.ga_profile_id') == '')
             <!--[if lt IE 8]>
             <script type="text/javascript">
                 $(document).ready( function() {
@@ -24,7 +24,7 @@
             @include('theme::partials.navigation')
         </div>
 
-        @if (Config::get('cmscanvas::config.ga_profile_id') != '')
+        @if (config('cmscanvas.config.ga_profile_id') != '')
             <div id="analytics">
                 <div class="analytics-heading">
                     <div style="float: left;">Analytics</div>
