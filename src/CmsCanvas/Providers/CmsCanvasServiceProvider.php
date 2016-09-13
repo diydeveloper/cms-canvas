@@ -45,11 +45,9 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     public function setupConfig()
     {
         $source = realpath(__DIR__.'/../../config/config.php');
-        $this->publishes([$source => config_path('cmscanvas/config.php')], 'config');
         $this->mergeConfigFrom($source, 'cmscanvas.config');
 
         $source = realpath(__DIR__.'/../../config/admin.php');
-        $this->publishes([$source => config_path('cmscanvas/admin.php')], 'config');
         $this->mergeConfigFrom($source, 'cmscanvas.admin');
 
         $source = realpath(__DIR__.'/../../config/assets.php');
