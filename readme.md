@@ -108,10 +108,10 @@ chmod 777 public/diyphpdeveloper/cmscanvas/thumbnails
 chmod 777 public/diyphpdeveloper/cmscanvas/uploads
 ```
 
-Finally, remove any root (home page) routes from app/Http/routes.php
+Finally, remove any root (home page) routes from app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
 
 ```php
-// app/Http/routes.php
+// app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
 // The following is an example of what to remove:
 - Route::get('/', function () {
 -     return view('welcome');
