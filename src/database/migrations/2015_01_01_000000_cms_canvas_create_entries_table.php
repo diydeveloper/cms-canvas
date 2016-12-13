@@ -19,7 +19,7 @@ class CmsCanvasCreateEntriesTable extends Migration {
             $table->integer('entry_status_id')->unsigned()->index();
             $table->integer('author_id')->unsigned()->index()->nullable();
             $table->string('title', 255);
-            $table->string('url_title', 500)->index()->nullable();
+            $table->string('url_title', 255)->index()->nullable();
             $table->string('route', 1000)->nullable();
             $table->string('meta_title', 100)->nullable();
             $table->string('meta_keywords', 300)->nullable();
