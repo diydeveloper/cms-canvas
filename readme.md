@@ -9,7 +9,7 @@ http://cmscanvas.com/
 
 # Requirements
 
-CMS Canvas requires Laravel 5.2 and a MySQL server.
+CMS Canvas requires Laravel 5.3 or 5.2 and a MySQL server.
 
 # Installation
 
