@@ -13,7 +13,7 @@ use CmsCanvas\Models\Setting;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
-    const VERSION = '2.1.0';
+    const VERSION = '2.1.2';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -45,9 +45,18 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     public function setupConfig()
     {
         $source = realpath(__DIR__.'/../../config/config.php');
+        $this->publishes([$source => config_path('cmscanvas/config.php')], 'config');
         $this->mergeConfigFrom($source, 'cmscanvas.config');
 
+        // Convert relative paths in config to URLs 
+        config([
+            'cmscanvas.config.theme_assets_url' => asset(config('cmscanvas.config.theme_assets_url')),
+            'cmscanvas.config.avatars_url' => asset(config('cmscanvas.config.avatars_url')),
+            'cmscanvas.config.thumbnails_url' => asset(config('cmscanvas.config.thumbnails_url')),
+        ]);
+
         $source = realpath(__DIR__.'/../../config/admin.php');
+        $this->publishes([$source => config_path('cmscanvas/admin.php')], 'config');
         $this->mergeConfigFrom($source, 'cmscanvas.admin');
 
         $source = realpath(__DIR__.'/../../config/assets.php');
