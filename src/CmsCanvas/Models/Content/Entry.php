@@ -583,7 +583,7 @@ class Entry extends Model implements Renderable, PageInterface {
         }
 
         if ($this->isCustom404Page()) {
-            return Exception(
+            throw new Exception(
                 "The entry \"{$this->title}\" can not be deleted because it set as the default custom 404 page."
             );
         }

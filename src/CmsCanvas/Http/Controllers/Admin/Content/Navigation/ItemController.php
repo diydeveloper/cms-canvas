@@ -92,6 +92,7 @@ class ItemController extends AdminController {
 
         if ($item == null) {
             $navigationItem->sort = Item::max('id');
+            $navigationItem->depth = 0;
         }
 
         $navigationItem->save();
