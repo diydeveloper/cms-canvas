@@ -17,8 +17,7 @@ class Render implements ViewRender {
     /**
      * Defines the order in which to sort.
      *
-     * @param \CmsCanvas\Models\Content\Type $contentType
-     * @param array $parameters
+     * @param \CmsCanvas\Content\Type\Builder\Type $contentTypeBuilder
      * @return void
      */
     public function __construct(ContentTypeBuilder $contentTypeBuilder)
@@ -34,14 +33,14 @@ class Render implements ViewRender {
      */
     public function __get($key)
     {
-        return $this->entryBuilder->getData($name);
+        return $this->contentTypeBuilder->getData($name);
     }
 
     /**
      * Magic method to catch undefined methods
      *
      * @param  string $name
-     * @param  array $arguments
+     * @param  array  $arguments
      * @return void
      */
     public function __call($name, $arguments)
