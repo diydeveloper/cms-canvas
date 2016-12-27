@@ -58,7 +58,7 @@ EOD
                 'theme_layout' => 'default',
                 'url_title_flag' => 1,
                 'route' => 'blog/{year?}/{month?}/{day?}/{url_title?}',
-                'entry_uri_template' => 'blog/{{ created_at_local|date("Y") }}/{{ created_at_local|date("m") }}/{{ created_at_local|date("d") }}/{{ url_title }}',
+                'entry_uri_template' => 'blog/{{ created_at_local|date("Y/m/d") }}/{{ url_title }}',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
