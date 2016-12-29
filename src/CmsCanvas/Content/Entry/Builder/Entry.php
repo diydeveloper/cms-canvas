@@ -68,7 +68,7 @@ class Entry {
     {
         $this->entry = $entry;
         $this->setParameters($parameters);
-        $this->renderedData = $this->entry->getRenderedData();
+        $this->setRenderedData($this->entry->getRenderedData());
     }
 
     /**
@@ -121,13 +121,6 @@ class Entry {
             ->updatedAt($this->entry->contentType->updated_at->timestamp)
             ->with($data);
 
-        if ($this->entry->template_flag) {
-            $content = StringView::make((string) $content)
-                ->cacheKey($this->entry->getRouteName())
-                ->updatedAt(max($this->entry->updated_at->timestamp, $this->entry->contentType->updated_at->timestamp))
-                ->with($data);
-        }
-
         return $content;
     }
 
@@ -179,6 +172,39 @@ class Entry {
         } else {
             $this->parameters = $parameters;
         }
+
+        return $this;
+    }
+
+    /**
+     * Set entry rendered data to class variable
+     *
+     * @return self
+     */
+    protected function setRenderedData(array $data)
+    {
+        if ($this->entry->template_flag) {
+            $stringData = [];
+            $mixedData = [];
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $stringData[$key] = $value;
+                } else {
+                    $mixedData[$key] = $value;
+                }
+            }
+
+            $jsonData = json_encode($stringData);
+            $jsonData = StringView::make($jsonData)
+                ->cacheKey($this->entry->getRouteName())
+                ->updatedAt(max($this->entry->updated_at->timestamp, $this->entry->contentType->updated_at->timestamp))
+                ->with(array_merge($data, $this->parameters))
+                ->render();
+            $stringData = json_decode($jsonData, true);
+            $data = array_merge($stringData, $mixedData);
+        }
+
+        $this->renderedData = $data;
 
         return $this;
     }
