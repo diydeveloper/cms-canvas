@@ -390,7 +390,7 @@ class Builder {
      */
     protected function setEntryIds($entryIds)
     {
-        if ($entryIds === null || $entryIds !== '') {
+        if ($entryIds === null || $entryIds === '') {
             $this->entryIds = null;
         } else {
             $this->entryIds = $this->parseStringValues('entries.id', $entryIds);
