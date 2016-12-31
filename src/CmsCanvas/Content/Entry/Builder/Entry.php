@@ -179,6 +179,7 @@ class Entry {
     /**
      * Set entry rendered data to class variable
      *
+     * @param  array  $data
      * @return self
      */
     protected function setRenderedData(array $data)
