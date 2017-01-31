@@ -11,10 +11,10 @@
     ],
     "require": {
         "php": ">=5.4.0",
-    	"laravel/framework": "5.2.*|5.3.*",
-    	"laravelcollective/html": "5.2.*|5.3.*",
+    	"laravel/framework": "5.2.*|5.3.*|5.4.*",
+    	"laravelcollective/html": "5.2.*|5.3.*|5.4.*",
         "intervention/image": "2.*",
-        "rcrowe/twigbridge": "^0.9.3"
+        "rcrowe/twigbridge": "^0.9.4"
     },
     "autoload": {
         "classmap": [
