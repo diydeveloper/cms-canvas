@@ -16,9 +16,9 @@ class Model extends Eloquent {
      *
      * @return \CmsCanvas\Database\Eloquent\Relations\Pivot
      */
-    public function newPivot(Eloquent $parent, array $attributes, $table, $exists)
+    public function newPivot(Eloquent $parent, array $attributes, $table, $exists, $using = null)
     {
-        return new Pivot($parent, $attributes, $table, $exists);
+        return new Pivot($parent, $attributes, $table, $exists, $using);
     }
 
     /**

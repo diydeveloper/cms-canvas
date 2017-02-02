@@ -26,7 +26,7 @@ class Ckeditor extends FieldType {
     public function getSettingsValidationRules()
     {
         return [
-            'settings.height' => 'integer|min:0' 
+            'settings.height' => 'integer|min:0|nullable' 
         ];
     }
 

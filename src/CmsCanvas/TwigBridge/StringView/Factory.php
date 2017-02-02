@@ -102,6 +102,15 @@ class Factory implements FactoryContract
     public function addNamespace($namespace, $hints) {}
 
     /**
+     * Replace the namespace hints for the given namespace.
+     *
+     * @param  string  $namespace
+     * @param  string|array  $hints
+     * @return $this
+     */
+    public function replaceNamespace($namespace, $hints) {}
+
+    /**
      * Add a new namespace to the loader.
      *
      * @param  \CmsCanvas\TwigBridge\StringView\StringView  $view

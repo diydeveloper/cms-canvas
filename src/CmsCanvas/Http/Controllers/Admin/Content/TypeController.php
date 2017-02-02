@@ -136,7 +136,8 @@ class TypeController extends AdminController {
             'short_name' => "required|alpha_dash|max:50"
                 ."|unique:content_types,short_name".(($contentType == null) ? "" : ",{$contentType->id}"),
             'route' => "max:500|unique:content_types,route".(($contentType == null) ? "" : ",{$contentType->id}"),
-            'entries_allowed' => 'integer',
+            'entries_allowed' => 'integer|nullable',
+            'max_revisions' => 'integer|nullable',
         ];
 
         $messages = [];

@@ -42,6 +42,35 @@ class RouteServiceProvider extends ServiceProvider
     protected $contentTypes;
 
     /**
+     * @var array
+     */
+    protected $middleware = [
+        'cmscanvas.auth' => \CmsCanvas\Http\Middleware\Authenticate::class,
+        'cmscanvas.permission' => \CmsCanvas\Http\Middleware\Permission::class,
+        'cmscanvas.ajax' => \CmsCanvas\Http\Middleware\Ajax::class,
+        'cmscanvas.flushCache' => \CmsCanvas\Http\Middleware\FlushCache::class
+    ];
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    public function boot()
+    {
+        parent::boot();
+
+        foreach($this->middleware as $name => $class) {
+            if (version_compare($this->app->version(), '5.4', '>=')) {
+                $this->aliasMiddleware($name, $class);
+            } else {
+                $this->middleware($name, $class);
+            }
+        }
+    }
+
+    /**
      * Define the routes for the application.
      *
      * @param  \Illuminate\Routing\Router  $router

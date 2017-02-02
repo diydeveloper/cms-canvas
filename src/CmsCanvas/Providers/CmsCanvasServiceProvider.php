@@ -2,7 +2,7 @@
 
 namespace CmsCanvas\Providers;
 
-use App, Event, DateTime, View, Request, Cache;
+use App, Event, DateTime, View, Request, Cache, Validator;
 use Illuminate\Support\ServiceProvider;
 use CmsCanvas\Theme\ThemePublisher;
 use CmsCanvas\Commands\ThemePublishCommand;
@@ -13,7 +13,7 @@ use CmsCanvas\Models\Setting;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
-    const VERSION = '2.1.5';
+    const VERSION = '2.1.6';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -33,8 +33,8 @@ class CmsCanvasServiceProvider extends ServiceProvider {
 
         $this->setupConfig();
         $this->setupViews();
-        $this->setupMiddleware();
         $this->setupPublishing();
+        $this->setupValidations();
     }
 
     /**
@@ -102,19 +102,6 @@ class CmsCanvasServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Include filter files.
-     *
-     * @return void
-     */
-    public function setupMiddleware()
-    {
-        $this->app->router->middleware('cmscanvas.auth', 'CmsCanvas\Http\Middleware\Authenticate');
-        $this->app->router->middleware('cmscanvas.permission', 'CmsCanvas\Http\Middleware\Permission');
-        $this->app->router->middleware('cmscanvas.ajax', 'CmsCanvas\Http\Middleware\Ajax');
-        $this->app->router->middleware('cmscanvas.flushCache', 'CmsCanvas\Http\Middleware\FlushCache');
-    }
-
-    /**
      * Defines file groups to be published
      *
      * @return void
@@ -135,6 +122,18 @@ class CmsCanvasServiceProvider extends ServiceProvider {
             [__DIR__.'/../../../public/' => public_path('diyphpdeveloper/cmscanvas'),],
             'public'
         );
+    }
+
+    /**
+     * Adds custom form validations
+     *
+     * @return void
+     */
+    public function setupValidations()
+    {
+        Validator::extend('nullable', function($attribute, $value, $parameters, $validator) {
+            return $value == null;
+        });
     }
 
     /**
