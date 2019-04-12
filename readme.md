@@ -128,3 +128,5 @@ Password: password
 ```
 
 Once you are logged in the first thing you should do is change your email and password!!!
+
+For full documentation see https://github.com/diyphpdeveloper/cms-canvas/wiki
