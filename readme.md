@@ -1,6 +1,6 @@
 A content management system for [Laravel 5](http://laravel.com/).
 
-http://cmscanvas.com/
+https://github.com/diyphpdeveloper/cms-canvas/wiki
 
 [![Latest Stable Version](https://poser.pugx.org/diyphpdeveloper/cmscanvas/v/stable)](https://packagist.org/packages/diyphpdeveloper/cmscanvas)
 [![Total Downloads](https://poser.pugx.org/diyphpdeveloper/cmscanvas/downloads)](https://packagist.org/packages/diyphpdeveloper/cmscanvas)
