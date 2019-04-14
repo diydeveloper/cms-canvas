@@ -18,7 +18,8 @@ class Model extends Eloquent {
      */
     public function newPivot(Eloquent $parent, array $attributes, $table, $exists, $using = null)
     {
-        return new Pivot($parent, $attributes, $table, $exists, $using);
+        return $using ? $using::fromRawAttributes($parent, $attributes, $table, $exists)
+                      : Pivot::fromAttributes($parent, $attributes, $table, $exists);
     }
 
     /**
@@ -195,11 +196,9 @@ class Model extends Eloquent {
      */
     public function fromDateTime($value, $timezone = null)
     {
-        $format = $this->getDateFormat();
-
-        $value = $this->asDateTime($value, $timezone);
-
-        return $value->format($format);
+        return empty($value) ? $value : $this->asDateTime($value, $timezone)->format(
+            $this->getDateFormat()
+        );
     }
 
     /**

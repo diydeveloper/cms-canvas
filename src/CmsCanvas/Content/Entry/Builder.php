@@ -530,7 +530,7 @@ class Builder {
      */
     protected function compileContentTypes()
     {
-        if (count($this->contentTypes) > 0) {
+        if ($this->contentTypes != null) {
             $builder = $this;
 
             $this->entries->whereHas('contentType', function($query) use ($builder) {
@@ -607,7 +607,7 @@ class Builder {
      */
     protected function compileOrders()
     {
-        if (count($this->orders) > 0) {
+        if (is_array($this->orders) && count($this->orders) > 0) {
             $counter = 0;
             foreach ($this->orders as $orderBy) {
                 if (in_array($orderBy, $this->sortableColumns)) {
@@ -633,7 +633,7 @@ class Builder {
      */
     protected function compileWheres()
     {
-        if (count($this->wheres) > 0) {
+        if (is_array($this->wheres) && count($this->wheres) > 0) {
             $this->joinEntryData();
 
             foreach ($this->wheres as $whereClause) {

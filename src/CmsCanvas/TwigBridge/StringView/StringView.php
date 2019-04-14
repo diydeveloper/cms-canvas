@@ -237,4 +237,14 @@ class StringView implements ViewContract {
         return $this->view; 
     }
 
+    /**
+     * Get the array of view data.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
 }
