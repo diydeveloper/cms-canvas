@@ -48,6 +48,8 @@ jq_admin_toolbar(document).ready( function() {
             value: CSRF_TOKEN
         }).appendTo(form);
 
+        jq_admin_toolbar(document.body).append(form);
+
         form.submit();
 
         return false;
