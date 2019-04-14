@@ -49,7 +49,7 @@
                                 <td class="center no_row_link"><input type="checkbox" value="{!! $contentType->id !!}" name="selected[]" /></td>
                                 <td>{!! $contentType->title !!}</td>
                                 <td>{!! $contentType->short_name !!}</td>
-                                <td>{!! $contentType->entries->count() !!} / {!! $contentType->entries_allowed or 'Unlimited' !!}</td>
+                                <td>{!! $contentType->entries->count() !!} / {!! $contentType->entries_allowed ?? 'Unlimited' !!}</td>
                                 <td class="right">
                                     <ul class="actions_btn">
                                         <li>
