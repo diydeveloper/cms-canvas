@@ -9,7 +9,7 @@ https://github.com/diyphpdeveloper/cms-canvas/wiki
 
 # Requirements
 
-CMS Canvas requires Laravel 5.3 or 5.2 and a MySQL server.
+CMS Canvas requires Laravel 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, or 5.8 and a MySQL server.
 
 # Installation
 
@@ -38,94 +38,93 @@ DB_PASSWORD=root
 
 # Quick Start
 
-Once Composer has installed or updated you will need to register CMS Canvas with Laravel itself. Open up config/app.php and find the providers key, towards the end of the file, and add the following just prior to the application service providers:
+1. Once Composer has installed or updated you will need to register CMS Canvas's user model with Laravel. To do this update the providers array in config/auth.php to:
 
-```php
-'providers' => [
-    ...
-        CmsCanvas\Providers\CmsCanvasServiceProvider::class,
-        CmsCanvas\Providers\RouteServiceProvider::class,
-        CmsCanvas\Providers\EventServiceProvider::class,
-        CmsCanvas\Providers\TwigBridgeServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
-
-        /*
-         * Application Service Providers...
-         */
-    ...
-],
-```
-
-Now find the alliases key, again towards the end of the file, and add the following to the end:
-
-```php
-'aliases' => [
-    ...
-        'Admin'     => CmsCanvas\Support\Facades\Admin::class,
-        'Content'   => CmsCanvas\Support\Facades\Content::class,
-        'Theme'     => CmsCanvas\Support\Facades\Theme::class,
-        'StringView' => CmsCanvas\Support\Facades\StringView::class,
-        'Form'      => Collective\Html\FormFacade::class,
-        'HTML'      => Collective\Html\HtmlFacade::class,
-        'Twig'      => TwigBridge\Facade\Twig::class,
-],
-```
-
-Update the providers array in config/auth.php to use CMS Canvas's user model:
-
-```php
-'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => CmsCanvas\Models\User::class,
+    ```php
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => CmsCanvas\Models\User::class,
+        ],
     ],
-],
-```
+    ```
 
-Now that config/app.php and config/auth.php is configured, use Artisan to add CMS Canvas's templates and configs:
+2. If running **Larevel 5.2 to 5.4** you will need to manually register providers and aliases. If you are running Laravel 5.5 or greater this step can be skipped. Open up config/app.php and find the providers key, towards the end of the file, and add the following just prior to the application service providers:
 
-```php
-php artisan vendor:publish
-```
+    ```php
+    'providers' => [
+        ...
+            CmsCanvas\Providers\CmsCanvasServiceProvider::class,
+            CmsCanvas\Providers\RouteServiceProvider::class,
+            CmsCanvas\Providers\EventServiceProvider::class,
+            CmsCanvas\Providers\TwigBridgeServiceProvider::class,
+            Collective\Html\HtmlServiceProvider::class,
+            Intervention\Image\ImageServiceProvider::class,
 
-Next use Artisan to create CMS Canvas's database tables:
+            /*
+             * Application Service Providers...
+             */
+        ...
+    ],
+    ```
 
-```php
-php artisan migrate
-```
+    Now find the alliases key, again towards the end of the file, and add the following to the end:
 
-Populate the database tables with the default data required for CMS Canvas to run:
+    ```php
+    'aliases' => [
+        ...
+            'Admin'     => CmsCanvas\Support\Facades\Admin::class,
+            'Content'   => CmsCanvas\Support\Facades\Content::class,
+            'Theme'     => CmsCanvas\Support\Facades\Theme::class,
+            'StringView' => CmsCanvas\Support\Facades\StringView::class,
+            'Form'      => Collective\Html\FormFacade::class,
+            'HTML'      => Collective\Html\HtmlFacade::class,
+            'Twig'      => TwigBridge\Facade\Twig::class,
+    ],
+    ```
 
-```php
-php artisan db:seed --class="CmsCanvas\Database\Seeds\DatabaseSeeder"
-```
+3. Now that config/app.php and config/auth.php is configured, use Artisan to add CMS Canvas's templates and configs:
 
-Make the following directories writable:
+    ```php
+    php artisan vendor:publish
+    ```
 
-```bash
-chmod 777 public/diyphpdeveloper/cmscanvas/thumbnails
-chmod 777 public/diyphpdeveloper/cmscanvas/uploads
-```
+4. Next use Artisan to create CMS Canvas's database tables:
 
-Finally, remove any root (home page) routes from app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
+    ```php
+    php artisan migrate
+    ```
 
-```php
-// app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
-// The following is an example of what to remove:
-- Route::get('/', function () {
--     return view('welcome');
-- });
-```
+5. Populate the database tables with the default data required for CMS Canvas to run:
 
-To access the admin panel go to your web browser and visit:
+    ```php
+    php artisan db:seed --class="CmsCanvas\Database\Seeds\DatabaseSeeder"
+    ```
 
-```
-http://yourdomain.com/sitemin
-Email: admin@domain.com
-Password: password
+6. Make the following directories writable:
 
-```
+    ```bash
+    chmod 777 public/diyphpdeveloper/cmscanvas/thumbnails
+    chmod 777 public/diyphpdeveloper/cmscanvas/uploads
+    ```
+
+7. Finally, remove any root (home page) routes from app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
+
+    ```php
+    // app/Http/routes.php (Laravel 5.2) or routes/web.php (Laravel 5.3)
+    // The following is an example of what to remove:
+    - Route::get('/', function () {
+    -     return view('welcome');
+    - });
+    ```
+
+8. To access the admin panel go to your web browser and visit:
+
+    ```
+    http://yourdomain.com/sitemin
+    Email: admin@domain.com
+    Password: password
+    ```
 
 Once you are logged in the first thing you should do is change your email and password!!!
 
