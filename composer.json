@@ -24,5 +24,26 @@
             "CmsCanvas\\": "src/CmsCanvas/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CmsCanvas\\Providers\\CmsCanvasServiceProvider",
+                "CmsCanvas\\Providers\\RouteServiceProvider",
+                "CmsCanvas\\Providers\\EventServiceProvider",
+                "CmsCanvas\\Providers\\TwigBridgeServiceProvider",
+                "Collective\\Html\\HtmlServiceProvider",
+                "Intervention\\Image\\ImageServiceProvider"
+            ],
+            "aliases": {
+                "Admin": "CmsCanvas\\Support\\Facades\\Admin",
+                "Content": "CmsCanvas\\Support\\Facades\\Content",
+                "Theme": "CmsCanvas\\Support\\Facades\\Theme",
+                "StringView": "CmsCanvas\\Support\\Facades\\StringView",
+                "Form": "Collective\\Html\\FormFacade",
+                "HTML": "Collective\\Html\\HtmlFacade",
+                "Twig": "TwigBridge\\Facade\\Twig"
+            }
+        }
+    }
 }
