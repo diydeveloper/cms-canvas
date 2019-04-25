@@ -13,7 +13,7 @@ use CmsCanvas\Models\Setting;
 
 class CmsCanvasServiceProvider extends ServiceProvider {
 
-    const VERSION = '2.1.6';
+    const VERSION = '2.1.7';
 
     /**
      * Indicates if loading of the provider is deferred.
