@@ -135,7 +135,7 @@ class TypeController extends AdminController {
             'title' => 'required|max:255',
             'short_name' => "required|alpha_dash|max:50"
                 ."|unique:content_types,short_name".(($contentType == null) ? "" : ",{$contentType->id}"),
-            'route' => "max:500|unique:content_types,route".(($contentType == null) ? "" : ",{$contentType->id}"),
+            'route' => "max:500|nullable|unique:content_types,route".(($contentType == null) ? "" : ",{$contentType->id}"),
             'entries_allowed' => 'integer|nullable',
             'max_revisions' => 'integer|nullable',
         ];
