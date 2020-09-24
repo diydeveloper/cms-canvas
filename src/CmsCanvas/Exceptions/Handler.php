@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler {
      * @param  \Exception  $e
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         if ($e instanceof \CmsCanvas\Exceptions\ExceptionDisplayInterface) {
             $view = $e->getView();
