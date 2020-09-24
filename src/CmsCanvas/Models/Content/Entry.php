@@ -15,7 +15,7 @@ use CmsCanvas\Exceptions\Exception;
 use CmsCanvas\Content\Entry\Builder\Entry as EntryBuilder;
 use CmsCanvas\Support\Contracts\View\Renderable;
 use CmsCanvas\Support\Contracts\Page as PageInterface;
-use Twig_Loader_String;
+use Twig\Loader\ArrayLoader;
 
 class Entry extends Model implements Renderable, PageInterface {
 
@@ -392,11 +392,13 @@ class Entry extends Model implements Renderable, PageInterface {
             $currentLoader = $twig->getLoader();
             $currentCache = $twig->getCache();
 
+	    $arrayContent = ['entry_uri_template' => $this->contentType->entry_uri_template];
+
             $twig->setCache(false);
-            $twig->setLoader(new Twig_Loader_String());
+            $twig->setLoader(new ArrayLoader($arrayContent));
 
             $uri = $twig->render(
-                $this->contentType->entry_uri_template,
+		'entry_uri_template',
                 $this->getRenderedData()
             );
 

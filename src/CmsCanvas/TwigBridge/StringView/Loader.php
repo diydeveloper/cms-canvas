@@ -2,16 +2,16 @@
 
 namespace CmsCanvas\TwigBridge\StringView;
 
-use Twig_LoaderInterface;
-use Twig_Error_Loader;
-use Twig_ExistsLoaderInterface;
+use Twig\Loader\LoaderInterface;
+use Twig\Error\LoaderError;
+use Twig\Source;
 use InvalidArgumentException;
 use CmsCanvas\TwigBridge\StringView\StringView;
 
 /**
  * Basic loader using absolute paths.
  */
-class Loader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class Loader implements LoaderInterface
 {
     protected $templates = [];
 
@@ -36,14 +36,14 @@ class Loader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSource($name)
+    public function getSourceContext($name)
     {
         $name = (string) $name;
         if (!isset($this->templates[$name])) {
-            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
         }
 
-        return $this->templates[$name]->getSource();
+        return new Source($this->templates[$name]->getSource(), $name, '');
     }
 
     /**
@@ -53,7 +53,7 @@ class Loader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
     {
         $name = (string) $name;
         if (!isset($this->templates[$name])) {
-            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
         }
 
         return $this->templates[$name]->getCacheKey();
@@ -66,7 +66,7 @@ class Loader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
     {
         $name = (string) $name;
         if (!isset($this->templates[$name])) {
-            throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+            throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
         }
 
         return $this->templates[$name]->getUpdatedAt() <= $time;

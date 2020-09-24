@@ -79,7 +79,7 @@ class TwigBridgeServiceProvider extends ServiceProvider
 
                 $defaultTimezone = config('cmscanvas.config.default_timezone');
                 if ($defaultTimezone != null) {
-                    $twig->getExtension('core')->setTimezone($defaultTimezone);
+                    $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone($defaultTimezone);
                 }
 
                 return $twig;
