@@ -2,16 +2,16 @@
 
 namespace CmsCanvas\TwigBridge\Extension;
 
-use Twig_Extension;
-use Twig_SimpleFunction;
-use Twig_SimpleFilter;
-use Twig_SimpleTest;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use Twig\TwigFilter;
+use Twig\TwigTest;
 use CmsCanvas\Content\Content as ContentManager;
 
 /**
  * Access CmsCanvas's theme class in your Twig templates.
  */
-class Content extends Twig_Extension
+class Content extends AbstractExtension
 {
     /**
      * @var \CmsCanvas\Content\Content
@@ -42,13 +42,13 @@ class Content extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('entries', [$this->content, 'entries'], ['is_variadic' => true]),
-            new Twig_SimpleFunction('entry_first', [$this->content, 'entryFirst'], ['is_variadic' => true]),
-            new Twig_SimpleFunction('entry', [$this->content, 'entry']),
-            new Twig_SimpleFunction('navigation', [$this->content, 'navigation'], ['is_variadic' => true]),
-            new Twig_SimpleFunction('breadcrumb', [$this->content, 'breadcrumb'], ['is_variadic' => true]),
-            new Twig_SimpleFunction('is_home_page', [$this->content, 'isHomePage']),
-            new Twig_SimpleFunction('thumbnail', [$this->content, 'thumbnail'], ['is_variadic' => true]),
+            new TwigFunction('entries', [$this->content, 'entries'], ['is_variadic' => true]),
+            new TwigFunction('entry_first', [$this->content, 'entryFirst'], ['is_variadic' => true]),
+            new TwigFunction('entry', [$this->content, 'entry']),
+            new TwigFunction('navigation', [$this->content, 'navigation'], ['is_variadic' => true]),
+            new TwigFunction('breadcrumb', [$this->content, 'breadcrumb'], ['is_variadic' => true]),
+            new TwigFunction('is_home_page', [$this->content, 'isHomePage']),
+            new TwigFunction('thumbnail', [$this->content, 'thumbnail'], ['is_variadic' => true]),
         ];
     }
 
@@ -58,8 +58,8 @@ class Content extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('user_date', [$this->content, 'userDate']),
-            new Twig_SimpleFilter('thumbnail', [$this->content, 'thumbnail'], ['is_variadic' => true]),
+            new TwigFilter('user_date', [$this->content, 'userDate']),
+            new TwigFilter('thumbnail', [$this->content, 'thumbnail'], ['is_variadic' => true]),
         ];
     }
 
@@ -69,10 +69,10 @@ class Content extends Twig_Extension
     public function getTests()
     {
         return [
-            new Twig_SimpleTest('entry', function($value) {
+            new TwigTest('entry', function($value) {
                 return ($value instanceof \CmsCanvas\Content\Entry\Render);
             }),
-            new Twig_SimpleTest('content_type', function($value) {
+            new TwigTest('content_type', function($value) {
                 return ($value instanceof \CmsCanvas\Content\Type\Render);
             }),
         ];

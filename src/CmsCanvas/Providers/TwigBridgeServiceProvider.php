@@ -2,6 +2,9 @@
 
 namespace CmsCanvas\Providers;
 
+use Twig\Extension\ExtensionInterface;
+use Twig\Lexer;
+use Twig\Environment;
 use TwigBridge\ServiceProvider;
 use TwigBridge\Engine\Twig;
 use TwigBridge\Engine\Compiler;
@@ -65,7 +68,7 @@ class TwigBridgeServiceProvider extends ServiceProvider
                         }
                     } elseif (is_callable($extension)) {
                         $extension = $extension($this->app, $twig);
-                    } elseif (!is_a($extension, 'Twig_Extension')) {
+                    } elseif (!is_a($extension, ExtensionInterface::class)) {
                         throw new InvalidArgumentException('Incorrect extension type');
                     }
 
@@ -73,7 +76,7 @@ class TwigBridgeServiceProvider extends ServiceProvider
                 }
 
                 // Set lexer
-                if (is_a($lexer, 'Twig_LexerInterface')) {
+                if (is_a($lexer, Lexer::class)) {
                     $twig->setLexer($lexer);
                 }
 
@@ -87,8 +90,8 @@ class TwigBridgeServiceProvider extends ServiceProvider
             true
         );
 
-        $this->app->alias('twig', 'Twig_Environment');
-        $this->app->alias('twig', 'TwigBridge\Bridge');
+        $this->app->alias('twig', Environment::class);
+        $this->app->alias('twig', Bridge::class);
 
         $this->app->bindIf('twig.compiler', function () {
             return new Compiler($this->app['twig']);

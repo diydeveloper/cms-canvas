@@ -2,14 +2,14 @@
 
 namespace CmsCanvas\TwigBridge\Extension;
 
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use CmsCanvas\Theme\Theme as ThemeManager;
 
 /**
  * Access CmsCanvas's theme class in your Twig templates.
  */
-class Theme extends Twig_Extension
+class Theme extends AbstractExtension
 {
     /**
      * @var \CmsCanvas\Theme\Theme
@@ -40,16 +40,16 @@ class Theme extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('theme_head', [$this->theme, 'head']),
-            new Twig_SimpleFunction('theme_footer', [$this->theme, 'footer']),
-            new Twig_SimpleFunction('theme_asset', [$this->theme, 'asset']),
-            new Twig_SimpleFunction('theme_metadata', [$this->theme, 'metadata']),
-            new Twig_SimpleFunction('theme_javascripts', [$this->theme, 'javascripts']),
-            new Twig_SimpleFunction('theme_stylesheets', [$this->theme, 'stylesheets']),
-            new Twig_SimpleFunction('theme_analytics', [$this->theme, 'analytics']),
-            new Twig_SimpleFunction('theme_meta_title', [$this->theme, 'metaTitle']),
-            new Twig_SimpleFunction('theme_meta_description', [$this->theme, 'metaDescription']),
-            new Twig_SimpleFunction('theme_meta_keywords', [$this->theme, 'metaKeywords']),
+            new TwigFunction('theme_head', [$this->theme, 'head']),
+            new TwigFunction('theme_footer', [$this->theme, 'footer']),
+            new TwigFunction('theme_asset', [$this->theme, 'asset']),
+            new TwigFunction('theme_metadata', [$this->theme, 'metadata']),
+            new TwigFunction('theme_javascripts', [$this->theme, 'javascripts']),
+            new TwigFunction('theme_stylesheets', [$this->theme, 'stylesheets']),
+            new TwigFunction('theme_analytics', [$this->theme, 'analytics']),
+            new TwigFunction('theme_meta_title', [$this->theme, 'metaTitle']),
+            new TwigFunction('theme_meta_description', [$this->theme, 'metaDescription']),
+            new TwigFunction('theme_meta_keywords', [$this->theme, 'metaKeywords']),
         ];
     }
 }

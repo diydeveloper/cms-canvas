@@ -13,7 +13,7 @@ class Factory implements FactoryContract
     /**
      * Twig environment
      *
-     * @var Twig_Environment
+     * @var \Twig\Environment
      */
     private $twig;
 

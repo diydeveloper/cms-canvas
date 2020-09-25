@@ -94,7 +94,7 @@ return [
         |
         | Enabled extensions.
         |
-        | `Twig_Extension_Debug` is enabled automatically if twig.debug is TRUE.
+        | `\Twig\Extension\DebugExtension` is enabled automatically if twig.debug is TRUE.
         |
         */
         'enabled' => [
@@ -160,7 +160,7 @@ return [
         | Available functions. Access like `{{ secure_url(...) }}`.
         |
         | Each function can take an optional array of options. These options are
-        | passed directly to `Twig_SimpleFunction`.
+        | passed directly to `\Twig\TwigFunction`.
         |
         | So for example, to mark a function as safe you can do the following:
         |
@@ -194,7 +194,7 @@ return [
         | Available filters. Access like `{{ variable|filter }}`.
         |
         | Each filter can take an optional array of options. These options are
-        | passed directly to `Twig_SimpleFilter`.
+        | passed directly to `\Twig\TwigFilter`.
         |
         | So for example, to mark a filter as safe you can do the following:
         |

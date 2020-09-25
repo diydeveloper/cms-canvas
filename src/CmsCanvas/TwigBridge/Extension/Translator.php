@@ -2,15 +2,14 @@
 
 namespace CmsCanvas\TwigBridge\Extension;
 
-use Twig_Extension;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use Illuminate\Translation\Translator as LaravelTranslator;
 
 /**
  * Access Laravels translator class in your Twig templates.
  */
-class Translator extends Twig_Extension
+class Translator extends AbstractExtension
 {
     /**
      * @var \Illuminate\Translation\Translator
@@ -41,7 +40,7 @@ class Translator extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('trans_locale', [$this->translator, 'getLocale']),
+            new TwigFunction('trans_locale', [$this->translator, 'getLocale']),
         ];
     }
 
