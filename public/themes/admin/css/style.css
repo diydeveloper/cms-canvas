@@ -1,20 +1,20 @@
 html {
-	margin: 0;
-	padding: 0;
-	height: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	height: 100%;
-	background: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #F4F4F4;
 }
 
 body, td, th, input, select, textarea, option, optgroup {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000000;
 }
 
 strong, b {
@@ -22,7 +22,7 @@ strong, b {
 }
 
 input[type='text'], input[type='password'] {
-	padding: 5px;
+    padding: 5px;
     border: 1px solid #abadb3;
 }
 
@@ -31,20 +31,20 @@ input[type='text'], input[type='password'] {
 }
 
 select {
-	padding: 5px;
+    padding: 5px;
     border: 1px solid #abadb3;
 }
 
 textarea {
-	padding: 5px;
+    padding: 5px;
     width: 450px;
     border: 1px solid #abadb3;
 }
 
 a, a:visited {
-	color: #003366;
-	text-decoration: none;
-	cursor: pointer;
+    color: #003366;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 a:hover {
@@ -52,16 +52,16 @@ a:hover {
 }
 
 a img {
-	border: 0;
+    border: 0;
 }
 
 form {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 label {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .fleft {
@@ -116,30 +116,30 @@ label {
 }
 
 #header .div1 {
-	height: 56px;
-	padding: 0px 30px;
-	/*background: url('../images/header.png') repeat-x;*/
+    height: 56px;
+    padding: 0px 30px;
+    /*background: url('../images/header.png') repeat-x;*/
     background-color: #f3f3f3;
     background-image: -webkit-linear-gradient(#f9f9f9, #f3f3f3);
     background-image: linear-gradient(#f9f9f9, #f3f3f3);
     background-repeat: repeat-x;
     border-bottom: 1px solid #e5e5e5;
     color: #555555;
-	min-width: 900px;
+    min-width: 900px;
 }
 
 #header .div2 {
-	padding: 18px 0px 0px 0px;
-	float: left;
+    padding: 18px 0px 0px 0px;
+    float: left;
     font-size: 16px;
 }
 
 #header .div3 {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-align: right;
     margin-top: 15px;
-	float: right;
+    float: right;
 }
 
 .down_arrow {
@@ -176,34 +176,34 @@ label {
 }
 
 #menu {
-	background: url('../images/box.png') repeat-x;
-	position: relative;
-	z-index: 1;
-	height: 34px;
-	clear: both;
-	padding: 0px 30px;
-	min-width: 900px;
+    background: url('../images/box.png') repeat-x;
+    position: relative;
+    z-index: 1;
+    height: 34px;
+    clear: both;
+    padding: 0px 30px;
+    min-width: 900px;
     border-bottom: 1px solid #e5e5e5;
 }
 
 #menu > ul.left {
-	float: left;
+    float: left;
 }
 
 #menu > ul.right {
-	float: right;
+    float: right;
 }
 
 #menu > ul {
-	position: relative;
-	margin: 0;
-	padding: 0;
+    position: relative;
+    margin: 0;
+    padding: 0;
 }
 
 #menu > ul ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     background: #FFFFFF;
     border: 1px solid #CCCCCC;
     border: 1px solid rgba(0,0,0,0.15);
@@ -214,23 +214,23 @@ label {
 }
 
 #menu > ul a {
-	display: block;
-	color: #FFFFFF;
-	text-decoration: none;
-	padding: 5px;
+    display: block;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 5px;
 }
 
 #menu > ul .top {
-	padding: 11px 15px 9px 17px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+    padding: 11px 15px 9px 17px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
     color: #333333;
-	text-align: center;
+    text-align: center;
     font-weight: bold;
 }
 
 #menu > ul ul li {
-	padding: 2px;
+    padding: 2px;
 }
 
 #menu > ul .selected .top {
@@ -239,34 +239,34 @@ label {
 }
 
 #menu > ul .parent {
-	background: url('../images/arrow-right.png') 95% center no-repeat;
+    background: url('../images/arrow-right.png') 95% center no-repeat;
 }
 
 #menu > ul li {
-	float: left;
-	list-style: none;
+    float: left;
+    list-style: none;
 }
 
 #menu > ul li ul {
-	position: absolute;
+    position: absolute;
 }
 
 #menu > ul li li {
-	clear: both;
+    clear: both;
 }
 
 #menu > ul li ul a {
-	color: #333333;
-	height: 15px;
-	width: 145px;
+    color: #333333;
+    height: 15px;
+    width: 145px;
 }
 
 #menu > ul li ul ul {
-	margin: -27px 0 0 157px;
+    margin: -27px 0 0 157px;
 }
 
 #menu > ul li li:hover, #menu > ul li li.sfhover {
-	background: #4183c4;
+    background: #4183c4;
     color: #FFFFFF;
 }
 
@@ -279,39 +279,39 @@ label {
 }
 
 #container {
-	height: 100%;
+    height: 100%;
 }
 
 body > #container {
-	height: auto;
-	min-height: 100%;
+    height: auto;
+    min-height: 100%;
 }
 
 #content {
-	padding: 10px 30px 0px 30px;
-	min-width: 900px;
-	padding-bottom: 128px;
+    padding: 10px 30px 0px 30px;
+    min-width: 900px;
+    padding-bottom: 128px;
 }
 
 #footer {
     border-top: 1px solid #e5e5e5;
-	height: 90px;
-	padding-top: 38px;
-	text-align: center;
-	font-size: 12px;
-	color: #333;
-	position: relative;
-	margin-top: -128px;
-	clear: both;
+    height: 90px;
+    padding-top: 38px;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+    position: relative;
+    margin-top: -128px;
+    clear: both;
 }
 
 #footer a {
-	color: #333;
-	text-decoration: underline;
+    color: #333;
+    text-decoration: underline;
 }
 
 .breadcrumb {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
     padding-top: 8px;
 }
 
@@ -320,7 +320,7 @@ body > #container {
 }
 
 .breadcrumb .current {
-	background: #547C96 url('../images/breadcrumb_end.jpg') right center no-repeat;
+    background: #547C96 url('../images/breadcrumb_end.jpg') right center no-repeat;
     color: #FFFFFF;
     padding: 6px 20px 6px 8px;
     font-weight: bold;
@@ -328,11 +328,11 @@ body > #container {
 }
 
 .breadcrumb a {
-	background: #547C96 url('../images/breadcrumb_divider.jpg') right center no-repeat;
+    background: #547C96 url('../images/breadcrumb_divider.jpg') right center no-repeat;
     color: #FFFFFF;
     padding: 6px 20px 6px 8px;
-	font-size: 12px;
-	color: #FFFFFF;
+    font-size: 12px;
+    color: #FFFFFF;
     text-decoration: none;
     display: block;
 }
@@ -344,11 +344,11 @@ body > #container {
 }
 
 .success {
-	padding: 10px 10px 10px 33px;
-	margin-bottom: 10px;
-	background: #EAF7D9 url('../images/success.png') 10px center no-repeat;
-	border: 1px solid #BBDF8D;
-	color: #555555;
+    padding: 10px 10px 10px 33px;
+    margin-bottom: 10px;
+    background: #EAF7D9 url('../images/success.png') 10px center no-repeat;
+    border: 1px solid #BBDF8D;
+    color: #555555;
 }
 
 .notification {
@@ -357,15 +357,15 @@ body > #container {
 }
 
 .notification.warning, .notification.error {
-	background: #FFD1D1 url('../images/warning.png') 10px center no-repeat;
-	border: 1px solid #F8ACAC;
-	color: #555555;
+    background: #FFD1D1 url('../images/warning.png') 10px center no-repeat;
+    border: 1px solid #F8ACAC;
+    color: #555555;
 }
 
 .notification.attention {
-	background: #FFF5CC url('../images/attention.png') 10px center no-repeat;
-	border: 1px solid #F2DD8C;
-	color: #555555;
+    background: #FFF5CC url('../images/attention.png') 10px center no-repeat;
+    border: 1px solid #F2DD8C;
+    color: #555555;
 }
 
 .notification .dropdown_close {
@@ -373,39 +373,39 @@ body > #container {
 }
 
 .required {
-	color: #FF0000;
-	font-weight: bold;
+    color: #FF0000;
+    font-weight: bold;
 }
 
 .help {
-	color: #666;
-	font-size: 10px;
-	font-weight: normal;
-	font-family: Verdana, Geneva, sans-serif;
-	display: block;
+    color: #666;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: Verdana, Geneva, sans-serif;
+    display: block;
 }
 
 .ex {
-	color: #666;
-	font-size: 10px;
-	font-weight: normal;
-	font-family: Verdana, Geneva, sans-serif;
+    color: #666;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 .info {
-	color: #666;
-	font-weight: normal;
-	font-family: Verdana, Geneva, sans-serif;
+    color: #666;
+    font-weight: normal;
+    font-family: Verdana, Geneva, sans-serif;
     margin-bottom: 5px;
 }
 
 .icon {
-	vertical-align: middle;
-	cursor: pointer;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 .image {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .box {
@@ -455,10 +455,11 @@ body > #container {
 }
 
 .box > .content {
-	padding: 10px;
-	border-left: 1px solid #e5e5e5;
-	border-right: 1px solid #e5e5e5;
-	border-bottom: 1px solid #e5e5e5;
+    padding: 10px;
+    border-left: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    background: #FFFFFF;
 }
 
 .box > .content.position_top {
@@ -495,9 +496,9 @@ button.button span {
 }
 
 a.button, .list a.button, button.button {
-	text-decoration: none;
-	color: #333333;
-	display: inline-block;
+    text-decoration: none;
+    color: #333333;
+    display: inline-block;
     margin-left: 2px;
     background: #fafafa; /* Old browsers */
     background: -moz-linear-gradient(top,  #fafafa 0%, #eaeaea 100%); /* FF3.6+ */
@@ -542,17 +543,17 @@ a.button:active, .list a.button:active, button.button:active {
 }
 
 table.filter, div.filter {
-	background: #E7EFEF; 
-	border: 1px solid #C6D7D7; 
-	margin-bottom: 15px;	
+    background: #E7EFEF; 
+    border: 1px solid #C6D7D7; 
+    margin-bottom: 15px;	
 }
 
 table.filter {
-	width: 100%;
+    width: 100%;
 }
 
 table.filter td {
-	padding: 5px;
+    padding: 5px;
 }
 
 div.filter {
@@ -560,38 +561,38 @@ div.filter {
 }
 
 .list {
-	border-collapse: collapse;
-	width: 100%;
-	border-top: 1px solid #DDDDDD;
-	border-left: 1px solid #DDDDDD;
-	margin-bottom: 20px;
+    border-collapse: collapse;
+    width: 100%;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    margin-bottom: 20px;
 }
 
 .list td, .list th {
-	border-right: 1px solid #DDDDDD;
-	border-bottom: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .list thead td, .list thead th {
-	background-color: #EFEFEF;
-	padding: 7px 5px;
+    background-color: #EFEFEF;
+    padding: 7px 5px;
     text-align: left;
 }
 
 .list thead td a, .list thead td, .list thead th a, .list thead th {
-	text-decoration: none;
-	color: #222222;
-	font-weight: bold;
+    text-decoration: none;
+    color: #222222;
+    font-weight: bold;
 }
 
 .list tbody td a {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .list tbody td {
-	vertical-align: middle;
-	padding: 7px 5px;
-	background: #FFFFFF;
+    vertical-align: middle;
+    padding: 7px 5px;
+    background: #FFFFFF;
 }
 
 .list tbody tr:hover td {
@@ -599,45 +600,45 @@ div.filter {
 }
 
 .list .left {
-	text-align: left;
-	padding: 7px;
+    text-align: left;
+    padding: 7px;
 }
 
 .list .right {
-	text-align: right;
-	padding: 7px;
+    text-align: right;
+    padding: 7px;
 }
 
 .list .center {
-	text-align: center;
-	padding: 7px;
+    text-align: center;
+    padding: 7px;
 }
 
 .list .asc {
-	padding-right: 15px;
-	background: url('../images/asc.png') right center no-repeat;
+    padding-right: 15px;
+    background: url('../images/asc.png') right center no-repeat;
 }
 
 .list .desc {
-	padding-right: 15px;
-	background: url('../images/desc.png') right center no-repeat;
+    padding-right: 15px;
+    background: url('../images/desc.png') right center no-repeat;
 }
 
 .list .filter td {
-	padding: 5px;
-	background: #E7EFEF;
+    padding: 5px;
+    background: #E7EFEF;
 }
 
 .pagination_footer {
-	border-top: 1px solid #e5e5e5;
-	display: inline-block;
-	width: 100%;
-	padding-top: 6px;
+    border-top: 1px solid #e5e5e5;
+    display: inline-block;
+    width: 100%;
+    padding-top: 6px;
 }
 
 .pagination li {
-	float: left;
-	padding-top: 6px;
+    float: left;
+    padding-top: 6px;
 }
 
 .pagination li + li {
@@ -647,21 +648,21 @@ div.filter {
 }
 
 .pagination li a {
-	border: 1px solid #DDDDDD;
-	padding: 4px 10px;
-	font-size: 12px;
-	text-decoration: none;
-	color: #A3A3A3;
+    border: 1px solid #DDDDDD;
+    padding: 4px 10px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #A3A3A3;
 }
 
 .pagination li.active span {
-	border: 1px solid #269BC6;
-	padding: 4px 10px;
-	font-size: 12px;
-	font-weight: normal;
-	text-decoration: none;
-	color: #269BC6;
-	background: #FFFFFF;
+    border: 1px solid #269BC6;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+    color: #269BC6;
+    background: #FFFFFF;
 }
 
 .pagination li.disabled span {
@@ -675,25 +676,25 @@ div.filter {
 }
 
 .pagination_footer .results {
-	float: right;
-	padding-top: 6px;
-	font-size: 12px;
+    float: right;
+    padding-top: 6px;
+    font-size: 12px;
 }
 
 table.form {
-	width: 100%;
-	border-collapse: collapse;
-	margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 table.form > tbody > tr > td:first-child {
-	width: 200px;
+    width: 200px;
 }
 
 table.form > tbody > tr > td {
-	padding: 10px;
-	color: #000000;
-	border-bottom: 1px dotted #CCCCCC;
+    padding: 10px;
+    color: #000000;
+    border-bottom: 1px dotted #CCCCCC;
 }
 
 .fields_wrapper {
@@ -702,11 +703,11 @@ table.form > tbody > tr > td {
 }
 
 .scrollbox {
-	border: 1px solid #CCCCCC !important;
-	width: 350px;
-	height: 100px;
-	background: #FFFFFF;
-	overflow-y: scroll;
+    border: 1px solid #CCCCCC !important;
+    width: 350px;
+    height: 100px;
+    background: #FFFFFF;
+    overflow-y: scroll;
 }
 
 .scrollbox div {
@@ -714,7 +715,7 @@ table.form > tbody > tr > td {
 }
 
 .scrollbox img {
-	float: right;
+    float: right;
 }
 
 .scrollbox label {
@@ -722,38 +723,38 @@ table.form > tbody > tr > td {
 }
 
 .htabs {
-	padding: 0px 0px 0px 10px;
-	height: 30px;
-	line-height: 16px;
-	border-bottom: 1px solid #DDDDDD;
-	margin-bottom: 15px;
+    padding: 0px 0px 0px 10px;
+    height: 30px;
+    line-height: 16px;
+    border-bottom: 1px solid #DDDDDD;
+    margin-bottom: 15px;
 }
 
 .htabs li {
-	float: left;
+    float: left;
 }
 
 .htabs a {
-	border-top: 1px solid #DDDDDD;
-	border-left: 1px solid #DDDDDD;
-	border-right: 1px solid #DDDDDD; 
-	background: #FFFFFF url('../images/tab.png') repeat-x;
-	padding: 7px 15px 6px 15px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: bold;
-	text-align: center;
-	text-decoration: none;
-	color: #000000;
-	margin-right: 2px;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD; 
+    background: #FFFFFF url('../images/tab.png') repeat-x;
+    padding: 7px 15px 6px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #000000;
+    margin-right: 2px;
     float: left;
     border-radius: 3px 3px 0 0;
     outline: 0;
 }
 
 .htabs li.ui-tabs-active a {
-	padding-bottom: 7px;
-	background: #FFFFFF;
+    padding-bottom: 7px;
+    background: #FFFFFF;
 }
 
 .ui-tabs .ui-tabs-hide {
@@ -761,128 +762,127 @@ table.form > tbody > tr > td {
 }
 
 .vtabs {
-	width: 190px;
-	padding: 10px 0px;
-	min-height: 578px;
-	float: left;
-	display: block;
-	border-right: 1px solid #DDDDDD;
+    width: 190px;
+    padding: 10px 0px;
+    min-height: 578px;
+    float: left;
+    display: block;
+    border-right: 1px solid #DDDDDD;
 }
 
 .vtabs a {
-	display: none;
+    display: none;
 }
 
 .vtabs a, .vtabs span {
-	display: block;
-	float: left;
-	width: 160px;
-	margin-bottom: 5px;
-	clear: both;
-	border-top: 1px solid #DDDDDD;
-	border-left: 1px solid #DDDDDD;
-	border-bottom: 1px solid #DDDDDD;
-	background: #F7F7F7;
-	padding: 6px 14px 7px 15px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: bold;
-	text-align: right;
-	text-decoration: none;
-	color: #000000;
+    display: block;
+    float: left;
+    width: 160px;
+    margin-bottom: 5px;
+    clear: both;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F7F7F7;
+    padding: 6px 14px 7px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: right;
+    text-decoration: none;
+    color: #000000;
 }
 
 .vtabs li.ui-tabs-selected a {
-	padding-right: 15px;
-	background: #FFFFFF;
+    padding-right: 15px;
+    background: #FFFFFF;
 }
 
 .vtabs a img, .vtabs span img {
-	position: relative;
-	top: 3px;
-	cursor: pointer;
+    position: relative;
+    top: 3px;
+    cursor: pointer;
 }
 
 .vtabs-content {
-	margin-left: 205px;
+    margin-left: 205px;
 }
 
 .scrollbox div {
-	padding: 3px;
+    padding: 3px;
 }
 
 .scrollbox div input {
-	margin: 0px;
-	padding: 0px;
-	margin-right: 3px;
+    margin: 0px;
+    padding: 0px;
+    margin-right: 3px;
 }
 
 .scrollbox div.even {
-	background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .scrollbox div.odd {
-	background: #E4EEF7;
+    background: #E4EEF7;
 }
 
-
 .overview {
-	float: left;
-	width: 49%;
-	margin-bottom: 20px;	
+    float: left;
+    width: 49%;
+    margin-bottom: 20px;	
 }
 
 .overview table {
-	width: 100%;
+    width: 100%;
 }
 
 .overview td + td {
-	text-align: right;
+    text-align: right;
 }
 
 .statistic {
-	float: right;
-	width: 49%;
-	margin-bottom: 20px;
+    float: right;
+    width: 49%;
+    margin-bottom: 20px;
 }
 
 .range {
-	float: right;
-	color: #FFF;
-	vertical-align: middle;
+    float: right;
+    color: #FFF;
+    vertical-align: middle;
 }
 
 .range {
-	padding-top: 1px;
-	padding-right: 1px;
+    padding-top: 1px;
+    padding-right: 1px;
 }
 
 .range, .range select {
-	font-size: 11px;	
+    font-size: 11px;	
 }
 
 .latest {
-	clear: both;	
+    clear: both;	
 }
 
 .latest tbody td {
-	background: #FFF;
+    background: #FFF;
 }
 
 .dashboard-heading {
-	background: #547C96; 
-	color: #FFF; 
-	border-bottom: 1px solid #8EAEC3; 
-	padding: 5px; 
-	font-size: 14px; 
-	font-weight: bold;	
+    background: #547C96; 
+    color: #FFF; 
+    border-bottom: 1px solid #8EAEC3; 
+    padding: 5px; 
+    font-size: 14px; 
+    font-weight: bold;	
 }
 
 .dashboard-content {
-	background: #FCFCFC; 
-	border: 1px solid #8EAEC3; 
-	padding: 10px; 
-	min-height: 180px;	
+    background: #FCFCFC; 
+    border: 1px solid #8EAEC3; 
+    padding: 10px; 
+    min-height: 180px;	
 }
 
 div.form div label {
@@ -1144,10 +1144,10 @@ div.form div img {
 .subnav {
     margin-bottom: 15px;
     background: url("../images/box.png") repeat-x scroll 0 0 transparent;
-	z-index: 1;
-	height: 34px;
-	clear: both;
-	min-width: 900px;
+    z-index: 1;
+    height: 34px;
+    clear: both;
+    min-width: 900px;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
 }
@@ -1158,8 +1158,8 @@ div.form div img {
 }
 
 .subnav > ul a {
-	display: block;
-	text-decoration: none;
+    display: block;
+    text-decoration: none;
     padding: 0px 15px;
     height: 34px;
     line-height: 34px;
