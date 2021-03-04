@@ -311,36 +311,29 @@ body > #container {
 }
 
 .breadcrumb {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     padding-top: 8px;
 }
 
-.breadcrumb li {
+.breadcrumb .breadcrumb-item {
     float: left;
 }
 
-.breadcrumb .current {
-    background: #547C96 url('../images/breadcrumb_end.jpg') right center no-repeat;
-    color: #FFFFFF;
-    padding: 6px 20px 6px 8px;
-    font-weight: bold;
-    display: block;
+.breadcrumb-item .active {
+    padding: 6px 20px 6px 0px;
 }
 
-.breadcrumb a {
-    background: #547C96 url('../images/breadcrumb_divider.jpg') right center no-repeat;
-    color: #FFFFFF;
-    padding: 6px 20px 6px 8px;
+.breadcrumb-item a {
+    padding: 6px 6px 6px 0px;
     font-size: 12px;
-    color: #FFFFFF;
-    text-decoration: none;
-    display: block;
+    text-decoration: underline;
 }
 
-.first_crumb {
-    border-radius: 3px 0 0 3px;
-    padding: 6px 20px 6px 8px;
+.breadcrumb-item + .breadcrumb-item::before {
     display: inline-block;
+    content: "/";
+    color: #6c757d;
+    padding-right: 6px;
 }
 
 .success {
